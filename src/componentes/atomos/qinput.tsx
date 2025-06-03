@@ -5,6 +5,7 @@ import {
   FormInputProps,
   Validacion,
 } from "./_forminput.tsx";
+import { QInputMoneda } from "./QInputMoneda.tsx";
 
 type QInputProps = FormInputProps;
 
@@ -39,6 +40,24 @@ export const QInput = ({
     tipo,
     ...props,
   };
+
+  if (tipo === "moneda") {
+    return (
+      <quimera-input {...attrs}>
+        <label>
+          <Etiqueta label={label} />
+          <QInputMoneda
+            nombre={nombre}
+            valor={props.valor ?? ""}
+            onChange={(v, e) => props.onChange?.(v, e)}
+            deshabilitado={deshabilitado}
+            simbolo="€"
+          />
+          <Validacion textoValidacion={textoValidacion} />
+        </label>
+      </quimera-input>
+    );
+  }
 
   return (
     <quimera-input {...attrs}>
