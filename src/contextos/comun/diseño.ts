@@ -56,3 +56,42 @@ export type TipoInput =
   | "url"
   | "rango"
   | "moneda";
+
+type ParamOpcion = {
+  valor: string;
+  descripcion?: string
+};
+
+export type ValorControl = null | string | ParamOpcion;
+
+export type Accion<T extends Modelo> = {
+  type: 'init';
+  payload: {
+    entidad: T
+  }
+} | {
+  type: 'set_campo';
+  payload: {
+    campo: string;
+    valor: string;
+  }
+}
+
+export type EstadoInput = {
+  nombre: string;
+  valor: string;
+  textoValidacion: string;
+  deshabilitado: boolean;
+  erroneo: boolean;
+  advertido: boolean;
+  valido: boolean;
+}
+
+export type ValidacionCampo = {
+  valido: boolean;
+  textoValidacion: string;
+  bloqueado: boolean;
+  requerido: boolean;
+}
+
+
