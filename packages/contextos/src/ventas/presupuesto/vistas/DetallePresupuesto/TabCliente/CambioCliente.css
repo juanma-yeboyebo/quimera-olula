@@ -1,5 +1,25 @@
-.CambioCliente {
+.Presupuesto .TabCliente .CambioCliente {
     quimera-autocompletar[nombre="cliente_id_cambio"] {
         grid-column: span 12;
+    }
+
+    quimera-input[nombre="nombre_cliente"] {
+        grid-column: 1 / span 8;
+    }
+
+    quimera-input[nombre="tipo_via"] {
+        grid-column: 1 / span 4;
+    }
+
+    quimera-input[nombre="nombre_via"] {
+        grid-column: span 2;
+    }
+
+    quimera-input[nombre="ciudad"] {
+        grid-column: span 2;
+    }
+
+    quimera-input[nombre="id_fiscal"] {
+        grid-column: 1 / span 4;
     }
 }

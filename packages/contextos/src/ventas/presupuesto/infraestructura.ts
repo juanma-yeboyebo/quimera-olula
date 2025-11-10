@@ -2,18 +2,65 @@ import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { Filtro, Orden, Paginacion } from "@olula/lib/diseño.ts";
 import { criteriaQuery } from "@olula/lib/infraestructura.ts";
 import ApiUrls from "../comun/urls.ts";
-import { CambiarArticuloLinea, CambiarCantidadLinea, DeleteLinea, GetPresupuesto, GetPresupuestos, LineaPresupuesto, PatchCambiarDivisa, PatchLinea, PostLinea, PostPresupuesto, Presupuesto } from "./diseño.ts";
+import { CambiarArticuloLinea, CambiarCantidadLinea, CambioCliente, DeleteLinea, esClienteRegistrado, GetPresupuesto, GetPresupuestos, LineaPresupuesto, PatchCambiarDivisa, PatchLinea, PostLinea, PostPresupuesto, Presupuesto, PresupuestoAPI } from "./diseño.ts";
 
 const baseUrl = new ApiUrls().PRESUPUESTO;
 
-type PresupuestoAPI = Presupuesto
+// type PresupuestoAPI = Presupuesto
 type LineaPresupuestoAPI = LineaPresupuesto
 
-export const presupuestoFromAPI = (p: PresupuestoAPI): Presupuesto => p;
+// export const presupuestoFromAPI = (p: PresupuestoAPI): Presupuesto => p;
+export const presupuestoFromAPI = (p: PresupuestoAPI): Presupuesto => ({
+  ...p,
+  nombre_via: p.direccion?.nombre_via ?? "",
+  cod_postal: p.direccion?.cod_postal ?? null,
+  ciudad: p.direccion?.ciudad ?? "",
+  provincia_id: p.direccion?.provincia_id ?? "",
+  provincia: p.direccion?.provincia ?? "",
+  pais_id: p.direccion?.pais_id ?? "",
+  telefono: p.direccion?.telefono ?? "",
+  tipo_via: p.direccion?.tipo_via ?? "",
+  numero: p.direccion?.numero ?? "",
+  otros: p.direccion?.otros ?? "",
+  apartado: p.direccion?.apartado ?? "",
+});
+
+export const presupuestoToAPI = (l: Presupuesto): PresupuestoAPI => {
+  const {
+    nombre_via,
+    cod_postal,
+    ciudad,
+    provincia_id,
+    provincia,
+    pais_id,
+    telefono,
+    tipo_via,
+    numero,
+    otros,
+    apartado,
+    ...rest
+  } = l;
+  return {
+    ...rest,
+    direccion: {
+      nombre_via: nombre_via ?? "",
+      cod_postal: cod_postal ?? "",
+      ciudad: ciudad ?? "",
+      provincia_id: provincia_id ?? null,
+      provincia: provincia ?? "",
+      pais_id: pais_id ?? "",
+      telefono: telefono ?? "",
+      tipo_via: tipo_via ?? "",
+      numero: numero ?? "",
+      otros: otros ?? "",
+      apartado: apartado ?? "",
+    },
+  };
+};
 export const lineaPresupuestoFromAPI = (l: LineaPresupuestoAPI): LineaPresupuesto => l;
 
 export const getPresupuesto: GetPresupuesto = async (id) =>
-  RestAPI.get<{ datos: Presupuesto }>(`${baseUrl}/${id}`).then((respuesta) => {
+  RestAPI.get<{ datos: PresupuestoAPI }>(`${baseUrl}/${id}`).then((respuesta) => {
     return presupuestoFromAPI(respuesta.datos);
   });
 
@@ -24,19 +71,43 @@ export const getPresupuestos: GetPresupuestos = async (
 ) => {
   const q = criteriaQuery(filtro, orden, paginacion);
 
-  const respuesta = await RestAPI.get<{ datos: Presupuesto[]; total: number }>(baseUrl + q);
+  const respuesta = await RestAPI.get<{ datos: PresupuestoAPI[]; total: number }>(baseUrl + q);
   return { datos: respuesta.datos.map(presupuestoFromAPI), total: respuesta.total };
 };
 
 export const postPresupuesto: PostPresupuesto = async (presupuesto): Promise<string> => {
-  const payload = {
-    cliente: {
+  let clientePayload;
+
+  if (esClienteRegistrado(presupuesto)) {
+    clientePayload = {
       cliente_id: presupuesto.cliente_id,
       direccion_id: presupuesto.direccion_id
-    },
-    // fecha: presupuesto.fecha,
-    empresa_id: presupuesto.empresa_id
+    };
+  } else {
+    clientePayload = {
+      nombre: presupuesto.nombre_cliente,
+      id_fiscal: presupuesto.id_fiscal,
+      direccion: {
+        nombre_via: presupuesto.nombre_via,
+        tipo_via: presupuesto.tipo_via || null,
+        numero: presupuesto.numero || null,
+        otros: presupuesto.otros || null,
+        cod_postal: presupuesto.cod_postal || null,
+        ciudad: presupuesto.ciudad,
+        provincia_id: presupuesto.provincia_id || null,
+        provincia: presupuesto.provincia || null,
+        pais_id: presupuesto.pais_id || null,
+        apartado: presupuesto.apartado || null,
+        telefono: presupuesto.telefono || null,
+      }
+    };
   }
+
+  const payload = {
+    cliente: clientePayload,
+    empresa_id: presupuesto.empresa_id
+  };
+
   return await RestAPI.post(baseUrl, payload, "Error al crear presupuesto").then((respuesta) => respuesta.id);
 }
 
@@ -52,15 +123,43 @@ export const patchCambiarDivisa: PatchCambiarDivisa = async (id, divisaId) => {
   await RestAPI.patch(`${baseUrl}/${id}`, { cambios: { divisa_id: divisaId } }, "Error al cambiar divisa del presupuesto");
 }
 
-export const patchCambiarCliente = async (id: string, clienteId: string, dirClienteId: string): Promise<void> => {
-  await RestAPI.patch(`${baseUrl}/${id}`, {
-    cambios: {
-      cliente: {
-        cliente_id: clienteId,
-        direccion_id: dirClienteId
+export const patchCambiarCliente = async (id: string, cambio: CambioCliente): Promise<void> => {
+  if (cambio.cliente_id) {
+    const clientePayload = {
+      cambios: {
+        cliente: {
+          cliente_id: cambio.cliente_id,
+          direccion_id: cambio.direccion_id
+        }
       }
     }
-  }, "Error al cambiar cliente del presupuesto");
+    await RestAPI.patch(`${baseUrl}/${id}`, clientePayload, "Error al cambiar cliente del presupuesto");
+  } else {
+    const clientePayload = {
+      cambios: {
+        cliente: {
+          nombre: cambio.nombre_cliente || "",
+          id_fiscal: cambio.id_fiscal,
+          direccion: {
+            nombre_via: cambio.nombre_via,
+            tipo_via: cambio.tipo_via || null,
+            numero: cambio.numero || null,
+            otros: cambio.otros || null,
+            cod_postal: cambio.cod_postal || null,
+            ciudad: cambio.ciudad || null,
+            provincia_id: cambio.provincia_id || null,
+            provincia: cambio.provincia || null,
+            pais_id: cambio.pais_id || null,
+            apartado: cambio.apartado || null,
+            telefono: cambio.telefono || null,
+          }
+        }
+      }
+    }
+    await RestAPI.patch(`${baseUrl}/${id}`, clientePayload, "Error al cambiar cliente del presupuesto");
+  }
+
+
 }
 
 export const getLineas = async (id: string): Promise<LineaPresupuesto[]> =>

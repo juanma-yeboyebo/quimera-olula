@@ -138,7 +138,7 @@ export const DetalleUsuario = ({
       setEntidad={(m) => init(m)}
       entidad={modelo}
       cargar={getUsuario}
-      cerrarDetalle={() => emitirUsuario("cancelar_seleccion")}
+      cerrarDetalle={() => emitir("seleccion_cancelada")}
     >
       {!!usuarioId && (
         <div className="DetalleUsuario">

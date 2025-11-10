@@ -78,7 +78,7 @@ export const DetalleLead = ({
       setEntidad={(l) => init(l)}
       entidad={modelo}
       cargar={getLead}
-      cerrarDetalle={() => emitir("cancelar_seleccion")}
+      cerrarDetalle={() => publicar("seleccion_cancelada")}
     >
       {!!leadId && (
         <>

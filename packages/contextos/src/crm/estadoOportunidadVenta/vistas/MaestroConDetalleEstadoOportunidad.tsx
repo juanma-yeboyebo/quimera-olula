@@ -72,6 +72,14 @@ const configMaquina: ConfigMaquina4<Estado, Contexto> = {
       estados_oportunidad_cargados: ({ maquina, payload }) =>
         pipe(maquina, setEstados(cargar(payload as EstadoOportunidad[]))),
       borrar: "borrando",
+      seleccion_cancelada: ({ maquina }) =>
+        pipe(
+          maquina,
+          setEstados((estados) => ({
+            ...estados,
+            idActivo: null,
+          }))
+        ),
     },
     creando: {
       estado_oportunidad_creado: ({ maquina, payload, setEstado }) =>

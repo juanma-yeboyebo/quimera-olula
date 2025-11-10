@@ -1,16 +1,16 @@
+import { QBoton } from "@olula/componentes/index.js";
 import { MaestroDetalle } from "@olula/componentes/maestro/MaestroDetalle.js";
-import { QuimeraAcciones } from "@olula/componentes/moleculas/qacciones.tsx";
 import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { puede } from "@olula/lib/dominio.ts";
 import { useLista } from "@olula/lib/useLista.ts";
 import { Maquina, useMaquina } from "@olula/lib/useMaquina.ts";
 import { useState } from "react";
 import { Cliente } from "../diseño.ts";
+import { metaTablaCliente } from "../dominio.ts";
 import { getClientes } from "../infraestructura.ts";
 import { AltaCliente } from "./AltaCliente.tsx";
 import { DetalleCliente } from "./DetalleCliente/DetalleCliente.tsx";
 import "./MaestroConDetalleCliente.css";
-import { TarjetaCliente } from "./TarjetaCliente.tsx";
 
 type Estado = "lista" | "alta";
 export const MaestroConDetalleCliente = () => {
@@ -46,16 +46,6 @@ export const MaestroConDetalleCliente = () => {
 
   const puedeCrear = puede("ventas.cliente.crear");
 
-  const acciones = [
-    puedeCrear && {
-      texto: "Nuevo",
-      onClick: () => emitir("alta_iniciada"),
-      variante: "borde" as const,
-    },
-  ].filter(Boolean);
-
-  // const modo = "tarjetas";
-
   return (
     <div className="Cliente">
       <MaestroDetalle<Cliente>
@@ -63,12 +53,16 @@ export const MaestroConDetalleCliente = () => {
           <>
             <h2>Clientes</h2>
             <div className="maestro-botones">
-              <QuimeraAcciones acciones={acciones} />
+              {puedeCrear && (
+                <QBoton onClick={() => emitir("alta_iniciada")}>Nuevo</QBoton>
+              )}
             </div>
           </>
         }
         modoVisualizacion="tabla"
-        tarjeta={(cliente) => <TarjetaCliente cliente={cliente} />}
+        modoDisposicion="maestro-50"
+        metaTabla={metaTablaCliente}
+        // tarjeta={(cliente) => <TarjetaCliente cliente={cliente} />}
         entidades={clientes.lista}
         setEntidades={clientes.setLista}
         seleccionada={clientes.seleccionada}

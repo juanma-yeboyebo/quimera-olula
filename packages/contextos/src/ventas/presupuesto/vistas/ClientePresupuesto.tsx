@@ -47,7 +47,7 @@ const ClienteLectura = ({
         {presupuesto.cliente_id}: {presupuesto.nombre_cliente}
       </label>
       <label>
-        {presupuesto.direccion.nombre_via}: {presupuesto.direccion.ciudad}
+        {presupuesto?.nombre_via}: {presupuesto.ciudad}
       </label>
       <button onClick={onEditarCallback}>Editar</button>
     </>
@@ -67,7 +67,8 @@ const ClienteEdicion = ({
     cliente_id,
     direccion_id,
   }: Record<string, string>) => {
-    patchCambiarCliente(presupuesto.id, cliente_id, direccion_id).then(() => {
+    const cambio = { cliente_id, direccion_id };
+    patchCambiarCliente(presupuesto.id, cambio).then(() => {
       onClienteCambiadoCallback({ cliente_id, direccion_id });
     });
   };

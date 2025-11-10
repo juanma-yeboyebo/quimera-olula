@@ -129,6 +129,7 @@ export const MaestroConDetallePresupuesto = ({
           </>
         }
         modoVisualizacion="tabla"
+        modoDisposicion="maestro-50"
         metaTabla={metaTablaPresupuesto}
         entidades={presupuestos.lista}
         setEntidades={setEntidades}

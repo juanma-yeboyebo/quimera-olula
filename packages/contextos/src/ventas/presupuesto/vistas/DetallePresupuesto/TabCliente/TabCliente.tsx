@@ -59,17 +59,32 @@ export const TabCliente = ({
             C
           </QBoton>
         </div>
-        <DirCliente
-          clienteId={modelo.cliente_id}
-          {...uiProps("direccion_id")}
-        />
+        {presupuesto.modelo.cliente_id !== "None" ? (
+          <DirCliente
+            clienteId={modelo.cliente_id}
+            {...uiProps("direccion_id")}
+          />
+        ) : (
+          <>
+            <QInput
+              deshabilitado={true}
+              label="Direccion"
+              nombre="direccion_cliente"
+              valor={`${modelo.tipo_via} ${modelo.nombre_via}, ${modelo.ciudad}`}
+            />
+          </>
+        )}
       </quimera-formulario>
       <QModal
         nombre="modal"
         abierto={estado === "cambiando_cliente"}
         onCerrar={() => emitir("cambio_cliente_cancelado")}
       >
-        <CambioCliente presupuestoId={modelo.id} publicar={emitir} />
+        <CambioCliente
+          presupuesto={presupuesto}
+          publicar={publicar}
+          emitir={emitir}
+        />
       </QModal>
     </div>
   );

@@ -10,6 +10,42 @@ export interface Presupuesto extends Entidad {
   nombre_cliente: string;
   id_fiscal: string;
   direccion_id: string;
+  agente_id: string;
+  nombre_agente: string;
+  divisa_id: string;
+  tasa_conversion: number;
+  total: number;
+  neto: number;
+  total_iva: number;
+  total_irpf: number;
+  total_divisa_empresa: number;
+  forma_pago_id: string;
+  nombre_forma_pago: string;
+  grupo_iva_negocio_id: string;
+  aprobado: boolean;
+  observaciones: string;
+  nombre_via: string;
+  tipo_via: string;
+  numero: string;
+  otros: string;
+  cod_postal: string;
+  ciudad: string;
+  provincia_id: number;
+  provincia: string;
+  pais_id: string;
+  apartado: string;
+  telefono: string;
+}
+
+export interface PresupuestoAPI {
+  id: string;
+  codigo: string;
+  fecha: string;
+  fecha_salida: string;
+  cliente_id: string;
+  nombre_cliente: string;
+  id_fiscal: string;
+  direccion_id: string;
   direccion: Direccion;
   agente_id: string;
   nombre_agente: string;
@@ -33,10 +69,41 @@ export type NuevoPresupuesto = {
   empresa_id: string;
 };
 
-export type CambioCliente = {
-  cliente_id: string;
+export type NuevoPresupuestoClienteNoRegistrado = {
+  empresa_id: string;
+  // Campos para cliente no registrado
   nombre_cliente: string;
-  direccion_id: string;
+  id_fiscal: string;
+  // Campos de dirección no registrada
+  nombre_via: string;
+  tipo_via?: string;
+  numero?: string;
+  otros?: string;
+  cod_postal?: string;
+  ciudad?: string;
+  provincia_id?: number | null;
+  provincia?: string;
+  pais_id?: string;
+  apartado?: string;
+  telefono?: string;
+};
+
+export type CambioCliente = {
+  cliente_id?: string;
+  nombre_cliente?: string;
+  direccion_id?: string;
+  id_fiscal?: string;
+  nombre_via?: string;
+  tipo_via?: string;
+  numero?: string;
+  otros?: string;
+  cod_postal?: string;
+  ciudad?: string;
+  provincia_id?: number | null;
+  provincia?: string;
+  pais_id?: string;
+  apartado?: string;
+  telefono?: string;
 };
 
 export interface LineaPresupuesto extends Entidad {
@@ -62,11 +129,15 @@ export type Cliente = {
   direccion_id: string;
 }
 
+export const esClienteRegistrado = (presupuesto: NuevoPresupuesto | NuevoPresupuestoClienteNoRegistrado): presupuesto is NuevoPresupuesto => {
+  return 'cliente_id' in presupuesto && 'direccion_id' in presupuesto;
+};
+
 export type GetPresupuestos = (filtro: Filtro, orden: Orden, paginacion: Paginacion) => RespuestaLista<Presupuesto>;
 
 export type GetPresupuesto = (id: string) => Promise<Presupuesto>;
 
-export type PostPresupuesto = (presupuesto: NuevoPresupuesto) => Promise<string>;
+export type PostPresupuesto = (presupuesto: NuevoPresupuesto | NuevoPresupuestoClienteNoRegistrado) => Promise<string>;
 
 export type CambiarArticuloLinea = (id: string, lineaId: string, referencia: string) => Promise<void>;
 

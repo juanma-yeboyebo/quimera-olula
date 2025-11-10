@@ -68,6 +68,14 @@ const configMaquina: ConfigMaquina4<Estado, Contexto> = {
           setEstado("inactivo" as Estado),
           setLeads(cargar(payload as Lead[]))
         ),
+      seleccion_cancelada: ({ maquina }) =>
+        pipe(
+          maquina,
+          setLeads((leads) => ({
+            ...leads,
+            idActivo: null,
+          }))
+        ),
     },
     creando: {
       lead_creado: ({ maquina, payload, setEstado }) =>

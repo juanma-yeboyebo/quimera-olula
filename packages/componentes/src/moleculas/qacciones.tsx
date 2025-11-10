@@ -65,9 +65,7 @@ export const QuimeraAcciones = ({
             Acciones
           </QBoton>
         </div>
-        <div className="lista-acciones">
-          {activo && renderItemsAcciones(accionesGenerales)}
-        </div>
+        {activo && renderItemsAcciones(accionesGenerales)}
       </div>
     );
   };

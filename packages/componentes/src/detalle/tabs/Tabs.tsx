@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import estilos from "./tabs.module.css";
 
 interface TabProps {
@@ -17,25 +17,68 @@ const Tab: React.FC<TabProps> = ({ children }) => {
 
 const Tabs: React.FC<TabsProps> = ({ children, className }) => {
   const [activeTab, setActiveTab] = React.useState(0);
-  const { detalleTabs, active } = estilos;
+  const [showArrows, setShowArrows] = useState(false);
+  const sliderRef = useRef<HTMLDivElement>(null);
 
-  const handleTabClick = (index: number) => {
-    setActiveTab(index);
+  // Detecta overflow
+  useEffect(() => {
+    const slider = sliderRef.current;
+    if (slider) {
+      setShowArrows(slider.scrollWidth > slider.clientWidth);
+    }
+    const handleResize = () => {
+      if (slider) {
+        setShowArrows(slider.scrollWidth > slider.clientWidth);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [children]);
+
+  // Scroll al hacer clic en flechas
+  const scrollSlider = (direction: "left" | "right") => {
+    const slider = sliderRef.current;
+    if (slider) {
+      const scrollAmount = slider.clientWidth * 0.6;
+      slider.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
   };
+
+  const { detalleTabs, active } = estilos;
 
   return (
     <div className={`${detalleTabs} ${className || ""}`.trim()}>
-      {/* Aplicar className */}
-      <div className="tab-header">
-        {children.map((tab, index) => (
-          <button
-            key={index}
-            onClick={() => handleTabClick(index)}
-            className={activeTab === index ? active : "inactive"}
+      <div className={estilos.tabSliderWrapper}>
+        {showArrows && (
+          <span
+            className={estilos.arrow + " " + estilos.left}
+            onClick={() => scrollSlider("left")}
           >
-            {tab.props.label}
-          </button>
-        ))}
+            &lt;
+          </span>
+        )}
+        <div className={estilos.tabHeaderSlider} ref={sliderRef}>
+          {children.map((tab, index) => (
+            <button
+              key={index}
+              onClick={() => setActiveTab(index)}
+              className={activeTab === index ? active : "inactive"}
+            >
+              {tab.props.label}
+            </button>
+          ))}
+        </div>
+        {showArrows && (
+          <span
+            className={estilos.arrow + " " + estilos.right}
+            onClick={() => scrollSlider("right")}
+          >
+            &gt;
+          </span>
+        )}
       </div>
       <div className="tab-content">{children[activeTab]}</div>
     </div>

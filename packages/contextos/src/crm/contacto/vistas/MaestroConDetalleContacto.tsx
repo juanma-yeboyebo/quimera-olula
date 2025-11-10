@@ -73,6 +73,14 @@ const configMaquina: ConfigMaquina4<Estado, Contexto> = {
           setEstado("Inactivo" as Estado),
           setContactos(cargar(payload as Contacto[]))
         ),
+      seleccion_cancelada: ({ maquina }) =>
+        pipe(
+          maquina,
+          setContactos((contactos) => ({
+            ...contactos,
+            idActivo: null,
+          }))
+        ),
     },
     Creando: {
       contacto_creado: ({ maquina, payload, setEstado }) =>

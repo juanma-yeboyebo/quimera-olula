@@ -4,11 +4,19 @@ import { Mostrar } from "@olula/componentes/moleculas/Mostrar.tsx";
 import { ContextoError } from "@olula/lib/contexto.ts";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { HookModelo, useModelo } from "@olula/lib/useModelo.ts";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Cliente } from "../../../comun/componentes/cliente.tsx";
 import { DirCliente } from "../../../comun/componentes/dirCliente.tsx";
-import { NuevoPresupuesto } from "../../diseño.ts";
-import { metaNuevoPresupuesto, nuevoPresupuestoVacio } from "../../dominio.ts";
+import {
+  NuevoPresupuesto,
+  NuevoPresupuestoClienteNoRegistrado,
+} from "../../diseño.ts";
+import {
+  metaNuevoPresupuesto,
+  metaNuevoPresupuestoClienteNoRegistrado,
+  nuevoPresupuestoClienteNoRegistradoVacio,
+  nuevoPresupuestoVacio,
+} from "../../dominio.ts";
 import { getPresupuesto, postPresupuesto } from "../../infraestructura.ts";
 import "./CrearPresupuesto.css";
 
@@ -19,62 +27,139 @@ export const CrearPresupuesto = ({
   publicar?: EmitirEvento;
   activo: boolean;
 }) => {
-  const presupuesto = useModelo(metaNuevoPresupuesto, {
-    ...nuevoPresupuestoVacio,
-  });
+  const [modoNoRegistrado, setModoNoRegistrado] = useState(false);
+  const presupuestoRegistrado = useModelo(
+    metaNuevoPresupuesto,
+    nuevoPresupuestoVacio
+  );
+  const presupuestoNoRegistrado = useModelo(
+    metaNuevoPresupuestoClienteNoRegistrado,
+    nuevoPresupuestoClienteNoRegistradoVacio
+  );
+
+  const toggleModoCliente = () => {
+    const nuevoModo = !modoNoRegistrado;
+    setModoNoRegistrado(nuevoModo);
+
+    presupuestoRegistrado.init(nuevoPresupuestoVacio);
+    presupuestoNoRegistrado.init(nuevoPresupuestoClienteNoRegistradoVacio);
+  };
 
   const cancelar = () => {
-    presupuesto.init();
+    presupuestoRegistrado.init(nuevoPresupuestoVacio);
+    presupuestoNoRegistrado.init(nuevoPresupuestoClienteNoRegistradoVacio);
+    setModoNoRegistrado(false);
     publicar("creacion_presupuesto_cancelada");
   };
 
   return (
     <Mostrar modo="modal" activo={activo} onCerrar={cancelar}>
-      <FormAltaPresupuesto publicar={publicar} presupuesto={presupuesto} />
+      <FormAltaPresupuesto
+        publicar={publicar}
+        presupuestoRegistrado={presupuestoRegistrado}
+        presupuestoNoRegistrado={presupuestoNoRegistrado}
+        modoNoRegistrado={modoNoRegistrado}
+        onToggleModoCliente={toggleModoCliente}
+      />
     </Mostrar>
   );
 };
 
 const FormAltaPresupuesto = ({
   publicar = () => {},
-  presupuesto,
+  presupuestoRegistrado,
+  presupuestoNoRegistrado,
+  modoNoRegistrado,
+  onToggleModoCliente,
 }: {
   publicar?: EmitirEvento;
-  presupuesto: HookModelo<NuevoPresupuesto>;
+  presupuestoRegistrado: HookModelo<NuevoPresupuesto>;
+  presupuestoNoRegistrado: HookModelo<NuevoPresupuestoClienteNoRegistrado>;
+  modoNoRegistrado: boolean;
+  onToggleModoCliente: () => void;
 }) => {
   const { intentar } = useContext(ContextoError);
 
   const crear = async () => {
-    const modelo = {
-      ...presupuesto.modelo,
-    };
+    let modelo;
+
+    if (modoNoRegistrado) {
+      modelo = { ...presupuestoNoRegistrado.modelo };
+    } else {
+      modelo = { ...presupuestoRegistrado.modelo };
+    }
+
     const id = await intentar(() => postPresupuesto(modelo));
     const presupuestoCreada = await getPresupuesto(id);
     publicar("presupuesto_creado", presupuestoCreada);
-    presupuesto.init();
+
+    // Reiniciar ambos modelos
+    presupuestoRegistrado.init(nuevoPresupuestoVacio);
+    presupuestoNoRegistrado.init(nuevoPresupuestoClienteNoRegistradoVacio);
   };
 
   const cancelar = () => {
     publicar("creacion_presupuesto_cancelada");
-    presupuesto.init();
+    presupuestoRegistrado.init(nuevoPresupuestoVacio);
+    presupuestoNoRegistrado.init(nuevoPresupuestoClienteNoRegistradoVacio);
   };
 
   return (
     <div className="CrearPresupuesto">
       <h2>Nueva Presupuesto</h2>
+      <div className="modo-cliente">
+        <QBoton onClick={onToggleModoCliente} variante="texto" tipo="button">
+          {modoNoRegistrado ? "Cliente no registrado" : "Cliente registrado"}
+        </QBoton>
+      </div>
       <quimera-formulario>
-        <Cliente
-          {...presupuesto.uiProps("cliente_id", "nombre")}
-          nombre="clientePresupuesto"
-        />
-        <DirCliente
-          clienteId={presupuesto.modelo.cliente_id}
-          {...presupuesto.uiProps("direccion_id")}
-        />
-        <QInput label="Empresa" {...presupuesto.uiProps("empresa_id")} />
+        {modoNoRegistrado ? (
+          <>
+            <QInput
+              label="Nombre del Cliente"
+              {...presupuestoNoRegistrado.uiProps("nombre_cliente")}
+            />
+            <QInput
+              label="ID Fiscal"
+              {...presupuestoNoRegistrado.uiProps("id_fiscal")}
+            />
+
+            <QInput
+              label="Tipo de Vía"
+              {...presupuestoNoRegistrado.uiProps("tipo_via")}
+            />
+            <QInput
+              label="Nombre de la Vía"
+              {...presupuestoNoRegistrado.uiProps("nombre_via")}
+            />
+            <QInput
+              label="Ciudad"
+              {...presupuestoNoRegistrado.uiProps("ciudad")}
+            />
+            <QInput
+              label="Empresa"
+              {...presupuestoNoRegistrado.uiProps("empresa_id")}
+            />
+          </>
+        ) : (
+          <>
+            <Cliente
+              {...presupuestoRegistrado.uiProps("cliente_id", "nombre")}
+              nombre="clientePresupuesto"
+            />
+            <DirCliente
+              clienteId={presupuestoRegistrado.modelo.cliente_id}
+              {...presupuestoRegistrado.uiProps("direccion_id")}
+            />
+            <QInput
+              label="Empresa"
+              {...presupuestoRegistrado.uiProps("empresa_id")}
+            />
+          </>
+        )}
       </quimera-formulario>
       <div className="botones">
-        <QBoton onClick={crear} deshabilitado={!presupuesto.valido}>
+        <QBoton onClick={crear} deshabilitado={!presupuestoRegistrado.valido}>
           Guardar
         </QBoton>
         <QBoton onClick={cancelar} variante="texto">

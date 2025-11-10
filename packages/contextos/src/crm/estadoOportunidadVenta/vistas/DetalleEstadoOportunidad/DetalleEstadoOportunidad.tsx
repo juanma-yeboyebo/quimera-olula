@@ -79,7 +79,7 @@ export const DetalleEstadoOportunidad = ({
       setEntidad={(e) => init(e)}
       entidad={modelo}
       cargar={getEstadoOportunidad}
-      cerrarDetalle={() => emitir("cancelar_seleccion")}
+      cerrarDetalle={() => publicar("seleccion_cancelada")}
     >
       {!!estadoId && (
         <>

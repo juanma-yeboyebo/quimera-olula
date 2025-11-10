@@ -62,6 +62,14 @@ const configMaquina: ConfigMaquina4<Estado, Contexto> = {
       usuarios_cargados: ({ maquina, payload }) =>
         pipe(maquina, setUsuarios(cargar(payload as Usuario[]))),
       borrar: "borrando",
+      seleccion_cancelada: ({ maquina }) =>
+        pipe(
+          maquina,
+          setUsuarios((usuarios) => ({
+            ...usuarios,
+            idActivo: null,
+          }))
+        ),
     },
     creando: {
       usuario_creado: ({ maquina, payload, setEstado }) =>

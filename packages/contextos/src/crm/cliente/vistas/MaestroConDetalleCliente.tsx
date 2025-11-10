@@ -76,6 +76,14 @@ const configMaquina: ConfigMaquina4<Estado, Contexto> = {
       },
       clientes_cargados: ({ maquina, payload }) =>
         pipe(maquina, setClientes(cargar(payload as Cliente[]))),
+      seleccion_cancelada: ({ maquina }) =>
+        pipe(
+          maquina,
+          setClientes((clientes) => ({
+            ...clientes,
+            idActivo: null,
+          }))
+        ),
     },
   },
 };

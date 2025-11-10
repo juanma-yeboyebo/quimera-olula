@@ -79,7 +79,7 @@ maestro-detalle[tipo="pantalla-completa"] {
         flex: 1 1 100%;
         min-width: 0;
         transition: all 0.3s ease;
-        padding: 0 465px;
+        /* padding: 0 20%; */
     }
 
     .Detalle.oculto {
