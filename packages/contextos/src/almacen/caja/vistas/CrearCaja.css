@@ -1,0 +1,6 @@
+.CrearCaja {
+
+    quimera-autocompletar[nombre="codigo_almacen"] {
+        grid-column: 1 / span 12;
+    }
+}

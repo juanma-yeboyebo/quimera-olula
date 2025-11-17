@@ -1,0 +1,15 @@
+.DetalleCaja {
+
+    quimera-autocompletar[nombre="codigo_almacen"] {
+        grid-column: 1 / span 12;
+    }
+
+    quimera-autocompletar[nombre="referencia_transferencia"] {
+        grid-column: 1 / span 8;
+    }
+
+    quimera-input[nombre="cantidad_transferencia"] {
+        grid-column: span 4;
+    }
+
+}
