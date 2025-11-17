@@ -108,7 +108,7 @@ export const MaestroConDetalleUsuario = () => {
         seleccionada={seleccionada}
         preMaestro={
           <>
-            <h2>Módulos</h2>
+            <h2>Usuarios</h2>
             <div className="maestro-botones">
               <QBoton onClick={() => emitir("crear")}>Nuevo</QBoton>
             </div>
