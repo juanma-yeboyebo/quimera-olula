@@ -19,7 +19,6 @@ export const ReglasOrganizadas = ({
   emitir,
 }: ReglasOrganizadasProps) => {
   if (!grupoSeleccionado) return null;
-  // console.log("ReglasOrganizadas", reglasOrganizadas, grupoSeleccionado);
   const reglaGeneral = reglasOrganizadas.find(
     (categoria) => categoria.id === "general"
   );

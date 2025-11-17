@@ -42,7 +42,6 @@ export const getArticulos: GetArticulos = async (
     paginacion?
 ) => {
     const q = criteriaQuery(filtro, orden, paginacion);
-    console.log("getArticulos query:", q, baseUrlArticulo);
     const respuesta = await RestAPI.get<{ datos: ArticuloAPI[]; total: number }>(baseUrlArticulo + q);
     return { datos: respuesta.datos.map(ArticuloFromApi), total: respuesta.total };
 };
