@@ -1,0 +1,25 @@
+.color__root {
+  height: 8rem;
+  background-color: rgb(37, 37, 38);
+  color: #ccc;
+  border-radius: 1rem;
+  font-size: 0.8em;
+}
+
+.color__header {
+  height: calc(100% / 2);
+  border-radius: 1rem 1rem 0 0;
+}
+
+.color__body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+}
+
+.color__hex {
+  font-size: 0.8em;
+  filter: brightness(60%);
+}

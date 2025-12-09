@@ -1,0 +1,168 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: albaran
+    id: idAlbaran
+    schemaName: albaranescli
+  - type: Model
+    name: lineas
+    id: idLinea
+    schema: lineasAlbaranCli
+state: 
+  indicarFirmando: false
+  callbackCerrado: null
+  callbackEnviaEmail: null
+  callbackEstadoFirmaModificado: null
+  firmaDocumento: true
+bunch: 
+  onInit:
+    - _type: set 
+      condition:
+          operator: A is defined
+          A:
+            payloadPath:  initAlbaran   
+      path: firmaAlbaran.observacionesfirma
+      value:
+        payloadPath: initAlbaran.observacionesFirma
+    - _type: set 
+      condition:
+          operator: A is defined
+          A:
+            payloadPath:  initAlbaran   
+      path: firmaAlbaran.idFirma
+      value:
+        payloadPath: initAlbaran.idFirma        
+    - condition:
+        operator: A is defined
+        A:
+          statePath: albaran.data.idAlbaran
+      _type: grape
+      name: getLineas
+  onGuardaCallback:
+    - _type: set
+      path: callbackCerrado 
+      value: 
+        payloadPath: callbackCerrado
+    - _type: set 
+      path: callbackEnviaEmail 
+      value: 
+        payloadPath: callbackEnviaEmailProp    
+    - _type: set 
+      path: callbackEstadoFirmaModificado 
+      value: 
+        payloadPath: callbackEstadoFirmaModificadoProp                 
+  onFirmarClicked:
+    - _type: grape
+      name: checkEstadoEnEspera
+  checkEstadoEnEspera:
+    - _type: get
+      schema: firmasdealbaranes
+      id:
+        statePath: firmaAlbaran.idFirma
+      success: checkEstadoEnEsperaSuccess 
+      error: checkEstadoEnEsperaError  
+  estadoEnEsperaModificado:
+    - _type: call
+      condition:
+          operator: A is defined
+          A:
+            statePath: callbackEstadoFirmaModificado
+      function:
+        statePath: callbackEstadoFirmaModificado 
+      params:
+        - key: albaran
+          value:
+            statePath: albaran
+  estadoEnEsperaConfirmado:
+    - _type: grape
+      name: firmaAlbaranCli      
+  firmaAlbaranCli:
+    - _type: set 
+      path: indicarFirmando 
+      value: 
+        const: true
+    - _type: patch
+      schema: albaranescli 
+      action: firmar_albaran_enespera
+      id:
+        statePath: albaran.buffer.idAlbaran
+      data:
+        - key: idalbaran
+          value:
+            statePath: albaran.buffer.idAlbaran
+        - key: observacionesfirma
+          value:
+            statePath: firmaAlbaran.observacionesfirma
+        - key: estado
+          value:
+            const: "Firmado"
+        - key: firma
+          value:
+            payloadPath: firma          
+      success: onFirmaAlbaranCliCompleted   
+      error: onFirmaAlbaranCliError 
+  onFirmaAlbaranCliError:
+    - _type: alert   
+      text: No se ha podido firmar el albarán.
+      severity: error
+    - _type: set 
+      path: indicarFirmando 
+      value: 
+        const: false
+  onFirmarCompleted:
+    - _type: patch
+      schema: albaranescli 
+      id:
+        statePath: albaran.buffer.idAlbaran
+      data:
+        - key: firmado
+          value:
+            const: true
+      success: firmarSucceded  
+      error: firmarError
+  firmarSucceded:
+    - _type: set
+      path: albaran.buffer.firmado
+      value:
+        const: true
+    - _type: set 
+      path: indicarFirmando 
+      value: 
+        const: false  
+    - _type: alert 
+      text: Se ha firmado el albarán 
+      severity: success 
+    - _type: call 
+      function: 
+        statePath: callbackCerrado
+      params:
+        - key: albaran
+          value:
+            statePath: albaran.buffer
+    - _type: call
+      condition:
+          operator: A is defined
+          A:
+            statePath: callbackEnviaEmail
+      function:
+        statePath: callbackEnviaEmail                 
+  firmarError:
+    - _type: set 
+      path: indicarFirmando 
+      value: 
+        const: false  
+    - _type: alert 
+      text: Se ha producido un error y no se ha firmado el albarán 
+      severity: error 
+  onFirmaAlbaranCliCompleted:
+    - _type: patch
+      schema: albaranescli 
+      id:
+        statePath: albaran.buffer.idAlbaran
+      data:
+        - key: firmado
+          value:
+            const: true
+      success: firmarSucceded  
+      error: firmarError
+ 

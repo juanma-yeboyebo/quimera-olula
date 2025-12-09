@@ -1,0 +1,21 @@
+.ItemCatalogoBody {
+  @include mobile {
+    flex-direction: column;
+  }
+  &Imagen {
+    margin-bottom: 10px;
+    max-width: 44%;
+    @include mobile {
+      max-width: 100%;
+    }
+    img {
+      width: 100%;
+    }
+  }
+  &Texto {
+    max-width: 55%;
+    @include mobile {
+      max-width: 100%;
+    }
+  }
+}

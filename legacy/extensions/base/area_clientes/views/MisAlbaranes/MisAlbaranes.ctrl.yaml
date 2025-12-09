@@ -1,0 +1,28 @@
+---
+shortcuts:
+  - type: Model
+    name: albaranes
+    id: idAlbaran
+    schema: misAlbaranes
+    url: "/areaclientes/albaranes"
+    logicDelete: false
+state:
+  filtroVisible: false
+bunch:
+  onInit:
+    - _type: grape
+      name: getAlbaranes
+  onMostrarFiltroClicked:
+    - _type: set
+      path: filtroVisible
+      value:
+        toggleStatePath: filtroVisible
+  onAlbaranesFilterChanged:
+    - _type: grape
+      name: onMostrarFiltroClicked
+    - _type: set
+      path: albaranes.filter
+      value:
+        payloadPath: value
+    - _type: grape
+      name: getAlbaranes

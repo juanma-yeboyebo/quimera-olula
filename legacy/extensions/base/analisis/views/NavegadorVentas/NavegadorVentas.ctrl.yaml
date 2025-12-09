@@ -1,0 +1,51 @@
+---
+state: 
+  ventasFilter: {d_referencia: [], d_codcliente: [], in_dimfamilia_codfamilia: []}
+  nivelesX: []
+  nivelesY: []
+  medidas: []
+  nivelesXAux: []
+  nivelesYAux: []
+  medidasAux: []
+  configuracionVisible: null
+bunch:
+  onMostrarModalConfiguracionClicked:
+    - _type: set
+      path: configuracionVisible
+      value:
+        payloadPath: tipo
+  ond_referenciaFilterChange:
+    - _type: appendItem
+      path: ventasFilter.d_referencia
+      value:
+        payloadPath: option        
+  onDeleted_referencia:
+    - _type: deleteItemByIndex
+      path: ventasFilter.d_referencia
+      index:
+        payloadPath: index
+  ond_codclienteFilterChange:
+    - _type: appendItem
+      path: ventasFilter.d_codcliente
+      value:
+        payloadPath: option   
+  onDeleted_codcliente:
+    - _type: deleteItemByIndex
+      path: ventasFilter.d_codcliente
+      index:
+        payloadPath: index
+  onin_dimfamilia_codfamiliaFilterChange:
+    - _type: appendItem
+      path: ventasFilter.in_dimfamilia_codfamilia
+      value:
+        payloadPath: option        
+  onDeletein_dimfamilia_codfamilia:
+    - _type: deleteItemByIndex
+      path: ventasFilter.in_dimfamilia_codfamilia
+      index:
+        payloadPath: index
+  resetconfiguracionVisible:
+    - _type: set 
+      path: configuracionVisible
+      value:
+        const: null

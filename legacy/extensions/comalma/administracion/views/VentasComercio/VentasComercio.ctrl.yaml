@@ -1,0 +1,61 @@
+---
+shortcuts:
+  - type: Model
+    name: ventasComercio
+    id: idVenta
+    schema: ventasComercio
+    # url: "/ventasComercio/:idComercio"
+    logicDelete: false
+state: 
+  nueva: false
+  escritorio: false
+  nombreComercio: ''
+bunch:
+  onInit:
+    - _type: set
+      path: ventasComercio.filter
+      value:
+        code: 'return { and: [["idcomercio", "eq", payload.idComercio]]}'     
+    - _type: grape
+      name: getVentasComercio
+    - _type: get 
+      schema: comercios
+      id:
+        payloadPath: idComercio
+      success: comercioRecibido 
+      error: errorComercioRecibido
+  onCargaTamaño:           
+    - _type: set 
+      path: escritorio
+      value:
+        payloadPath: escritorio                    
+  onNuevaVentaClicked:
+    - _type: set 
+      path: nueva
+      value:
+        toggleStatePath: nueva
+    # - _type: navigate
+    #   url:
+    #     const: "/ventasComercio/nueva"
+  onNewVentaChanged:  
+    - onVentasComercioNewItemChanged
+    - addVentasComercioItem
+  onVentasComercioItemReceived:
+    patch: override
+    grapes:
+      - _type: grape
+        name: addNuevaVenta 
+        payload:
+          url: 
+            const: "/ventasComercio"
+  comercioRecibido:
+    - _type: set
+      condition:
+          operator: A is defined
+          A:
+            payloadPath: response.resource.nombre
+      path: nombreComercio
+      value:  
+        payloadPath: response.resource.nombre
+
+                

@@ -1,0 +1,127 @@
+{
+  "translation": {
+    "appmenu": {
+      "catalogo": {
+        "title": "Catálogo",
+        "items": {
+          "tienda": "Tienda"
+        }
+      },
+      "areaClientes": {
+        "title": "Área de clientes",
+        "items": {
+          "condicionesVenta": "Conditions générales de vente"
+        }
+      }
+    },
+    "schemas": {
+      "catalogo": {
+        "codPlanta": "SKU",
+        "nombre": "Nombre",
+        "alturaMin": "Alto mín.",
+        "alturaMax": "Alto máx.",
+        "anchuraMin": "Ancho mín.",
+        "anchuraMax": "Ancho máx.",
+        "tempMax": "Tª mín.",
+        "tempMin": "Tª máx.",
+        "color": "Color",
+        "disponible": "Disponible",
+        "exposicionSolar": "Exposición solar",
+        "resHumedad": "Res. humedad",
+        "resSalinidad": "Res. salinidad"
+      },
+      "carrito": {
+        "fechaEntrega": "Fecha de entrega"
+      }
+    },
+    "resistenciaHumedad": {
+      "muySeco": "MUY SECO",
+      "seco": "SECO",
+      "medio": "MEDIA",
+      "alto": "ALTA",
+      "acuatica": "ACUÁTICA"
+    },
+    "exposicionSolar": {
+      "sol": "SOL",
+      "solSombra": "SOL/SOMBRA",
+      "sombra": "SOMBRA"
+    },
+    "resistenciaSalinidad": {
+      "alta": "ALTA",
+      "media": "MEDIA",
+      "baja": "BAJA"
+    },
+    "catalogoFiltro": {
+      "soloDisponibles": "Solo disponibles",
+      "coloresFloracion": "Colores floración"
+    },
+    "itemCatalogo": {
+      "medidas": "MEDIDAS",
+      "caracteristicas": "CARACTERÍSTICAS",
+      "descripcion": "DESCRIPCIÓN",
+      "comprar": "Comprar",
+      "masTamanos": "MÁS TAMAÑOS...",
+      "menosTamanos": "MENOS TAMAÑOS...",
+      "humedad": "Humedad del suelo",
+      "salinidad": "Resistencia salinidad"
+    },
+    "catalogo": {
+      "descripcion": "Descripción",
+      "titulo": "Tienda de Plantas Online",
+      "subtitulo": "En nuestra tienda online de plantas podrás encontrar una gran variedad de especies de palmáceas, árboles, arbustos, vivaces, etc. Contamos con un gran equipo de profesionales para ofrecerte el mejor servicio en la venta de una gran variedad plantas. Realizamos entregas a nivel nacional e internacional.",
+      "avisoNoLogueado": "!Para comprar es necesario tener una cuenta. <1>Identifíquese</1> o <2>contacte con nosotros</2> para crear una."
+    },
+    "carrito": {
+      "irACheckout": "Confirmar pedido",
+      "carritoVacío": "Tu carrito está vacío, <1>ve al catálogo</1>  para escoger tus productos"
+    },
+    "checkout": {
+      "confirmarPedido": "Confirmar pedido",
+      "volverCatalogo": "Volver al catálogo",
+      "direccionEntrega": "Dirección de entrega!",
+      "formaPago": "Forma de pago",
+      "codPago": "Forma de envío",
+      "formaEnvio": "Forma de envío",
+      "observaciones": "Observaciones de pedido",
+      "textoDefectoObservaciones": "Indique aquí sus observaciones"
+    },
+    "condicionesVenta":  {
+      "textoBoton": "Conditions générales de vente",
+      "titulo": "CONDITIONS GÉNÉRALES DE VENTE",
+      "parrafo1": "<strong>1) </strong>Pour passer <strong>commande</strong>, nous demandons au client d’indiquer clairement : nom complet de la raison sociale, adresse, téléphone, code postal, N.I.F., entité bancaire et nº de compte courant. Le lieu de livraison de la marchandise, la personne de contact et le téléphone devront être indiqués avec exactitude.<br /><br />",
+      "parrafo2": "<strong>2) </strong>Les frais de <strong>transport</strong> sont à la charge de l’acheteur.<br /><br />",
+      "parrafo3": "<strong>3) </strong>Le vendeur livrera la <strong>marchandise</strong> dans les délais indiqués de la commande mais ne sera pas responsable de retards entraînés par des cas de force majeure ou pour des causes étrangères à sa volonté. Tous les envois se feront par les moyens qu’il considère opportuns, en tenant toujours compte des intérêts du client et des bonnes conditions de la marchandise, exception faite des cas où le client a donné des ordres spécifiques.<br /><br />",
+      "parrafo4": "<strong>4) </strong>Les <strong>prix</strong> s’entendent au chargement dans le camion dans nos pépinières. Les prix indiqués sont nets et hors TVA.<br /><br />",
+      "parrafo5": "<strong>5) </strong>La forme de paiement sera celle qui a cours pour les clients enregistrés. Dans le cas de nouveaux clients, les opérations se feront <strong>au comptant</strong> en attendant leur enregistrement. Celui-ci réalisé, les conditions seront revues.<br /><br />",
+      "parrafo6": "<strong>6) </strong>Les  <strong>réclamations</strong> seront traitées pendant les cinq premiers jours à partir de la date de livraison. Les litiges seront soumis aux tribunaux de Mataró.<br /><br />",
+      "footer": "<br /><br /><strong>Offre sauf vente et/ou variation des prix</strong>"
+    },
+    "textoLegal":  {
+      "parrafo1": "* Les photographies publiées ne correspondent pas automatiquement au produit final. Il s'agit d'images representatives des produits disponibles.",
+      "parrafo2": "* Les tarifs proposés sur notre page web sont orientatifs. Chaque prix peut connaître des modifications durant le processus de validation et formalisation de la commande. Le commercial assigné validera la commande et confirmera les prix et quantités finales durant le processus de finalisation de la commande.",
+      "parrafo3": "* Concernant les articles de saison et petits formats, la quantité minimum de commande acceptée est d'une boite. Le commercial assigné se mettra en contact avec le client afin de confirmer les quantités avant de formaliser la commande definitive."
+    },
+    "pedidoConfirmado":  {
+      "titulo": "Commande envoyée",
+      "parrafo1": "Une commande ne sera validée qu'une fois que le commercial assigné aura contacté le client afin de la formaliser.",
+      "aceptar": "Accepter"
+    },
+    "enlacesArribas": {
+      "empresa": { "titulo": "Enterprise", "url": "/fr/empresa/" },
+      "catalogos": { "titulo": "Catalogue", "url": "/fr/catalogos/" },
+      "produccion": { "titulo": "Production", "url": "/fr/produccion/" },
+      "blog": { "titulo": "BLOG", "url": "/fr/blog/" },
+      "foro": { "titulo": "Forum", "url": "/fr/forumx/" },
+      "localizacion": { "titulo": "Chantiers", "url": "/fr/localizacion/" },
+      "contacto": { "titulo": "Contact", "url": "/fr/contacto/" },
+      "tiendaOnline": "Boutique en ligne"
+    },
+    "enlacesBarnaplant": {
+      "nosotros": { "titulo": "nous", "url": "/sobre-nosotros/" },
+      "produccion": { "titulo": "production", "url": "/produccion/" },
+      "obras": { "titulo": "travaux et fournitures", "url": "/obras-y-suministros/" },
+      "catalogos": { "titulo": "catalogues", "url": "/catalogos-barnaplant/" },
+      "contacto": { "titulo": "contact", "url": "/contacto/" }
+    }
+  }
+}

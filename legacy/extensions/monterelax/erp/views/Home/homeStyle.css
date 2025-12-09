@@ -1,0 +1,27 @@
+.homeIcon span {
+  font-size: 2.5rem
+}
+
+.homeGroupIcon {
+  width: auto;
+  position: relative;
+  float: left;
+  margin-left: 10px;
+}
+
+.homeIcon {
+  padding-left: 30%;
+}
+
+.container {
+  padding: 0;
+}
+
+.gridElement {
+  padding-bottom: 10px;
+}
+
+.buttonElement {
+  width: auto;
+}
+

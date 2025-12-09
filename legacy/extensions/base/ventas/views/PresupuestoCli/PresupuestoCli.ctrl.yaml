@@ -1,0 +1,58 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: presupuesto
+    id: idPresupuesto
+    schemaName: presupuestosCli
+    deleteConfirmQuestion:
+      titulo: Borrar presupuesto
+      cuerpo: El presupuesto se borrará
+  - type: Model
+    name: lineas
+    id: idLinea
+    schema: lineasPresupuestosCli
+state:
+  vistaDetalle: principal
+bunch:
+  onInit:
+    - condition:
+        operator: A is defined
+        A:
+          statePath: presupuesto.data.idPresupuesto
+      _type: grape
+      name: getLineas
+  onPresupuestoBufferSectionAccepted:
+    - _type: grape
+      name: savePresupuesto
+  onPresupuestoBufferSectionCancelled:
+    - _type: grape
+      name: loadBufferPresupuesto
+  onLineasItemChanged:
+    - _type: grape
+      name: reloadPresupuesto
+  onLineaCreada:
+    - _type: grape
+      name: reloadPresupuesto
+    - _type: grape
+      name: addLineasItem
+  onAtrasClicked:
+    - _type: grape
+      name: cancelPresupuesto
+  onMasClicked:
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          statePath: vistaDetalle
+        B:
+          const: principal
+      then:
+        _type: set
+        path: vistaDetalle
+        value:
+          const: otra
+      else:
+        _type: set
+        path: vistaDetalle
+        value:
+          const: principal

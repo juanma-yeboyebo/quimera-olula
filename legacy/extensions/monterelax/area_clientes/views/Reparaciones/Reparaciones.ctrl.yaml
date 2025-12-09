@@ -1,0 +1,23 @@
+---
+shortcuts:
+  - type: Model
+    name: reparaciones
+    id: idReparacion
+    schema: reparaciones
+    url: '/areaclientes/reparaciones'
+    logicDelete: false
+state:
+  showFilter: false
+bunch:
+  onInit:
+    - _type: grape
+      name: getReparaciones
+  onAtrasClicked:
+    - _type: navigate
+      url:
+        const: '/' 
+  onShowFilterClicked:
+    - _type: set
+      path: showFilter
+      value:
+        toggleStatePath: showFilter

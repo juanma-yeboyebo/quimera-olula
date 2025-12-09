@@ -1,0 +1,29 @@
+---
+shortcuts:
+  - type: Model
+    name: compras
+    id: idCompra
+    schema: compras
+    url: "/compras"
+    logicDelete: false
+state:
+  filtroVisible: false
+bunch:
+  onInit:
+    - _type: set
+      path: compras.filter
+      value:
+        code: 'return { and: [["idconsumidor", "eq", state.idConsumidor]]}'        
+    - _type: grape
+      name: getCompras
+  onMostrarFiltroClicked:
+    - _type: set
+      path: filtroVisible
+      value:
+        toggleStatePath: filtroVisible            
+  onNuevaCompraClicked:
+    - _type: navigate
+      url:
+        const: "/compras/nueva"
+  onNewCompraChanged:
+   - addComprasItem

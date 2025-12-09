@@ -1,3 +1,6 @@
 packages:
   - packages/*
   - apps/*
+  - legacy/apps/*
+  - legacy/libs/*
+  - legacy/extensions/**

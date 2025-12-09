@@ -1,0 +1,17 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: linea
+    id: idLinea
+    schemaName: lineasFacturasCli
+    deleteConfirmQuestion:
+      titulo: Borrar línea
+      cuerpo: La línea se borrará
+state: {}
+bunch:
+  onLineaSectionAccepted:
+    - _type: grape
+      name: saveLinea
+  onLineaSectionCancelled:
+    - _type: grape
+      name: loadBufferLinea

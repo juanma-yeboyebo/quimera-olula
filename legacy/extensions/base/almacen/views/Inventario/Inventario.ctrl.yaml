@@ -1,0 +1,55 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: inventario
+    id: codInventario
+    schemaName: inventarios
+  - type: Model
+    name: lineas
+    id: idLinea
+    schema: lineasInventario
+state:
+  vistaDetalle: principal
+bunch:
+  onInit:
+    - condition:
+        operator: A is defined
+        A:
+          statePath: inventario.data.codInventario
+      _type: grape
+      name: getLineas
+  onInventarioBufferSectionAccepted:
+    - _type: grape
+      name: saveInventario
+  onInventarioBufferSectionCancelled:
+    - _type: grape
+      name: loadBufferInventario
+  onLineasItemChanged:
+    - _type: grape
+      name: reloadInventario
+  onLineaCreada:
+    - _type: grape
+      name: reloadInventario
+    - _type: grape
+      name: addLineasItem
+  onAtrasClicked:
+    - _type: grape
+      name: cancelInventario
+  onMasClicked:
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          statePath: vistaDetalle
+        B:
+          const: principal
+      then:
+        _type: set
+        path: vistaDetalle
+        value:
+          const: otra
+      else:
+        _type: set
+        path: vistaDetalle
+        value:
+          const: principal

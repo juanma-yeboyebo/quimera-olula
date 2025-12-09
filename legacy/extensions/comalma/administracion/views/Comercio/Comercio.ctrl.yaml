@@ -1,0 +1,95 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: comercio
+    id: idComercio
+    schemaName: comercio
+    deleteConfirmQuestion:
+      titulo: Borrar pedido
+      cuerpo: El pedido se borrará
+  - type: Model
+    name: campanas
+    id: idCampana
+    schema: campanas
+    action: "get_campanas_comercio"
+state: 
+  modalCambiarPassword: false
+  nuevoPassword: null
+  repeatedPassword: null
+bunch:
+  onInit:
+    - _type: set
+      condition:
+          operator: A is defined
+          A:
+            payloadPath: initComercio.idComercio
+      path: campanas.filter
+      value:
+        code: 'return { and: [["idcomercio", "eq", payload.initComercio.idComercio]]}'
+    - _type: set
+      path: vistaDetalle
+      value:
+        const: principal
+    - _type: grape
+      name: getCampanas
+    - _type: grape
+      name: onTipoComercioChanged
+      payload:
+        value:
+          statePath: comercio.data.tipo            
+  onAtrasClicked:
+    - _type: grape
+      name: cancelComercio 
+  onTipoComercioChanged:            
+    - _type: set
+      path: comercio.buffer.tipo
+      value:
+        code: 'return payload.value'   
+  onComercioBufferSeccionCancelada:  
+    - _type: grape
+      name: loadBufferComercio                     
+  onComercioBufferSectionAccepted:
+    - _type: grape
+      name: saveComercio
+  onCambiarPasswordClicked:
+    - _type: set 
+      path: modalCambiarPassword
+      value:
+        const: true
+  onConfirmarCambioPasswordClicked:
+    - _type: patch 
+      schema: comercios
+      id:
+        statePath: comercio.buffer.idComercio
+      action: cambiar_password
+      data:
+        - key: password
+          value:
+            statePath: nuevoPassword
+      success: passwordCambiadoSuccess 
+      error: passwordCambiadoError
+  passwordCambiadoSuccess:
+    - _type: grape
+      name: onCancelarCambioPasswordClicked
+    - _type: alert 
+      text: Contraseña cambiada
+      severity: success      
+  passwordCambiadoError:
+    - _type: grape
+      name: onCancelarCambioPasswordClicked
+    - _type: alert 
+      text: Error al cambiar contraseña
+      severity: error
+  onCancelarCambioPasswordClicked:   
+    - _type: set 
+      path: modalCambiarPassword
+      value:
+        const: false     
+    - _type: set 
+      path: nuevoPassword
+      value:
+        const: null
+    - _type: set 
+      path: repeatedPassword
+      value:
+        const: null                          

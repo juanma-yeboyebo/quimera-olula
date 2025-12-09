@@ -1,0 +1,80 @@
+---
+shortcuts:
+  - type: Model
+    name: consultas
+    id: cp
+    schema: consumidoresConsulta
+    url: "/consultas/compraporcp"
+    action: "get_cp_consulta"
+    logicDelete: false  
+state:
+  filtroVisible: true
+  idCampana: null
+  idCampanaXls: null
+  comerciosDesdeXls: null
+  filtroXls: ["1", "eq", "1"]
+bunch:
+  onInit:
+    - _type: grape
+      name: lanzarConsultas
+  onConsultasFilterChanged:    
+    patch: override
+    grapes:
+      - _type: set
+        path: consultas.filter
+        value:
+          payloadPath: value  
+      - _type: grape
+        name: lanzarConsultas
+  lanzarConsultas: 
+    - _type: grape
+      condition:
+          operator: A = B
+          A:
+            payloadPath: type
+          B:
+            const: 'clearFilter'
+      name: seteaDatosAux           
+    - _type: grape
+      name: seteaDatosXls                         
+    - _type: grape
+      name: getConsultas
+      payload:
+        getConsultasParams:
+          code: 'return {idCampana: state.idCampana}'
+  seteaDatosAux:
+    - _type: set
+      path: idCampana
+      value:
+        const: null                                     
+  seteaDatosXls:
+    - _type: grape 
+      name: compruebaFiltroVacio
+  filtroVacioComprobado:
+    - _type: set
+      path: filtroXls
+      value:
+        payloadPath: filtroAux  
+    - _type: set
+      path: idCampanaXls
+      value:
+        statePath: idCampana                                
+  onExportarConsultaClicked:
+    - _type: download
+      schema: consumidoresConsulta
+      action: hoja_calculo_compras_cp
+      params:
+        - key: filter
+          value:
+            statePath: filtroXls  
+        - key: idCampana
+          value:
+            statePath: idCampanaXls                          
+      filename:
+        const: consulta_compras_codigopostal.xlsx
+      success: none
+      error: error_download_consultas  
+  error_download_consultas:
+    - _type: alert 
+      text: No se pudo descargar la consulta
+      severity: error      

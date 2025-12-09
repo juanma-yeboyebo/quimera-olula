@@ -1,0 +1,27 @@
+# comentado por no saber si lo vamos a usar todavia
+---
+shortcuts:
+  - type: Model
+    name: ordenesCarga
+    id: idorden
+    schema: ordenesCarga
+    url: "/ordenesDeCarga"
+    logicDelete: true
+state:
+  filtroVisible: true
+bunch:
+  onInit:
+    - _type: get
+      schema: ordenesCarga
+      filter:
+        or:
+          - - const: estado
+            - eq
+            - const: PTE
+          - - const: estado
+            - eq
+            - const: EN CURSO
+          - - const: estado
+            - eq
+            - const: ALBARANADA
+      success: onOrdenesCargaRecibidos

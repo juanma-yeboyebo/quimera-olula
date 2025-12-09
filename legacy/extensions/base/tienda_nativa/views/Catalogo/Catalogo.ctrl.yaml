@@ -1,0 +1,52 @@
+---
+shortcuts:
+  - type: Model
+    name: catalogo
+    id: referencia
+    schema: catalogo
+    url: "/catalogo"
+    logicDelete: true
+state:
+  filtroVisible: false
+bunch:
+  onInit:
+    - _type: grape
+      name: getCatalogo
+  onMostrarFiltroClicked:
+    - _type: set
+      path: filtroVisible
+      value:
+        toggleStatePath: filtroVisible
+  onCatalogoFilterChanged:
+    - _type: grape
+      name: onMostrarFiltroClicked
+    - _type: set
+      path: catalogo.filter
+      value:
+        payloadPath: value
+    - _type: grape
+      name: getCatalogo
+  onAnadirProductoACarritoClicked:
+    - _type: post
+      schema: nuevaLineaCarrito
+      action: anadir_producto
+      data:
+        - key: referencia
+          value:
+            payloadPath: referencia
+        - key: cantidad
+          value:
+            payloadPath: cantidad
+        - key: idCarrito
+          value:
+            payloadPath: idCarrito
+      success: onProductoAnadidoAlCarrito
+  onProductoAnadidoAlCarrito:
+    - _type: appDispatch
+      name: setCarrito
+      payload:
+        carrito:
+          loadSchema:
+            schema: carrito
+            data:
+              payloadPath: response.carrito

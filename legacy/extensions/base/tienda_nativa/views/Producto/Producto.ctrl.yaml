@@ -1,0 +1,17 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: producto
+    id: referencia
+    schemaName: catalogo
+state: {}
+bunch:
+  onProductoSectionAccepted:
+    - _type: grape
+      name: "?"
+  onProductoSectionCancelled:
+    - _type: grape
+      name: "?"
+  onAtrasClicked:
+    - _type: grape
+      name: cancelProducto

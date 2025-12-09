@@ -1,0 +1,43 @@
+---
+shortcuts:
+  - type: Model
+    name: carritos
+    id: idCarrito
+    schema: carrito
+    url: "/carritos"
+    logicDelete: true
+state:
+  filtroVisible: false
+bunch:
+  onInit:
+    - _type: grape
+      name: getCarritos
+  onNuevoCarritoClicked:
+    - _type: navigate
+      url:
+        const: "/carritos/nuevo"
+  onNewCarritoChanged:
+    - onCarritosNewItemChanged
+    - addCarritosItem
+  onReloadCarritosItemSucceded:
+    - _type: navigate
+      condition:
+          operator: A = B
+          A:
+            payloadPath: event
+          B:
+            const: 'created'
+      url:
+        const: "/"         
+  deleteCarritosItem:
+    - getCarritos
+    - _type: appDispatch
+      name:  getCarritoActivo
+  onCarritosItemReceived:
+    - getCarritos
+    - _type: appDispatch
+      name:  getCarritoActivo
+  onSaveCarritoInternoSucceded:
+    - getCarritos
+  changeCarritosItem:
+    - getCarritos

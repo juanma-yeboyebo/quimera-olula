@@ -1,0 +1,109 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: pedido
+    id: idPedido
+    schemaName: pedidoscli 
+  - type: Model
+    name: lineas
+    id: idLinea
+    schema: misLineasPedido    
+state:
+  vistaDetalle: principal
+  modalFirmaVisible: false
+  resetOpen: false
+  urlAtras: null
+  generandoAlbaran: false
+  modalFirmarAlbaran: false
+bunch:
+  onInit:
+    - condition:
+        operator: A is defined
+        A:
+          statePath: pedido.data.idPedido
+      _type: grape
+      name: getLineas
+    - condition:
+        operator: A is defined
+        A:
+          payloadPath: urlAtrasProp
+      _type: grape
+      name: setUrl
+  setUrl: 
+    - _type: set
+      path: urlAtras
+      value:
+        payloadPath: urlAtrasProp    
+  onAtrasClicked:
+    - _type: if
+      if:
+        operator: A is defined
+        A:
+          statePath: urlAtras
+      then:
+        _type: navigate
+        url:
+          statePath: urlAtras
+      else:
+        _type: grape
+        name: cancelPedido
+  onGenerarAlbaranParcialClicked:
+    - _type: set 
+      path: modalFirmarAlbaran
+      value:
+        const: true    
+  cancelarFirmarAlbaran: 
+    - _type: set 
+      path: modalFirmarAlbaran
+      value:
+        const: false      
+    - _type: set 
+      path: generandoAlbaran
+      value:
+        const: false                          
+  onGenerarAlbaranParcialConfirmado:
+    - _type: set 
+      path: generandoAlbaran
+      value:
+        const: true
+    - _type: post
+      schema: crearAlbaranParcial
+      action: generar_albaran_parcial
+      data:
+        - key: idPedido
+          value:
+            statePath: pedido.data.idPedido
+        - key: lineas
+          value:
+            payloadPath: response.lineasAEnviar
+      success: generarAlbaranParcialSuccess 
+      error: generarAlbaranParcialError               
+  generarAlbaranParcialSuccess:
+    - _type: alert 
+      text: Se ha generado el albarán
+      severity: success   
+    - _type: grape
+      name: getLineas 
+    - _type: grape 
+      name: cancelarFirmarAlbaran             
+  generarAlbaranParcialError:
+    - _type: alert 
+      text: Ha habido un error y no se ha generado el albarán
+      severity: error   
+    - _type: grape 
+      name: cancelarFirmarAlbaran
+  onLineaChanged:
+    - _type: setItem
+      condition:
+        operator: A = B
+        A:
+          payloadPath: field
+        B:
+          const: "cantAEnviar"
+      path: lineas.dict
+      key:
+        payloadPath: index
+      prop:
+        const: "cantAEnviar"
+      value:
+        payloadPath: value            

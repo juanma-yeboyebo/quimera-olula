@@ -18,17 +18,17 @@ export const logout = async () => {
     });
 }
 
-export const comprobarToken = () => {
+export const comprobarToken = async () => {
     const validez = tokenAcceso.validez();
 
-    if (validez > 3) return;
+    if (validez > 3) return Promise.resolve();
 
     return refrescarToken();
 }
 
 export const refrescarToken = async () => {
     const token = tokenRefresco.obtener();
-    if (!token) return;
+    if (!token) return Promise.reject();
 
     return refrescarTokenAPI(token).then((datosRefresco) => {
         tokenAcceso.actualizar(datosRefresco.tokenAcceso);

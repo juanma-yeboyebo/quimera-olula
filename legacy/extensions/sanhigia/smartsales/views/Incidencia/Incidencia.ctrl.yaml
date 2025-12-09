@@ -1,0 +1,182 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: incidencia
+    id: codIncidencia
+    schemaName: incidencias
+  - type: Model
+    name: tareas
+    id: idTarea
+    schema: tarea
+    logicDelete: false        
+state: 
+  crearPresupuesto: false
+  creandoPresupuesto: false
+  dirAuto: false
+  dirCanaria: false
+  regimenIva: null
+  origenMercanciaOptions: [{ key: "Exportaciones", value: "Península" },{ key: "IGIC", value: "Canarias" }]
+bunch:
+  onInit:
+    - _type: set
+      path: tareas.filter
+      value:
+        code: 'return { and: [["codincidencia", "eq", state.incidencia.data.codIncidencia]]}' 
+    - _type: grape
+      name: getTengoDirAuto
+    - _type: grape
+      name: getTareas      
+  onAtrasClicked:
+    - _type: grape
+      name: cancelIncidencia   
+  onIncidenciaBufferSectionAccepted:
+    - _type: grape
+      name: saveIncidencia
+  onIncidenciaBufferSectionCancelled:
+    - _type: grape
+      name: loadBufferIncidencia
+  onIncidenciaBufferCodClienteChanged:
+    - _type: set
+      path: incidencia.buffer.codCliente
+      value:
+        payloadPath: value
+    - _type: set
+      path: incidencia.buffer.nombreCliente
+      value:
+        payloadPath: option.nombre   
+    - _type: grape
+      name: getTengoDirAuto           
+  onIncidenciaBufferReferenciaChanged:
+    - _type: set
+      path: incidencia.buffer.referencia
+      value:
+        payloadPath: value
+    - _type: set
+      path: incidencia.buffer.descripcionReferencia
+      value:
+        payloadPath: option.descripcion
+  getTengoDirAuto:    
+    - _type: patch
+      condition:
+          operator: A is defined
+          A:
+            statePath: incidencia.buffer.codCliente
+      schema: dirAutoClientes
+      id:
+        const: '-static-'
+      action: data_direcciones_cliente
+      data:
+        - key: codcliente
+          value:
+            statePath: incidencia.buffer.codCliente       
+      success: onGetTengoDirAutoSucceeded
+      error: onGetTengoDirAutoError   
+  onGetTengoDirAutoSucceeded:
+    - _type: set 
+      path: dirAuto
+      value:
+        payloadPath: response.data.dir_auto
+    - condition:
+        operator: A is true
+        A:
+          payloadPath: response.data.dir_unica_canarias
+      _type: grape
+      name: setDirCanarias
+      payload:
+        esCanariasValue:
+          const: true     
+  onCodDirCliChanged:
+    - _type: set
+      path: incidencia.buffer.codDirCli
+      value:
+        payloadPath: value
+    - _type: grape
+      name: compruebaDirCanarias  
+  compruebaDirCanarias:
+    - _type: get
+      schema: dirClientes
+      id:
+        payloadPath: value
+      action: check_dir_canarias
+      success: compruebaCanariasSuccess
+      error: compruebaCanariasError 
+  compruebaCanariasSuccess:
+    - _type: grape
+      name: setDirCanarias
+      payload:
+        esCanariasValue:
+          payloadPath: response.esCanarias     
+  setDirCanarias:
+    - _type: set 
+      path: dirCanaria
+      value:
+        payloadPath: esCanariasValue  
+    - _type: set 
+      path: regimenIva
+      value:
+        code: 'return  payload.esCanariasValue ? "Exportaciones" : null' 
+  onIrAPresupuestoClicked: 
+    - _type: navigate
+      condition:
+          operator: A is defined
+          A:
+            statePath: incidencia.buffer.idPresupuesto
+      url:
+        code: 'return `/ventas/presupuestos/${state.incidencia.buffer.idPresupuesto}`'
+  onCrearPresupuestoButtonClicked:
+    - _type: grape 
+      condition:
+          operator: A is true
+          A:
+            code: 'return !state.dirAuto' 
+      name: toggleCrearPresupuesto        
+    - _type: grape 
+      condition:
+          operator: A is true
+          A:
+            statePath: dirAuto    
+      name: crearPresupuestoIncidencia
+  crearPresupuestoIncidencia:
+    - _type: grape
+      name: toggleCreandoPresupuesto  
+    - _type: post 
+      schema: nuevoPresupuestoIncidencia
+      action: crear_presupuesto_incidencia
+      data:
+        - key: codIncidencia
+          value:
+            statePath: incidencia.buffer.codIncidencia      
+        - key: codCliente
+          value:
+            statePath: incidencia.buffer.codCliente
+        - key: codDir
+          value:
+            statePath: incidencia.buffer.codDirCli
+        - key: codAgente
+          value:
+            statePath: incidencia.buffer.codAgente            
+        - key: regimenIva
+          value:
+            statePath: regimenIva            
+      success: onNuevoPresupuestoIncidenciaGuardado 
+      error: onNuevoPresupuestoIncidenciaError
+  onNuevoPresupuestoIncidenciaGuardado:
+    - _type: navigate
+      url:
+        code: 'return `/ventas/presupuestos/${payload.response}`'
+  toggleCrearPresupuesto:
+    - _type: set
+      path: crearPresupuesto
+      value:
+        toggleStatePath: crearPresupuesto
+  toggleCreandoPresupuesto:
+    - _type: set
+      path: creandoPresupuesto
+      value:
+        toggleStatePath: creandoPresupuesto
+  onNuevoPresupuestoSeccionConfirmada:
+    - _type: grape
+      name: crearPresupuestoIncidencia
+  onNuevoPresupuestoSeccionCancelada:
+    - _type: grape 
+      name: toggleCrearPresupuesto  

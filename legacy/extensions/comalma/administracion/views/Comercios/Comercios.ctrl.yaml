@@ -1,0 +1,26 @@
+---
+shortcuts:
+  - type: Model
+    name: comercios
+    id: idComercio
+    schema: comercios
+    url: "/establecimientos"
+    action: "get"
+    logicDelete: false
+state:
+  filtroVisible: false
+bunch:
+  onInit:
+    - _type: grape
+      name: getComercios
+  onMostrarFiltroClicked:
+    - _type: set
+      path: filtroVisible
+      value:
+        toggleStatePath: filtroVisible        
+  onNuevoComercioClicked:
+    - _type: navigate
+      url:
+        const: "/establecimientos/nuevo"
+  onNewComercioChanged:
+   - addComerciosItem

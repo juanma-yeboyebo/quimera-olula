@@ -1,0 +1,86 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: carrito
+    id: idCarrito
+    schemaName: carrito
+    action: get_carritos_completados
+    deleteConfirmQuestion:
+      titulo: Borrar carrito
+      cuerpo: El carrito se borrará
+  - type: Model
+    name: lineas
+    id: idLinea
+    schema: misLineasCarrito
+state:
+  vistaDetalle: principal
+bunch:
+  onInit:
+    - _type: grape
+      name: getLineas
+  onEditarReferenciaCarritoSectionAccepted:
+    - _type: grape
+      name: saveCarrito
+  onEditarReferenciaCarritoSectionCancelled:
+    - _type: grape
+      name: loadBuffeCarrito
+  onCarritoBufferChanged:
+    patch: override
+    grapes:
+      - _type: grape
+        name: cambiarReferencia 
+  cambiarReferencia:       
+    - _type: set
+      path: carrito.buffer.referencia
+      value:
+        payloadPath: value  
+  onAtrasClicked:
+    - _type: grape
+      name: cancelCarrito
+  onActivarCarritoClicked:
+    - _type: patch
+      schema: carrito
+      action: activar_carrito
+      id:
+        statePath: carrito.buffer.idCarrito
+      success: onCarritoActivo
+      error: onActivarCarritoError
+  onActivarCarritoError:
+    - _type: alert
+      text: Error al enviar el pedido
+      severity: error
+  onCarritoActivo:
+    - _type: grape
+      name: reloadCarrito
+    - _type: appDispatch
+      name:  getCarritoActivo
+    - _type: alert
+      text: Carrito actualizado
+      severity: success
+  onDescargarPedidoClicked:
+    # - _type: log
+    #   desc: miMensajeLineaguarda
+    #   value: 
+    #     const: cantidadAnadir
+    # - _type: patch
+    #   schema: carrito
+    #   action: generar_prespuesto
+    #   id:
+    #     statePath: carrito.buffer.idCarrito
+    #   success: onPresupuestoGenerado
+    #   error: onGenerarPresupuestoError
+    - _type: download
+      schema: carrito
+      action: descargar_pedido_xls
+      params:
+        - key: idcarrito
+          value:
+            statePath: carrito.buffer.idCarrito
+      filename:
+        const: pedido.xlsx
+      success: none
+      error: onGenerarPresupuestoError
+  onGenerarPresupuestoError:
+    - _type: alert
+      text: Error al generarar presupuesto
+      severity: error    

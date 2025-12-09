@@ -19,10 +19,10 @@ const llamada = async <T>({ method, url, headers = {}, body, msgError }: {
     body: body ? JSON.stringify(body) : undefined,
   });
 
-  if ([401, 403].includes(response.status)) {
-    window.location.href = "/login";
-    return Promise.reject();
-  }
+  // if ([401, 403].includes(response.status)) {
+  //   window.location.href = "/login";
+  //   return Promise.reject();
+  // }
 
   if (!response.ok) {
     const errorText = await response.text();

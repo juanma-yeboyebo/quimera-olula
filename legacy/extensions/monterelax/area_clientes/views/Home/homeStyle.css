@@ -1,0 +1,57 @@
+.homeIcon span {
+  font-size: 2.5rem
+}
+
+.homeGroupIcon {
+  width: auto;
+  position: relative;
+  float: left;
+  margin-left: 10px;
+}
+
+.homeIcon {
+  padding-left: 30%;
+}
+
+.container {
+  padding: 0;
+}
+
+.gridElement {
+  padding-bottom: 10px;
+}
+
+.buttonElement {
+  width: auto;
+}
+
+.contenedorFondo {
+    position: relative;
+    height: calc(100vh - 60px);
+    width: 100%;
+    overflow: hidden;
+}
+
+.imagenFondo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+.containerSuperpuesto {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.capaFondo {
+    background-color: rgba(143, 143, 143, 0.5); /* Ajusta el valor de opacidad según sea necesario */
+}
+

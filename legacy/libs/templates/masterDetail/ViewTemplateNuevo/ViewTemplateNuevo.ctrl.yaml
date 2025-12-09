@@ -1,0 +1,15 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: templateNameNuevo
+    id: templatePK
+    schemaName: templateSchema
+    mode: insert
+state: {}
+bunch:
+  onNuevoTemplateNameNuevoSectionAccepted:
+    - _type: grape
+      name: saveTemplateName
+  onNuevoTemplateNameNuevoSectionCancelled:
+    - _type: grape
+      name: cancelTemplateName

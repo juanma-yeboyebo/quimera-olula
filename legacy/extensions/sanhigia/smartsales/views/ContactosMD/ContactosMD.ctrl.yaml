@@ -1,0 +1,52 @@
+---
+shortcuts:
+  - type: Model
+    name: contactos
+    id: codContacto
+    schema: contactoSummary
+    action: "get_contactos_with_summary"
+    url: '/ss/contactosmd'
+    logicDelete: false
+state:
+  showFilter: false
+  externalFilter: null
+  buscaContacto: null
+bunch:
+  # onInit:
+  #   - _type: set
+  #     path: contactos.filter
+  #     value:
+  #       code: 'return { and: [["tipoevento", "eq", "curso"]]}'     
+  #   - _type: grape
+  #     name: getContactos
+  onShowFilterClicked:
+    - _type: set
+      path: showFilter
+      value:
+        toggleStatePath: showFilter
+  onAtrasClicked:
+    - _type: navigate
+      url:
+        const: '/'   
+  onBuscaContactoChanged:
+    - _type: set
+      path: buscaContacto
+      value:
+        payloadPath: value   
+  checkBusqueda:
+    - _type: log 
+      desc: mimensaje_checkBusqueda
+      value:
+        payloadPath: value  
+    - _type: set
+      path: externalFilter
+      value:
+        code: 'return [{filter: {"or":[["nombre","like",payload.value],["email","like",payload.value],["telefono1","like",payload.value]]}}]'  
+    # - _type: grape
+    #   name: getContactos              
+  onNuevoContactoClicked:
+    - _type: navigate
+      url:
+        const: "/ss/contactosmd/nuevo"     
+  onNewContactoChanged:
+    - addContactosItem                             

@@ -1,0 +1,174 @@
+---
+shortcuts:
+  - type: Model
+    name: consultas
+    id: idConsumidor
+    schema: consumidoresConsulta
+    url: "/consultas/comprasporusuario"
+    action: "get_clientes_consulta"
+    logicDelete: false  
+state:
+  filtroVisible: true
+  idCampana: null
+  comerciosDesde: null
+  importeDesde: null
+  numComprasDesde: null
+  numComprasHasta: null
+  soloAceptaComunicacion: true
+  idCampanaXls: null
+  comerciosDesdeXls: null
+  importeDesdeXls: null
+  numComprasDesdeXls: null
+  numComprasHastaXls: null  
+  soloAceptaComunicacionXls: true
+  filtroXls: ["1", "eq", "1"]
+bunch:
+  onInit:
+    - _type: grape
+      name: lanzarConsultas
+  onConsultasFilterChanged:    
+    patch: override
+    grapes:
+      - _type: set
+        path: consultas.filter
+        value:
+          payloadPath: value  
+      - _type: grape
+        name: lanzarConsultas
+  lanzarConsultas: 
+    - _type: grape
+      condition:
+          operator: A = B
+          A:
+            payloadPath: type
+          B:
+            const: 'clearFilter'
+      name: seteaDatosAux           
+    - _type: grape
+      name: seteaDatosXls                         
+    - _type: grape
+      name: getConsultas
+      payload:
+        getConsultasParams:
+          code: 'return {idCampana: state.idCampana, comerciosDesde: state.comerciosDesde, importeDesde: state.importeDesde, soloAceptaComunicacion: state.soloAceptaComunicacion, numComprasDesde: state.numComprasDesde, numComprasHasta: state.numComprasHasta}'
+  seteaDatosAux:
+    - _type: set
+      path: idCampana
+      value:
+        const: null     
+    - _type: set
+      path: comerciosDesde
+      value:
+        const: null      
+    - _type: set
+      path: importeDesde
+      value:
+        const: null   
+    - _type: set
+      path: soloAceptaComunicacion
+      value:
+        const: false    
+    - _type: set
+      path: numComprasDesde
+      value:
+        const: null   
+    - _type: set
+      path: numComprasHasta
+      value:
+        const: null                                      
+  seteaDatosXls:
+    - _type: grape 
+      name: compruebaFiltroVacio
+  filtroVacioComprobado:
+    - _type: set
+      path: filtroXls
+      value:
+        payloadPath: filtroAux  
+    - _type: set
+      path: idCampanaXls
+      value:
+        statePath: idCampana     
+    - _type: set
+      path: comerciosDesdeXls
+      value:
+        statePath: comerciosDesde  
+    - _type: set
+      path: importeDesdeXls
+      value:
+        statePath: importeDesde 
+    - _type: set
+      path: soloAceptaComunicacionXls
+      value:
+        statePath: soloAceptaComunicacion  
+    - _type: set
+      path: numComprasDesdeXls
+      value:
+        statePath: numComprasDesde    
+    - _type: set
+      path: numComprasHastaXls
+      value:
+        statePath: numComprasHasta                             
+  onExportarConsultaClientesClicked:
+    - _type: download
+      schema: consumidoresConsulta
+      action: hoja_calculo_total_compras_cliente
+      params:
+        - key: filter
+          value:
+            statePath: filtroXls  
+        - key: idCampana
+          value:
+            statePath: idCampanaXls     
+        - key: comerciosDesde
+          value:
+            statePath: comerciosDesdeXls    
+        - key: importeDesde
+          value:
+            statePath: importeDesdeXls   
+        - key: soloAceptaComunicacion
+          value:
+            statePath: soloAceptaComunicacionXls  
+        - key: numComprasDesde
+          value:
+            statePath: numComprasDesdeXls              
+        - key: numComprasHasta
+          value:
+            statePath: numComprasHastaXls                                           
+      filename:
+        const: consulta_total_compras_consumidores.xlsx
+      success: none
+      error: error_download_consultas  
+  onExportarConsultaComprasClicked:
+    - _type: download
+      schema: consumidoresConsulta
+      action: hoja_calculo_compras_cliente
+      params:
+        - key: filter
+          value:
+            statePath: filtroXls  
+        - key: idCampana
+          value:
+            statePath: idCampanaXls     
+        - key: comerciosDesde
+          value:
+            statePath: comerciosDesdeXls    
+        - key: importeDesde
+          value:
+            statePath: importeDesdeXls   
+        - key: soloAceptaComunicacion
+          value:
+            statePath: soloAceptaComunicacionXls  
+        - key: numComprasDesde
+          value:
+            statePath: numComprasDesdeXls              
+        - key: numComprasHasta
+          value:
+            statePath: numComprasHastaXls                                           
+      filename:
+        const: consulta_compras_consumidores.xlsx
+      success: none
+      error: error_download_consultas        
+  error_download_consultas:
+    - _type: alert 
+      text: No se pudo descargar la consulta
+      severity: error      

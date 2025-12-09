@@ -1,0 +1,15 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: comercio
+    id: idComercio
+    schemaName: comercios
+    mode: insert
+state: {}
+bunch:
+  onNuevoComercioSectionAccepted:
+    - _type: grape
+      name: saveComercio
+  onNuevoComercioSectionCancelled:
+    - _type: grape
+      name: cancelComercio   

@@ -1,0 +1,62 @@
+---
+state: 
+  codfinca: null,
+  miFinca: {}
+  misFincas: []
+  callbackCerrar: null
+bunch:
+  onInit:
+    - _type: set
+      path: codfinca
+      value: 
+        localStorageValue: finca.codfinca   
+    - _type: set
+      path: callbackCerrar
+      value: 
+        payloadPath: callbackCerrar   
+    - _type: grape 
+      name: dameMisFincas
+  dameMisFincas:
+    - _type: get
+      schema: misFincas
+      success: misFincasRecibidas 
+      error: errorDameMisFincas  
+  misFincasRecibidas:  
+    - _type: set 
+      path: misFincas
+      value:
+        payloadPath: response.data  
+  errorDameMisFincas:
+    - _type: alert
+      text: No se han podido cargar las fincas.
+      severity: error             
+  onCerrarCambiarFincaConfirm: 
+    - _type: if
+      if:
+        operator: A is defined
+        A:
+          statePath: callbackCerrar
+      then:
+        _type: grape
+        name: 'llamaCallbackCerrar'
+      else:
+        _type: navigate
+        url:
+          const: "/"
+  onCambiarFincaConfirmClicked:
+    - _type: get
+      schema: fincas
+      id:
+        statePath: codfinca
+      success: fincaRecibida        
+  fincaRecibida: 
+    - _type: setToLocalStorage
+      key: finca
+      value: 
+        code: return payload.response.data[0]
+    - _type: grape
+      name: onCerrarCambiarFincaConfirm  
+    - _type: alert
+      text: Finca seleccionada.
+      severity: success            
+                                     

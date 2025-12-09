@@ -1,0 +1,56 @@
+{
+  "translation": {
+    "schemas": {
+      "catalogo": {
+        "codPlanta": "ca/SKU",
+        "nombre": "Nome",
+        "alturaMin": "Alto mín.",
+        "alturaMax": "Alto máx.",
+        "anchuraMin": "Ancho mín.",
+        "anchuraMax": "Ancho máx.",
+        "tempMax": "Tª mín.",
+        "tempMin": "Tª máx.",
+        "color": "Color",
+        "disponible": "Disponible",
+        "exposicionSolar": "Exposición solar",
+        "exposicionSolar_sol": "SOL CAT",
+        "exposicionSolar_solsombra": "SOL/SOMBRA",
+        "exposicionSolar_sombra": "SOMBRA",
+        "resHumedad": "Res. humedad",
+        "resSalinidad": "Res. salinidad",
+        "resSalinidad_alta": "ALTA ca"
+      }
+    },
+    "resistenciaHumedad": {
+      "muySeco": "(c) MUY SECO",
+      "seco": "(c) SECO",
+      "medio": "(c) MEDIA",
+      "alto": "(c) ALTA",
+      "acuatica": "(c) ACUÁTICA"
+    },
+    "itemCatalogo": {
+      "medidas": "(c) MEDIDAS",
+      "caracteristicas": "(c) CARACTERÍSTICAS",
+      "descripcion": "(c) DESCRIPCIÓN",
+      "comprar": "(c) Comprar",
+      "masTamanos": "(c) MÁS TAMAÑOS...",
+      "menosTamanos": "(c) MENOS TAMAÑOS..."
+    },
+    "catalogo": {
+      "descripcion": "Descripción",
+      "titulo": "(cat) Tienda de Plantas Online",
+      "subtitulo": "(cat) En nuestra tienda online de plantas podrás encontrar una gran variedad de especies de palmáceas, árboles, arbustos, vivaces, etc. Contamos con un gran equipo de profesionales para ofrecerte el mejor servicio en la venta de una gran variedad plantas. Realizamos entregas a nivel nacional e internacional.",
+      "avisoNoLogueado": "(cat) Para comprar es necesario tener una cuenta. <1>Identifíquese</1> o <2>contacte con nosotros</2> para crear una."
+    },
+    "checkout": {
+      "confirmarPedido": "Confirmar pedido",
+      "volverCatalogo": "Volver al catálogo!",
+      "direccionEntrega": "Dirección de entrega!",
+      "formaPago": "Forma de pago",
+      "codPago": "Forma de envío",
+      "formaEnvio": "Forma de envío",
+      "observaciones": "Observaciones",
+      "textoDefectoObservaciones": "Indique aquí sus observaciones"
+    }
+  }
+}

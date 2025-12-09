@@ -1,0 +1,32 @@
+---
+shortcuts:
+  - type: Model
+    name: campanas
+    id: idCampana
+    schema: campanas
+    logicDelete: false
+  - type: Model
+    name: campanasComercio
+    id: idCampana
+    schema: campanas
+    action: "get_campanas_comercio"
+state:
+  filtroVisible: false
+bunch:
+  onInit:
+    - _type: set
+      path: campanasComercio.filter
+      value:
+        code: 'return { and: [["idcomercio", "eq", payload.idComercio]]}'
+    - _type: grape
+      name: getCampanasComercio
+    - _type: grape
+      name: getCampanas
+  onAtrasClicked:
+    - _type: grape
+      name: cancelComercio 
+  onMostrarFiltroClicked:
+    - _type: set
+      path: filtroVisible
+      value:
+        toggleStatePath: filtroVisible

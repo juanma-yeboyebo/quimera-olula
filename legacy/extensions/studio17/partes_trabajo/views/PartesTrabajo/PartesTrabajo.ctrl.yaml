@@ -1,0 +1,34 @@
+---
+shortcuts:
+  - type: Model
+    name: partes
+    id: codParte
+    schema: partesTrabajo
+    url: "/partes-trabajo"
+state:
+  filtroVisible: false
+bunch:
+  onInit:
+    - _type: grape
+      name: getPartes
+  onMostrarFiltroClicked:
+    - _type: set
+      path: filtroVisible
+      value:
+        toggleStatePath: filtroVisible
+  onPartesFilterChanged:
+    - _type: grape
+      name: onMostrarFiltroClicked
+    - _type: set
+      path: partes.filter
+      value:
+        payloadPath: value
+    - _type: grape
+      name: getPartes
+  onNuevoParteClicked:
+    - _type: navigate
+      url:
+        const: "/partes-trabajo/nuevo"
+  onNewParteChanged:
+    - onPartesNewItemChanged
+    - addPartesItem

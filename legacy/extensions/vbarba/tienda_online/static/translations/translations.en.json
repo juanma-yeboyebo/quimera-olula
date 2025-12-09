@@ -1,0 +1,127 @@
+{
+  "translation": {
+    "appmenu": {
+      "catalogo": {
+        "title": "Catálogo",
+        "items": {
+          "tienda": "Tienda"
+        }
+      },
+      "areaClientes": {
+        "title": "Área de clientes",
+        "items": {
+          "condicionesVenta": "General sales conditions"
+        }
+      }
+    },
+    "schemas": {
+      "catalogo": {
+        "codPlanta": "SKU",
+        "nombre": "Nombre",
+        "alturaMin": "Alto mín.",
+        "alturaMax": "Alto máx.",
+        "anchuraMin": "Ancho mín.",
+        "anchuraMax": "Ancho máx.",
+        "tempMax": "Tª mín.",
+        "tempMin": "Tª máx.",
+        "color": "Color",
+        "disponible": "Disponible",
+        "exposicionSolar": "Exposición solar",
+        "resHumedad": "Res. humedad",
+        "resSalinidad": "Res. salinidad"
+      },
+      "carrito": {
+        "fechaEntrega": "Fecha de entrega"
+      }
+    },
+    "resistenciaHumedad": {
+      "muySeco": "MUY SECO",
+      "seco": "SECO",
+      "medio": "MEDIA",
+      "alto": "ALTA",
+      "acuatica": "ACUÁTICA"
+    },
+    "exposicionSolar": {
+      "sol": "SOL",
+      "solSombra": "SOL/SOMBRA",
+      "sombra": "SOMBRA"
+    },
+    "resistenciaSalinidad": {
+      "alta": "ALTA",
+      "media": "MEDIA",
+      "baja": "BAJA"
+    },
+    "catalogoFiltro": {
+      "soloDisponibles": "Solo disponibles",
+      "coloresFloracion": "Colores floración"
+    },
+    "itemCatalogo": {
+      "medidas": "MEDIDAS",
+      "caracteristicas": "CARACTERÍSTICAS",
+      "descripcion": "DESCRIPCIÓN",
+      "comprar": "Comprar",
+      "masTamanos": "MÁS TAMAÑOS...",
+      "menosTamanos": "MENOS TAMAÑOS...",
+      "humedad": "Humedad del suelo",
+      "salinidad": "Resistencia salinidad"
+    },
+    "catalogo": {
+      "descripcion": "Descripción",
+      "titulo": "Tienda de Plantas Online",
+      "subtitulo": "En nuestra tienda online de plantas podrás encontrar una gran variedad de especies de palmáceas, árboles, arbustos, vivaces, etc. Contamos con un gran equipo de profesionales para ofrecerte el mejor servicio en la venta de una gran variedad plantas. Realizamos entregas a nivel nacional e internacional.",
+      "avisoNoLogueado": "!Para comprar es necesario tener una cuenta. <1>Identifíquese</1> o <2>contacte con nosotros</2> para crear una."
+    },
+    "carrito": {
+      "irACheckout": "Confirmar pedido",
+      "carritoVacío": "Tu carrito está vacío, <1>ve al catálogo</1>  para escoger tus productos"
+    },
+    "checkout": {
+      "confirmarPedido": "Confirmar pedido",
+      "volverCatalogo": "Volver al catálogo",
+      "direccionEntrega": "Dirección de entrega!",
+      "formaPago": "Forma de pago",
+      "codPago": "Forma de envío",
+      "formaEnvio": "Forma de envío",
+      "observaciones": "Observaciones de pedido",
+      "textoDefectoObservaciones": "Indique aquí sus observaciones"
+    },
+    "condicionesVenta":  {
+      "textoBoton": "General sales conditions",
+      "titulo": "GENERAL SALES CONDITIONS",
+      "parrafo1": "<strong>1) </strong>When placing an <strong>order</strong>, we ask the client to clearly indicate: complete firm’s name, address, telephone, postcode, N.I.F. (fiscal identity no.), bank and checking account number. The client should specifically indicate the destination of the goods, a contact person, and telephone number.<br /><br />",
+      "parrafo2": "<strong>2) </strong>The <strong>transport</strong> expenses will be taken care of by the buyer.<br /><br />",
+      "parrafo3": "<strong>3) </strong>The seller will deliver the <strong>goods</strong> within the specified date on the order but will not be held responsible for the delays due to beyond his/her control. All of the shipments will be made by appropriate means, always looking out for the interest of the client and the good of the merchandise; except for those cases in which the client has given specific orders.<br /><br />",
+      "parrafo4": "<strong>4) </strong>The <strong>prices</strong> are calculated plus transport expenses in our nursery. The indicated prices are net and the VAT will be charged separately in the bill.<br /><br />",
+      "parrafo5": "<strong>5) </strong>The form of payment will be the habitual for classified clients. For new clients, the transactions will be made <strong>in cash</strong> while waiting for their classification. Once received, the conditions will be revised.<br /><br />",
+      "parrafo6": "<strong>6) </strong><strong>Claims</strong> will be dealt with during the first five days after delivery. If there are lawsuits, they will be submitted to the courts of Mataró.<br /><br />",
+      "footer": "<br /><br /><strong>Offer subject to availability and/or variation of prices</strong>"
+    },
+    "textoLegal":  {
+      "parrafo1": "* The published photographs do not correspond to the final product, they are representative images of the available item.",
+      "parrafo2": "* The rates shown on the website are indicative, the price may be modified during the order validation and formalization process. The assigned salesperson will validate the order and confirm the final prices and quantities during the order formalization process.",
+      "parrafo3": "* For seasonal items and small formats, the minimum quantity accepted for an order is one tray. The assigned salesperson will contact you to confirm the quantities before formalizing the order."
+    },
+    "pedidoConfirmado":  {
+      "titulo": "Order sent",
+      "parrafo1": "The order will not be valid until the assigned salesperson contacts you to formalize it.",
+      "aceptar": "Accept"
+    },
+    "enlacesArribas": {
+      "empresa": { "titulo": "Company", "url": "/en/empresa/" },
+      "catalogos": { "titulo": "Catalogue", "url": "/en/catalogos/" },
+      "produccion": { "titulo": "Production", "url": "/en/produccion/" },
+      "blog": { "titulo": "BLOG", "url": "/en/blog/" },
+      "foro": { "titulo": "Forum", "url": "/en/forumx/" },
+      "localizacion": { "titulo": "Works", "url": "/en/localizacion/" },
+      "contacto": { "titulo": "Contact", "url": "/en/contacto/" },
+      "tiendaOnline": "Shop online"
+    },
+    "enlacesBarnaplant": {
+      "nosotros": { "titulo": "us", "url": "/sobre-nosotros/" },
+      "produccion": { "titulo": "production", "url": "/produccion/" },
+      "obras": { "titulo": "works and supplies", "url": "/obras-y-suministros/" },
+      "catalogos": { "titulo": "catalogs", "url": "/catalogos-barnaplant/" },
+      "contacto": { "titulo": "contact", "url": "/contacto/" }
+    }
+  }
+}

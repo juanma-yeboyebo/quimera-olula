@@ -1,0 +1,308 @@
+---
+shortcuts: []
+state:
+  idTarea: null
+  tarea: null
+  tramosTarea: null
+  inputTarea: null
+  modalCantidadTramo: false
+  modalTerminarTarea: false
+  cantidadNuevoTramo: 0
+  modoBuscar: true
+  procesando: false
+  utillajes: []
+  observaciones: null
+bunch:
+  onInit:
+    - _type: if
+      if:
+        operator: A is defined
+        A:
+          payloadPath: idTareaProp
+      then:
+        _type: grape
+        name: tengoIdTareaProp
+      else:
+        _type: grape
+        name: noTengoIdTareaProp
+  tengoIdTareaProp:
+    - _type: set
+      path: inputTarea
+      value:
+        payloadPath: idTareaProp
+    - _type: set
+      path: idTarea
+      value:
+        payloadPath: idTareaProp
+    - _type: grape
+      name: getTarea
+    - _type: grape
+      name: changeModo
+  noTengoIdTareaProp:
+    - _type: set
+      path: inputTarea
+      value:
+        const: null
+    - _type: set
+      path: idTarea
+      value:
+        const: null
+    - _type: set
+      path: modoBuscar
+      value:
+        const: true
+    - _type: set
+      path: tramosTarea
+      value:
+        const: null
+    - _type: set
+      path: tarea
+      value:
+        const: null
+    - _type: set
+      path: procesando
+      value:
+        const: false
+  getTarea:
+    - _type: get
+      schema: tareas
+      id:
+        statePath: idTarea
+      success: onGetTareaSuccess
+      error: onGetTareaError
+    - _type: set
+      path: procesando
+      value:
+        const: false
+  onGetTareaSuccess:
+    - _type: if
+      if:
+        operator: A is defined
+        A:
+          code: "return payload.response.data[0]?.idTarea"
+      then:
+        _type: grape
+        name: compruebaEstadoTarea
+      else:
+        _type: grape
+        name: setSinTarea
+  compruebaEstadoTarea:
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          code: "return payload.response.data[0].estado"
+        B:
+          const: "OFF"
+      then:
+        _type: grape
+        name: setTareaOff
+      else:
+        _type: grape
+        name: setTarea
+  setTarea:
+    - _type: set
+      path: tarea
+      value:
+        code: "return payload.response.data[0]"
+    - _type: grape
+      name: dameTramos
+    - _type: grape
+      name: dameUtillaje      
+  dameTramos:
+    - _type: if
+      if:
+        operator: A is true
+        A:
+          code: 'return ["EN CURSO","EN PAUSA","TERMINADA"].includes(state.tarea?.estado)'
+      then:
+        _type: get
+        schema: tramosTarea
+        filter:
+          and:
+            - - const: idtarea
+              - eq
+              - statePath: tarea.idTarea
+        success: onGetTramosTareaSuccess
+      else:
+        _type: grape
+        name: onVaciaTramosTarea
+  onGetTramosTareaSuccess:
+    - _type: set
+      path: tramosTarea
+      value:
+        payloadPath: response.data
+  onVaciaTramosTarea:
+    - _type: set
+      path: tramosTarea
+      value:
+        const: null
+  setTareaOff:
+    - _type: alert
+      text: La tarea indicada no está activa. Esto es debido a que alguna de sus tareas precedentes todavía no ha terminado.
+      severity: warning
+    - _type: navigate
+      url:
+        const: "/tareas/tareasterminal"
+  setSinTarea:
+    - _type: alert
+      text: La tarea no existe.
+      severity: warning
+    - _type: navigate
+      url:
+        const: "/tareas/tareasterminal"
+  dameCantidadTramo:
+    - _type: if
+      if:
+        operator: A is true
+        A:
+          code: "return (state.tarea.tareaInicial || state.tarea.tareaFinal)"
+      then:
+        _type: set
+        path: modalCantidadTramo
+        value:
+          const: true  
+      else:
+        _type: grape
+        name: pararTareaIntermedia   
+  dameUtillaje:       
+    - _type: get 
+      schema: utillajes
+      action: get_utillajes
+      id:
+        const: '-static-'
+      filter:
+        and:
+          - - const: idTipoTareaPro
+            - eq
+            - statePath: tarea.idTipoTareaPro
+          - - const: referencia
+            - eq
+            - statePath: tarea.referencia            
+      success: utillajesRecibidos 
+      error: grape_al_que_llamar_en_caso_de_error
+  utillajesRecibidos:
+    - _type: set
+      path: utillajes
+      value:
+        payloadPath: response.data.utillajes  
+    - _type: set
+      path: observaciones
+      value:
+        payloadPath: response.data.observaciones              
+  cancelarDetenerTarea:
+    - _type: set
+      path: modalCantidadTramo
+      value:
+        const: false
+    - _type: set
+      path: cantidadNuevoTramo
+      value:
+        const: 0
+  confirmarDetenerTarea:
+    - _type: if
+      if:
+        operator: A is true
+        A:
+          code: "return state.cantidadNuevoTramo > 0"
+      then:
+        _type: grape
+        name: pararTarea
+      else:
+        _type: alert
+        text: No se especifico cantidad para la tarea.
+        severity: error
+  pararTareaIntermedia:
+    - _type: set
+      path: cantidadNuevoTramo
+      value:
+        const: 0.1
+    - _type: grape
+      name: pararTarea
+  pararTarea:
+    - _type: set
+      path: modalCantidadTramo
+      value:
+        const: false
+    - _type: set
+      path: modalTerminarTarea
+      value:
+        const: true
+  iniciarTarea:
+    - _type: patch
+      schema: tareas
+      action: iniciar_tarea
+      id:
+        statePath: tarea.idTarea
+      success: getTarea
+    - _type: set
+      path: procesando
+      value:
+        const: true
+  pausarTarea:
+    - _type: set
+      path: modalTerminarTarea
+      value:
+        const: false
+    - _type: set
+      path: procesando
+      value:
+        const: true
+    - _type: patch
+      schema: tareas
+      action: pausar_tarea
+      id:
+        statePath: tarea.idTarea
+      data:
+        - key: cantidad
+          value:
+            statePath: cantidadNuevoTramo
+      success: tareaDetenida
+      error: erroDetenerTarea
+  terminarTarea:
+    - _type: set
+      path: modalTerminarTarea
+      value:
+        const: false  
+    - _type: set
+      path: procesando
+      value:
+        const: true
+    - _type: patch
+      schema: tareas
+      action: terminar_tarea
+      id:
+        statePath: tarea.idTarea
+      data:
+        - key: cantidad
+          value:
+            statePath: cantidadNuevoTramo
+      success: tareaDetenida
+      error: erroDetenerTarea
+  tareaDetenida:
+    - _type: set
+      path: cantidadNuevoTramo
+      value:
+        const: 0
+    - _type: grape
+      name: getTarea
+  erroDetenerTarea:
+    - _type: alert
+      text: Error al detener la tarea.
+      severity: error
+    - _type: set
+      path: procesando
+      value:
+        const: false
+  changeModo:
+    - _type: set
+      path: modoBuscar
+      value:
+        toggleStatePath: modoBuscar
+  buscarTarea:
+    # - _type: grape
+    #   name: changeModo
+    - _type: navigate
+      url:
+        const: "tareas/tareasterminal"        
+  # onDeleteTramoClicked:

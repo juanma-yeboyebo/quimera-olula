@@ -1,0 +1,191 @@
+---
+shortcuts: []
+state:
+  enviando: false
+  opcionesEnvio: null
+  tipoDoc: null
+  idDoc: null
+  codCliente: null
+  codigoParte: null
+  callbackCerrado: null
+  callbackEnviado: null
+  dirDisponible: []
+  dirTO: []
+  dirCC: []
+  dirBCC: []
+  estadoNuevoEmail: invalido
+  nuevoEmail: null
+bunch:
+  onInit:
+    - _type: set
+      path: opcionesEnvio 
+      value: 
+        payloadPath: opcionesDocProp     
+    - _type: set
+      path: tipoDoc 
+      value: 
+        payloadPath: opcionesDocProp.main.tipo   
+    - _type: set
+      path: idDoc 
+      value: 
+        payloadPath: idDocProp   
+    - _type: set
+      path: codCliente 
+      value: 
+        payloadPath: codClienteProp   
+    - _type: set
+      path: codigoParte 
+      value: 
+        payloadPath: codigoParteProp                     
+    - _type: set
+      path: callbackCerrado 
+      value: 
+        payloadPath: callbackCerradoProp
+    - _type: set
+      path: callbackEnviado 
+      value: 
+        payloadPath: callbackEnviadoProp 
+    - _type: grape
+      name: getDireccionesPorClienteYDoc
+  getDireccionesPorClienteYDoc:
+    - _type: patch
+      schema: emailDocsCliente
+      id:
+        const: '-static-'
+      action: dame_email_dir_docs
+      data:
+        - key: tipodoc
+          value:
+            statePath: tipoDoc   
+        - key: codcliente
+          value:
+            statePath: codCliente        
+      success: onGetDireccionesPorClienteYDocSucceeded
+      error: onGetDireccionesPorClienteYDocError 
+  onGetDireccionesPorClienteYDocSucceeded:
+    - _type: set
+      path: dirDisponible 
+      value: 
+        payloadPath: response.direcciones_disponibles   
+    - _type: set
+      path: dirTO 
+      value: 
+        payloadPath: response.direcciones_to           
+  onGetDireccionesPorClienteYDocError:
+    - _type: alert 
+      text: Error al cargar direcciones de correo
+      severity: error
+  onCancelarEnviarEmailClicked:
+    - _type: call 
+      function: 
+        statePath: callbackCerrado
+  onEnviarEmailClicked:
+    - _type: set
+      path: enviando 
+      value: 
+        const: true
+    - _type: post
+      condition:
+          operator: A is defined
+          A:
+            code: 'return !state.codigoParte'
+      schema: emailDocsCliente
+      action: enviar_email_documento
+      data:
+        - key: idDoc
+          value:
+            statePath: idDoc
+        - key: codCliente
+          value:
+            statePath: codCliente            
+        - key: tipoDoc
+          value:
+            payloadPath: tipo            
+        - key: dirTo
+          value:
+            statePath: dirTO
+        - key: dirCc
+          value:
+            statePath: dirCC
+        - key: dirBcc
+          value:
+            statePath: dirBCC   
+      success: onEnviarEmailSucceeded
+      error: onEnviarEmailError 
+    - _type: post
+      condition:
+          operator: A is defined
+          A:
+            statePath: codigoParte
+      schema: emailDocsCliente
+      action: enviar_email_partecarro
+      data:
+        - key: idDoc
+          value:
+            statePath: idDoc
+        - key: codCliente
+          value:
+            statePath: codCliente            
+        - key: tipoDoc
+          value:
+            payloadPath: tipo
+        - key: codigoParte
+          value:
+            statePath: codigoParte                
+        - key: dirTo
+          value:
+            statePath: dirTO
+        - key: dirCc
+          value:
+            statePath: dirCC
+        - key: dirBcc
+          value:
+            statePath: dirBCC   
+      success: onEnviarEmailSucceeded
+      error: onEnviarEmailError       
+  onEnviarEmailSucceeded:
+    - _type: set
+      path: enviando 
+      value: 
+        const: false
+    - _type: alert 
+      text: Correo enviado
+      severity: success  
+    - _type: call 
+      function: 
+        statePath: callbackEnviado
+  onEnviarEmailError:
+    - _type: set
+      path: enviando 
+      value: 
+        const: false
+    - _type: alert 
+      text: Error al enviar correo
+      severity: error
+    - _type: grape
+      name: onCancelarEnviarEmailClicked
+  setNuevoEmail:  
+    - _type: set
+      path: nuevoEmail 
+      value: 
+        payloadPath: value
+    - _type: set
+      path: estadoNuevoEmail 
+      value: 
+        payloadPath: valido   
+  handleTextFieldKey:
+    - _type: grape
+      condition:
+          operator: A is true
+          A:
+            code: 'return payload.keyCode === 13 && state.estadoNuevoEmail === "valido"'
+      name: onAddNuevoEmailClicked                       
+  onAddNuevoEmailClicked:
+    - _type: appendItem
+      path: dirDisponible
+      value:
+        statePath: nuevoEmail
+    - _type: set
+      path: nuevoEmail 
+      value: 
+        const: null        

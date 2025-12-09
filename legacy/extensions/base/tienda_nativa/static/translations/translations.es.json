@@ -1,0 +1,24 @@
+{
+  "translation": {
+    "catalogo": {
+      "titulo": "Tienda de Plantas Online",
+      "subtitulo": "En nuestra tienda online de plantas podrás encontrar una gran variedad de especies de palmáceas, árboles, arbustos, vivaces, etc. Contamos con un gran equipo de profesionales para ofrecerte el mejor servicio en la venta de una gran variedad plantas. Realizamos entregas a nivel nacional e internacional.",
+      "avisoNoLogueado": "Tu carrito está vacío, <1>ve al catálogo</1> para escoger tus productos"
+    },
+    "itemCatalogo": {
+      "medidas": "MEDIDAS",
+      "comprar": "Comprar"
+    },
+    "producto": {
+      "irACatalogo": "Ir al catálogo"
+    },
+    "carrito": {
+      "carritoVacío": "Tu carrito está vacío, <1>ve al catálogo</1>  para escoger tus productos"
+    },
+    "pedidoConfirmado":  {
+      "titulo": "¡Gracias! Pedido recibido",
+      "parrafo1": "",
+      "aceptar": "Aceptar"
+    }
+  }
+}

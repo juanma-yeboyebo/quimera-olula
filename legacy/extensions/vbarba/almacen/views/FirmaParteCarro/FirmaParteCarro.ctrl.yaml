@@ -1,0 +1,124 @@
+---
+shortcuts: []
+state: 
+  indicarFirmando: false
+  callbackChanged: null
+  parteCarro: null
+  movCarro: null
+bunch: 
+  onInit:  
+    - _type: set
+      path: callbackChanged 
+      value: 
+        payloadPath: callbackChanged
+    - _type: set
+      path: parteCarro 
+      value: 
+        payloadPath: parteCarroProp
+    - _type: set
+      path: movCarro 
+      value: 
+        payloadPath: movCarroProp        
+  onFirmaParteCarroCodContactoChanged:
+    - _type: get
+      schema: contacto
+      filter:
+        - const: codcontacto
+        - const: eq
+        - payloadPath: value
+      success: onDatosContactoRecibidos
+  onDatosContactoRecibidos:
+    - _type: set
+      path: firmaParteCarro.codContacto
+      value:
+        payloadPath: value
+    - _type: set
+      path: firmaParteCarro.firmadopor
+      value:
+        code: 'return payload.response.data[0]?.nombre ?? ""'
+    - _type: set
+      path: firmaParteCarro.cifnif
+      value:
+        code: 'return payload.response.data[0]?.nif ?? ""' 
+  onFirmarClicked:
+    - _type: set 
+      path: indicarFirmando 
+      value: 
+        const: true
+    - _type: patch
+      schema: tiposCarro
+      action: guardar_movimientos_carros
+      id:
+        statePath: parteCarro.idParte
+      data:
+        - key: movCarro
+          value:
+            statePath: movCarro            
+      success: onMovimientosCarrosGuardado  
+      error: firmarError
+  onMovimientosCarrosGuardado:      
+    - _type: post
+      schema: firmasdecarros
+      data:
+        - key: idEscarro
+          value:
+            statePath: parteCarro.idParte
+        - key: codigoParte
+          value:
+            statePath: parteCarro.codigoParte
+        - key: codContacto
+          value:
+            statePath: firmaParteCarro.codContacto
+        - key: firmadopor
+          value:
+            statePath: firmaParteCarro.firmadopor   
+        - key: cifnif
+          value:
+            statePath: firmaParteCarro.cifnif
+        - key: puesto
+          value:
+            statePath: firmaParteCarro.puesto 
+        - key: fecha
+          value:
+            statePath: firmaParteCarro.fecha
+        - key: hora
+          value:
+            statePath: firmaParteCarro.hora
+        - key: observacionesfirma
+          value:
+            statePath: firmaParteCarro.observacionesfirma
+        - key: estado
+          value:
+            const: "Firmado"
+        - key: firma
+          value:
+            payloadPath: firma  
+      success: onFirmarCompleted  
+      error: firmarError           
+  onFirmarCompleted:
+    - _type: alert 
+      text: Se ha firmado el parte de carro 
+      severity: success   
+    - _type: call 
+      function: 
+        statePath: callbackChanged
+      params:
+        - key: parte
+          value:
+            statePath: parteCarro.buffer
+        - key: firmadopor
+          value:
+            statePath: firmaParteCarro.firmadopor           
+    - _type: set 
+      path: indicarFirmando 
+      value: 
+        const: false
+  firmarError:
+    - _type: set 
+      path: indicarFirmando 
+      value: 
+        const: false  
+    - _type: alert 
+      text: Se ha producido un error y no se ha firmado el parte de carro 
+      severity: error 
+

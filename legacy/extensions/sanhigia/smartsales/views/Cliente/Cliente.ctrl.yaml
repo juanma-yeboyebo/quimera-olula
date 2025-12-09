@@ -1,0 +1,54 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: cliente
+    id: codCliente
+    action: "dame_clientes"
+    schemaName: clientes
+  - type: Model
+    name: contactos
+    action: "dame_contactos_cliente"
+    id: codContacto
+    schema: contactosCliente
+state:
+  producto: null
+  contactoAnadir: null
+  modalAnadirContactoVisible: false
+  modalCrearContactoVisible: false
+  modalErroresCargaContactosExcel: false
+  erroresCarga: []
+bunch:
+  # onInit:
+  #   - _type: grape
+  #     name: getCliente
+  onSaveContactoClicked:
+    - _type: patch
+      schema: clientes
+      action: add_contacto_cliente
+      id:
+        statePath: cliente.data.codCliente
+      data:
+        - key: codcontacto
+          value:
+            statePath: contactoAnadir           
+      success: onAddContactoEventoSuccess
+      error: onAddContactoEventoError
+  onAddContactoEventoSuccess:
+    - _type: set
+      path: contactoAnadir
+      value:
+        const: null
+    - _type: set
+      path: modalCrearContactoVisible
+      value:
+        const: false
+    - _type: alert
+      text: Contacto añadido con éxito
+      severity: info
+  onAddContactoEventoError:
+    - _type: alert
+      text: Error al añadir contacto.
+      severity: error
+  onAtrasClicked:
+    - _type: grape
+      name: cancelCliente      

@@ -1,0 +1,79 @@
+---
+shortcuts: 
+  - type: DetailBuffer
+    name: linea
+    id: idLinea
+    schemaName: lineasPedidoCompra
+    deleteConfirmQuestion:
+      titulo: Borrar línea
+      cuerpo: La línea se borrará
+state:
+  codUbicacionArticulo: null
+  sustitutivo: {}
+  stock:
+    disponible: null
+  cambio: 0
+  tipoCambio: edited
+  onSuccess: null
+bunch:
+  onBufferLineaLoaded:
+    patch: append
+    grapes:
+      - condition:
+          operator: A is defined
+          A:
+            payloadPath: initLinea
+        _type: grape
+        name: seteaCodUbicacionArticulo 
+  seteaCodUbicacionArticulo:
+    - _type: set
+      path: codUbicacionArticulo
+      value:
+        code: 'return payload.initLinea.codUbicacionArticulo'        
+  onLineaSectionAccepted:
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          payloadPath: section
+        B:
+          const: 'ubicacion'
+      then:
+        _type: grape
+        name: cambiaUbicacionArticulo  
+      else:
+        _type: grape
+        name: saveLinea        
+  onLineaSectionCancelled:
+    - _type: grape
+      name: loadBufferLinea
+  onLineaUbicacionChanged:
+    - _type: set
+      path: linea.buffer.codUbicacionArticulo
+      value:
+        payloadPath: value
+  cambiaUbicacionArticulo:    
+    - _type: patch
+      schema: lineasPedidoCompraAgrupado
+      action: cambiar_ubicacion_articulo
+      data:
+        - key: referencia
+          value:
+            statePath: linea.buffer.referencia
+        - key: codUbicacionArticulo
+          value:
+            statePath: codUbicacionArticulo
+      success: onUbicacionArticuloCambiada    
+      error: onCambiaUbicacionArticuloError    
+  onUbicacionArticuloCambiada:
+    - _type: grape
+      name: reloadLinea        
+  onCambiaUbicacionArticuloError:
+    - _type: alert
+      text: Error al actualizar la ubicación del artículo
+      severity: error          
+  onCantCambiada:        
+    - _type: set
+      path: linea.buffer.shCantAlbaran
+      value:
+        payloadPath: cantidad        

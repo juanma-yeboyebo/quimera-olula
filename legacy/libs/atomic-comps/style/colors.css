@@ -1,0 +1,92 @@
+:root {
+  /* common */
+  --light-percentage: 25%;
+  --lighter-percentage: 35%;
+
+  /* primary */
+  --primary-h: 206;
+  --primary-s: 100%;
+  --primary-l: 40%;
+
+  --primary: hsl(var(--primary-h), var(--primary-s), var(--primary-l));
+
+  --primary-light: hsl(
+    var(--primary-h),
+    var(--primary-s),
+    calc(var(--primary-l) + var(--light-percentage))
+  );
+  --primary-lighter: hsl(
+    var(--primary-h),
+    var(--primary-s),
+    calc(var(--primary-l) + var(--lighter-percentage))
+  );
+
+  --primary-dark: hsl(
+    var(--primary-h),
+    var(--primary-s),
+    calc(var(--primary-l) - var(--light-percentage))
+  );
+  --primary-darker: hsl(
+    var(--primary-h),
+    var(--primary-s),
+    calc(var(--primary-l) - var(--lighter-percentage))
+  );
+
+  /* success */
+  --success-h: 120;
+  --success-s: 60%;
+  --success-l: 40%;
+
+  --success: hsl(var(--success-h), var(--success-s), var(--success-l));
+
+  --success-light: hsl(
+    var(--success-h),
+    var(--success-s),
+    calc(var(--success-l) + var(--light-percentage))
+  );
+  --success-lighter: hsl(
+    var(--success-h),
+    var(--success-s),
+    calc(var(--success-l) + var(--lighter-percentage))
+  );
+
+  --success-dark: hsl(
+    var(--success-h),
+    var(--success-s),
+    calc(var(--success-l) - var(--light-percentage))
+  );
+  --success-darker: hsl(
+    var(--success-h),
+    var(--success-s),
+    calc(var(--success-l) - var(--lighter-percentage))
+  );
+
+  /* danger */
+  --danger-h: 0;
+  --danger-s: 69%;
+  --danger-l: 50%;
+
+  --danger: hsl(var(--danger-h), var(--danger-s), var(--danger-l));
+
+  --danger-light: hsl(
+    var(--danger-h),
+    var(--danger-s),
+    calc(var(--danger-l) + var(--light-percentage))
+  );
+  --danger-lighter: hsl(
+    var(--danger-h),
+    var(--danger-s),
+    calc(var(--danger-l) + var(--lighter-percentage))
+  );
+
+  --danger-dark: hsl(
+    var(--danger-h),
+    var(--danger-s),
+    calc(var(--danger-l) - var(--light-percentage))
+  );
+  --danger-darker: hsl(
+    var(--danger-h),
+    var(--danger-s),
+    calc(var(--danger-l) - var(--lighter-percentage))
+  );
+}

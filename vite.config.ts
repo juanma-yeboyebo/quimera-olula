@@ -1,6 +1,7 @@
 /// <reference types="vitest" />
 /// <reference types="vite/client" />
 
+import ViteYaml from "@modyfi/vite-plugin-yaml";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { VitePWA } from 'vite-plugin-pwa';
@@ -11,6 +12,7 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    ViteYaml(),
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {

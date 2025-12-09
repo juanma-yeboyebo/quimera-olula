@@ -1,0 +1,95 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: campaniaLeads
+    id: idCampania
+    schemaName: campania
+    mode: insert
+state:
+  producto: null
+bunch:
+  onAtrasClicked:
+    - _type: grape
+      name: cancelCampaniaLeads
+    - _type: navigate
+      url:
+        const: /ss/leadpacientes    
+  onCrearCampaniaLeadsClicked:
+    - _type: set
+      path: campaniaLeads.buffer.cuentaMarketing
+      value:
+        const: 'leadspacientes'
+    - _type: set
+      path: campaniaLeads.buffer.tipo
+      value:
+        const: 'marketingDigital'
+    - _type: set
+      path: campaniaLeads.buffer.tipoProducto
+      value:
+        const: 'listadearticulos'
+    - _type: grape
+      name: saveCampaniaLeads
+  onCampaniaLeadsSaved:
+    - _type: alert
+      text: Campaña creada correctamente
+      severity: success
+    - _type: navigate
+      url:
+        const: /ss/leadpacientes            
+  onProductoChanged:
+    - _type: appendItem
+      path: campaniaLeads.buffer.productos
+      value:
+        payloadPath: option
+  onProductoOfertarChanged:
+    - _type: appendItem
+      path: campaniaLeads.buffer.productosOfertar
+      value:
+        payloadPath: option
+  onDeleteChildProductosClicked:
+    - _type: deleteItemByIndex
+      path: campaniaLeads.buffer.productos
+      index:
+        payloadPath: index
+  onDeleteChildProductosOfertarClicked:
+    - _type: deleteItemByIndex
+      path: campaniaLeads.buffer.productosOfertar
+      index:
+        payloadPath: index        
+  onCampaniaLeadsBufferTipoChanged:      
+    - _type: setItem 
+      path: campaniaLeads
+      value:
+        payloadPath: value
+      key:
+        const: buffer
+      prop:
+        const: tipo
+    - _type: setItem 
+      path: campaniaLeads
+      condition:
+          operator: A in list B
+          A:
+            payloadPath: value
+          B:
+            const: ['ventaCruzada', 'marketingDigital']            
+      value:
+        const: listadearticulos
+      key:
+        const: buffer
+      prop:
+        const: tipoProducto
+    - _type: setItem 
+      path: campaniaLeads
+      condition:
+          operator: A = B
+          A:
+            payloadPath: value
+          B:
+            const: 'marketingDigital'            
+      value:
+        const: []
+      key:
+        const: buffer
+      prop:
+        const: productos        

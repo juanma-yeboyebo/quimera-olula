@@ -1,0 +1,14 @@
+.facturas__root {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "filter detail"
+    "master detail";
+  row-gap: 0.25rem;
+  column-gap: 1rem;
+}
+
+.facturas__root > *:last-child {
+  grid-area: detail;
+}

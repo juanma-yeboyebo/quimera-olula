@@ -1,0 +1,296 @@
+---
+shortcuts:
+  - type: Model
+    name: pedidosGenerarPreparaciones
+    id: idPedido
+    schema: generarpreparaciones
+    url: "/generarpreparaciones"
+    action: "get_generar_preparaciones"
+    logicDelete: true
+state:
+  agrupandoPedidos: false
+  filtroVisible: false
+  pedidosPdtesFiltro: false
+  pedidosCompletarFiltro: false
+  codProveedorFiltro: null
+  ref1Filtro: null
+  ref2Filtro: null
+  habilitarMulticheck: false
+  arrayMultiCheck: []
+  # modalAgruparPedidosGenerarPreparaciones: false
+  modalEnviarAPda: false
+  descripcionAgrupar: null
+  ubicacionInicial: null
+  ubicacionFinal: null
+  checkClicked:  false
+  ubicaciones: []
+bunch:
+  onInit:
+    - _type: grape
+      name: checkPedidosGenerarPreparacionesFilterSaved
+    - _type: grape 
+      name: dameUbicaciones
+  dameUbicaciones:
+    - _type: get
+      schema: ubicacion
+      success: ubicacionesRecibidas 
+      error: errorUbicaciones
+  ubicacionesRecibidas:  
+    - _type: set 
+      path: ubicaciones
+      value:
+        payloadPath: response.data
+  onMostrarFiltroClicked:
+    - _type: set
+      path: filtroVisible
+      value:
+        toggleStatePath: filtroVisible    
+  cerrarFiltro:
+    - _type: set
+      path: filtroVisible
+      value:
+        const: false                  
+  onPedidosGenerarPreparacionesFilterChanged:
+    patch: override
+    grapes:
+      - _type: grape
+        name: cerrarFiltro
+      - _type: set
+        path: pedidosGenerarPreparaciones.filter
+        value:
+          payloadPath: value      
+      - condition:
+          operator: A is true
+          A:
+            code: 'return !!state.pedidosPdtesFiltro || !!state.pedidosCompletarFiltro' 
+        _type: grape
+        name: comprobarFiltrosFueraSchema
+      - _type: grape
+        name: getPedidosGenerarPreparaciones
+      - _type: grape
+        name: resetearAcciones
+  onNuevoPedidoClicked:
+    - _type: navigate
+      url:
+        const: "/ventas/pedidos/nuevo"
+  onNewPedidoChanged:
+    - onPedidosGenerarPreparacionesNewItemChanged
+    - addPedidosGenerarPreparacionesItem
+  comprobarFiltrosFueraSchema:
+    - _type: if
+      if:
+        operator: A is true
+        A:
+          code: 'return !state.pedidosGenerarPreparaciones.filter?.and && !!state.pedidosGenerarPreparaciones.filter' 
+      then:
+          # Limpiando filtros
+        _type: grape
+        name: limpiaFiltrosFueraSchema 
+      else:
+        # Filtrando
+        _type: grape
+        name: comprobarFiltrosAgregados 
+  limpiaFiltrosFueraSchema:   
+    - _type: set
+      path: pedidosPdtesFiltro
+      value:
+        const: false 
+    - _type: set
+      path: pedidosCompletarFiltro
+      value:
+        const: false  
+    - _type: set
+      path: codProveedorFiltro
+      value:
+        const: null    
+    - _type: set
+      path: ref1Filtro
+      value:
+        const: null   
+    - _type: set
+      path: ref2Filtro
+      value:
+        const: null                                 
+  comprobarFiltrosAgregados:       
+    - _type: if
+      if:
+        operator: A is true
+        A:
+          code: 'return !!state.pedidosGenerarPreparaciones.filter?.and' 
+      then:
+        _type: grape
+        name: addFiltrosFueraSchema
+      else:
+        _type: grape
+        name: addAndFiltrosFueraSchema
+  addFiltrosFueraSchema:                
+      - condition:
+          operator: A is true
+          A:
+            statePath: pedidosPdtesFiltro
+        _type: appendItem
+        path: pedidosGenerarPreparaciones.filter.and
+        value:
+          code: 'return ["sh_estadopago", "eq", "Pagos pendientes"]'
+      - condition:
+          operator: A is true
+          A:
+            statePath: pedidosCompletarFiltro
+        _type: appendItem
+        path: pedidosGenerarPreparaciones.filter.and
+        value:
+          code: 'return ["completadostock", "eq", "True"]'          
+      - condition:
+          operator: A is defined
+          A:
+            statePath: codProveedorFiltro
+        _type: appendItem
+        path: pedidosGenerarPreparaciones.filter.and
+        value:
+          code: 'return ["codproveedor", "eq", state.codProveedorFiltro]'                 
+      - _type: if
+        if:
+          operator: A is true
+          A:
+            code: 'return !!state.ref1Filtro && !!state.ref2Filtro'
+        then:
+          _type: grape
+          name: addFiltroReferenciaDoble
+        else:
+          _type: grape
+          name: addFiltroReferenciaUnica
+  addFiltroReferenciaUnica:   
+      - condition:
+          operator: A is defined
+          A:
+            statePath: ref1Filtro
+        _type: appendItem
+        path: pedidosGenerarPreparaciones.filter.and
+        value:
+          code: 'return ["referencia", "eq", state.ref1Filtro]'   
+      - condition:
+          operator: A is defined
+          A:
+            statePath: ref2Filtro
+        _type: appendItem
+        path: pedidosGenerarPreparaciones.filter.and
+        value:
+          code: 'return ["referencia", "eq", state.ref2Filtro]'  
+  addFiltroReferenciaDoble:     
+      - _type: appendItem
+        path: pedidosGenerarPreparaciones.filter.and
+        value:
+          code: 'return { or: [["referencia", "eq", state.ref1Filtro], ["referencia", "eq", state.ref2Filtro]]}'                                                 
+  addAndFiltrosFueraSchema:   
+      - _type: set
+        path: pedidosGenerarPreparaciones.filter
+        value:
+          code: 'return { and: []}'  
+      - _type: grape
+        name: addFiltrosFueraSchema  
+  onHabilitarMulticheckClicked:  
+      - condition:
+          operator: A is true
+          A:
+            statePath: habilitarMulticheck
+        _type: set
+        path: arrayMultiCheck
+        value:
+          const: []    
+      - _type: set
+        path: habilitarMulticheck
+        value:
+         toggleStatePath: habilitarMulticheck      
+  onPedidosGenerarPreparacionesCheckItemChecked:  
+    - _type: appendItem
+      path: arrayMultiCheck
+      value:
+        payloadPath: idPedido 
+    - _type: set
+      path: checkClicked
+      value:
+        const: true         
+  onPedidosGenerarPreparacionesCheckItemCheckout:
+    - _type: deleteItemByIndex
+      path: arrayMultiCheck
+      index:
+        payloadPath: index 
+    - _type: set
+      path: checkClicked
+      value:
+        const: true          
+  onPedidosGenerarPreparacionesCheckItemSelected:
+    - _type: if
+      if:
+        operator: A is true
+        A:
+          statePath: checkClicked
+      then:
+          _type: set
+          path: checkClicked
+          value:
+            const: false  
+      else:
+          _type: grape
+          name: onPedidosGenerarPreparacionesItemSelected     
+  resetearAcciones:       
+    - _type: set
+      path: arrayMultiCheck
+      value:
+        const: []     
+    - _type: set
+      path: habilitarMulticheck
+      value:
+        const: false 
+  onBotonAgruparPedidosGenerarPreparacionesClicked:  
+    - _type: set
+      path: modalAgruparPedidosGenerarPreparaciones
+      value:
+        const: true 
+  cerrarModalAgruparPedidosGenerarPreparaciones:  
+    - _type: set
+      path: modalAgruparPedidosGenerarPreparaciones
+      value:
+        const: false    
+    - _type: set
+      path: descripcionAgrupar
+      value:
+        const: null   
+    - _type: set
+      path: ubicacionInicial
+      value:
+        const: null   
+    - _type: set
+      path: ubicacionFinal
+      value:
+        const: null   
+  onAgruparPedidosGenerarPreparacionesConfirmado: 
+    - _type: set 
+      path: agrupandoPedidos
+      value:
+        const: true    
+    - _type: patch
+      schema: generarpreparaciones
+      action: genera_preparacion_de_pedidos
+      data:
+        - key: descripcion
+          value:
+            payloadPath: descripcionAgrupar
+        - key: ubicacionInicial
+          value:
+            payloadPath: ubicacionInicial
+        - key: ubicacionFinal
+          value:
+            payloadPath: ubicacionFinal
+        - key: pedidos
+          value:
+            statePath: arrayMultiCheck            
+      success: onAgruparPedidosGenerarPreparacionesSuccess
+      error: onAgruparPedidosGenerarPreparacionesError
+  # onEnviarPDAClicked:  
+  #   - _type: set
+  #     path: modalEnviarAPda
+  #     value:
+  #       toggleStatePath: modalEnviarAPda 
+                                                                                                
+                

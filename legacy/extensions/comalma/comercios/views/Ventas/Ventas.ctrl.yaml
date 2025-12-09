@@ -1,0 +1,44 @@
+---
+shortcuts:
+  - type: Model
+    name: ventas
+    id: idVenta
+    schema: ventas
+    url: "/ventas"
+    logicDelete: false
+state: 
+  nueva: true
+  escritorio: false
+bunch:
+  onInit:
+    - _type: set
+      path: ventas.filter
+      value:
+        code: 'return { and: [["idcomercio", "eq", state.idComercio]]}'     
+    - _type: grape
+      name: getVentas 
+  onCargaTamaño:           
+    - _type: set 
+      path: escritorio
+      value:
+        payloadPath: escritorio                    
+  onNuevaVentaClicked:
+    - _type: set 
+      path: nueva
+      value:
+        toggleStatePath: nueva
+    # - _type: navigate
+    #   url:
+    #     const: "/ventas/nueva"
+  onNewVentaChanged:  
+    - onVentasNewItemChanged
+    - addVentasItem
+  onVentasItemReceived:
+    patch: override
+    grapes:
+      - _type: grape
+        name: addNuevaVenta 
+        payload:
+          url: 
+            const: "/ventas"
+                

@@ -1,0 +1,15 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: campana
+    id: idCampana
+    schemaName: campanas
+    mode: insert
+state: {}
+bunch:
+  onNuevoCampanaSectionAccepted:
+    - _type: grape
+      name: saveCampana
+  onNuevoCampanaSectionCancelled:
+    - _type: grape
+      name: cancelCampana

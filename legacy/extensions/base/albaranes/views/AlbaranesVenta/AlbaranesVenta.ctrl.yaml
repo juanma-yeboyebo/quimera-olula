@@ -1,0 +1,52 @@
+---
+shortcuts:
+  - type: Model
+    name: albaranes
+    id: idAlbaran
+    schema: albaranescli
+    # url: "/albaranesVenta"
+    logicDelete: true
+state: 
+  modalFirmaVisible: false
+  albaranSeleccionado: null
+  fechaHoy: 'util.today()'
+bunch: 
+  onInit:
+    - _type: grape
+      name: getAlbaranes
+  onFirmarAlbaranClicked:     
+    - _type: set
+      path: modalFirmaVisible
+      value:
+        const: true 
+    - _type: set
+      path: albaranSeleccionado
+      value:
+        payloadPath: data.albaran 
+  onCerrarFirmaAlbaran:
+    - _type: set
+      path: modalFirmaVisible
+      value:
+        const: false
+    - _type: grape
+      condition:
+          operator: A is defined
+          A:
+            payloadPath: albaran
+      name: getAlbaranes
+  onDescargarAlbaranClicked:
+    - _type: download
+      schema: albaranescli
+      action: descargar_alabaran_pdf
+      params:
+        - key: idAlbaran
+          value:
+            payloadPath: idAlbaran 
+      filename:
+        const: albaran.pdf
+      success: none
+      error: error_descargar_albaran
+  error_descargar_albaran:
+    - _type: alert 
+      text: Error al descargar el albarán
+      severity: error

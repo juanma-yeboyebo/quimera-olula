@@ -1,0 +1,29 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: factura
+    id: idFactura
+    schemaName: facturaCliNueva
+    mode: insert
+state: 
+  savingFactura: false
+bunch:
+  onNuevaFacturaSectionAccepted:
+    - _type: set 
+      path: savingFactura
+      value:
+        const: true  
+    - _type: grape
+      name: saveFactura
+  onNuevaFacturaSectionCancelled:
+    - _type: set 
+      path: savingFactura
+      value:
+        const: false    
+    - _type: grape
+      name: cancelFactura
+  onSaveFacturaFailed:
+    - _type: set 
+      path: savingFactura
+      value:
+        const: false         

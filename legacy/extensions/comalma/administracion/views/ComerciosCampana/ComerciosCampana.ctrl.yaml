@@ -1,0 +1,80 @@
+---
+shortcuts:
+  - type: Model
+    name: comercios
+    id: idComercio
+    schema: comercios
+    logicDelete: false
+  - type: Model
+    name: comerciosCampana
+    id: idComercio
+    schema: comercios
+    action: "get_comercios_campana"
+state:
+  filtroVisible: false
+  campanaActiva: false
+bunch:
+  onInit:
+    - _type: set
+      path: campanaActiva
+      value:
+        payloadPath: idCampana
+    - _type: set
+      path: comerciosCampana.filter
+      value:
+        code: 'return { and: [["idcampana", "eq", payload.idCampana]]}'
+    - _type: grape
+      name: getComerciosCampana
+    - _type: grape
+      name: getComercios
+  onAtrasClicked:
+    - _type: grape
+      name: cancelComercio 
+  onMostrarFiltroClicked:
+    - _type: set
+      path: filtroVisible
+      value:
+        toggleStatePath: filtroVisible
+  onComerciosCambiados:
+    - _type: grape
+      name: getComerciosCampana
+  onAnadirComercioClicked:
+    - _type: patch
+      action: anadir_comercio_campana
+      schema: campanas
+      id:
+        payloadPath: idCampana
+      data:
+        - key: idcomercio
+          value:
+            payloadPath: idComercio
+      success: onComerciosCambiados
+  onQuitarComercioClicked:
+    - _type: patch
+      action: quitar_comercio_campana
+      schema: campanas
+      id:
+        payloadPath: idCampana
+      data:
+        - key: idcomercio
+          value:
+            payloadPath: idComercio
+      success: onComerciosCambiados
+  onQuitarTodosComerciosCampanaClicked:
+    - _type: patch
+      action: quitar_todo_comercio_campana
+      schema: campanas
+      id:
+        statePath: campanaActiva
+      success: onComerciosCambiados
+  onAnadirTodosComerciosCampanaClicked:
+    - _type: patch
+      action: anadir_todo_comercio_campana
+      schema: campanas
+      id:
+        statePath: campanaActiva
+      data:
+        - key: comercios
+          value:
+            statePath: comercios.idList
+      success: onComerciosCambiados      

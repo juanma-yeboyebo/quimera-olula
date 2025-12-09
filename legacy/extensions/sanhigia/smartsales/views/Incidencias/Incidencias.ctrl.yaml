@@ -1,0 +1,19 @@
+---
+shortcuts:
+  - type: Model
+    name: incidencias
+    id: codIncidencia
+    schema: incidencias
+    url: '/ss/incidencias'
+    logicDelete: false
+state:
+  showFilter: false
+bunch:
+  onInit: 
+    - _type: grape
+      name: getIncidencias
+  onShowFilterClicked:
+    - _type: set
+      path: showFilter
+      value:
+        toggleStatePath: showFilter

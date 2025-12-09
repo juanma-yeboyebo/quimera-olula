@@ -1,0 +1,26 @@
+---
+shortcuts: []
+state: {}
+bunch:
+  onBotonGenerarPedidosProveedorClicked:
+    - _type: log 
+      desc: mimensaje_onBotonGenerarPedidosProveedorClicked
+      value:
+        statePath: arrayMultiCheck
+    - _type: patch
+      action: generar_enviar_pedidoprov
+      schema: pedidos
+      data:
+        - key: arrayPedidos
+          value:
+            statePath: arrayMultiCheck
+      success: onGenerarPedidoProvSuccess
+      # error: onGenerarPedidoProvError  
+  onGenerarPedidoProvSuccess:
+    - _type: alert
+      text: Pedido Generado
+      severity: success
+  # onGenerarPedidoProvError:
+  #   - _type: alert
+  #     text: Error al generar pedido
+  #     severity: error  

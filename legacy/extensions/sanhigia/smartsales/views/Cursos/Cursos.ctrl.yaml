@@ -1,0 +1,23 @@
+---
+shortcuts:
+  - type: Model
+    name: cursos
+    id: codCurso
+    schema: eventosCurso
+    url: '/ss/cursos'
+    logicDelete: false
+state:
+  showFilter: false
+bunch:
+  # onInit:
+  #   - _type: set
+  #     path: cursos.filter
+  #     value:
+  #       code: 'return { and: [["tipoevento", "eq", "curso"]]}'     
+  #   - _type: grape
+  #     name: getCursos
+  onShowFilterClicked:
+    - _type: set
+      path: showFilter
+      value:
+        toggleStatePath: showFilter

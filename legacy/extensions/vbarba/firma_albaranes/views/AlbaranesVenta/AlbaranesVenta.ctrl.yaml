@@ -1,0 +1,73 @@
+---
+shortcuts: []
+state: 
+  modalVistaEnviarAlbaran: false
+bunch: 
+  onIrESCarrosClicked:
+    - _type: navigate
+      condition:
+          operator: A is defined
+          A:
+            payloadPath: idParteES
+      url:
+        code: "return '/parteCarros/' + payload.codigoParte + '/' + payload.idParteES"
+  onCrearESCarrosConfrimado:
+    - _type: post
+      schema: partescarros
+      data:
+        - key: tipoDocCli
+          value:
+            const: 'Albarán' 
+        - key: idDocumentoCli
+          value:
+            payloadPath: idAlbaran  
+        - key: codDocumentoCli
+          value:
+            payloadPath: codigo              
+        - key: aplicadoA
+          value:
+            const: 'Cliente'    
+        - key: porCliente
+          value:
+            const: true  
+        - key: nombreCliente
+          value:
+            payloadPath: nombreCliente               
+        - key: codCliente
+          value:
+            payloadPath: codCliente         
+        - key: codAgente
+          value:
+            payloadPath: codAgente              
+        - key: firmado
+          value:
+            const: false                                                             
+      success: successCrearESCarros
+      error: errorCrearESCarros  
+  successCrearESCarros:
+    - _type: navigate
+      condition:
+          operator: A is defined
+          A:
+            payloadPath: response.codparte
+      url:
+        code: "return '/parteCarros/' + payload.response.codparte + '/' + payload.response.pk"       
+  errorCrearESCarros:   
+    - _type: alert 
+      text: Error al crear parte de movimiento de E/S de carros 
+      severity: error 
+  onCallbackEnviaEmail:
+    - _type: set 
+      path: modalVistaEnviarAlbaran
+      value:
+        const: true
+  onCancelEnviarEmailClicked:
+    - _type: set 
+      path: modalVistaEnviarAlbaran
+      value:
+        const: false
+  onEmailEnviado:
+    - _type: set 
+      path: modalVistaEnviarAlbaran
+      value:
+        const: false         

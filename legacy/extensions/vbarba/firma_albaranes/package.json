@@ -1,0 +1,21 @@
+{
+  "name": "@quimera-extension/vbarba-firma_albaranes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "quimera": "workspace:@quimera/core@*",
+    "@quimera/comps": "workspace:*",
+    "@quimera/styles": "workspace:*",
+    "@quimera/thirdparty": "workspace:*",
+    "@quimera-extension/core": "workspace:*",
+    "@quimera-extension/login": "workspace:*",
+    "@quimera-extension/base-almacen": "workspace:*",
+    "@quimera-extension/base-albaranes": "workspace:*",
+    "@quimera-extension/base-firma_albaranes": "workspace:*",
+    "@quimera-extension/base-facturas": "workspace:*"
+  }
+}

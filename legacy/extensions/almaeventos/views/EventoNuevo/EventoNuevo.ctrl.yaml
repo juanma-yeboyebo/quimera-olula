@@ -1,0 +1,36 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: evento
+    id: codProyecto
+    schemaName: eventos
+    mode: insert
+state: 
+  callbackGuardado: null
+bunch:
+  onInit:
+    - _type: set
+      path: callbackGuardado 
+      value: 
+        payloadPath: callbackGuardado
+  onEventoBufferChanged:
+    - _type: grape
+      condition:
+          operator: A = B
+          A:
+            payloadPath: field
+          B:
+            const: 'referencia'
+      name: cambiaDescripcionRef
+  cambiaDescripcionRef:
+    - _type: set 
+      path: evento.buffer.descripcionRef
+      value:
+        payloadPath: option.descripcion         
+  onNuevoEventoSectionAccepted:
+    - _type: grape
+      name: saveEvento
+  onEventoSaved:
+    - _type: call 
+      function: 
+        statePath: callbackGuardado

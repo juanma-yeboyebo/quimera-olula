@@ -1,0 +1,29 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: linea
+    id: idLinea
+    parentId: idAlbaran
+    schemaName: lineasAlbaranesCli
+    mode: insert
+state:
+  inline: true
+bunch:
+  onExpandirClicked:
+    - _type: set
+      path: inline
+      value:
+        toggleStatePath: inline
+  onLineaExpandidaSectionAccepted:
+    - _type: grape
+      name: saveLinea
+  onLineaExpandidaSectionCancelled:
+    - _type: grape
+      name: onExpandirClicked
+  onLineaSaved:
+    - _type: grape
+      name: initBufferLinea
+    - _type: set
+      path: inline
+      value:
+        const: true

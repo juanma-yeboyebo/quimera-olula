@@ -1,0 +1,29 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: albaran
+    id: idAlbaran
+    schemaName: albaranCliNuevo
+    mode: insert
+state: 
+  savingAlbaran: false
+bunch:
+  onNuevoAlbaranSectionAccepted:
+    - _type: set 
+      path: savingAlbaran
+      value:
+        const: true    
+    - _type: grape
+      name: saveAlbaran
+  onNuevoAlbaranSectionCancelled:
+    - _type: set 
+      path: savingAlbaran
+      value:
+        const: false  
+    - _type: grape
+      name: cancelAlbaran
+  onSaveAlbaranFailed:
+    - _type: set 
+      path: savingAlbaran
+      value:
+        const: false    

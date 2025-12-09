@@ -1,0 +1,19 @@
+{
+  "name": "@quimera-extension/base-tienda_nativa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "quimera": "workspace:@quimera/core@*",
+    "@quimera/comps": "workspace:*",
+    "@quimera/styles": "workspace:*",
+    "@quimera/thirdparty": "workspace:*",
+    "@quimera-extension/core": "workspace:*",
+    "@quimera-extension/login": "workspace:*",
+    "@quimera-extension/base-ventas": "workspace:*",
+    "@quimera-extension/base-area_clientes": "workspace:*"
+  }
+}

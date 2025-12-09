@@ -1,0 +1,45 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: albaran
+    id: idAlbaran
+    schemaName: misAlbaranes
+    deleteConfirmQuestion:
+      titulo: Borrar albaran
+      cuerpo: El albaran se borrará
+  - type: Model
+    name: lineas
+    action: get_lineas
+    id: idLinea
+    schema: misLineasAlbaran
+state:
+  vistaDetalle: principal
+bunch:
+  onInit:
+    - condition:
+        operator: A is defined
+        A:
+          statePath: albaran.data.idAlbaran
+      _type: grape
+      name: getLineas
+  onAtrasClicked:
+    - _type: grape
+      name: cancelAlbaran
+  onMasClicked:
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          statePath: vistaDetalle
+        B:
+          const: principal
+      then:
+        _type: set
+        path: vistaDetalle
+        value:
+          const: otra
+      else:
+        _type: set
+        path: vistaDetalle
+        value:
+          const: principal

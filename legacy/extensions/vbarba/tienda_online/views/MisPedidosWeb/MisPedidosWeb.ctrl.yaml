@@ -1,0 +1,27 @@
+---
+shortcuts:
+  - type: Model
+    name: carritos
+    id: idCarrito
+    schema: carrito
+    action: get_carritos_completados
+    url: "/mispedidosweb"
+    logicDelete: true
+state:
+  filtroVisible: false
+bunch:
+  onInit:
+    - _type: grape
+      name: getCarritos
+  # deleteCarritosItem:
+  #   - getCarritos
+  #   - _type: appDispatch
+  #     name:  getCarritoActivo
+  # onCarritosItemReceived:
+  #   - getCarritos
+  #   - _type: appDispatch
+  #     name:  getCarritoActivo
+  # onSaveCarritoInternoSucceded:
+  #   - getCarritos
+  # changeCarritosItem:
+  #   - getCarritos

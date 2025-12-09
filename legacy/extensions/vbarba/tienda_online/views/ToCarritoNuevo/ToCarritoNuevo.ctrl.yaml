@@ -1,0 +1,25 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: carrito
+    id: idCarrito
+    schemaName: nuevoCarrito
+    mode: insert
+state: {}
+bunch:
+  onCarritoBufferChanged:
+    patch: override
+    grapes:
+      - _type: grape
+        name: cambiarReferencia 
+  cambiarReferencia:       
+    - _type: set
+      path: carrito.buffer.referencia
+      value:
+        payloadPath: value  
+  onNuevoCarritoSectionAccepted:
+    - _type: grape
+      name: saveCarrito
+  onNuevoCarritoSectionCancelled:
+    - _type: grape
+      name: cancelCarrito

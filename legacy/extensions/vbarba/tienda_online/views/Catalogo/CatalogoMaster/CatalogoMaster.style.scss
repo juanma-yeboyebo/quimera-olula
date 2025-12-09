@@ -1,0 +1,14 @@
+@include mobile {
+  .PresentacionItemsTexto{
+    :first-child{
+      text-align: center;
+    }
+    :last-child{
+      text-align: justify;
+    }
+  }
+  .PresentacionItemsImagenes{
+    flex-direction: column;
+    align-items: center;
+  }
+}

@@ -1,0 +1,9 @@
+---
+shortcuts:
+  - type: Model
+    name: lineasCarrito
+    id: idlinea
+    schema: lineasCarrito
+    logicDelete: true
+state: {}
+bunch: {}

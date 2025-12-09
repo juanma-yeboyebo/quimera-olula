@@ -1,0 +1,112 @@
+{
+  "translation": {
+    "appmenu": {
+      "catalogo": {
+        "title": "Catálogo",
+        "items": {
+          "tienda": "Tienda"
+        }
+      },
+      "areaClientes": {
+        "title": "Área de clientes",
+        "items": {
+          "condicionesVenta": "Condicions generals de venda"
+        }
+      }
+    },
+    "schemas": {
+      "catalogo": {
+        "codPlanta": "ca/SKU",
+        "nombre": "Nome",
+        "alturaMin": "Alto mín.",
+        "alturaMax": "Alto máx.",
+        "anchuraMin": "Ancho mín.",
+        "anchuraMax": "Ancho máx.",
+        "tempMax": "Tª mín.",
+        "tempMin": "Tª máx.",
+        "color": "Color",
+        "disponible": "Disponible",
+        "exposicionSolar": "Exposición solar",
+        "exposicionSolar_sol": "SOL CAT",
+        "exposicionSolar_solsombra": "SOL/SOMBRA",
+        "exposicionSolar_sombra": "SOMBRA",
+        "resHumedad": "Res. humedad",
+        "resSalinidad": "Res. salinidad",
+        "resSalinidad_alta": "ALTA ca"
+      }
+    },
+    "resistenciaHumedad": {
+      "muySeco": "(c) MUY SECO",
+      "seco": "(c) SECO",
+      "medio": "(c) MEDIA",
+      "alto": "(c) ALTA",
+      "acuatica": "(c) ACUÁTICA"
+    },
+    "itemCatalogo": {
+      "medidas": "(c) MEDIDAS",
+      "caracteristicas": "(c) CARACTERÍSTICAS",
+      "descripcion": "(c) DESCRIPCIÓN",
+      "comprar": "(c) Comprar",
+      "masTamanos": "(c) MÁS TAMAÑOS...",
+      "menosTamanos": "(c) MENOS TAMAÑOS..."
+    },
+    "catalogo": {
+      "descripcion": "Descripción",
+      "titulo": "(cat) Tienda de Plantas Online",
+      "subtitulo": "(cat) En nuestra tienda online de plantas podrás encontrar una gran variedad de especies de palmáceas, árboles, arbustos, vivaces, etc. Contamos con un gran equipo de profesionales para ofrecerte el mejor servicio en la venta de una gran variedad plantas. Realizamos entregas a nivel nacional e internacional.",
+      "avisoNoLogueado": "(cat) Para comprar es necesario tener una cuenta. <1>Identifíquese</1> o <2>contacte con nosotros</2> para crear una."
+    },
+    "carrito": {
+      "irACheckout": "Confirmar pedido",
+      "carritoVacío": "Tu carrito está vacío, <1>ve al catálogo</1>  para escoger tus productos"
+    },
+    "checkout": {
+      "confirmarPedido": "Confirmar pedido",
+      "volverCatalogo": "Volver al catálogo!",
+      "direccionEntrega": "Dirección de entrega!",
+      "formaPago": "Forma de pago",
+      "codPago": "Forma de envío",
+      "formaEnvio": "Forma de envío",
+      "observaciones": "Observaciones de pedido",
+      "textoDefectoObservaciones": "Indique aquí sus observaciones"
+    },
+    "condicionesVenta":  {
+      "textoBoton": "Condicions generals de venda",
+      "titulo": "CONDICIONS GENERALS DE VENDA",
+      "parrafo1": "<strong>1) </strong>Per realitzar una <strong>comanda</strong>, preguem al client ens indiqui amb tota claredat: nom complert de la raó social, adreça, telèfon, codi postal, N.I.F., entitat bancària i número de compte corrent. Igualment, caldrà indicar exactament destinació de la mercaderia, persona de contacte i telèfon.<br /><br />",
+      "parrafo2": "<strong>2) </strong>El cost del <strong>transport</strong> va a càrrec del comprador.<br /><br />",
+      "parrafo3": "<strong>3) </strong>El venedor entregarà la <strong>mercaderia</strong> dins de les dates especificades a la comanda però no es considerarà responsable de les possibles demores  degudes a causes de força major o causes alienes a la seva voluntat. Tots els enviaments es realitzaran amb els mitjans  que es creguin oportuns, tenint en compte sempre els interessos del client i el bé de la mercaderia; a excepció d´aquells casos en que existeixin indicacions específiques per part del client.<br /><br />",
+      "parrafo4": "<strong>4) </strong>Els <strong>preus</strong> s´entenen sobre camió en els nostres vivers. Els preus indicats són nets i l´I.V.A. es cobrarà desglossat a la factura.<br /><br />",
+      "parrafo5": "<strong>5) </strong>La forma de pagament serà l´habitual en els clients classificats. En el cas de nous clients, les operacions es realitzaran <strong>al comptat</strong> mentre s´espera la seva classificació. Un cop rebudes, es revisaran les condicions.<br /><br />",
+      "parrafo6": "<strong>6) </strong>Les <strong>reclamacions</strong> seran ateses durant els cinc primers dies a partir de la data d´entrega. En cas de litigi se sotmetran als tribunals de Mataró.<br /><br />",
+      "footer": "<br /><br /><strong>Oferta excepte venda i/o variació en els preus</strong>"
+    },
+    "textoLegal":  {
+      "parrafo1": "* Les fotografies publicades no corresponen amb el producte final, són imatges representatives de l’article disponible.",
+      "parrafo2": "* Les tarifes que es mostren a la web són orientatives, el preu pot patir modificacions durant el procés de validació i formalització de la comanda. El comercial assignat validarà la comanda i confirmarà els preus i les quantitats finals durant el procés de formalització d’aquesta.",
+      "parrafo3": "* En els articles de temporada i els formats de test petits, la quantitat mínima de comanda és d’una safata (15 unitats per al format M-11 o 10 unitats per al format C-1L). El comercial assignat contactarà per confirmar les quantitats abans de formalitzar la comanda."
+    },
+    "pedidoConfirmado":  {
+      "titulo": "Comanda enviada",
+      "parrafo1": "La comanda no tindrà validesa fins que el comercial assignat contacti per tal de formalitzar-la.",
+      "aceptar": "Acceptar"
+    },
+    "enlacesArribas": {
+      "empresa": { "titulo": "Empresa", "url": "/ca/empresa/" },
+      "catalogos": { "titulo": "Catàleg", "url": "/ca/catalogos/" },
+      "produccion": { "titulo": "Producció", "url": "/ca/produccion/" },
+      "blog": { "titulo": "BLOG", "url": "/ca/blog/" },
+      "foro": { "titulo": "Fòrum", "url": "/ca/forumx/" },
+      "localizacion": { "titulo": "Obres", "url": "/ca/localizacion/" },
+      "contacto": { "titulo": "Contacte", "url": "/ca/contacto/" },
+      "tiendaOnline": "Botiga online"
+    },
+    "enlacesBarnaplant": {
+      "nosotros": { "titulo": "nosaltres", "url": "/sobre-nosotros/" },
+      "produccion": { "titulo": "producció", "url": "/produccion/" },
+      "obras": { "titulo": "obres i suministraments", "url": "/obras-y-suministros/" },
+      "catalogos": { "titulo": "catàlegs", "url": "/catalogos-barnaplant/" },
+      "contacto": { "titulo": "contacte", "url": "/contacto/" }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+---
+shortcuts:
+  - type: Model
+    name: pedidos
+    id: idPedido
+    schema: misPedidos
+    url: "/areaclientes/pedidos"
+    logicDelete: false
+state:
+  filtroVisible: false
+bunch:
+  onInit:
+    - _type: grape
+      name: getPedidos
+  onMostrarFiltroClicked:
+    - _type: set
+      path: filtroVisible
+      value:
+        const: true
+  onPedidosFilterChanged:
+    - _type: set
+      path: filtroVisible
+      value:
+        const: false
+    - _type: set
+      path: pedidos.filter
+      value:
+        payloadPath: value
+    - _type: grape
+      name: getPedidos

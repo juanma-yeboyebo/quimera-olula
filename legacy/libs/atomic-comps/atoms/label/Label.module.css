@@ -1,0 +1,17 @@
+.label__root {
+  color: var(--primary);
+}
+
+.label__disabled {
+  color: grey;
+}
+
+.label__hasError {
+  color: var(--danger);
+}
+
+.label__required::after {
+  content: " *";
+  color: grey;
+  /* color: var(--danger); */
+}

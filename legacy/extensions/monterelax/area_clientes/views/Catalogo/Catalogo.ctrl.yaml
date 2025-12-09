@@ -1,0 +1,15 @@
+---
+shortcuts: []
+state: 
+  idModelo: null
+bunch: 
+  onIdCatalogoProp:
+    - _type: set
+      path: idModelo
+      value:
+        payloadPath: idModelo   
+  cerraModalCompra: 
+    - _type: navigate
+      url:
+        const: "/catalogo"                       
+

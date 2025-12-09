@@ -1,0 +1,504 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: pedido
+    id: idPedido
+    action: "get_pedidos_compra"
+    schemaName: pedidosCompra
+  - type: Model
+    name: lineas
+    id: idLinea
+    schema: lineasPedidoCompra
+state:
+  modalEnviarAPda: false
+  codbarrasAsociar: false
+  modalLotesAlmacenVisible: false
+  modalLotesTipo: false
+  modalLotesInventarioVisible: false
+  lotesAlmacen: []
+  idLineaModal: false
+  selectedLote: false
+  status:
+    vistaDetalle: principal
+    enviandoPda: false
+    procesandoGenerarAlbaran: false
+  ubicaciones: []
+  codBarras: null
+bunch:
+  # En sanhigia cargamos siempre todas las líneas por la revisión
+  # en la totalización que cambia precios y crea líneas regalo
+  onInit:
+    - _type: set
+      path: vistaDetalle
+      value:
+        const: principal
+    - condition:
+        operator: A is defined
+        A:
+          statePath: pedido.data.idPedido
+      _type: set
+      path: lineas.page.limit
+      value:
+        const: 1000
+    - condition:
+        operator: A is defined
+        A:
+          statePath: pedido.data.idPedido
+      _type: grape
+      name: getLineas
+    - _type: grape
+      name: dameUbicaciones
+  dameUbicaciones:
+    - _type: get
+      schema: ubicacion
+      success: ubicacionesRecibidas
+      error: errorUbicaciones
+  ubicacionesRecibidas:
+    - _type: set
+      path: ubicaciones
+      value:
+        payloadPath: response.data
+  errorUbicaciones:
+    - _type: alert
+      text: No se han podido cargar las ubicaciones.
+      severity: error
+  onAtrasClicked:
+    - _type: grape
+      name: cancelPedido
+  onLineaCambiada:
+    - _type: grape
+      name: getLineas
+    - _type: grape
+      name: compruebaAniadirTrabajador
+    - _type: grape
+      name: compruebaCambiaEstadoPda
+  onCerrarLineaClicked:
+    - _type: patch
+      action: cerrar_linea_compra
+      schema: lineasPedidoCompra
+      id:
+        payloadPath: idLineaCerrar
+      success: onLineaCambiada
+  onEstadoPdaActualizado:
+    - _type: grape
+      name: setChangesForBufferPedido
+      payload:
+        changes:
+          paramValues:
+            - key: estadoPda
+              value:
+                payloadPath: response.estadoPda
+    - _type: grape
+      name: focusCodBarras
+  onEnviarPDAClicked:
+    - _type: set
+      path: status.enviandoPda
+      value:
+        const: true
+    - _type: patch
+      schema: pedidosCompra
+      id:
+        statePath: pedido.buffer.idPedido
+      action: pedido_compra_listopda
+      data:
+        - key: codTrabajador
+          value:
+            statePath: pedido.buffer.codTrabajador
+      success: onPedidoEnviadoPDA
+      error: onEnviarPDAError
+  onEnviarPDAError:
+    - _type: set
+      path: status.enviandoPda
+      value:
+        const: false
+    - _type: alert
+      text: Error al enviar el pedido
+      severity: error
+  onPedidoEnviadoPDA:
+    - _type: set
+      path: pedido.buffer.estadoPda
+      value:
+        const: "Listo PDA"
+    - _type: grape
+      name: savePedido
+    - _type: set
+      path: status.enviandoPda
+      value:
+        const: false
+    - _type: alert
+      text: Pedido enviado
+      severity: success
+  onGenerarAlbaranClicked:
+    - _type: set
+      path: procesandoGenerarAlbaran
+      value:
+        const: true
+    - _type: patch
+      schema: pedidosCompra
+      id:
+        statePath: pedido.buffer.idPedido
+      action: generar_albaran_compra
+      data:
+        - key: codTrabajador
+          value:
+            statePath: pedido.buffer.codTrabajador
+      success: onGenerarAlbaranSuccess
+      error: onGenerarAlbaranError
+  onGenerarAlbaranError:
+    - _type: set
+      path: procesandoGenerarAlbaran
+      value:
+        const: false
+    - _type: alert
+      text: Error al generar albaran
+      severity: error
+  onGenerarAlbaranSuccess:
+    - _type: set
+      path: procesandoGenerarAlbaran
+      value:
+        const: false
+    - _type: alert
+      text: Albaran generado
+      severity: success
+    - _type: grape
+      name: getLineas
+  onLecturaCodBarras:
+    - _type: patch
+      action: procesaCodBarrasProv
+      schema: pedidosCompra
+      id:
+        statePath: pedido.buffer.idPedido
+      data:
+        - key: codbarras
+          value:
+            payloadPath: codBarras
+      success: onLecturaCodBarraseSuccess
+  onLecturaCodBarraseSuccess:
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          payloadPath: response.asklote
+        B:
+          const: true
+      then:
+        _type: grape
+        name: onMostrarModalLotesBarcode
+      else:
+        if:
+          operator: A = B
+          A:
+            payloadPath: response.askasociar
+          B:
+            const: true
+        then:
+          _type: grape
+          name: onMostrarModalLinasAsociar
+        else:
+          _type: grape
+          name: onLineaCambiada
+  onMostrarModalLotesBarcode:
+    - _type: set
+      path: modalLotesTipo
+      value:
+        const: movilotescli
+    - _type: set
+      path: idLineaModal
+      value:
+        payloadPath: response.idlinea
+    - _type: patch
+      action: get_lotes_prov_almacen
+      schema: lotesPorAlmacen
+      data:
+        - key: idlinea
+          value:
+            payloadPath: response.idlinea
+      success: onMostrarModalLotesSuccess
+  onMostrarModalLotesSuccess:
+    - _type: set
+      path: lotesAlmacen
+      value:
+        payloadPath: response.data
+    - _type: grape
+      name: onLineaCambiada
+    - _type: set
+      path: modalLotesAlmacenVisible
+      value:
+        toggleStatePath: modalLotesAlmacenVisible
+  onMostrarModalLinasAsociar:
+    # - _type: log
+    #   desc: miMensajeModalAsociar
+    #   value:
+    #     const: cantidadAnadir
+    - _type: set
+      path: modalAsociarBarcodeVisible
+      value:
+        toggleStatePath: modalAsociarBarcodeVisible
+    - _type: set
+      path: codigoBarrasFormateado
+      value:
+        payloadPath: response.codbarras
+  onCerrarModalLotesAlmacen:
+    - _type: set
+      path: modalLotesAlmacenVisible
+      value:
+        const: false
+  onCerrarModaAsociarBarcode:
+    - _type: set
+      path: modalAsociarBarcodeVisible
+      value:
+        const: false
+    - _type: grape
+      name: focusCodBarras
+  onAsociarBarcode:
+    - _type: patch
+      action: procesaCodBarrasProv
+      schema: pedidosCompra
+      id:
+        statePath: pedido.buffer.idPedido
+      data:
+        - key: codbarras
+          value:
+            payloadPath: barcode
+        - key: idlinea
+          value:
+            payloadPath: idLinea
+        - key: asociar
+          value:
+            const: true
+      success: onAsociarBarcodeSuccess
+  onAsociarBarcodeSuccess:
+    - _type: grape
+      name: onMostrarModalLinasAsociar
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          payloadPath: response.asklote
+        B:
+          const: true
+      then:
+        _type: grape
+        name: onMostrarModalLotesBarcode
+      else:
+        _type: grape
+        name: onLineaCambiada
+  onLotesItemSelected:
+    - _type: set
+      path: selectedLote
+      value:
+        payloadPath: item
+  onAsociarItemSelected:
+    - _type: set
+      path: selectedAsociar
+      value:
+        payloadPath: item
+  onAnadirCantidadLote:
+    # - _type: log
+    #   desc: miMensajeLineaguarda
+    #   value:
+    #     payloadPath: cantidadAnadir
+    - _type: patch
+      action: anadirMoviloteProv
+      schema: lineasPedidoCompra
+      id:
+        payloadPath: idLinea
+      data:
+        - key: codlote
+          value:
+            payloadPath: codLote
+        - key: cantidad
+          value:
+            payloadPath: cantidadAnadir
+      success: onAnadirCantidadLoteSuccess
+  onAnadirCantidadLoteSuccess:
+    - _type: grape
+      name: onCerrarModalLotesAlmacen
+    - _type: set
+      path: selectedLote
+      value:
+        const: false
+    - _type: grape
+      name: getLineas
+  onLineaChanged:
+    - _type: setItem
+      condition:
+        operator: A = B
+        A:
+          payloadPath: field
+        B:
+          const: "codUbicacionArticulo"
+      path: lineas.dict
+      key:
+        payloadPath: index
+      prop:
+        const: "codUbicacionArticulo"
+      value:
+        payloadPath: value
+    - _type: patch
+      condition:
+        operator: A is defined
+        A:
+          payloadPath: value
+      schema: lineasPedidoCompraAgrupado
+      action: cambiar_ubicacion_articulo
+      id:
+        payloadPath: index
+      data:
+        - key: codUbicacionArticulo
+          value:
+            payloadPath: value
+      success: onUbicacionArticuloCambiada
+      error: onCambiaUbicacionArticuloError
+  onUbicacionArticuloCambiada:
+    - _type: grape
+      name: reloadLinea
+  onCambiaUbicacionArticuloError:
+    - _type: alert
+      text: Error al actualizar la ubicación del artículo
+      severity: error
+  onAnadirMoviloteCliCLiked:
+    - _type: patch
+      action: anadirMoviloteProv
+      schema: lineasPedidoCompra
+      id:
+        payloadPath: idLinea
+      data:
+        - key: codlote
+          value:
+            payloadPath: codLote
+        - key: ncodlote
+          value:
+            payloadPath: ncodLote
+        - key: caducidad
+          value:
+            payloadPath: caducidad
+      success: onAnadirMoviloteCliCLikedSuccess
+  onAnadirMoviloteCliCLikedSuccess:
+    - _type: grape
+      name: getLineas
+    - _type: grape
+      name: onCerrarModalLotesAlmacen
+    - _type: set
+      path: selectedLote
+      value:
+        const: false
+    - _type: set
+      path: ncodlote
+      value:
+        const: false
+    - _type: set
+      path: caducidad
+      value:
+        const: false
+  onCantidadLineaEnter:
+    - _type: grape
+      name: focusCodBarras
+  onCantidadLineaBlurr:
+    # - _type: log
+    #   desc: cantidadlinea
+    #   value:
+    #     payloadPath: cantidadLinea
+    # - _type: log
+    #   desc: nuevaCantidadLinea
+    #   value:
+    #     payloadPath: nuevaCantidadLinea
+    # - _type: if
+    #   if:
+    #     operator: A = B
+    #     A:
+    #       payloadPath: nuevaCantidadLinea
+    #     B:
+    #       payloadPath: cantidadLinea
+    #   then:
+    #     _type: grape
+    #     name: focusCodBarras
+    #   else:
+    - _type: grape
+      name: onCantidadLineaCambiada
+  onCantidadLineaCambiada:
+    - _type: patch
+      action: cambiarCantidadLinea
+      schema: lineasPedidoCompra
+      id:
+        payloadPath: idLinea
+      data:
+        - key: cantidadNueva
+          value:
+            payloadPath: nuevaCantidadLinea
+      success: onLineaCambiada
+  onTdbLineasPedidoCliColumnClicked:
+    - _type: log
+      desc: miMensajeIf
+      value:
+        payloadPath: data.order
+    - _type: if
+      if:
+        operator: A in list B
+        A:
+          payloadPath: data.order
+        B:
+          const: ["codpedido", "sh_codubicacionarticulo", "descripcion", "refprov"]
+      then:
+        _type: grape
+        name: onOrderLineasPreparacion
+      # else:
+      #   _type: log
+      #   desc: miMensajeElse
+      #   value:
+      #     const: else
+  onOrderLineasPreparacion:
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          statePath: orderColumns
+        B:
+          const: "ASC"
+      then:
+        _type: grape
+        name: changeOrderColumnDESC
+      else:
+        _type: grape
+        name: changeOrderColumnASC
+  changeOrderColumnDESC:
+    - _type: set
+      path: orderColumns
+      value:
+        const: DESC
+    - _type: grape
+      name: changeOrderColumn
+  changeOrderColumnASC:
+    - _type: set
+      path: orderColumns
+      value:
+        const: ASC
+    - _type: grape
+      name: changeOrderColumn
+  changeOrderColumn:
+    - _type: log
+      desc: miMensajeElse
+      value:
+        statePath: orderColumns
+    - _type: set
+      path: lineas.order
+      value:
+        code: "return { field: payload.data.order, direction: state.orderColumns }"
+    - _type: grape
+      name: getLineas
+  onTrabajadorActualizado:
+    - _type: set
+      path: pedido.buffer.codTrabajador
+      value:
+        payloadPath: codTrabajador
+    - _type: set
+      path: pedido.buffer.nombreTrabajador
+      value:
+        payloadPath: nombreTrabajador
+    - _type: grape
+      name: focusCodBarras
+  clearCodBarras:
+    - _type: set
+      path: codBarras
+      value:
+        const: null

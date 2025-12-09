@@ -1,0 +1,285 @@
+---
+shortcuts:
+  - type: Model
+    name: stocks
+    id: referencia
+    schema: stocks
+    url: "/stocks"
+    logicDelete: true
+state:
+      miFinca: {}
+      lectura: null
+      codalmacen: null
+      modalCrearStockVisible: false
+      creandoStock: false
+bunch:
+  onInit:
+    - _type: set
+      path: miFinca
+      value: 
+        localStorageValue: finca   
+    - _type: grape
+      name: dameStocks    
+    - _type: set
+      path: codalmacen
+      value: 
+        statePath: miFinca.codalmacendefecto        
+  dameStocks:            
+    - condition:
+        operator: A is defined
+        A:
+          statePath: miFinca.codfinca
+      _type: grape
+      name: getStocks
+      payload:
+        getStocksParams:
+          code: 'return {codFinca: state.miFinca.codfinca}'    
+  onTdbStocksRowClicked:
+    - _type: grape
+      name: onStocksItemSelected
+      payload:
+        item:
+          code: 'return payload' 
+  actualizarCurrent: 
+    - _type: setItem
+      path: stocks.dict
+      key:
+        payloadPath: data.referencia
+      prop:
+        const: "disponible"
+      value:
+        payloadPath: data.disponible      
+    - _type: setItem
+      path: stocks.dict
+      key:
+        payloadPath: data.referencia
+      prop:
+        const: "tieneFoto"
+      value:
+        payloadPath: data.tieneFoto           
+  recargarStockDesdeArticulo:
+    - _type: setItem
+      path: stocks.dict
+      key:
+        payloadPath: data.referencia
+      prop:
+        const: "descripcion"
+      value:
+        payloadPath: data.descripcion 
+    - _type: setItem
+      path: stocks.dict
+      key:
+        payloadPath: data.referencia
+      prop:
+        const: "tieneFoto"
+      value:
+        payloadPath: data.tieneFoto
+    - _type: setItem
+      path: stocks.dict
+      key:
+        payloadPath: data.referencia
+      prop:
+        const: "publicadoWeb"
+      value:
+        payloadPath: data.publicadoWeb 
+    - _type: setItem
+      path: stocks.dict
+      key:
+        payloadPath: data.referencia
+      prop:
+        const: "precioRef"
+      value:
+        payloadPath: data.precioRef                                               
+    - _type: set
+      path: stocks.current
+      value:
+        code: return state.stocks.dict[payload.data.referencia]                            
+  onCambiarDisponibleClicked: 
+    - _type: patch
+      schema: stocks
+      action: cambiar_disponible
+      id:
+        payloadPath: data.idarticuloprov
+      data:
+        - key: disponible
+          value:
+            code: return !payload.data.disponible 
+        - key: referencia
+          value:
+            payloadPath: data.referencia    
+        - key: codproveedor
+          value:
+            statePath: miFinca.codproveedor    
+        - key: nombreProveedor
+          value:
+            statePath: miFinca.nombreproveedor                              
+      success: onDisponibleActualizado
+  onDisponibleActualizado:     
+    - _type: setItem
+      path: stocks.dict
+      key:
+        payloadPath: response.referencia
+      prop:
+        const: "disponible"
+      value:
+        payloadPath: response.disponible 
+    - _type: setItem
+      condition:
+          operator: A is true
+          A:
+            payloadPath: response.disponible
+      path: stocks.dict
+      key:
+        payloadPath: response.referencia
+      prop:
+        const: "publicadoWeb"
+      value:
+        const: true         
+    - _type: alert
+      text: Disponibilidad actualizada.
+      severity: success           
+  onReferenciaChanged:  
+    - condition:
+        operator: not A
+        A:
+          payloadPath: value 
+      _type: grape
+      name: onLecturaChanged        
+    - _type: set
+      path: referencia
+      value:
+        payloadPath: value 
+    - _type: set
+      path: stocks.filter
+      value:
+        code: 'return payload.value ? { and: [["referencia", "like", payload.value]]} : null'
+    - _type: grape
+      name: dameStocks       
+  onLecturaChanged:  
+    - _type: set
+      path: lectura
+      value:
+        payloadPath: value                 
+  onFiltroChanged:       
+    - _type: set
+      path: stocks.filter
+      value:
+        code: 'return payload.value ? { and: [payload.filtro]} : null'
+    - _type: grape
+      name: dameStocks     
+  onVerImagenClicked:
+    - _type: get
+      schema: articuloimages
+      action: get_url_image
+      id:
+        payloadPath: referencia
+      success: onGetUrlImageSucceded  
+  onGetUrlImageSucceded:
+    - _type: navigate
+      url:
+        payloadPath: response.direccion                           
+  onPublicadoWebClicked:
+    - _type: patch
+      schema: articulos
+      action: cambiar_publicadoweb
+      id:
+        payloadPath: data.referencia
+      data:
+        - key: vb_publicadoweb
+          value:
+            code: return !payload.data.publicadoWeb 
+        - key: referencia
+          value:
+            payloadPath: data.referencia                                 
+      success: onPublicadoWebActualizado
+  onPublicadoWebActualizado:           
+    - _type: setItem
+      path: stocks.dict
+      key:
+        payloadPath: response.referencia
+      prop:
+        const: "publicadoWeb"
+      value:
+        payloadPath: response.vb_publicadoweb  
+    - _type: alert
+      text: Artículo actualizado.
+      severity: success
+  onCrearStockClicked:
+    - _type: set
+      condition:
+          operator: A is true
+          A:
+            code: 'return !state?.referencia || !state?.miFinca?.codalmacendefecto'
+      path: modalCrearStockVisible
+      value:
+        const: true
+    - _type: grape
+      condition:
+          operator: A is true
+          A:
+            code: 'return !!state?.referencia && !!state?.miFinca?.codalmacendefecto'
+      name: onAceptarCrearStockClicked
+  onCancelarCrearStockClicked:
+      - _type: set
+        path: creandoStock
+        value:
+          const: false    
+      - _type: set
+        path: modalCrearStockVisible
+        value:
+          const: false
+  onAceptarCrearStockClicked:
+    - _type: set
+      path: creandoStock
+      value:
+        const: true
+    - _type: patch
+      schema: stocks
+      action: crear_registro_stocks
+      data:
+        - key: referencia
+          value:
+            statePath: referencia    
+        - key: codalmacen
+          value:
+            statePath: codalmacen                          
+      success: onStockCreado
+      error: onCrearStockError
+  onCrearStockError:
+    - _type: alert
+      text: Error al crear el stock.
+      severity: error
+    - _type: grape
+      name: onCancelarCrearStockClicked
+  onStockCreado:
+    - _type: grape
+      name: onCancelarCrearStockClicked
+    - dameStocks
+    - _type: navigate
+      url:
+        payloadPath: response.direccion  
+  onStocksItemChanged:               
+    - _type: setItem
+      condition:
+        operator: A is defined
+        A:
+          payloadPath: field
+      path: stocks.dict
+      key:
+        payloadPath: referencia
+      prop:
+        payloadPath: field
+      value:
+        payloadPath: value 
+    - _type: setItem
+      condition:
+        operator: A is true
+        A:
+          code: 'return payload.field === "disponible" && !!payload.value'   
+      path: stocks.dict
+      key:
+        payloadPath: referencia
+      prop:
+        const: "publicadoWeb"
+      value:
+        payloadPath: value                 

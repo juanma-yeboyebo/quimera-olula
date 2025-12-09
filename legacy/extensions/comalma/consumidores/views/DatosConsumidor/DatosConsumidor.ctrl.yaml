@@ -1,0 +1,98 @@
+---
+shortcuts: []
+state: {}
+bunch:
+  onInit:
+    - _type: get
+      schema: consumidores
+      filter:
+        - const: email
+        - const: eq
+        - payloadPath: email
+      success: onGetConsumidoresSuccess
+      error: onGetConsumidoresError  
+  onGetConsumidoresSuccess:
+    - _type: if
+      if: 
+        operator: A is defined
+        A:
+          code: 'return payload.response.data[0]'
+      then:
+        _type: set   
+        path: consumidor
+        value:
+          code: 'return payload.response.data[0]'
+      else:
+        _type: grape
+        name: onGetConsumidoresError 
+  onGetConsumidoresError:      
+    - _type: alert
+      text: No se ha encontrado al usuario
+      severity: error      
+  onConsumidorGeneroChanged:
+    - _type: set
+      path: consumidor.genero
+      value:
+        payloadPath: value                         
+  onConsumidorSeccionConfirmada:
+    - _type: patch
+      schema: consumidores
+      id:
+        statePath: consumidor.idConsumidor
+      data:
+        - key: nombre
+          value:
+            statePath: consumidor.nombre
+        - key: apellidos
+          value:
+            statePath: consumidor.apellidos
+        - key: ciudad
+          value:
+            statePath: consumidor.ciudad 
+        - key: provincia
+          value:
+            statePath: consumidor.provincia   
+        - key: codPostal
+          value:
+            statePath: consumidor.codPostal                                      
+        - key: genero
+          value:
+            statePath: consumidor.genero   
+        - key: email
+          value:
+            statePath: consumidor.email
+        - key: cifnif
+          value:
+            statePath: consumidor.cifnif
+        - key: fechaNacimiento
+          value:
+            statePath: consumidor.fechaNacimiento
+        - key: telefono
+          value:
+            statePath: consumidor.telefono
+        - key: aceptaComunicacion
+          value:
+            statePath: consumidor.aceptaComunicacion         
+        - key: aceptaCondiciones
+          value:
+            statePath: consumidor.aceptaCondiciones                                                                                      
+      success: guardarConsumidorSuccess
+      error: guardarConsumidorError
+  guardarConsumidorSuccess:  
+    # - _type: grape
+    #   name: seteaUserData 
+    #   payload:
+    #     user_data:
+    #       localStorageValue: user_data 
+    - _type: alert
+      text: Datos guardados correctamente
+      severity: success
+  # seteaUserData:
+  #   - _type: setToLocalStorage
+  #     key: user_data
+  #     value:
+  #       code: 'return {user:{...payload.user_data.user, user: state.consumidor.email}}'           
+  guardarConsumidorError:      
+    - _type: alert
+      text: Error al guardar los datos
+      severity: error   

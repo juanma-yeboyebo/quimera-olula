@@ -1,0 +1,223 @@
+---
+state:
+  smState: idle-search
+  codProveedor: null
+  codAlmacen: ALM
+  fechaDesde: 'util.today()'
+  fechaHasta: null
+  diasServicio: null
+  factorSeguridad: null
+  pageRows: 25
+  tableData: []
+  hasLines: false
+  hasPrev: false
+  hasNext: false
+  currentPage: 0
+bunch:
+  onBuscarClicked:
+    - _type: smTransition
+      current: idle-search
+      target: searching
+    - _type: grape
+      name: clearState
+    # - _type: get
+    - _type: post
+      schema: peticionPrevisionCompras
+      action: buscar
+      # params:
+      data:
+        - key: codProveedor
+          value:
+            statePath: codProveedor
+        - key: codAlmacen
+          value:
+            statePath: codAlmacen
+        - key: fechaDesde
+          value:
+            statePath: fechaDesde
+        - key: fechaHasta
+          value:
+            statePath: fechaHasta
+        - key: diasServicio
+          value:
+            statePath: diasServicio
+        - key: factorSeguridad
+          value:
+            statePath: factorSeguridad
+      success: onBuscarSucceeded
+      error: onBuscarError
+
+  clearState:
+    - _type: set
+      path: tableData
+      value:
+        const: []
+    - _type: set
+      path: currentPage
+      value:
+        const: 0
+    - _type: set
+      path: hasLines
+      value:
+        const: false
+    - _type: set
+      path: hasPrev
+      value:
+        const: false
+    - _type: set
+      path: hasNext
+      value:
+        const: false
+
+  onPrevPageClicked:
+    - _type: smTransition
+      current: idle-data
+      target: refreshing
+    - _type: set
+      path: currentPage
+      value:
+        code: 'return state.currentPage - 1'
+    - _type: grape
+      name: updatePagination
+    - _type: smTransition
+      current: refreshing
+      target: idle-data
+
+  onNextPageClicked:
+    - _type: smTransition
+      current: idle-data
+      target: refreshing
+    - _type: set
+      path: currentPage
+      value:
+        code: 'return state.currentPage + 1'
+    - _type: grape
+      name: updatePagination
+    - _type: smTransition
+      current: refreshing
+      target: idle-data
+
+  updateHasLines:
+    - _type: set
+      path: hasLines
+      value:
+        code: 'return state.tableData.some(row => row.selection && row.aPedir)'
+
+  updatePagination:
+    - _type: set
+      path: hasPrev
+      value:
+        code: 'return state.currentPage > 0'
+    - _type: set
+      path: hasNext
+      value:
+        code: 'return state.tableData.length > state.pageRows * (state.currentPage + 1)'
+
+  clearPagination:
+    - _type: set
+      path: currentPage
+      value:
+        code: 'return 0'
+    - _type: grape
+      name: updatePagination
+
+  onBuscarError:
+    - _type: alert
+      text: Ocurrió un problema. No se ha podido realizar la búsqueda
+      severity: warning
+    - _type: smTransition
+      current: searching
+      target: idle-search
+
+  onBuscarSucceeded:
+    - _type: set
+      path: tableData
+      value:
+        payloadPath: response.data
+    - _type: grape
+      name: updateHasLines
+    - _type: grape
+      name: clearPagination
+    - _type: smTransition
+      current: searching
+      target: idle-data
+
+  # onNextPageClicked:
+  #   - _type: set
+  #     path: currentPage
+  #     value:
+  #       code: 'return state.currentPage + 1'
+
+  onSelectionChanged:
+    - _type: set
+      path: tableData
+      value:
+        code: 'return state.tableData.map((row, idx) => payload.index === idx ? ({ ...row, selection: payload.value }) : row)'
+    - _type: grape
+      name: updateHasLines
+
+  onAPedirChanged:
+    - _type: set
+      path: tableData
+      value:
+        code: 'return state.tableData.map((row, idx) => payload.index === idx ? ({ ...row, aPedir: payload.value }) : row)'
+    # - _type: set
+    #   path: tableData
+    #   value:
+    #     code: 'return state.tableData.map((row) => payload.index === row.idArticuloProv ? ({ ...row, aPedir: payload.value }) : row)'
+    - _type: grape
+      name: updateHasLines
+
+  onGenerarPedidoClicked:
+    - _type: smTransition
+      condition:
+        operator: A is true
+        A:
+          statePath: hasLines
+      current: idle-data
+      target: creating
+    - _type: alert
+      condition:
+        operator: not A
+        A:
+          statePath: hasLines
+      text: El pedido debe contener al menos una línea
+      severity: warning
+    - _type: post
+      condition:
+        operator: A is true
+        A:
+          statePath: hasLines
+      schema: peticionGenerarPedido
+      data:
+        - key: codProveedor
+          value:
+            statePath: codProveedor
+        - key: lineas
+          value:
+            code: 'return state.tableData.filter(row => row.selection && row.aPedir).map(row => ({ referencia: row.referencia, descripcion: row.descripcion, cantidad: row.aPedir }))'
+      success: onGenerarPedidoSucceeded
+      error: onGenerarPedidoError
+
+  onGenerarPedidoError:
+    - _type: alert
+      text: Ocurrió un problema. No se ha generado el pedido
+      severity: warning
+    - _type: smTransition
+      current: creating
+      target: idle-data
+
+  onGenerarPedidoSucceeded:
+    - _type: alert
+      text: Pedido generado correctamente
+      severity: success
+    - _type: grape
+      name: onBuscarClicked
+    - _type: smTransition
+      current: creating
+      target: idle-data
+
+  onVolverABuscarClicked:
+    - _type: smTransition
+      current: idle-data
+      target: idle-search

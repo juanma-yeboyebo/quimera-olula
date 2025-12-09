@@ -1,0 +1,58 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: factura
+    id: idFactura
+    schemaName: facturascli
+    deleteConfirmQuestion:
+      titulo: Borrar factura
+      cuerpo: El factura se borrará
+  - type: Model
+    name: lineas
+    id: idLinea
+    schema: lineasFacturasCli
+state:
+  vistaDetalle: principal
+bunch:
+  onInit:
+    - condition:
+        operator: A is defined
+        A:
+          statePath: factura.data.idFactura
+      _type: grape
+      name: getLineas
+  onFacturaBufferSectionAccepted:
+    - _type: grape
+      name: saveFactura
+  onFacturaBufferSectionCancelled:
+    - _type: grape
+      name: loadBufferFactura
+  onLineasItemChanged:
+    - _type: grape
+      name: reloadFactura
+  onLineaCreada:
+    - _type: grape
+      name: reloadFactura
+    - _type: grape
+      name: addLineasItem
+  onAtrasClicked:
+    - _type: grape
+      name: cancelFactura
+  onMasClicked:
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          statePath: vistaDetalle
+        B:
+          const: principal
+      then:
+        _type: set
+        path: vistaDetalle
+        value:
+          const: otra
+      else:
+        _type: set
+        path: vistaDetalle
+        value:
+          const: principal

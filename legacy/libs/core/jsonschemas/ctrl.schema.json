@@ -1,0 +1,764 @@
+{
+  "type": "object",
+  "properties": {
+    "state": {
+      "type": "object",
+      "description": "Variables de estado",
+      "patternProperties": {
+        "^.*$": {
+          "defaultSnippets": [
+            {
+              "label": "Array",
+              "description": "Variable de tipo array",
+              "body": []
+            },
+            {
+              "label": "Objeto",
+              "description": "Variable de tipo objeto",
+              "body": {}
+            },
+            {
+              "label": "String",
+              "description": "Variable de tipo string",
+              "body": ""
+            },
+            {
+              "label": "Bool",
+              "description": "Variable de tipo bool",
+              "body": false
+            },
+            {
+              "label": "Null",
+              "description": "Variable de tipo null",
+              "body": null
+            }
+          ]
+        },
+        "additionalProperties": false
+      }
+    },
+    "bunch": {
+      "type": "object",
+      "description": "Bunch",
+      "patternProperties": {
+        "^.*$": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "patch": {
+                  "type": "string",
+                  "enum": ["append", "override", "prepend"]
+                },
+                "grapes": {
+                  "description": "Grapes",
+                  "$ref": "#/$defs/grapes"
+                }
+              }
+            },
+            {
+              "description": "Grapes",
+              "$ref": "#/$defs/grapes"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "_defaultSnippets": [
+        {
+          "label": "Array",
+          "description": "Variable de tipo array",
+          "body": []
+        }
+      ]
+    }
+  },
+  "required": ["state", "bunch"],
+  "$defs": {
+    "value": {
+      "description": "Obtiene un valor desde las partes accesibles del contexto (estado, payload, esquemas, constantes, ...)",
+      "type": "object",
+      "properties": {
+        "cleanSchema": {
+          "description": "Valores de un esquema al que se pasa por parámetro {}",
+          "type": "string"
+        },
+        "code": {
+          "description": "Valor construido manualmente con una función javascript que recibe payload y estado. Ej: (_, clave) => clave*2",
+          "type": "string"
+        },
+        "const": {
+          "description": "Valor constante de cualquier tipo"
+        },
+        "condition": {
+          "description": "Valor booleano de una condición",
+          "type": "string"
+        },
+        "loadSchema": {
+          "description": "Valor resultado de cargar un schema",
+          "type": "object",
+          "properties": {
+            "schema": {
+              "description": "Nombre del esquema",
+              "type": "string"
+            },
+            "data": {
+              "description": "Datos entrada de la carga",
+              "$ref": "#/$defs/value"
+            }
+          }
+        },
+        "localStorageValue": {
+          "description": "Valor de un objeto almacenado en el navegador",
+          "type": "string"
+        },
+        "mediaWidth": {
+          "description": "Valor de la anchura del dispositivo",
+          "type": "null"
+        },
+        "statePath": {
+          "description": "Valor de una ruta en el estado",
+          "type": "string"
+        },
+        "payloadPath": {
+          "description": "Valor de una ruta en el payload",
+          "type": "string"
+        },
+        "payloadPathOrZero": {
+          "description": "Valor de una ruta en el payload o cero si es nulo o indefinido",
+          "type": "string"
+        },
+        "toggleStatePath": {
+          "description": "Valor inverso de un valor booleano de una ruta en el estado",
+          "type": "string"
+        }
+      },
+      "maxProperties": 1,
+      "additionalProperties": false
+    },
+    "condition": {
+      "description": "Obtiene un valor desde las partes accesibles del contexto (estado, payload, esquemas, constantes, ...)",
+      "type": "object",
+      "properties": {
+        "operator": {
+          "description": "Operador lógico a aplicar",
+          "type": "string",
+          "enum": [
+            "A = B",
+            "A in list B",
+            "A is defined",
+            "A is true",
+            "not A",
+            "schema is invalid for A",
+            "list A is empty",
+            "list A is not empty",
+            "mediaWidth in [xs, sm]"
+          ]
+        },
+        "and": {
+          "description": "Operador AND sobre lista de condiciones",
+          "type": "array",
+          "items": {
+            "description": "Condición",
+            "$ref": "#/$defs/condition"
+          }
+        },
+        "or": {
+          "description": "Operador OR sobre lista de condiciones",
+          "type": "array",
+          "items": {
+            "description": "Condición",
+            "$ref": "#/$defs/condition"
+          }
+        }
+      },
+      "patternProperties": {
+        "^[a-z]$": {
+          "description": "Parámetros del operador lógico",
+          "$ref": "#/$defs/value"
+        }
+      }
+    },
+    "grape": {
+      "anyOf": [
+        {
+          "type": "object",
+          "description": "Lanza un toast con un mensaje",
+          "properties": {
+            "_type": {
+              "type": "string",
+              "const": "alert"
+            },
+            "condition": {
+              "description": "Condiciona el grape a que la condición se cumpla",
+              "$ref": "#/$defs/condition"
+            },
+            "text": {
+              "description": "Texto del mensaje",
+              "type": "string"
+            },
+            "severity": {
+              "description": "Severidad (Info, error, etc.)",
+              "type": "string",
+              "enum": ["error", "info", "success", "warning"]
+            }
+          },
+          "required": ["_type", "text", "severity"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Llamada a un grape del contexto de aplicación",
+          "properties": {
+            "_type": {
+              "type": "string",
+              "const": "appDispatch"
+            },
+            "condition": {
+              "description": "Condiciona el grape a que la condición se cumpla",
+              "$ref": "#/$defs/condition"
+            },
+            "name": {
+              "description": "Nombre del grape de aplicación a llamar",
+              "type": "string"
+            },
+            "payload": {
+              "description": "Payload a enviar",
+              "type": "object",
+              "properties": {
+                "description": "Valores del payload",
+                "$ref": "#/$defs/value"
+              }
+            }
+          },
+          "required": ["_type", "name"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Establece un valor en una variable de estado",
+          "properties": {
+            "_type": {
+              "type": "string",
+              "const": "set"
+            },
+            "condition": {
+              "description": "Condiciona el grape a que la condición se cumpla",
+              "$ref": "#/$defs/condition"
+            },
+            "path": {
+              "description": "Ruta a la variable de estado a modificar separada por puntos. Ej: pedido.codCliente",
+              "type": "string"
+            },
+            "value": {
+              "description": "Valor a asignar a la variable de estado",
+              "$ref": "#/$defs/value"
+            }
+          },
+          "required": ["_type", "path", "value"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Añade un valor al final de un array almacenado en una variable de estado",
+          "properties": {
+            "_type": {
+              "type": "string",
+              "const": "appendItem"
+            },
+            "condition": {
+              "description": "Condiciona el grape a que la condición se cumpla",
+              "$ref": "#/$defs/condition"
+            },
+            "path": {
+              "description": "Ruta a la variable de estado que contiene el array separada por puntos. Ej: pedido.lineas",
+              "type": "string"
+            },
+            "value": {
+              "description": "Valor a concatenar al array almacenado en la variable de estado",
+              "$ref": "#/$defs/value"
+            }
+          },
+          "required": ["_type", "path", "value"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Elimina un elemento de un array almacenado en una variable de estado a partir de su índice",
+          "properties": {
+            "_type": {
+              "type": "string",
+              "const": "deleteItemByIndex"
+            },
+            "condition": {
+              "description": "Condiciona el grape a que la condición se cumpla",
+              "$ref": "#/$defs/condition"
+            },
+            "path": {
+              "description": "Ruta a la variable de estado que contiene el array separada por puntos. Ej: pedido.lineas",
+              "type": "string"
+            },
+            "index": {
+              "description": "Índice del elemento a eliminar del array almacenado en la variable de estado",
+              "$ref": "#/$defs/value"
+            }
+          },
+          "required": ["_type", "path", "index"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Establece un valor en elemento de un diccionario del estado",
+          "properties": {
+            "_type": {
+              "type": "string",
+              "const": "setItem"
+            },
+            "condition": {
+              "description": "Condiciona el grape a que la condición se cumpla",
+              "$ref": "#/$defs/condition"
+            },
+            "path": {
+              "description": "Ruta al diccionario",
+              "type": "string"
+            },
+            "value": {
+              "description": "Valor a asignar a la variable de estado",
+              "$ref": "#/$defs/value"
+            },
+            "key": {
+              "description": "Clave del diccionario",
+              "$ref": "#/$defs/value"
+            },
+            "prop": {
+              "description": "Propiedad del elemento a cambiar",
+              "$ref": "#/$defs/value"
+            }
+          },
+          "required": ["_type", "path", "value", "key", "prop"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Ejecuta una función",
+          "properties": {
+            "_type": {
+              "type": "string",
+              "const": "call"
+            },
+            "condition": {
+              "description": "Condiciona el grape a que la condición se cumpla",
+              "$ref": "#/$defs/condition"
+            },
+            "function": {
+              "description": "Valor del que obtener la función",
+              "$ref": "#/$defs/value"
+            },
+            "params": {
+              "description": "Lista de parámetros",
+              "$ref": "#/$defs/valueArray"
+            }
+          },
+          "required": ["_type", "function"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Descarga un archivo",
+          "properties": {
+            "_type": {
+              "type": "string",
+              "const": "download"
+            },
+            "condition": {
+              "description": "Condiciona el grape a que la condición se cumpla",
+              "$ref": "#/$defs/condition"
+            },
+            "schema": {
+              "description": "Schema a usar",
+              "type": "string"
+            },
+            "params": {
+              "description": "Parámetros a pasar",
+              "$ref": "#/$defs/valueArray"
+            },
+            "action": {
+              "description": "Acción asociada en la API",
+              "type": "string"
+            },
+            "filename": {
+              "description": "Nombre del fichero a obtener",
+              "$ref": "#/$defs/value"
+            },
+            "success": {
+              "description": "Grape al que llamar en caso de éxito",
+              "type": "string"
+            },
+            "error": {
+              "description": "Grape al que llamar en caso de error",
+              "type": "string"
+            }
+          },
+          "required": ["_type", "schema", "success"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Ejecuta una función",
+          "properties": {
+            "_type": {
+              "type": "string",
+              "const": "get"
+            },
+            "condition": {
+              "description": "Condiciona el grape a que la condición se cumpla",
+              "$ref": "#/$defs/condition"
+            },
+            "schema": {
+              "description": "Schema a usar",
+              "type": "string"
+            },
+            "action": {
+              "description": "Acción si no es get",
+              "type": "string"
+            },
+            "id": {
+              "description": "Id del objeto a obetener (usar id o filter)",
+              "$ref": "#/$defs/value"
+            },
+            "filter": {
+              "description": "Filtro a aplicar",
+              "$ref": "#/$defs/filter"
+            },
+            "params": {
+              "description": "Datos a enviar",
+              "$ref": "#/$defs/valueArray"
+            },
+            "success": {
+              "description": "Grape al que llamar en caso de éxito",
+              "type": "string"
+            },
+            "error": {
+              "description": "Grape al que llamar en caso de error",
+              "type": "string"
+            }
+          },
+          "required": ["_type", "schema", "success"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Llama a otro grape por nombre",
+          "properties": {
+            "_type": {
+              "type": "string",
+              "const": "grape"
+            },
+            "condition": {
+              "description": "Condiciona el grape a que la condición se cumpla",
+              "$ref": "#/$defs/condition"
+            },
+            "name": {
+              "description": "Nombre del grape",
+              "type": "string"
+            },
+            "payload": {
+              "description": "Payload a enviar",
+              "type": "object",
+              "properties": {
+                "description": "Valores del payload",
+                "$ref": "#/$defs/value"
+              }
+            }
+          },
+          "required": ["_type", "name"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Llamada http PATCH",
+          "properties": {
+            "_type": {
+              "type": "string",
+              "const": "patch"
+            },
+            "condition": {
+              "description": "Condiciona el grape a que la condición se cumpla",
+              "$ref": "#/$defs/condition"
+            },
+            "schema": {
+              "description": "Schema a usar",
+              "type": "string"
+            },
+            "id": {
+              "description": "Id del objeto a obetener (usar id o filter)",
+              "$ref": "#/$defs/value"
+            },
+            "action": {
+              "description": "Acción si no es el patch por defecto",
+              "type": "string"
+            },
+            "data": {
+              "description": "Datos a enviar",
+              "$ref": "#/$defs/valueArray"
+            },
+            "files": {
+              "description": "Ficheros para subir",
+              "$ref": "#/$defs/value"
+            },
+            "success": {
+              "description": "Grape al que llamar en caso de éxito",
+              "type": "string"
+            },
+            "error": {
+              "description": "Grape al que llamar en caso de error",
+              "type": "string"
+            }
+          },
+          "required": ["_type", "schema", "success"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Llamada http POST",
+          "properties": {
+            "_type": {
+              "type": "string",
+              "const": "post"
+            },
+            "condition": {
+              "description": "Condiciona el grape a que la condición se cumpla",
+              "$ref": "#/$defs/condition"
+            },
+            "schema": {
+              "description": "Schema a usar",
+              "type": "string"
+            },
+            "action": {
+              "description": "Acción si no es el post por defecto",
+              "type": "string"
+            },
+            "success": {
+              "description": "Grape al que llamar en caso de éxito",
+              "type": "string"
+            },
+            "data": {
+              "description": "Datos a enviar",
+              "$ref": "#/$defs/valueArray"
+            },
+            "error": {
+              "description": "Grape al que llamar en caso de error",
+              "type": "string"
+            }
+          },
+          "required": ["_type", "schema", "success"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "if / then / [else]",
+          "properties": {
+            "_type": {
+              "type": "string",
+              "const": "if"
+            },
+            "if": {
+              "description": "Condición",
+              "$ref": "#/$defs/condition"
+            },
+            "then": {
+              "description": "Grape en caso de que la condición se cumpla",
+              "$ref": "#/$defs/grape"
+            },
+            "else": {
+              "description": "Grape en caso de que la condición no se cumpla",
+              "$ref": "#/$defs/grape"
+            }
+          },
+          "required": ["if", "then"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Navegar",
+          "properties": {
+            "_type": {
+              "type": "string",
+              "const": "navigate"
+            },
+            "condition": {
+              "description": "Condiciona el grape a que la condición se cumpla",
+              "$ref": "#/$defs/condition"
+            },
+            "url": {
+              "description": "URL (si es local comienza por /, si es externa por http y abre una nueva ventana",
+              "$ref": "#/$defs/value"
+            }
+          },
+          "required": ["_type", "url"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Establece un valor a almacenar en el navegador",
+          "properties": {
+            "_type": {
+              "type": "string",
+              "const": "setToLocalStorage"
+            },
+            "condition": {
+              "description": "Condiciona el grape a que la condición se cumpla",
+              "$ref": "#/$defs/condition"
+            },
+            "key": {
+              "description": "Nombre de la clave a almacenar",
+              "type": "string"
+            },
+            "value": {
+              "description": "Valor a almacenar",
+              "$ref": "#/$defs/value"
+            }
+          },
+          "required": ["_type", "key", "value"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Transición de máquina de estados",
+          "properties": {
+            "_type": {
+              "type": "string",
+              "const": "smTransition"
+            },
+            "condition": {
+              "description": "Condiciona el grape a que la condición se cumpla",
+              "$ref": "#/$defs/condition"
+            },
+            "current": {
+              "description": "Estado inicial",
+              "type": "string"
+            },
+            "target": {
+              "description": "Estado final",
+              "type": "string"
+            },
+            "actions": {
+              "description": "Acciones asociadas a la transición",
+              "type": "array",
+              "items": {
+                "description": "Grapes asociados a la transición",
+                "$ref": "#/$defs/grape"
+              }
+            }
+          },
+          "required": ["_type", "current", "target"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Muestra un valor por la consola",
+          "properties": {
+            "_type": {
+              "type": "string",
+              "const": "log"
+            },
+            "condition": {
+              "description": "Condiciona el grape a que la condición se cumpla",
+              "$ref": "#/$defs/condition"
+            },
+            "desc": {
+              "description": "Descripción que acompañará al valor",
+              "type": "string"
+            },
+            "value": {
+              "description": "Valor a mostrar",
+              "$ref": "#/$defs/value"
+            }
+          },
+          "required": ["_type", "desc", "value"],
+          "additionalProperties": false
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "defaultSnippets": [
+        {
+          "label": "Grape",
+          "description": "Nuevo grape",
+          "body": {}
+        }
+      ]
+    },
+    "grapes": {
+      "type": "array",
+      "items": {
+        "description": "Grapes",
+        "$ref": "#/$defs/grape"
+      }
+    },
+    "valueArray": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "description": "Nombre del parámetro",
+            "type": "string"
+          },
+          "value": {
+            "description": "Valor del parámetro",
+            "$ref": "#/$defs/value"
+          }
+        }
+      }
+    },
+    "filterClause": {
+      "description": "Sentencias a combinar con AND",
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "description": "Valor",
+            "$ref": "#/$defs/value"
+          },
+          {
+            "description": "Operador lógico a aplicar",
+            "type": "string",
+            "enum": ["eq"]
+          }
+        ]
+      }
+    },
+    "filter": {
+      "anyOf": [
+        {
+          "description": "Cláusula",
+          "$ref": "#/$defs/filterClause"
+        },
+        {
+          "description": "Anidamiento AND / OR",
+          "type": "object",
+          "properties": {
+            "and": {
+              "description": "Operador lógico AND",
+              "type": "array",
+              "items": {
+                "description": "Cláusula",
+                "$ref": "#/$defs/filter"
+              }
+            },
+            "or": {
+              "description": "Operador lógico AND",
+              "type": "array",
+              "items": {
+                "description": "Cláusula",
+                "$ref": "#/$defs/filter"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

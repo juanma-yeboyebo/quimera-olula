@@ -1,0 +1,220 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: curso
+    id: codCurso
+    schemaName: eventosCurso
+  - type: Model
+    name: lineaseventos
+    id: idlineaEvento
+    schema: lineaseventos
+  - type: Model
+    name: contactosevento
+    action: "dame_contactos_evento"
+    id: idInteraccion
+    schema: contactosCurso
+state:
+  producto: null
+  contactoAnadir: null
+  idTipoTratoNuevaCampania: null
+  valorTratosNuevaCampania: 0
+  modalAnadirContactoVisible: false
+  modalCrearContactoVisible: false
+  modalErroresCargaContactosExcel: false
+  modalCrearCampaniaVisible: false
+  erroresCarga: []
+bunch:
+  # onInit:
+  #   - _type: grape
+  #     name: getCurso
+  onCrearCampaniaClickConfirmed:
+    - _type: patch
+      action: crear_campania_curso
+      schema: eventosCurso
+      id:
+        statePath: curso.data.codCurso
+      data:
+        - key: idtipotrato
+          value:
+            statePath: idTipoTratoNuevaCampania
+      success: onCrearCampaniaCursoSuccess
+      error: onCrearCampaniaCursoError
+  onRemoveContactoEventoConfirmed:
+    - _type: patch
+      schema: eventosCurso
+      action: remove_contacto_evento
+      id:
+        statePath: curso.data.codCurso
+      data:
+        - key: codcontacto
+          value:
+            payloadPath: codContacto           
+      success: onRemoveContactoEventoSuccess
+      error: onRemoveContactoEventoError
+  onRemoveContactoEventoSuccess:
+    - _type: alert
+      text: Contacto eliminado.
+      severity: success  
+    - _type: grape
+      name: getContactosevento
+  onRemoveContactoEventoError:
+    - _type: alert
+      text: Error al eliminar contacto
+      severity: error
+    - _type: grape
+      name: getContactosevento
+  onCrearCampaniaCursoError:
+    - _type: grape
+      name: resetCrearCampania  
+    - _type: alert
+      text: Error al crear campaña
+      severity: error
+  onCrearCampaniaCursoSuccess:
+    - _type: set
+      path: curso.buffer.idCampania
+      value:
+        payloadPath: response.pk
+    - _type: grape
+      name: resetCrearCampania        
+    - _type: alert
+      text: Campaña creada con éxito
+      severity: info
+  onSaveContactoClicked:
+    - _type: patch
+      schema: eventosCurso
+      action: add_contacto_evento
+      id:
+        statePath: curso.data.codCurso
+      data:
+        - key: codcontacto
+          value:
+            statePath: contactoAnadir    
+        - key: tipo
+          value:
+            payloadPath: tipoCreacion                             
+      success: onAddContactoEventoSuccess
+      error: onAddContactoEventoError
+  saveContactoCreado:
+    - _type: patch
+      schema: eventosCurso
+      action: add_contacto_evento
+      id:
+        statePath: curso.data.codCurso
+      data:
+        - key: codcontacto
+          value:
+            payloadPath: contactoAnadir    
+        - key: tipo
+          value:
+            payloadPath: tipoCreacion                             
+      success: onAddContactoEventoSuccess
+      error: onAddContactoEventoError      
+  onAddContactoEventoSuccess:
+    - _type: set
+      path: contactoAnadir
+      value:
+        const: null
+    - _type: set
+      path: modalAnadirContactoVisible
+      value:
+        const: false
+    - _type: set
+      path: modalCrearContactoVisible
+      value:
+        const: false        
+    - _type: alert
+      text: Contacto añadido
+      severity: success
+    - _type: grape
+      name: getContactosevento
+  onAddContactoEventoError:
+    - _type: set
+      path: contactoAnadir
+      value:
+        const: null
+    - _type: set
+      path: modalAnadirContactoVisible
+      value:
+        const: false
+    - _type: set
+      path: modalCrearContactoVisible
+      value:
+        const: false          
+    - _type: alert
+      text: Error, contacto no añadido
+      severity: error
+    - _type: grape
+      name: getContactosevento      
+  onExcelAdjuntado:
+    - _type: patch
+      schema: eventosCurso
+      action: importar_contactos_excel
+      id:
+        payloadPath: codCurso
+      files:
+        payloadPath: files
+      success: onExcelCargado
+      # error: onExcelCargadoError  
+  onExcelCargado:
+    - _type: grape
+      name: getTratosCampania
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          payloadPath: response
+        B:
+          const: true
+      then:
+        _type: grape
+        name: onMostrarMensajeExcelCargado  
+      else:
+        _type: grape
+        name: mostrarModalErroresCarga
+  mostrarModalErroresCarga:
+    - _type: set
+      path: modalErroresCargaContactosExcel
+      value:
+        const: true  
+    - _type: set
+      path: erroresCarga
+      value:
+        payloadPath: response  
+  onCerrarModalErroresCarga:
+    - _type: grape
+      name: getContactosevento
+    - _type: set
+      path: modalErroresCargaContactosExcel
+      value:
+        const: false         
+  onMostrarMensajeExcelCargado: 
+    - _type: alert
+      text: Contactos añadidos.
+      severity: success   
+    - _type: grape
+      name: getContactosevento       
+  onExcelCargadoError:  
+    - _type: alert
+      text: 'Error: El fichero no se pudo leer correctamente'
+      severity: error     
+  onCrearCampaniaClicked:
+    - _type: set
+      path: modalCrearCampaniaVisible
+      value:
+        const: true
+  onCancelarCrearCampaniaClicked:
+    - _type: grape
+      name: resetCrearCampania
+  resetCrearCampania:
+    - _type: set
+      path: modalCrearCampaniaVisible
+      value:
+        const: false
+    - _type: set
+      path: idTipoTratoNuevaCampania
+      value:
+        const: null        
+    - _type: set
+      path: valorTratosNuevaCampania
+      value:
+        const: 0            

@@ -1,0 +1,16 @@
+---
+shortcuts:
+  - type: Model
+    name: lineasCarrito
+    id: idlinea
+    schema: lineasCarrito
+    logicDelete: true
+state: {}
+bunch:
+  onAuthenticatedChanged:
+    - condition:
+        operator: A is true
+        A:
+          statePath: authenticated
+      _type: appDispatch
+      name: getCarritoActivo

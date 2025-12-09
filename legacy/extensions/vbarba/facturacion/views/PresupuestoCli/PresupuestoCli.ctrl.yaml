@@ -1,0 +1,65 @@
+---
+shortcuts: []
+state:
+  generandoPedido: false
+  modalVistaEnviarDocumento:  false
+bunch:
+  onImprimirPresupuestoClicked:
+    - _type: download
+      schema: presupuestosCli
+      params:
+        - key: idpresupuesto
+          value:
+            statePath: presupuesto.buffer.idPresupuesto
+      action: presupuesto_to_pdf
+      filename:
+        const: presupuesto.pdf
+      success: none
+  onGenerarPedidoClicked:
+    - _type: set
+      path: generandoPedido
+      value:
+        const: true
+    - _type: patch
+      action: generar_pedido
+      schema: presupuestosCli
+      id:
+        statePath: presupuesto.buffer.idPresupuesto
+      data:
+        - key: servircompleto
+          value:
+            const: true
+      success: onGenerarPedidoSuccess
+      error: onGenerarPedidoError
+  onGenerarPedidoSuccess:
+    - _type: set
+      path: generandoPedido
+      value:
+        const: false
+    - _type: alert
+      text: Pedido Generado
+      severity: success
+  onGenerarPedidoError:
+    - _type: set
+      path: generandoPedido
+      value:
+        const: false  
+    - _type: alert
+      text: Error al generar pedido
+      severity: error
+  onEnviarEmailClicked:
+    - _type: set 
+      path: modalVistaEnviarDocumento
+      value:
+        const: true
+  onCancelEnviarEmailClicked:
+    - _type: set 
+      path: modalVistaEnviarDocumento
+      value:
+        const: false
+  onEmailEnviado:
+    - _type: set 
+      path: modalVistaEnviarDocumento
+      value:
+        const: false  
+

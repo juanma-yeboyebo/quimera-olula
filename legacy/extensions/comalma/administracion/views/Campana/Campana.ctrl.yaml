@@ -1,0 +1,34 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: campana
+    id: idCampana
+    schemaName: campanas  
+  - type: Model
+    name: comercios
+    id: idComercio
+    schema: comercios
+    action: "get_comercios_campana"
+state: {}
+bunch:
+  onInit:
+    - _type: set
+      condition:
+          operator: A is defined
+          A:
+            payloadPath: initCampana
+      path: comercios.filter
+      value:
+        code: 'return { and: [["idcampana", "eq", payload.initCampana.idCampana]]}'
+    - _type: set
+      path: vistaDetalle
+      value:
+        const: principal
+    - _type: grape
+      name: getComercios    
+  onCampanaBufferSectionAccepted:
+    - _type: grape
+      name: saveCampana
+  onCampanaBufferSectionCancelled:
+    - _type: grape
+      name: loadBufferCampana

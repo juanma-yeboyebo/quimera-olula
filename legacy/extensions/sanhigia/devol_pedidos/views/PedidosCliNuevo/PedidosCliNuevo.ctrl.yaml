@@ -1,0 +1,95 @@
+---
+shortcuts: []
+state: 
+  codAgente: null
+  codAgenteMkt: null
+  dirCanaria: false
+  origenMercanciaOptions: [{ key: "Exportaciones", value: "Península" },{ key: "IGIC", value: "Canarias" }]
+bunch:
+  onInit:
+    patch: prepend
+    grapes:
+      - _type: set
+        condition:
+            operator: A is defined
+            A:
+              payloadPath: codAgenteProp
+        path: codAgente
+        value:
+          payloadPath: codAgenteProp
+      - _type: set
+        condition:
+            operator: A is defined
+            A:
+              payloadPath: codAgenteMktProp
+        path: codAgenteMkt
+        value:
+          payloadPath: codAgenteMktProp              
+  savePedido:
+    patch: prepend
+    grapes:
+      - _type: set
+        path: pedido.buffer.sh_ctrlestadoborr
+        value:
+          const: true
+      - _type: set
+        condition:
+          operator: A is defined
+          A:
+            statePath: codAgente
+        path: pedido.buffer.codAgente
+        value:
+          statePath: codAgente
+      - _type: set
+        condition:
+          operator: A is defined
+          A:
+            statePath: codAgenteMkt
+        path: pedido.buffer.codAgenteMkt
+        value:
+          statePath: codAgenteMkt
+  onDireccionCambiada:
+  - _type: if
+    if:
+      operator: A is defined
+      A:
+        payloadPath: codDir
+    then:
+      _type: grape
+      name: compruebaCanarias
+    else:
+      _type: grape
+      name: setDirCanarias
+      payload:
+        esCanariasValue:
+          const: false
+  compruebaCanarias:
+    - _type: get 
+      schema: dirClientes
+      action: check_dir_canarias
+      id:
+        payloadPath: codDir
+      success: compruebaCanariasSuccess 
+      error: compruebaCanariasError
+  compruebaCanariasSuccess:
+    - _type: grape 
+      name: setDirCanarias
+      payload:
+        esCanariasValue:
+          payloadPath: response.esCanarias          
+  compruebaCanariasError:
+    - _type: alert
+      text: Error al comprobar si la dirección es de Canarias
+      severity: error
+  setDirCanarias:
+    - _type: set
+      path: dirCanaria
+      value:
+        payloadPath: esCanariasValue    
+    - _type: grape
+      name: onPedidoBufferChanged
+      payload:
+        field:
+          const: "regimenIva"   
+        value:
+          code: 'return payload.esCanariasValue ? "Exportaciones" : null'       

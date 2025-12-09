@@ -1,0 +1,33 @@
+{
+  "ref1": {
+    "type": "IconButton",
+    "id": "saveLinea",
+    "size": "small",
+    "color": "primary",
+    "disabled": {
+      "condition": {
+        "operator": "schema is invalid for A",
+        "schema": "lineasAlbaranesCli",
+        "A": {
+          "valueType": "statePath",
+          "value": "linea.buffer"
+        }
+      }
+    },
+    "children": [
+      {
+        "type": "Icon",
+        "id": "Icon1",
+        "key": "Icon1",
+        "fontSize": "large",
+        "value": "save_alt"
+      }
+    ]
+  },
+  "ref2": {
+    "type": "Icon",
+    "id": "Icon1",
+    "fontSize": "large",
+    "value": "save_alt"
+  }
+}

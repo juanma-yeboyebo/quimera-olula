@@ -1,0 +1,121 @@
+---
+shortcuts:
+  - type: Model
+    name: catalogo
+    id: codPlanta
+    schema: catalogo
+    # url: "/catalogo"
+    logicDelete: true
+state:
+  filtroVisible: true
+  smState: catalogo
+  referenciaExt: null
+  lectura: null
+  soloDisponibles: False
+bunch:
+  onInit:
+    - _type: if
+      if:
+        operator: A is defined
+        A:
+          payloadPath: referenciaProp
+      then:
+        _type: grape
+        name: cargaUnaReferencia
+      else:
+        _type: grape
+        name: cargaTodasReferencias
+    - condition:
+        operator: mediaWidth in [xs, sm]
+        a:
+          mediaWidth:
+        b:
+          const:
+            - xs
+            - sm
+      _type: set
+      path: filtroVisible
+      value:
+        toggleStatePath: filtroVisible
+  onSoloDisponiblesChanged:
+    - _type: set
+      path: soloDisponibles
+      value:
+        toggleStatePath: soloDisponibles
+  onLecturaChanged:
+    - _type: set
+      path: lectura
+      value:
+        payloadPath: value
+  cargaUnaReferencia:
+    - _type: set
+      path: referenciaExt
+      value:
+        payloadPath: referenciaProp
+    - _type: grape
+      name: onCatalogoFilterChanged
+      payload:
+        value:
+          code: 'return {"and":[["referencia","like",payload.referenciaProp]]}'
+  cargaTodasReferencias:
+    - _type: set
+      path: referenciaExt
+      value:
+        const: null
+    - _type: grape
+      name: getCatalogo
+  onMostrarFiltroClicked:
+    - _type: set
+      path: filtroVisible
+      value:
+        toggleStatePath: filtroVisible
+  onAnadirProductoACarritoClicked:
+    - _type: post
+      schema: nuevaLineaCarrito
+      action: anadir_producto
+      data:
+        - key: referencia
+          value:
+            payloadPath: referencia
+        - key: cantidad
+          value:
+            payloadPath: cantidad
+        - key: idCarrito
+          value:
+            payloadPath: idCarrito
+      success: onProductoAnadidoAlCarrito
+  onProductoAnadidoAlCarrito:
+    - _type: appDispatch
+      name: setCarrito
+      payload:
+        carrito:
+          loadSchema:
+            schema: carrito
+            data:
+              payloadPath: response.carrito
+  onCatalogoFilterChanged:
+    - _type: set
+      path: catalogo.filter
+      value:
+        payloadPath: value
+    - _type: grape
+      name: getCatalogo
+    # - _type: log
+    #   desc: mimensaje_sssssssssssssssssssssssssssss
+    #   value:
+    #     payloadPath: type
+    - condition:
+        operator: A = B
+        A:
+          payloadPath: type
+        B:
+          const: "clearFilter"
+      _type: set
+      path: lectura
+      value:
+        const: ""
+  onFiltroChanged:
+    - _type: set
+      path: catalogo.filter
+      value:
+        code: "return payload.value ? { and: [payload.filtro]} : null"

@@ -1,0 +1,23 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: compra
+    id: idCompra
+    schemaName: compras  
+state:
+
+bunch:
+  onInit:
+    - _type: set
+      path: vistaDetalle
+      value:
+        const: principal
+  onCompraBufferSectionAccepted:
+    - _type: grape
+      name: saveCompra
+  onCompraBufferSectionCancelled:
+    - _type: grape
+      name: loadBufferCompra
+  onAtrasClicked:
+    - _type: grape
+      name: cancelCompra        

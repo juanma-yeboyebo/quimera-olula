@@ -1,0 +1,142 @@
+---
+state: 
+  modalNuevoTratoVisible: false
+  modalErroresCargaContactosExcel: false
+  erroresCarga: []
+  idCampania: false
+bunch:
+  onInit:
+    - _type: grape
+      name: seteaOrigen   
+    - _type: grape      
+      name: getExternalFilterInSession 
+    - _type: set
+      path: idCampania
+      value:
+        payloadPath: idCampania
+    # Ya estamos llamando al cambiar el filtro arriba a 'onTratosCampaniaFilterChanged'
+    # - _type: grape
+    #   name: getTratosData      
+  onExcelAdjuntado:
+    - _type: patch
+      schema: campania
+      action: importar_contactos
+      id:
+        payloadPath: idCampania
+      files:
+        payloadPath: files
+      success: onExcelCargado
+      # error: onExcelCargadoError  
+  onExcelCargado:
+    - _type: grape
+      name: getTratosCampania
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          payloadPath: response
+        B:
+          const: true
+      then:
+        _type: grape
+        name: onMostrarMensajeExcelCargado  
+      else:
+        _type: grape
+        name: mostrarModalErroresCarga
+  mostrarModalErroresCarga:
+    - _type: set
+      path: modalErroresCargaContactosExcel
+      value:
+        const: true  
+    - _type: set
+      path: erroresCarga
+      value:
+        payloadPath: response  
+  onCerrarModalErroresCarga:
+    - _type: set
+      path: modalErroresCargaContactosExcel
+      value:
+        const: false         
+
+  onMostrarMensajeExcelCargado: 
+    - _type: alert
+      text: Contactos añadido.
+      severity: success   
+    - _type: grape
+      name: getTratosData       
+  onExcelCargadoError:  
+    - _type: alert
+      text: 'Error: El fichero no se pudo leer correctamente'
+      severity: error       
+  onNuevoTratoClicked:
+    - _type: set
+      path: modalNuevoTratoVisible
+      value:
+        const: true  
+  onCerrarCrearTrato:
+    - _type: set
+      path: modalNuevoTratoVisible
+      value:
+        const: false         
+    - _type: grape
+      name: getTratosData
+  onSincronizarConACClickedConfirm:
+    - _type: patch
+      schema: campania
+      action: sincronizar_con_activecampaign
+      id:
+        statePath: idCampania
+      success: onAcSincronizados
+      error: onSincronizadoACError 
+  onAsignarAgentesAutoClicked:        
+    - _type: patch
+      schema: campania
+      action: asignar_agentes_auto
+      id:
+        statePath: idCampania
+      success: onAgentesAsignados
+      error: onAgentesAsignadosError 
+  onPublicarTratosClicked:
+    - _type: patch
+      schema: campania
+      action: publicar_tratos_campania
+      id:
+        statePath: idCampania
+      success: onTratosPublicados
+      error: onTratosPublicadosError 
+  onSincronizadoAC:
+    - _type: grape
+      name: getTratosCampania
+    - _type: alert
+      text: Sincronizacion con AC completada.
+      severity: success          
+  onSincronizadoACError:  
+    - _type: alert
+      text: 'Error: No se pudo sincronizar con AC'
+      severity: error   
+  onAgentesAsignados:
+    - _type: grape
+      name: getTratosCampania
+    - _type: alert
+      text: Agentes asignados automáticamente.
+      severity: success        
+  onAcSincronizados:
+    - _type: grape
+      name: getTratosCampania
+    - _type: alert
+      text: Contactos asignados automáticamente.
+      severity: success     
+  onAgentesAsignadosError:  
+    - _type: alert
+      text: 'Error: No se pudieron asignar los agentes'
+      severity: error   
+  onTratosPublicados:
+    - _type: grape
+      name: getTratosCampania
+    - _type: alert
+      text: Tratos publicados.
+      severity: success          
+  onTratosPublicadosError:  
+    - _type: alert
+      text: 'Error: No se pudieron publicar los tratos'
+      severity: error    

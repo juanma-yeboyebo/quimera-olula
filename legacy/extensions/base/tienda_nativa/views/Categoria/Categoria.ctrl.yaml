@@ -1,0 +1,20 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: categoria
+    id: idCategoria
+    schemaName: categorias
+    deleteConfirmQuestion:
+      titulo: Borrar categoría
+      cuerpo: La categoría se borrará
+state: {}
+bunch:
+  onCategoriaSectionAccepted:
+    - _type: grape
+      name: saveCategoria
+  onCategoriaSectionCancelled:
+    - _type: grape
+      name: loadBufferCategoria
+  onAtrasClicked:
+    - _type: grape
+      name: cancelCategoria

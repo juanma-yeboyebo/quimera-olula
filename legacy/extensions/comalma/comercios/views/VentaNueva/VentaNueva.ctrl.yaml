@@ -1,0 +1,54 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: venta
+    id: idVenta
+    schemaName: ventas
+    mode: insert
+state: 
+  nuevoConsumidor: false
+bunch:
+  onNuevaVentaSectionAccepted:
+    - _type: grape
+      name: saveVenta
+  onVentaInternoSaved:
+    - _type: grape
+      name: initBufferVenta      
+  onNuevaVentaSectionCancelled:
+    - _type: grape
+      name: cancelVenta
+    - _type: grape
+      name: loadBufferVenta
+  onClienteExistenteClicked:
+    - _type: set
+      path: nuevoConsumidor
+      value: 
+        const: false
+  onNuevoClienteClicked:
+    - _type: set
+      path: nuevoConsumidor
+      value: 
+        const: true
+  onVolverMenuClicked:
+    - _type: navigate
+      url:
+        const: "/" 
+  onVentaBufferChanged:
+    - _type: set
+      condition:
+        operator: not A
+        A:
+          statePath: venta.buffer.idComercio
+      path: venta.buffer.idComercio
+      value:
+        statePath: miIdComercio  
+    - _type: set
+      condition:
+        operator: A = B
+        A:
+          payloadPath: field
+        B:
+          const: "idConsumidor"
+      path: venta.buffer.idConsumidor
+      value:
+        payloadPath: option.idconsumidor

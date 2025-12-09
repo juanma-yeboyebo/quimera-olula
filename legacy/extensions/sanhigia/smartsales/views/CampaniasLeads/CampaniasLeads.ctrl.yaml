@@ -1,0 +1,102 @@
+---
+shortcuts:
+  - type: Model
+    name: campaniasLeads
+    id: idCampania
+    schema: campania
+    url: '/ss/leadpacientes'
+    logicDelete: false
+state:
+  showFilter: false
+  mostrarArchivadas: false
+bunch:
+  onInit:
+    - _type: grape
+      name: getCampaniasLeads
+      payload:
+        getCampaniasLeadsParams:
+            code: 'return {archivadas: state.mostrarArchivadas, cuentamarketing: "leadspacientes"}'
+  onAtrasClicked:
+    - _type: set
+      path: campaniasLeads.current
+      value:
+        const: null
+    - _type: navigate
+      url:
+        const: '/'
+  onShowFilterClicked:
+    - _type: set
+      path: showFilter
+      value:
+        toggleStatePath: showFilter
+  onNuevaCampaniaClicked:
+    - _type: navigate
+      url:
+        const: /ss/leadpacientes/nueva
+  onMostrarArchivadasChanged:
+    - _type: set 
+      path: mostrarArchivadas
+      value:
+        toggleStatePath: mostrarArchivadas
+  onCampaniasLeadsFilterChanged:
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          payloadPath: type
+        B:
+          const: 'clearFilter'
+      then:
+        _type: grape
+        name: resetMostarArchivadas
+      else:
+        _type: grape
+        name: filtroCambiado
+        payload:
+          mostrarArchivadas:
+            code: 'return state.mostrarArchivadas'
+  resetMostarArchivadas:  
+    - _type: set 
+      path: mostrarArchivadas
+      value:
+        const: false
+    - _type: grape
+      name: filtroCambiado
+      payload:
+        mostrarArchivadas:
+          code: 'return false'
+  filtroCambiado:
+    - _type: grape
+      name: onShowFilterClicked
+    - _type: set
+      path: campaniasLeads.filter
+      value:
+        payloadPath: value
+    - _type: grape
+      name: getCampaniasLeads
+      payload:
+        getCampaniasLeadsParams:
+            code: 'return {archivadas: payload.mostrarArchivadas, cuentamarketing: "leadspacientes"}'  
+  # lanzarConsultas: 
+  #   - _type: grape
+  #     condition:
+  #         operator: A = B
+  #         A:
+  #           payloadPath: type
+  #         B:
+  #           const: 'clearFilter'
+  #     name: seteaDatosAux           
+  #   - _type: grape
+  #     name: seteaDatosXls                         
+  #   - _type: grape
+  #     name: getConsultas
+  #     payload:
+  #       getConsultasParams:
+  #         code: 'return {soloAceptaComunicacion: state.soloAceptaComunicacion}'       
+  onCampaniasLeadsItemChanged: 
+    - _type: grape
+      condition:
+          operator: A is true
+          A:
+            code: 'return !state.mostrarArchivadas && payload.item.estado === "archivada"'
+      name: deleteCampaniasLeadsItem

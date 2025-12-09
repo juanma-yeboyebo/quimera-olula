@@ -1,0 +1,185 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: sofa
+    id: idSofa
+    parentId: idNoNecesarioSofa
+    schemaName: configSofa
+    mode: insert
+  - type: Model
+    name: configuraciones
+    id: idpreciobase
+    schema: preciosBase
+state: 
+    callbackVolver: null
+    misConfiguraciones: []
+    idTela: null
+    totalPrecio: 0
+    idModelo: null
+    comprando: false
+    tipoFiltroMedidaModulo: "not_like"
+    medidaModulo: "*"
+    arrayMedidasModulo: [{"key": '*', "value": "Estándar"},{"key": '*70', "value": "70"},{"key": '*80', "value": "80"},{"key": '*90', "value": "90"}]
+    tipoFiltroMedidaBrazo: "not_like"
+    medidaBrazo: "/"
+    arrayMedidasBrazo: [{"key": '/', "value": "Estándar"},{"key": '/15', "value": "15"},{"key": '/20', "value": "20"},{"key": '/A20', "value": "/A20"}]
+bunch:
+  init:
+    - _type: set
+      path: callbackVolver
+      value:
+        payloadPath: callbackVolver    
+    - _type: set
+      path: idModelo
+      value:
+        payloadPath: idModeloProp   
+    - _type: grape 
+      name: seteaFiltro
+  seteaFiltro:
+    - _type: set
+      path: configuraciones.filter
+      value:
+        code: 'return { and: [["idmodelo", "eq", state.idModelo],["precio", "gt", 0],["confbase", state.tipoFiltroMedidaModulo, state.medidaModulo],["confbase", state.tipoFiltroMedidaBrazo, state.medidaBrazo]]}'                   
+  onIdTelaChanged: 
+    - _type: grape 
+      name: reseteaMisConfiguraciones    
+    - _type: set
+      path: idTela
+      value:
+        payloadPath: value
+    - _type: grape 
+      name: cargaConfiguraciones
+  cargaConfiguraciones:
+    - _type: grape
+      name: getConfiguraciones
+      payload:
+        getConfiguracionesParams:
+          code: 'return {idTela: state.idTela, idModelo: state.idModelo}'     
+  onSofaSaved:
+    - _type: appDispatch
+      name: getCarritoActivo
+  onSofaBufferChanged:  
+    patch: override
+    grapes:
+      - _type: grape
+        name: cambiarTela 
+  cambiarTela:       
+    - _type: set
+      path: sofa.buffer.idTela
+      value:
+        payloadPath: option.value  
+  onSaveSofaInternoSucceded:   
+    patch: append
+    grapes:
+      - _type: grape
+        name: volverCatalogo                        
+  calculaTotalPrecio: 
+    - _type: set
+      path: totalPrecio
+      value:
+        code: 'return state.misConfiguraciones.map(conf => conf?.precio ?? 0).reduce((partialSum, a) => partialSum + a, 0)'
+  onSaveSofaClicked:
+    patch: override
+    grapes:
+      - _type: grape
+        name: comprarSofa  
+  comprarSofa:  
+    - _type: post
+      schema: configSofa
+      data:
+        - key: idLinea
+          value:
+            const: null
+        - key: idModelo
+          value:
+            statePath: idModelo            
+        - key: idTela
+          value:
+            statePath: idTela
+        - key: configuracion
+          value:
+           code: 'return state.misConfiguraciones.filter(conf => conf?.confbase).map(conf => conf?.confbase)'
+      success: onProductoAnadidoAlCarrito 
+    - _type: set
+      path: comprando
+      value:
+        const: true       
+  onProductoAnadidoAlCarrito:
+    - _type: appDispatch
+      name: getCarritoActivo 
+    - _type: set
+      path: comprando
+      value:
+        const: false        
+    - _type: grape
+      name: volverCatalogo  
+  onConfiguracionDropped:
+    - _type: if
+      if:
+        operator: A is true
+        A:
+          code: 'return payload.result?.destination?.droppableId === "montador" && payload.result?.source?.droppableId === "configuraciones"'
+      then:
+        _type: grape
+        name: addConfiguracionPorIndice
+
+    - _type: if
+      if:
+        operator: A is true
+        A:
+          code: 'return payload.result?.destination?.droppableId === "montador" && payload.result?.source?.droppableId === "montador"'
+      then:
+        _type: grape
+        name: recolocaConfiguracion
+  onFiltroMedidasModuloChanged:
+    - _type: set
+      path: medidaModulo
+      value:
+        payloadPath: value
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          payloadPath: value
+        B:
+          const: '*'
+      then:
+        _type: set
+        path: tipoFiltroMedidaModulo
+        value:
+          const: "not_like"
+      else:
+        _type: set
+        path: tipoFiltroMedidaModulo
+        value:
+          const: "like"            
+    - _type: grape 
+      name: seteaFiltro    
+    - _type: grape 
+      name: cargaConfiguraciones
+  onFiltroMedidasBrazoChanged:
+      - _type: set
+        path: medidaBrazo
+        value:
+          payloadPath: value
+      - _type: if
+        if:
+          operator: A = B
+          A:
+            payloadPath: value
+          B:
+            const: '*'
+        then:
+          _type: set
+          path: tipoFiltroMedidaBrazo
+          value:
+            const: "not_like"
+        else:
+          _type: set
+          path: tipoFiltroMedidaBrazo
+          value:
+            const: "like"            
+      - _type: grape 
+        name: seteaFiltro    
+      - _type: grape 
+        name: cargaConfiguraciones           

@@ -1,0 +1,95 @@
+---
+shortcuts: 
+  - type: Model
+    name: historico
+    id: referencia
+    schema: historicoPresupuestosCliente
+    action: get_historico_pedidos
+state: {}
+bunch:
+  # En sanhigia cargamos siempre todas las líneas por la revisión
+  # en la totalización que cambia precios y crea líneas regalo
+  onLineasItemChanged:
+    - _type: grape
+      name: reloadPresupuesto
+    - _type: grape
+      name: getLineas
+  onLineaCreada:
+    - _type: grape
+      name: reloadPresupuesto
+    - _type: grape
+      name: getLineas
+  onPrintPresupuestoClicked:
+    - _type: download
+      schema: presupuestoCliToPDF
+      params:
+        - key: idpresupuesto
+          value:
+            statePath: presupuesto.buffer.idPresupuesto
+      action: to_pdf
+      filename:
+        const: presupuesto.pdf
+      success: none
+  # onInitPresupuestoChanged:
+  #   - _type: grape
+  #     name: getHistoricoSiHayCliente
+  onInitPresupuesto:
+    patch: append
+    grapes:
+      - _type: grape
+        name: getHistoricoSiHayCliente
+  getHistoricoSiHayCliente:
+    - condition:
+        operator: A is true
+        A:
+          code: return !!state.presupuesto?.buffer.codCliente
+      _type: grape
+      name: getHistorico
+  onAnadirLineaDesdeHistoricoClicked:
+    - _type: setItem
+      condition:
+          operator: A is true
+          A:
+            code: 'return !payload.referencia.includes(".")'    
+      path: historico.dict
+      key:
+        payloadPath: referencia
+      prop:
+        const: "_status"
+      value:
+        const: creating_line
+    - _type: grape
+      condition:
+          operator: A is true
+          A:
+            code: 'return payload.referencia.includes(".")'    
+      name: seteaStatusCreatingLine        
+    - _type: patch
+      action: build_linea
+      schema: presupuestosCli
+      success: onLineaHistoricoAnadida
+      id:
+        statePath: presupuesto.buffer.idPresupuesto
+      data:
+        - key: referencia
+          value:
+            payloadPath: referencia
+        - key: cantidad
+          value:
+            payloadPath: cantidad
+  onLineaHistoricoAnadida:
+    - _type: grape
+      name: addLineasItem
+      payload:
+        id:
+          payloadPath: response.pk
+        event:
+          const: created
+    - _type: grape
+      name: reloadPresupuesto
+    - _type: grape
+      name: deleteKeyHistorico
+      payload:
+        referencia:
+          payloadPath: referencia
+

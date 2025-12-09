@@ -1,0 +1,25 @@
+
+.Details {
+  flex-basis: 50%;
+  padding: 1em;
+  box-sizing: border-box;
+  max-width: 800px;
+  flex-grow: 999;
+}
+.summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+  list-style: none;
+  font-size: 1.7rem;
+  line-height: 1.334;
+  letter-spacing: 0em;
+  color: var(--main-color);
+  height: var(--header-height);
+}
+.title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

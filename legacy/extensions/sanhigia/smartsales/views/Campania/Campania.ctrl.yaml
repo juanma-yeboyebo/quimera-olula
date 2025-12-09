@@ -1,0 +1,643 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: campania
+    id: idCampania
+    schemaName: campania
+    deleteConfirmQuestion:
+      titulo: Eliminar campaña
+      cuerpo: Se eliminará la campaña
+  - type: Model
+    name: canalesCampania
+    id: codCanal
+    schema: canalesCampaña      
+state:
+  producto: null
+  data: {}
+  fechaInicioComparacion: null
+  fechaFinComparacion: null
+  lanzandoCampania: false
+  canales: [{ codCanal: "Meta", nombre: "Meta (Facebook)", idCampania: null, idCanalCampania: null }]
+  publicandoCampaniaDigital: false
+  eiliminandoCampaniaDigital: false
+  avisoAgentePorDefecto: false
+  listaCampania: 'lista_incluidos'
+  modoListaIncluidos: 'todos'
+  modoListaExcluidos: 'alguno'
+bunch:
+  onInit:
+    - _type: grape
+      condition:
+          operator: A = B
+          A:
+            statePath: campania.data.tipo
+          B:
+            const: marketingDigital
+      name: cargaCanalesCampania
+  cargaCanalesCampania:
+    - _type: set
+      path: canalesCampania.filter
+      value:
+        code: 'return { and: [["idcampania", "eq", state.campania.data.idCampania]]}'
+    - _type: grape
+      name: getCanalesCampania
+  onAtrasClicked:
+    # - _type: grape
+    #   name: cancelCampania
+    - _type: navigate
+      url:
+        const: '/ss/campanias'
+  #   - _type: set
+  #     path: campanias.current
+  #     value:
+  #       const: null
+  onCampaniaSectionAccepted:
+    - _type: grape
+      name: saveCampania
+  onCampaniaSectionCancelled:
+    - _type: grape
+      name: loadBufferCampania
+  onClacularClientesClicked:
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          statePath: campania.data.tipo
+        B:
+          const: 'ventaCruzada'
+      then:
+        _type: grape
+        name: calcularClientes
+      else:
+        _type: grape
+        name: calcularContactos
+  calcularContactos:
+    - _type: post
+      action: generate_contactos_campania
+      data:
+        - key: idCampania
+          value:
+            statePath: campania.data.idCampania
+        - key: fechaAlta
+          value:
+            statePath: campania.data.fechaAlta
+        - key: tipo
+          value:
+            statePath: campania.data.tipo
+        - key: tipoProducto
+          value:
+            statePath: campania.data.tipoProducto
+        - key: productos
+          value:
+            statePath: campania.data.productos
+        - key: subfamilia
+          value:
+            statePath: campania.data.subfamilia
+        - key: diasDesdeUltimaCompra
+          value:
+            statePath: campania.data.diasDesdeUltimaCompra
+        - key: umbralRecomendacion
+          value:
+            statePath: campania.data.umbralRecomendacion
+      schema: generateContactosCampania
+      success: onClientesCalculados
+      error: onClientesCalculadosError
+  onLanzarCampaniaClicked:
+    - _type: grape 
+      name: compruebaAgenteTratoPorDefecto
+  compruebaAgenteTratoPorDefecto:
+    - _type: if
+      if:
+        operator: A is true
+        A:
+          statePath: campania.data.avisoAgenteTratosPorDefecto
+      then:
+        _type: grape 
+        name: compruebaAgenteTratos
+      else:
+        _type: grape 
+        name: onLanzarCampaniaConfirmado
+  compruebaAgenteTratos:
+    - _type: if
+      if: 
+        operator: A is defined
+        A:
+          statePath: campania.data.codAgenteTratos
+      then: 
+        _type: grape 
+        name: onLanzarCampaniaConfirmado
+      else:
+        _type: set
+        path: avisoAgentePorDefecto 
+        value:
+          const: true 
+        # _type: alert
+        # text: Para el tipo de trato seleccionado debe haber un agente de trato asociado.
+        # severity: error
+  cancelarLanzarCampania:
+    - _type: set
+      path: avisoAgentePorDefecto 
+      value:
+        const: false
+  procesaLanzarCampania:
+    - _type: set
+      path: avisoAgentePorDefecto 
+      value:
+        const: false
+    - _type: grape 
+      name: onLanzarCampaniaConfirmado
+  onLanzarCampaniaConfirmado:
+    - _type: set 
+      path: lanzandoCampania
+      value:
+        toggleStatePath: lanzandoCampania
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          statePath: campania.data.tipo
+        B:
+          const: 'ventaCruzada'
+      then:
+        _type: grape
+        name: onCrearTratosClicked
+      else:
+        _type: grape
+        name: launchCampania
+  launchCampania:
+    - _type: post
+      action: launch_campania
+      data:
+        - key: idCampania
+          value:
+            statePath: campania.data.idCampania
+      schema: launchCampania
+      success: onCampaniaLanzada
+      error: onCampaniaLanzadaError
+  # onContactosCalculados:
+  #   - _type: set
+  #     path: campania.data.numClientes
+  #     value:
+  #       payloadPath: response.data
+  calcularClientes:    
+    - _type: post
+      action: calcular_clientes_venta_cruzada
+      data:
+        - key: idCampania
+          value:
+            statePath: campania.data.idCampania
+        - key: fechaAlta
+          value:
+            statePath: campania.data.fechaAlta
+        - key: tipo
+          value:
+            statePath: campania.data.tipo
+        - key: tipoProducto
+          value:
+            statePath: campania.data.tipoProducto
+        - key: productos
+          value:
+            statePath: campania.data.productos
+        - key: subfamilia
+          value:
+            statePath: campania.data.subfamilia
+        - key: diasDesdeUltimaCompra
+          value:
+            statePath: campania.data.diasDesdeUltimaCompra
+        - key: fechaInicioUltimaCompra
+          value:
+            statePath: campania.data.fechaInicioUltimaCompra
+        - key: fechaFinUltimaCompra
+          value:
+            statePath: campania.data.fechaFinUltimaCompra             
+        - key: umbralRecomendacion
+          value:
+            statePath: campania.data.umbralRecomendacion
+      schema: generateContactosCampania
+      success: onClientesCalculados
+      error: onClientesCalculadosError
+  onClientesCalculados:
+    - _type: if
+      if:
+        operator: A is true
+        A:
+          code: 'return payload.response.data === 0'
+      then:
+        _type: alert
+        text: No hay clientes para estos parámetros
+        severity: error
+      else:
+        _type: grape
+        name: onClientesEncontrados
+  onClientesEncontrados: 
+    - _type: set
+      path: campania.data.numClientes
+      value:
+        payloadPath: response.data         
+  onCampaniaLanzada:
+    - _type: alert
+      text: Campaña lanzada correctamente
+      severity: success
+    - _type: set 
+      path: lanzandoCampania
+      value:
+        toggleStatePath: lanzandoCampania
+    - _type: grape
+      name: reloadCampania
+  onCampaniaLanzadaError:
+    - _type: log
+      desc: mimensaje_campanialanzadaerror
+      value:
+        statePath: data
+    - _type: alert
+      text: Error al lanzar la campaña
+      severity: error
+    - _type: set 
+      path: lanzandoCampania
+      value:
+        toggleStatePath: lanzandoCampania
+  onArchivarCampaniaClicked:
+    - _type: post
+      action: archive_campania
+      data:
+        - key: idCampania
+          value:
+            statePath: campania.data.idCampania
+      schema: launchCampania
+      success: onCampaniaArchivada
+  onCampaniaArchivada:
+    - _type: grape
+      name: reloadCampania
+  onEliminarCampaniaClicked:
+    - _type: grape
+      name: deleteCampania
+  # onProductoChanged:
+  #   - _type: appendItem
+  #     path: campania.buffer.productos
+  #     value:
+  #       payloadPath: option
+  onListaCampaniaChanged:
+    - _type: set
+      path: listaCampania
+      value:
+        payloadPath: value     
+  onModoListaIncluidosChanged:
+    - _type: set
+      path: modoListaIncluidos
+      value:
+        payloadPath: value    
+    - _type: grape
+      name: onTipoListaChanged
+      payload:
+        lista:
+          const: lista_incluidos      
+  onModoListaExcluidosChanged:
+    - _type: set
+      path: modoListaExcluidos
+      value:
+        payloadPath: value    
+    - _type: grape
+      name: onTipoListaChanged
+      payload:
+        lista:
+          const: lista_excluidos  
+  onProductoOfertarChanged:
+    - _type: appendItem
+      path: campania.buffer.productosOfertar
+      value:
+        payloadPath: option        
+  # onDeleteProducto:
+  #   - _type: deleteItemByIndex
+  #     path: campania.buffer.productos
+  #     index:
+  #       payloadPath: index
+  onDeleteChildProductosListaIncluidosClicked:
+    - _type: deleteItemByIndex
+      path: campania.buffer.productos.lista_incluidos.refs
+      index:
+        payloadPath: index
+  onDeleteChildProductosListaExcluidosClicked:
+    - _type: deleteItemByIndex
+      path: campania.buffer.productos.lista_excluidos.refs
+      index:
+        payloadPath: index  
+  onDeleteProductoOfertar:
+    - _type: deleteItemByIndex
+      path: campania.buffer.productosOfertar
+      index:
+        payloadPath: index       
+  onBufferCampaniaLoaded:
+    - _type: grape
+      name: getProductos
+    - _type: grape
+      name: setFechasComparacion
+    - _type: grape
+      name: getGraphs
+  onFechaInicioComparacionChanged:
+    - _type: set
+      path: fechaInicioComparacion
+      value:
+        payloadPath: value
+    - _type: grape
+      name: getGraphs
+  onFechaFinComparacionChanged:
+    - _type: set
+      path: fechaFinComparacion
+      value:
+        payloadPath: value
+    - _type: grape
+      name: getGraphs
+  getProductos:
+    - _type: get
+      condition:
+          operator: A is defined
+          A:
+            statePath: campania.data.productos.lista_incluidos
+      schema: articulo
+      success: onGetProductosIncluidosSucceded
+      filter:
+        - const: referencia
+        - const: in
+        - code: return state.campania.data.productos.lista_incluidos.refs.map(producto => producto?.referencia ?? producto)
+    - _type: get
+      condition:
+          operator: A is defined
+          A:
+            statePath: campania.data.productos.lista_excluidos    
+      schema: articulo
+      success: onGetProductosExcluidosSucceded
+      filter:
+        - const: referencia
+        - const: in
+        - code: return state.campania.data.productos.lista_excluidos.refs.map(producto => producto?.referencia ?? producto)        
+  setFechasComparacion:
+    - condition:
+        operator: A is true
+        A:
+          code: return state.campania.data.estado !== 'pendiente'
+      _type: set
+      path: fechaInicioComparacion
+      value:
+        code: return state.campania.data.fechaInicioImpacto
+    - condition:
+        operator: A is true
+        A:
+          code: return state.campania.data.estado !== 'pendiente'
+      _type: set
+      path: fechaFinComparacion
+      value:
+        code: return state.campania.data.fechaFinImpacto
+  onGetProductosIncluidosSucceded:
+    - _type: set
+      path: campania.buffer.productos.lista_incluidos.refs
+      value:
+        payloadPath: response.data
+    - _type: set
+      path: campania.data.productos.lista_incluidos.refs
+      value:
+        payloadPath: response.data
+  onGetProductosExcluidosSucceded:
+    - _type: set
+      path: campania.buffer.productos.lista_excluidos.refs
+      value:
+        payloadPath: response.data
+    - _type: set
+      path: campania.data.productos.lista_excluidos.refs
+      value:
+        payloadPath: response.data        
+  getGraphs:
+    - condition:
+        operator: A is true
+        A:
+          code: return state.campania.data.estado !== 'pendiente' && state.campania.data.tipo !== "marketingDigital"
+      _type: post
+      action: get_graphs_campania
+      data:
+        - key: name
+          value:
+            const: VentasMedicionProducto
+        - key: fechaInicioMedicion
+          value:
+            statePath: campania.data.fechaInicioImpacto
+        - key: fechaFinMedicion
+          value:
+            statePath: campania.data.fechaFinImpacto
+        - key: fechaInicioComparacion
+          value:
+            statePath: fechaInicioComparacion
+        - key: fechaFinComparacion
+          value:
+            statePath: fechaFinComparacion
+        - key: tipoProducto
+          value:
+            statePath: campania.data.tipoProducto
+        - key: productos
+          value:
+            statePath: campania.data.productos
+        - key: subfamilia
+          value:
+            statePath: campania.data.subfamilia
+      schema: graficosCampania
+      success: onGetGraphsSucceeded
+  onGetGraphsSucceeded:
+    - _type: set
+      path: data
+      value:
+        payloadPath: response.data
+  onTipoSeccionConfirmada:
+    - _type: grape
+      name: saveCampania
+  onCrearTratosClicked:
+    - _type: post
+      action: generate_contactos_campania
+      data:
+        - key: idCampania
+          value:
+            statePath: campania.data.idCampania
+        - key: fechaAlta
+          value:
+            statePath: campania.data.fechaAlta
+        - key: tipo
+          value:
+            statePath: campania.data.tipo
+        - key: tipoProducto
+          value:
+            statePath: campania.data.tipoProducto
+        - key: productos
+          value:
+            statePath: campania.data.productos
+        - key: subfamilia
+          value:
+            statePath: campania.data.subfamilia   
+        - key: fechaInicioUltimaCompra
+          value:
+            statePath: campania.data.fechaInicioUltimaCompra
+        - key: fechaFinUltimaCompra
+          value:
+            statePath: campania.data.fechaFinUltimaCompra   
+      schema: campania
+      success: onTratosCreados
+      error: onTratosCreadosError 
+  onTratosCreados:
+    - _type: set 
+      path: lanzandoCampania
+      value:
+        toggleStatePath: lanzandoCampania
+    - _type: if
+      if:
+        operator: A is true
+        A:
+          code: 'return payload.response.data === 0'
+      then:
+        _type: alert
+        text: No hay clientes para estos parámetros
+        severity: error
+      else:
+        _type: grape
+        name: tratosCreadosSuccess
+  tratosCreadosSuccess:
+    - _type: alert
+      text: Tratos creados
+      severity: success
+    - _type: grape
+      name: reloadCampania
+  onPublicarCampaniaDigitalClicked: 
+    - _type: grape
+      name: tooglePublicandoCampaniaDigital
+    - _type: grape
+      condition:
+          operator: A = B
+          A:
+            payloadPath: tipo
+          B:
+            const: Meta
+      name: publicarCampaniaDigitalMeta
+  tooglePublicandoCampaniaDigital:
+    - _type: set 
+      path: publicandoCampaniaDigital
+      value:
+        toggleStatePath: publicandoCampaniaDigital
+  toogleEliminandoCampaniaDigital:
+    - _type: set 
+      path: eiliminandoCampaniaDigital
+      value:
+        toggleStatePath: eiliminandoCampaniaDigital        
+  publicarCampaniaDigitalMeta:
+    - _type: post
+      action: publicar_campania_digital_meta
+      schema: campania
+      data:
+        - key: nombre
+          value:
+            statePath: campania.buffer.nombre      
+        - key: idCampania
+          value:
+            statePath: campania.buffer.idCampania
+        - key: cuentaMarketing
+          value:
+            statePath: campania.buffer.cuentaMarketing                                           
+      success: onCampaniaDigitalPublicada  
+      error: onCampaniaDigitalPublicadaError
+  onCampaniaDigitalPublicada:
+    - _type: grape
+      name: reloadCampania
+    - _type: grape
+      name: recargaCampaniasDigitales   
+    - _type: grape
+      name: tooglePublicandoCampaniaDigital          
+    - _type: alert
+      text: Campaña digital publicada
+      severity: success       
+  onCampaniaDigitalPublicadaError:
+    - _type: grape
+      name: tooglePublicandoCampaniaDigital      
+    - _type: alert
+      text: Campaña digital no publicada
+      severity: error    
+  recargaCampaniasDigitales:
+    - _type: grape
+      name: getCanalesCampania
+  onEliminarCampaniaDigitalClicked:
+    - _type: grape
+      name: toogleEliminandoCampaniaDigital
+    - _type: grape
+      condition:
+          operator: A = B
+          A:
+            payloadPath: tipo
+          B:
+            const: Meta
+      name: eliminarCampaniaDigitalMeta  
+  eliminarCampaniaDigitalMeta:
+    - _type: post
+      action: borrar_campania_digital_meta
+      schema: borrarcanalcampania
+      data:
+        - key: idCanalCampania
+          value:
+            payloadPath: idcanalcampania                                 
+      success: onCampaniaDigitalEliminada  
+      error: onCampaniaDigitalEliminadaError    
+  onCampaniaDigitalEliminada:
+    - _type: grape
+      name: recargaCampaniasDigitales   
+    - _type: grape
+      name: toogleEliminandoCampaniaDigital            
+    - _type: alert
+      text: Campaña digital eliminada
+      severity: success      
+  onCampaniaDigitalEliminadaError:
+    - _type: grape
+      name: toogleEliminandoCampaniaDigital     
+    - _type: alert
+      text: Campaña digital no eliminada
+      severity: error
+  onSincronizarCampaniaDigitalClicked:
+    - _type: grape
+      name: tooglePublicandoCampaniaDigital
+    - _type: grape
+      condition:
+          operator: A = B
+          A:
+            payloadPath: tipo
+          B:
+            const: Meta
+      name: sincronizarCampaniaDigitalMeta
+  sincronizarCampaniaDigitalMeta:
+    - _type: post
+      action: sincronizar_campania_digital_meta
+      schema: sincrocanalcampania
+      data:
+        - key: idCanalCampania
+          value:
+            payloadPath: idCanalCampania
+        - key: idCampania
+          value:
+            payloadPath: idCampania            
+      success: onCampaniaDigitalSincronizada  
+      error: onCampaniaDigitalSincronizadaError               
+  onCampaniaDigitalSincronizada: 
+    - _type: grape
+      name: tooglePublicandoCampaniaDigital          
+    - _type: alert
+      text: Campaña digital sincronizada
+      severity: success       
+  onCampaniaDigitalSincronizadaError:
+    - _type: grape
+      name: tooglePublicandoCampaniaDigital      
+    - _type: alert
+      text: Campaña digital no sincronizada
+      severity: error    
+  
+         
+  onTratoBufferCodAgenteChanged:
+    - _type: set
+      path: campania.buffer.codAgenteTratos
+      value:
+        payloadPath: value
+  onCodagenteSeccionConfirmada:
+    - _type: grape
+      name: saveCampania
+  onCampaniaSaved:
+    - _type: grape
+      name: reloadCampania

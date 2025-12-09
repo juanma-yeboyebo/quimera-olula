@@ -1,0 +1,28 @@
+---
+shortcuts:
+  - type: Model
+    name: facturas
+    id: idFactura
+    schema: misFacturas
+    url: "/areaclientes/facturas"
+    logicDelete: false
+state:
+  filtroVisible: false
+bunch:
+  onInit:
+    - _type: grape
+      name: getFacturas
+  onMostrarFiltroClicked:
+    - _type: set
+      path: filtroVisible
+      value:
+        toggleStatePath: filtroVisible
+  onFacturasFilterChanged:
+    - _type: grape
+      name: onMostrarFiltroClicked
+    - _type: set
+      path: facturas.filter
+      value:
+        payloadPath: value
+    - _type: grape
+      name: getFacturas

@@ -1,0 +1,89 @@
+.button__root {
+  --button-color: black;
+  --dark-color: #222;
+  --light-color: #ccc;
+
+  padding: 0.4rem 1rem;
+  text-transform: capitalize;
+  border-radius: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: bold;
+  box-sizing: border-box;
+  line-height: 1.55rem;
+  letter-spacing: 0.025rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--button-color);
+  color: var(--button-color);
+  background-color: transparent;
+
+  white-space: nowrap;
+
+  transition-delay: 0s;
+  transition-duration: 0.25s;
+  transition-property: color, border, background-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.button__root:hover {
+  color: var(--dark-color);
+  border-color: var(--dark-color);
+  background-color: var(--light-color);
+}
+
+/* Variants */
+.button__primary {
+  --button-color: var(--primary);
+  --dark-color: var(--primary-dark);
+  --light-color: var(--primary-lighter);
+}
+
+.button__success {
+  --button-color: var(--success);
+  --dark-color: var(--success-dark);
+  --light-color: var(--success-lighter);
+}
+
+.button__danger {
+  --button-color: var(--danger);
+  --dark-color: var(--danger-dark);
+  --light-color: var(--danger-lighter);
+}
+
+/* Styles */
+.button__text {
+  border: none;
+}
+
+.button__contained {
+  background-color: var(--button-color);
+  color: white;
+}
+
+.button__contained:hover {
+  color: white;
+  background-color: var(--dark-color);
+  border: 1px solid var(--dark-color);
+}
+
+/* Sizes */
+.button__small {
+  padding: 0.25rem 0.65rem;
+  font-size: 0.8rem;
+  line-height: 1.4rem;
+}
+
+.button__large {
+  padding: 0.55rem 1.4rem;
+  font-size: 0.95rem;
+  line-height: 1.65rem;
+}
+
+/* Disabled */
+.button__disabled {
+  --button-color: grey;
+  --dark-color: grey;
+  --light-color: transparent;
+}

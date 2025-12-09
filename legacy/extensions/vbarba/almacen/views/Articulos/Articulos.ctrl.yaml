@@ -1,0 +1,90 @@
+---
+shortcuts:
+  - type: Model
+    name: articulos
+    id: referencia
+    schema: articulos
+    url: "/articulos"
+    logicDelete: true
+state:
+    lectura: null
+bunch:
+  onInit:
+    - _type: grape
+      name: getArticulos
+    - _type: set
+      path: articulos.filter
+      value:
+        code: 'return {}'        
+  onTdbArticulosRowClicked:
+    - _type: grape
+      name: onArticulosItemSelected
+      payload:
+        item:
+          code: 'return payload'
+  onReferenciaChanged:  
+    - condition:
+        operator: not A
+        A:
+          payloadPath: value 
+      _type: grape
+      name: onLecturaChanged             
+    - _type: set
+      path: referencia
+      value:
+        payloadPath: value 
+    - _type: set
+      path: articulos.filter
+      value:
+        code: 'return payload.value ? { and: [["referencia", "like", payload.value]]} : null'
+    - _type: grape
+      name: getArticulos         
+  onLecturaChanged:  
+    - _type: set
+      path: lectura
+      value:
+        payloadPath: value  
+  onFiltroChanged:    
+    - _type: set
+      path: articulos.filter
+      value:
+        code: 'return payload.value ? { and: [payload.filtro]} : null'
+    - _type: grape
+      name: getArticulos 
+  onVerImagenClicked:
+    - _type: get
+      schema: articuloimages
+      action: get_url_image
+      id:
+        payloadPath: referencia
+      success: onGetUrlImageSucceded  
+  onGetUrlImageSucceded:
+    - _type: navigate
+      url:
+        payloadPath: response.direccion
+  onPublicadoWebClicked:
+    - _type: patch
+      schema: articulos
+      action: cambiar_publicadoweb
+      id:
+        payloadPath: data.referencia
+      data:
+        - key: vb_publicadoweb
+          value:
+            code: return !payload.data.publicadoWeb 
+        - key: referencia
+          value:
+            payloadPath: data.referencia                                 
+      success: onPublicadoWebActualizado
+  onPublicadoWebActualizado:           
+    - _type: setItem
+      path: articulos.dict
+      key:
+        payloadPath: response.referencia
+      prop:
+        const: "publicadoWeb"
+      value:
+        payloadPath: response.vb_publicadoweb  
+    - _type: alert
+      text: Artículo actualizado.
+      severity: success   

@@ -1,0 +1,31 @@
+---
+shortcuts: []
+state: {}
+bunch: 
+  onDescargarFacturaClicked:
+    - _type: download
+      schema: misFacturas
+      params:
+        - key: idfactura
+          value:
+            statePath: factura.buffer.idFactura
+      action: factura_to_pdf
+      filename:
+        const: factura.pdf
+      success: none
+  onExportarFacturaClicked:
+    - _type: download
+      schema: misFacturas
+      action: descargar_factura_xls
+      params:
+        - key: idfactura
+          value:
+            statePath: factura.buffer.idFactura
+      filename:
+        const: factura.xlsx
+      success: none
+      error: onExportarFacturaError
+  onExportarFacturaError:
+    - _type: alert
+      text: Error al exportar factura
+      severity: error  

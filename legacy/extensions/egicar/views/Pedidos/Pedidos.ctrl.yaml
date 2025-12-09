@@ -1,0 +1,67 @@
+---
+shortcuts:
+  - type: Model
+    name: pedidos
+    id: idPedido
+    schema: pedidoscli
+    url: "/pedidos"
+state: 
+  codigoOrden: null
+  idTarea: null
+bunch: 
+  onInit:
+    - _type: if
+      if:
+        operator: not A
+        A:
+          payloadPath: codigoOrdenProp
+      then:
+        _type: grape
+        name: dameTodosPedidos
+      else:
+        _type: grape
+        name: dameUnPedido
+  dameTodosPedidos:
+    - _type: grape
+      name: getPedidos
+  dameUnPedido:
+    - _type: set
+      path: codigoOrden
+      value:
+        payloadPath: codigoOrdenProp
+    - _type: set
+      path: idTarea
+      value:
+        payloadPath: idTareaProp        
+    - _type: set 
+      path: pedidos.filter
+      value:
+        code: 'return { and: [["idpedido", "eq", payload.idPedido]]}'
+    - _type: grape
+      name: getPedidos
+  # onMostrarFiltroClicked:
+  #   - _type: set
+  #     path: filtroVisible
+  #     value:
+  #       toggleStatePath: filtroVisible
+  # onPartesCarrosFilterChanged:
+  #   patch: append
+  #   grapes:
+  #     - _type: grape
+  #       name: actualizaContFiltro
+  # actualizaContFiltro:
+  #   - _type: set
+  #     path: contadorFiltros
+  #     value:
+  #       payloadPath: cantFilter
+  # onNuevoParteCarroClicked:
+  #   - _type: navigate
+  #     url:
+  #       const: "/partesCarros/nuevo"   
+  # onVolverListadoPartesClicked:
+  #   - _type: navigate
+  #     url:
+  #       const: "/partesCarros"   
+  # onNewParteCarroChanged:
+  #   - onPartesCarrosNewItemChanged
+  #   - addPartesCarrosItem                    

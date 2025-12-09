@@ -1,0 +1,152 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: parteCarro
+    id: idParte
+    schemaName: partescarros 
+  - type: Model
+    name: tiposCarro
+    id: codigo
+    schema: tiposCarro
+    action: get_tabla_es_carros
+state:
+  modalFirmaVisible: false
+  modalVistaEnviarDocumento:  false
+  resetOpen: false
+  urlAtras: null
+  vistaDetalle: principal
+bunch:
+  onInit:
+    - condition:
+        operator: A is defined
+        A:
+          statePath: parteCarro.data.idParte
+      _type: grape
+      name: getTiposCarro
+    - condition:
+        operator: A is defined
+        A:
+          payloadPath: urlAtrasProp
+      _type: grape
+      name: setUrl
+  setUrl: 
+    - _type: set
+      path: urlAtras
+      value:
+        payloadPath: urlAtrasProp    
+  onGuardarMovCarrosClicked:
+    - _type: patch
+      schema: tiposCarro
+      action: guardar_movimientos_carros
+      id:
+        statePath: parteCarro.data.idParte
+      data:
+        - key: movCarro
+          value:
+            code: "return Object.values(state.tiposCarro.dict).filter(car => car.entrada !== 0 || car.salida !== 0)"           
+      success: onMovCarrosGuardado  
+      error: onMovCarrosGuardadoError  
+  onMovCarrosGuardado:   
+    - _type: alert 
+      text: Se han guardado las entradas y salidas de carros para este parte.
+      severity: success 
+  onMovCarrosGuardadoError:   
+    - _type: alert 
+      text: Se ha producido un error y no se han guardado las entradas y salidas de carros para este parte.
+      severity: error              
+  onFirmarParteCarroClicked: 
+    - _type: set
+      path: modalFirmaVisible
+      value:
+        const: true 
+    - _type: set
+      path: parteSeleccionado
+      value:
+        payloadPath: data.parte 
+  onParteCarroFirmado:
+    - _type: set
+      path: resetOpen
+      value:
+        toggleStatePath: resetOpen      
+    - _type: grape
+      name: getTiposCarro
+    - _type: set
+      path: parteCarro.buffer.firmado
+      value:
+        const: true
+    - _type: set
+      path: parteCarro.buffer.firmadoPor
+      value:
+        payloadPath: firmadopor        
+    - _type: grape
+      name: saveParteCarro
+    - _type: grape
+      name: onCerrarFirmaParteCarro
+  onCerrarFirmaParteCarro:
+    - _type: set
+      path: modalFirmaVisible
+      value:
+        const: false
+  onEntradaTipoCarroChanged:
+    - _type: setItem
+      path: tiposCarro.dict
+      value:
+        payloadPath: value
+      key:
+        payloadPath: index
+      prop:
+        const: "entrada"    
+    - _type: grape
+      name: recalculaTotales        
+  onSalidaTipoCarroChanged:
+    - _type: setItem
+      path: tiposCarro.dict
+      value:
+        payloadPath: value
+      key:
+        payloadPath: index
+      prop:
+        const: "salida"       
+    - _type: grape
+      name: recalculaTotales  
+  recalculaTotales:      
+    - _type: grape
+      name: onCambiarTotal        
+    - _type: grape
+      name: onCambiarSaldoDespues       
+  onCambiarTotal:
+    - _type: setItem
+      path: tiposCarro.dict
+      value:
+        code: "return state.tiposCarro.dict[payload.index].entrada - state.tiposCarro.dict[payload.index].salida"
+      key:
+        payloadPath: index
+      prop:
+        const: "total"
+  onCambiarSaldoDespues:
+    - _type: setItem
+      path: tiposCarro.dict
+      value:
+        code: "return state.tiposCarro.dict[payload.index].saldo_antes + state.tiposCarro.dict[payload.index].total"
+      key:
+        payloadPath: index
+      prop:
+        const: "saldo_despues"    
+  onParteCarroSeccionConfirmada:
+    - _type: grape
+      name: saveParteCarro 
+  onEnviarEmailClicked:
+    - _type: set 
+      path: modalVistaEnviarDocumento
+      value:
+        const: true                 
+  onCancelEnviarEmailClicked:
+    - _type: set 
+      path: modalVistaEnviarDocumento
+      value:
+        const: false
+  onEmailEnviado:
+    - _type: set 
+      path: modalVistaEnviarDocumento
+      value:
+        const: false    

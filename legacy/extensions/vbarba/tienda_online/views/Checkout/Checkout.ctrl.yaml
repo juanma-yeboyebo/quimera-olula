@@ -1,0 +1,45 @@
+---
+shortcuts: []
+state:
+  modalPedidoConfirmadoVisible: false
+bunch:
+  onCarritoBufferFechaEntregaChanged:
+    - _type: set
+      path: carrito.buffer.fechaEntrega
+      value:
+        payloadPath: value
+    - _type: grape
+      name: saveCarrito
+  onGenerarPresupuestoClicked:
+    - _type: download
+      schema: carrito
+      action: generar_prespuesto
+      params:
+        - key: idcarrito
+          value:
+            statePath: carrito.buffer.idCarrito
+      filename:
+        const: presupuesto.xlsx
+      success: none
+      error: onGenerarPresupuestoError
+  onGenerarPresupuestoError:
+    - _type: alert
+      text: Error al generarar presupuesto
+      severity: error    
+  onPedidoConfirmado:  
+    patch: override
+    grapes:
+      - _type: smTransition
+        current: confirmando
+        target: confirmacion
+        actions:
+          # - _type: alert
+          #   text: TRANSICION de confirmando a confirmacion
+          #   severity: info
+          - _type: appDispatch
+            name: setCarrito
+            payload:
+              carrito:
+                const:
+                  id:
+                  lineas: []                      

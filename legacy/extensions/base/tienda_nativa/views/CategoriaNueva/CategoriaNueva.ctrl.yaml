@@ -1,0 +1,15 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: categoria
+    id: idCategoria
+    schemaName: categorias
+    mode: insert
+state: {}
+bunch:
+  onNuevaCategoriaSectionAccepted:
+    - _type: grape
+      name: saveCategoria
+  onNuevaCategoriaSectionCancelled:
+    - _type: grape
+      name: cancelCategoria

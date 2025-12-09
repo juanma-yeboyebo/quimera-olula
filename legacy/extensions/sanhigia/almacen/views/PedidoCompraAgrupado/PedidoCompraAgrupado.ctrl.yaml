@@ -1,0 +1,265 @@
+---
+shortcuts:
+  - type: Model
+    name: lineas
+    id: idLinea
+    schema: lineasPedidoCompraAgrupado
+    # url: "/pedidoscompra/agrupar"
+    action: "get_lineas_agrupacion"
+state:
+  modalEnviarAPda: false
+  codbarrasAsociar: false
+  modalLotesAlmacenVisible: false
+  modalLotesTipo: false
+  modalLotesInventarioVisible: false
+  lotesAlmacen: []
+  idLineaModal: false
+  selectedLote: false
+  status:
+    vistaDetalle: principal
+    enviandoPda: false
+bunch:
+  onInit:
+    - _type: set
+      path: lineas.filter
+      value:
+        code: 'return payload.idsPedido ? { and: [["idpedido", "in", payload.idsPedido]]} : null'
+    - _type: grape
+      name: getLineas
+  onLineaChanged:
+    - _type: setItem
+      condition:
+        operator: A = B
+        A:
+          payloadPath: field
+        B:
+          const: "codUbicacionArticulo"
+      path: lineas.dict
+      key:
+        payloadPath: index
+      prop:
+        const: "codUbicacionArticulo"
+      value:
+        payloadPath: value
+    - _type: patch
+      condition:
+        operator: A is defined
+        A:
+          payloadPath: value
+      schema: lineasPedidoCompraAgrupado
+      action: cambiar_ubicacion_articulo
+      id:
+        payloadPath: index
+      data:
+        - key: codUbicacionArticulo
+          value:
+            payloadPath: value
+      success: onUbicacionArticuloCambiada
+      error: onCambiaUbicacionArticuloError
+  onUbicacionArticuloCambiada:
+    - _type: grape
+      name: reloadLinea
+  onCambiaUbicacionArticuloError:
+    - _type: alert
+      text: Error al actualizar la ubicación del artículo
+      severity: error
+  onVerPedidoClicked:
+    - _type: navigate
+      url:
+        payloadPath: urlPedido
+  onLineaCambiada:
+    - _type: grape
+      name: getLineas
+  onCerrarLineaClicked:
+    - _type: patch
+      action: cerrar_linea_compra
+      schema: lineasPedidoCompra
+      id:
+        payloadPath: idLineaCerrar
+      success: onLineaCambiada
+  onLecturaCodBarras:
+    - _type: patch
+      action: procesaCodBarrasProv
+      schema: pedidosCompra
+      data:
+        - key: grupoPedidos
+          value:
+            payloadPath: idsPedido
+        - key: codbarras
+          value:
+            payloadPath: codBarras
+      success: onLecturaCodBarraseSuccess
+  onLecturaCodBarraseSuccess:
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          payloadPath: response.asklote
+        B:
+          const: true
+      then:
+        _type: grape
+        name: onMostrarModalLotesBarcode
+      else:
+        if:
+          operator: A = B
+          A:
+            payloadPath: response.askasociar
+          B:
+            const: true
+        then:
+          _type: grape
+          name: onMostrarModalLinasAsociar
+        else:
+          _type: grape
+          name: onLineaCambiada
+  onMostrarModalLotesBarcode:
+    - _type: set
+      path: modalLotesTipo
+      value:
+        const: movilotescli
+    - _type: set
+      path: idLineaModal
+      value:
+        payloadPath: response.idlinea
+    - _type: patch
+      action: get_lotes_prov_almacen
+      schema: lotesPorAlmacen
+      data:
+        - key: idlinea
+          value:
+            payloadPath: response.idlinea
+      success: onMostrarModalLotesSuccess
+  onMostrarModalLotesSuccess:
+    - _type: set
+      path: lotesAlmacen
+      value:
+        payloadPath: response.data
+    - _type: set
+      path: modalLotesAlmacenVisible
+      value:
+        toggleStatePath: modalLotesAlmacenVisible
+  onMostrarModalLinasAsociar:
+    - _type: set
+      path: modalAsociarBarcodeVisible
+      value:
+        toggleStatePath: modalAsociarBarcodeVisible
+    - _type: set
+      path: codigoBarrasFormateado
+      value:
+        payloadPath: response.codbarras
+  onCerrarModalLotesAlmacen:
+    - _type: set
+      path: modalLotesAlmacenVisible
+      value:
+        const: false
+  onCerrarModaAsociarBarcode:
+    - _type: set
+      path: modalAsociarBarcodeVisible
+      value:
+        const: false
+  onAsociarBarcode:
+    - _type: patch
+      action: procesaCodBarrasProv
+      schema: pedidosCompra
+      data:
+        - key: idspedido
+          value:
+            payloadPath: idsPedido
+        - key: codbarras
+          value:
+            payloadPath: barcode
+        - key: idlinea
+          value:
+            payloadPath: idLinea
+        - key: asociar
+          value:
+            const: true
+      success: onAsociarBarcodeSuccess
+  onAsociarBarcodeSuccess:
+    - _type: grape
+      name: onMostrarModalLinasAsociar
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          payloadPath: response.asklote
+        B:
+          const: true
+      then:
+        _type: grape
+        name: onMostrarModalLotesBarcode
+      else:
+        - _type: grape
+          name: getLineas
+  onLotesItemSelected:
+    - _type: set
+      path: selectedLote
+      value:
+        payloadPath: item
+  onAsociarItemSelected:
+    - _type: set
+      path: selectedAsociar
+      value:
+        payloadPath: item
+  onAnadirCantidadLote:
+    # - _type: log
+    #   desc: miMensajeLineaguarda
+    #   value:
+    #     payloadPath: cantidadAnadir
+    - _type: patch
+      action: anadirMoviloteProv
+      schema: lineasPedidoCompra
+      id:
+        payloadPath: idLinea
+      data:
+        - key: codlote
+          value:
+            payloadPath: codLote
+        - key: cantidad
+          value:
+            payloadPath: cantidadAnadir
+      success: onAnadirCantidadLoteSuccess
+  onAnadirCantidadLoteSuccess:
+    - _type: grape
+      name: onCerrarModalLotesAlmacen
+    - _type: set
+      path: selectedLote
+      value:
+        const: false
+    - _type: grape
+      name: getLineas
+  onAnadirMoviloteCliCLiked:
+    - _type: patch
+      action: anadirMoviloteProv
+      schema: lineasPedidoCompra
+      id:
+        payloadPath: idLinea
+      data:
+        - key: codlote
+          value:
+            payloadPath: codLote
+        - key: ncodlote
+          value:
+            payloadPath: ncodLote
+        - key: caducidad
+          value:
+            payloadPath: caducidad
+      success: onAnadirMoviloteCliCLikedSuccess
+  onAnadirMoviloteCliCLikedSuccess:
+    - _type: grape
+      name: getLineas
+    - _type: grape
+      name: onCerrarModalLotesAlmacen
+    - _type: set
+      path: selectedLote
+      value:
+        const: false
+    - _type: set
+      path: ncodlote
+      value:
+        const: false
+    - _type: set
+      path: caducidad
+      value:
+        const: false

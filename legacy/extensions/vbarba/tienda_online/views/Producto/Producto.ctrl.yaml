@@ -1,0 +1,25 @@
+---
+# shortcuts:
+#   - type: Model
+#     name: lineasCarrito
+#     id: idlinea
+#     schema: lineasCarrito
+#     logicDelete: true
+state:
+  producto: null
+bunch:
+  onInit:
+    - condition:
+        operator: A is defined
+        A:
+          payloadPath: referencia
+      _type: get
+      schema: catalogo
+      id:
+        payloadPath: referencia
+      success: onProductoReceived
+  onProductoReceived:
+    - _type: set
+      path: producto
+      value:
+        payloadPath: response.data.0

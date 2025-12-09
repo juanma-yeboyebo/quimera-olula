@@ -1,0 +1,29 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: pedido
+    id: idPedido
+    schemaName: pedidoCliNuevo
+    mode: insert
+state: 
+  savingPedido: false
+bunch:
+  onNuevoPedidoSectionAccepted:
+    - _type: set 
+      path: savingPedido
+      value:
+        const: true
+    - _type: grape
+      name: savePedido
+  onNuevoPedidoSectionCancelled:
+    - _type: set 
+      path: savingPedido
+      value:
+        const: false  
+    - _type: grape
+      name: cancelPedido
+  onSavePedidoFailed:
+    - _type: set 
+      path: savingPedido
+      value:
+        const: false        

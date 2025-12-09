@@ -1,0 +1,56 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: factura
+    id: idFactura
+    schemaName: misFacturas
+    deleteConfirmQuestion:
+      titulo: Borrar factura
+      cuerpo: El factura se borrará
+  - type: Model
+    name: lineas
+    id: idLinea
+    action: get_lineas
+    schema: misLineasFactura
+state:
+  vistaDetalle: principal
+bunch:
+  onInit:
+    - condition:
+        operator: A is defined
+        A:
+          statePath: factura.data.idFactura
+      _type: grape
+      name: getLineas
+  onAtrasClicked:
+    - _type: grape
+      name: cancelFactura
+  onMasClicked:
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          statePath: vistaDetalle
+        B:
+          const: principal
+      then:
+        _type: set
+        path: vistaDetalle
+        value:
+          const: otra
+      else:
+        _type: set
+        path: vistaDetalle
+        value:
+          const: principal
+  onPrintFacturaClicked:
+    - _type: download
+      schema: misFacturas
+      params:
+        - key: codigo
+          value:
+            statePath: factura.data.codigo
+      action: imprimir_factura_pdf
+      filename:
+        code: 'return "Factura_" + state.factura.data.codigo + ".pdf"'
+      success: none        

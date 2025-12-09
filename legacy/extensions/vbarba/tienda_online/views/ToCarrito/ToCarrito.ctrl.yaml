@@ -1,0 +1,182 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: carrito
+    id: idCarrito
+    schemaName: carrito
+    deleteConfirmQuestion:
+      titulo: Borrar carrito
+      cuerpo: El carrito se borrará
+  - type: Model
+    name: lineas
+    id: idLinea
+    schema: misLineasCarrito
+state:
+  vistaDetalle: principal
+  callbackChanged: null
+bunch:
+  onInit:
+    - _type: grape
+      name: getLineas
+    - _type: set
+      path: callbackChanged 
+      value: 
+        payloadPath: callbackChanged
+  onEditarReferenciaCarritoSectionAccepted:
+    - _type: grape
+      name: saveCarrito
+  onEditarReferenciaCarritoSectionCancelled:
+    - _type: grape
+      name: loadBuffeCarrito
+  onCarritoBufferChanged:
+    patch: override
+    grapes:
+      - _type: grape
+        name: cambiarReferencia 
+  cambiarReferencia:       
+    - _type: set
+      path: carrito.buffer.referencia
+      value:
+        payloadPath: value  
+  onAtrasClicked:
+    - _type: grape
+      name: cancelCarrito
+  onContinuarComprandoClicked:
+    - _type: if
+      if: 
+        operator: A = B
+        A:
+          statePath: carrito.buffer.activo
+        B:
+          const: true
+      then: 
+        _type: grape
+        name: irACatalogo
+      else:
+        _type: grape
+        name: activarYIrACatalogo
+  irACatalogo:
+    - _type: navigate
+      url:
+        const: "/"
+  activarCarrito:
+    - _type: patch
+      schema: carrito
+      action: activar_carrito
+      id:
+        statePath: carrito.buffer.idCarrito
+      success: onCarritoActivoMsg
+      error: onActivarCarritoError    
+  activarYIrACatalogo:
+    - _type: patch
+      schema: carrito
+      action: activar_carrito
+      id:
+        statePath: carrito.buffer.idCarrito
+      success: onCarritoActivo
+      error: onActivarCarritoError    
+  onConfirmarCompraClicked:
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          statePath: carrito.buffer.activo
+        B:
+          const: true
+      then:
+        _type: grape
+        name: irACheckout
+      else:
+        _type: grape
+        name: activarYIrACheckout
+  activarYIrACheckout:
+    - _type: patch
+      schema: carrito
+      action: activar_carrito
+      id:
+        statePath: carrito.buffer.idCarrito
+      success: irACheckout
+      error: onActivarCarritoError
+  irACheckout:
+    - _type: appDispatch
+      name:  getCarritoActivo
+    - _type: navigate
+      url:
+        const: "/checkout"
+  onActivarCarritoError:
+    - _type: alert
+      text: Error al enviar el pedido
+      severity: error
+  onCarritoActivoMsg:
+    - _type: alert
+      text: Carrito actualizado
+      severity: success
+    # - _type: grape
+    #   name: reloadPage
+    - _type: call 
+      function: 
+        statePath: callbackChanged
+    - _type: set
+      path: carrito.buffer.activo
+      value:
+        const: true  
+  onCarritoActivo:
+    # - _type: grape
+    #   name: reloadCarrito
+    - _type: appDispatch
+      name:  getCarritoActivo
+    - _type: alert
+      text: Carrito actualizado
+      severity: success
+    - _type: navigate
+      url:
+        const: "/"
+  onGenerarPresupuestoClicked:
+    # - _type: log
+    #   desc: miMensajeLineaguarda
+    #   value: 
+    #     const: cantidadAnadir
+    # - _type: patch
+    #   schema: carrito
+    #   action: generar_prespuesto
+    #   id:
+    #     statePath: carrito.buffer.idCarrito
+    #   success: onPresupuestoGenerado
+    #   error: onGenerarPresupuestoError
+    - _type: download
+      schema: carrito
+      action: generar_prespuesto
+      params:
+        - key: idcarrito
+          value:
+            statePath: carrito.buffer.idCarrito
+      filename:
+        const: presupuesto.xlsx
+      success: none
+      error: onGenerarPresupuestoError
+  onGenerarPresupuestoError:
+    - _type: alert
+      text: Error al generarar presupuesto
+      severity: error
+  onActivarCarritoClicked:
+    - _type: grape
+      name: activarCarrito
+  onCambiarCantidadLineaClicked:
+    - _type: patch
+      schema: lineaCarrito
+      id:
+        payloadPath: idLinea
+      data:
+        - key: cantidad
+          value:
+            payloadPath: cantidad
+      success: onCantidadLineaCambiada
+  onCarritoSaved:
+    - _type: grape
+      name: recargaCarrito
+  onCantidadLineaCambiada:
+    - _type: grape
+      name: recargaCarrito
+  recargaCarrito:
+    - _type: appDispatch
+      name: getCarritoActivo

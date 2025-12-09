@@ -1,0 +1,16 @@
+{
+  "name": "@quimera-extension/base-tpv",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "quimera": "workspace:@quimera/core@*",
+    "@quimera/comps": "workspace:*",
+    "@quimera/styles": "workspace:*",
+    "@quimera/thirdparty": "workspace:*",
+    "@quimera-extension/core": "workspace:*"
+  }
+}

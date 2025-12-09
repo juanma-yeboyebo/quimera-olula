@@ -1,0 +1,8 @@
+---
+shortcuts:
+# state:
+#   vistaDetalle: principal
+bunch:
+  # onInit:
+  #   - _type: grape
+  #     name: getLotesAlmacen  

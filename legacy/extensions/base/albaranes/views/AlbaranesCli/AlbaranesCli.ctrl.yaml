@@ -1,0 +1,35 @@
+---
+shortcuts:
+  - type: Model
+    name: albaranes
+    id: idAlbaran
+    schema: albaranescli
+    url: "/ventas/albaranes"
+    logicDelete: true
+state:
+  filtroVisible: false
+bunch:
+  onInit:
+    - _type: grape
+      name: getAlbaranes
+  onMostrarFiltroClicked:
+    - _type: set
+      path: filtroVisible
+      value:
+        toggleStatePath: filtroVisible
+  onAlbaranesFilterChanged:
+    - _type: grape
+      name: onMostrarFiltroClicked
+    - _type: set
+      path: albaranes.filter
+      value:
+        payloadPath: value
+    - _type: grape
+      name: getAlbaranes
+  onNuevoAlbaranClicked:
+    - _type: navigate
+      url:
+        const: "/ventas/albaranes/nuevo"
+  onNewAlbaranChanged:
+    - onAlbaranesNewItemChanged
+    - addAlbaranesItem

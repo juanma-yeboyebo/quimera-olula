@@ -1,0 +1,99 @@
+---
+shortcuts: []
+state:
+  callbackEnviaEmail: null
+  firmaDocumento: false
+bunch: 
+  onGuardaCallback:
+    - _type: set
+      path: callbackCerrado 
+      value: 
+        payloadPath: callbackCerrado
+    - _type: set 
+      path: callbackEnviaEmail 
+      value: 
+        payloadPath: callbackEnviaEmailProp  
+  firmaAlbaranCli:
+    - _type: set 
+      path: indicarFirmando 
+      value: 
+        const: true
+    - _type: post
+      schema: firmasdealbaranes
+      data:
+        - key: idAlbaran
+          value:
+            statePath: albaran.buffer.idAlbaran
+        - key: codigo
+          value:
+            statePath: albaran.buffer.codigo
+        - key: codContacto
+          value:
+            statePath: firmaAlbaran.codContacto
+        - key: firmadopor
+          value:
+            statePath: firmaAlbaran.firmadopor
+        - key: cifnif
+          value:
+            statePath: firmaAlbaran.cifnif
+        - key: puesto
+          value:
+            statePath: firmaAlbaran.puesto 
+        - key: fecha
+          value:
+            statePath: firmaAlbaran.fecha
+        - key: hora
+          value:
+            statePath: firmaAlbaran.hora
+        - key: observacionesfirma
+          value:
+            statePath: firmaAlbaran.observacionesfirma
+        - key: estado
+          value:
+            const: "Firmado"
+        - key: firma
+          value:
+            payloadPath: firma          
+      success: onFirmaAlbaranCliCompleted  
+      error: onFirmaAlbaranCliError 
+  onFirmaAlbaranCliError:
+    - _type: alert   
+      text: No se ha podido firmar el albarán.
+      severity: error
+    - _type: set 
+      path: indicarFirmando 
+      value: 
+        const: false
+  onFirmaAlbaranCliCompleted:
+    - _type: patch
+      schema: albaranescli 
+      id:
+        statePath: albaran.buffer.idAlbaran
+      data:
+        - key: firmado
+          value:
+            const: true
+      success: firmarSucceded  
+      error: firmarError
+  firmarSucceded:
+    - _type: grape
+      name: enviaMailAlbaran
+  enviaMailAlbaran:
+    - _type: call
+      condition:
+          operator: A is defined
+          A:
+            statePath: callbackEnviaEmail
+      function:
+        statePath: callbackEnviaEmail
+  #   - _type: patch
+  #     action: envio_mail_albaran
+  #     schema: albaranescli
+  #     id:
+  #       statePath: albaran.buffer.idAlbaran
+  #     success: enviaMailAlbaranSuccess
+  # enviaMailAlbaranSuccess:
+  #   - _type: alert 
+  #     text: Email enviado.
+  #     severity: success 
+

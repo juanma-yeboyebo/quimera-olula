@@ -1,0 +1,23 @@
+{
+  "translation": {
+    "catalogo": {
+      "descripcion": "Descripción",
+      "titulo": "Sillones Relax",
+      "subtitulo": "Los sillones relax son una excelente opción para aquellos que buscan comodidad y relajación en su hogar. Estos sillones están diseñados para brindar una experiencia única de descanso, ya que cuentan con características especiales como reclinación y soporte lumbar ajustable. Además de ser extremadamente cómodos, también vienen en una variedad de estilos y materiales para adaptarse a cualquier decoración del hogar. Ya sea que estés buscando un lugar para relajarte después del trabajo o simplemente quieras disfrutar de una buena lectura, un sillón relax es la elección perfecta para tu hogar.",
+      "avisoNoLogueado": "!Para comprar es necesario tener una cuenta. <1>Identifíquese</1> o <2>contacte con nosotros</2> para crear una."
+    },
+    "carrito": {
+      "irACheckout": "Confirmar o editar pedido"
+    },
+    "checkout": {
+      "confirmarPedido": "Confirmar pedido",
+      "volverCatalogo": "Volver al catálogo",
+      "direccionEntrega": "Dirección de entrega!",
+      "formaPago": "Forma de pago",
+      "codPago": "Forma de envío",
+      "formaEnvio": "Forma de envío",
+      "observaciones": "Observaciones",
+      "textoDefectoObservaciones": "Indique aquí sus observaciones"
+    }
+  }
+}

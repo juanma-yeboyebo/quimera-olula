@@ -1,0 +1,35 @@
+---
+shortcuts:
+  - type: Model
+    name: categorias
+    id: idCategoria
+    schema: categorias
+    url: "/admin/catalogo/categorias"
+    logicDelete: true
+state:
+  filtroVisible: false
+bunch:
+  onInit:
+    - _type: grape
+      name: getCategorias
+  onMostrarFiltroClicked:
+    - _type: set
+      path: filtroVisible
+      value:
+        toggleStatePath: filtroVisible
+  onCategoriasFilterChanged:
+    - _type: grape
+      name: onMostrarFiltroClicked
+    - _type: set
+      path: categorias.filter
+      value:
+        payloadPath: value
+    - _type: grape
+      name: getCategorias
+  onNuevaCategoriaClicked:
+    - _type: navigate
+      url:
+        const: "/admin/catalogo/categorias/nueva"
+  onNewCategoriaChanged:
+    - onCategoriasNewItemChanged
+    - addCategoriasItem

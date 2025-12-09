@@ -1,0 +1,91 @@
+---
+shortcuts:
+  - type: Model
+    name: pedidos
+    id: idPedido
+    schema: pedidosotrosagentes
+    url: "/ss/ventas/pedidos/otrosagentes"
+    logicDelete: true
+state:
+  filtroVisible: false
+  habilitarMulticheck: false
+  arrayMultiCheck: []
+bunch:
+  onInit:
+    - _type: grape
+      name: getPedidos
+  onMostrarFiltroClicked:
+    - _type: set
+      path: filtroVisible
+      value:
+        toggleStatePath: filtroVisible
+  onPedidosFilterChanged:
+    - _type: grape
+      name: onMostrarFiltroClicked
+    - _type: set
+      path: pedidos.filter
+      value:
+        payloadPath: value
+    - _type: grape
+      name: getPedidos
+  onNuevoPedidoClicked:
+    - _type: navigate
+      url:
+        const: "/ventas/pedidos/nuevo"
+  onNewPedidoChanged:
+    - onPedidosNewItemChanged
+    - addPedidosItem
+  onHabilitarMulticheckClicked:  
+      - condition:
+          operator: A is true
+          A:
+            statePath: habilitarMulticheck
+        _type: set
+        path: arrayMultiCheck
+        value:
+          const: []    
+      - _type: set
+        path: habilitarMulticheck
+        value:
+         toggleStatePath: habilitarMulticheck
+  onPedidosCheckItemChecked:  
+    - _type: appendItem
+      path: arrayMultiCheck
+      value:
+        payloadPath: idPedido 
+    - _type: set
+      path: checkClicked
+      value:
+        const: true         
+  onPedidosCheckItemCheckout:
+    - _type: deleteItemByIndex
+      path: arrayMultiCheck
+      index:
+        payloadPath: index 
+    - _type: set
+      path: checkClicked
+      value:
+        const: true          
+  onPedidosCheckItemSelected:
+    - _type: if
+      if:
+        operator: A is true
+        A:
+          statePath: checkClicked
+      then:
+          _type: set
+          path: checkClicked
+          value:
+            const: false  
+      else:
+          _type: grape
+          name: onPedidosItemSelected     
+  resetearAcciones:       
+    - _type: set
+      path: arrayMultiCheck
+      value:
+        const: []     
+    - _type: set
+      path: habilitarMulticheck
+      value:
+        const: false          

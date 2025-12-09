@@ -1,0 +1,140 @@
+---
+shortcuts: 
+  - type: DetailBuffer
+    name: linea
+    id: idLinea
+    schemaName: lineasPedidosCliVenta
+    deleteConfirmQuestion:
+      titulo: Borrar línea
+      cuerpo: La línea se borrará
+state:
+  codUbicacionArticulo: null
+  sustitutivo: {}
+  stock:
+    disponible: null
+  cambio: 0
+  tipoCambio: edited
+  onSuccess: null
+bunch:
+  onBufferLineaLoaded:
+    patch: append
+    grapes:
+      - condition:
+          operator: A is defined
+          A:
+            payloadPath: initLinea
+        _type: grape
+        name: seteaCodUbicacionArticulo 
+  seteaCodUbicacionArticulo:
+    - _type: set
+      path: codUbicacionArticulo
+      value:
+        code: 'return payload.initLinea.codUbicacionArticulo'        
+  onLineaSectionAccepted:
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          payloadPath: section
+        B:
+          const: 'ubicacion'
+      then:
+        _type: grape
+        name: cambiaUbicacionArticulo  
+      else:
+        _type: grape
+        name: saveLinea        
+  onLineaSectionCancelled:
+    - _type: grape
+      name: loadBufferLinea
+  onLineaUbicacionChanged:
+    - _type: set
+      path: linea.buffer.codUbicacionArticulo
+      value:
+        payloadPath: value
+  cambiaUbicacionArticulo:    
+    - _type: patch
+      schema: lineasPedidosCliVenta
+      action: cambiar_ubicacion_articulo
+      data:
+        - key: referencia
+          value:
+            statePath: linea.buffer.referencia
+        - key: codUbicacionArticulo
+          value:
+            statePath: codUbicacionArticulo
+      success: onUbicacionArticuloCambiada    
+      error: onCambiaUbicacionArticuloError    
+  onUbicacionArticuloCambiada:
+    - _type: grape
+      name: reloadLinea        
+  onCambiaUbicacionArticuloError:
+    - _type: alert
+      text: Error al actualizar la ubicación del artículo
+      severity: error          
+  setSustitutivo:
+    - _type: set
+      path: sustitutivo.referencia
+      value:
+        payloadPath: response.resource.refSustitutivo
+    - _type: set
+      path: sustitutivo.factor
+      value:
+        payloadPath: response.resource.factorSustitucion
+    - _type: get
+      schema: articulos
+      id:
+        payloadPath: response.resource.refSustitutivo
+      success: onSustitutivoRecibido
+  onSustitutivoRecibido:
+    - _type: set
+      path: sustitutivo.descripcion
+      value:
+        payloadPath: response.resource.descripcion
+  onSustituirClicked:
+    - _type: grape
+      name: setChangesForBufferLinea
+      payload:
+        changes:
+          paramValues:
+            - key: referencia
+              value:
+                statePath: sustitutivo.referencia
+            - key: cantidad
+              value:
+                code: return state.linea.buffer.cantidad * state.sustitutivo.factor
+  onLineaDtoPorChanged:
+    - _type: set
+      path: linea.buffer.dtoManual
+      value:
+        code: return payload.value != 0
+    - _type: set
+      path: linea.buffer.dtoPor
+      value:
+        payloadPath: value
+  onCantCambiada:        
+    - _type: set
+      path: linea.buffer.shCantAlbaran
+      value:
+        payloadPath: cantidad 
+  onVerTodos:
+    - _type: log
+      desc: miMensajeLineaguarda
+      value: 
+        payloadPath: idLinea
+    - _type: patch
+      action: get_lotes_almacen
+      schema: lotesPorAlmacen
+      data:
+        - key: idlinea
+          value: 
+            payloadPath: idLinea
+        - key: verTodos
+          value: 
+            const: true
+      success: onVerTodosLotesClickedSuccess
+  onVerTodosLotesClickedSuccess:
+    - _type: set
+      path: lotesAlmacen
+      value:
+        payloadPath: response.data

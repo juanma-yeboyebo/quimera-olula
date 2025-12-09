@@ -1,0 +1,35 @@
+---
+shortcuts:
+  - type: Model
+    name: presupuestos
+    id: idPresupuesto
+    schema: presupuestosCli
+    url: "/ventas/presupuestos"
+    logicDelete: true
+state:
+  filtroVisible: false
+bunch:
+  onInit:
+    - _type: grape
+      name: getPresupuestos
+  onMostrarFiltroClicked:
+    - _type: set
+      path: filtroVisible
+      value:
+        toggleStatePath: filtroVisible
+  onPresupuestosFilterChanged:
+    - _type: grape
+      name: onMostrarFiltroClicked
+    - _type: set
+      path: presupuestos.filter
+      value:
+        payloadPath: value
+    - _type: grape
+      name: getPresupuestos
+  onNuevoPresupuestoClicked:
+    - _type: navigate
+      url:
+        const: "/ventas/presupuestos/nuevo"
+  onNewPresupuestoChanged:
+    - onPresupuestosNewItemChanged
+    - addPresupuestosItem

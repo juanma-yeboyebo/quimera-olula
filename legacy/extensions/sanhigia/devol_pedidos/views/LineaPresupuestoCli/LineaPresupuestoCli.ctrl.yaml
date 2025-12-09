@@ -1,0 +1,110 @@
+---
+shortcuts: []
+state:
+  sustitutivo: {}
+  stock:
+    disponible: null
+bunch:
+  onLineaSaved:
+    # En sanhigia cargamos siempre todas las líneas por la revisión
+    # en la totalización que cambia precios y crea líneas regalo
+    patch: append
+    grapes:
+      - _type: grape
+        name: reloadLinea
+  onLineaBufferChanged:
+    - condition:
+        operator: A = B
+        A:
+          payloadPath: field
+        B:
+          const: referencia
+      _type: grape
+      name: onLineaReferenciaChanged
+    - condition:
+        operator: A = B
+        A:
+          payloadPath: field
+        B:
+          const: dtoPor
+      _type: grape
+      name: onLineaDtoPorChanged
+  onLineaReferenciaChanged:
+    - _type: get
+      schema: articulos
+      id:
+        payloadPath: value
+      success: onArticuloRecibido
+    - _type: grape
+      name: checkStockArticulo
+  checkStockArticulo:
+    - _type: get
+      schema: checkStockLinea
+      filter:
+        and:
+          - - const: referencia
+            - eq
+            - statePath: linea.buffer.referencia
+          - - const: codalmacen
+            - eq
+            - const: ALM
+      success: onStockRecibido
+  onStockRecibido:
+    - _type: set
+      path: stock.disponible
+      value:
+        payloadPathOrZero: response.data.0.disponible
+  onArticuloRecibido:
+    - _type: if
+      if:
+        operator: A is true
+        A:
+          code: return !!payload.response.data[0]?.enSustitucion && !!payload.response.data[0]?.refSustitutivo
+      then:
+        _type: grape
+        name: setSustitutivo
+      else:
+        _type: set
+        path: sustitutivo
+        value:
+          const: {}
+  setSustitutivo:
+    - _type: set
+      path: sustitutivo.referencia
+      value:
+        payloadPath: response.resource.refSustitutivo
+    - _type: set
+      path: sustitutivo.factor
+      value:
+        payloadPath: response.resource.factorSustitucion
+    - _type: get
+      schema: articulos
+      id:
+        payloadPath: response.resource.refSustitutivo
+      success: onSustitutivoRecibido
+  onSustitutivoRecibido:
+    - _type: set
+      path: sustitutivo.descripcion
+      value:
+        payloadPath: response.resource.descripcion
+  onSustituirClicked:
+    - _type: grape
+      name: setChangesForBufferLinea
+      payload:
+        changes:
+          paramValues:
+            - key: referencia
+              value:
+                statePath: sustitutivo.referencia
+            - key: cantidad
+              value:
+                code: return state.linea.buffer.cantidad * state.sustitutivo.factor
+  onLineaDtoPorChanged:
+    - _type: set
+      path: linea.buffer.dtoManual
+      value:
+        code: return payload.value != 0
+    - _type: set
+      path: linea.buffer.dtoPor
+      value:
+        payloadPath: value

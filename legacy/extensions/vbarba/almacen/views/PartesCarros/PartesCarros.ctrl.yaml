@@ -1,0 +1,60 @@
+---
+shortcuts:
+  - type: Model
+    name: partesCarros
+    id: idParte
+    schema: partescarros
+    url: "/partesCarros"
+state: 
+  modalFirmaVisible: false
+  parteSeleccionado: null
+  filtroVisible: false
+  contadorFiltros: null
+  codigoParte: null
+bunch: 
+  onInit:
+    - _type: if
+      if:
+        operator: not A
+        A:
+          payloadPath: codigoParteProp
+      then:
+        _type: grape
+        name: dameTodosPartes
+      else:
+        _type: grape
+        name: dameUnParte
+  dameTodosPartes:
+    - _type: grape
+      name: getPartesCarros
+  dameUnParte:
+    - _type: set
+      path: codigoParte
+      value:
+        payloadPath: codigoParteProp      
+  onMostrarFiltroClicked:
+    - _type: set
+      path: filtroVisible
+      value:
+        toggleStatePath: filtroVisible
+  onPartesCarrosFilterChanged:
+    patch: append
+    grapes:
+      - _type: grape
+        name: actualizaContFiltro
+  actualizaContFiltro:
+    - _type: set
+      path: contadorFiltros
+      value:
+        payloadPath: cantFilter
+  onNuevoParteCarroClicked:
+    - _type: navigate
+      url:
+        const: "/partesCarros/nuevo"   
+  onVolverListadoPartesClicked:
+    - _type: navigate
+      url:
+        const: "/partesCarros"   
+  onNewParteCarroChanged:
+    - onPartesCarrosNewItemChanged
+    - addPartesCarrosItem                    

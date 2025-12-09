@@ -1,0 +1,190 @@
+---
+shortcuts:
+  - type: Model
+    name: movilotes
+    id: id
+    schema: moviLote
+    logicDelete: true
+  - type: Model
+    name: linea
+    id: idLinea
+    schema: lineasPedidoCliMoviloteProv
+state:
+  modalLotesAlmacenVisible: false
+  lotesAlmacen: []
+  idLineaModal: false
+  modalLotesTipo: false
+  selectedLote: false
+  idPedido: null
+  codPreparacionDePedido: null
+  loteAnadir: null
+  fechaAnadir: null
+bunch:
+  onInit:
+    - _type: set
+      path: movilotes.filter
+      value:
+        code: 'return { and: [["idlineapp", "eq", payload.idlineaPP],["docorigen","eq","PP"]]}'
+    - _type: grape
+      name: getMovilotes
+    - _type: set
+      path: linea.filter
+      value:
+        code: 'return { and: [["idlinea", "eq", payload.idlineaPP]]}'
+    - _type: grape
+      name: getLinea
+    - _type: set
+      path: idPedido
+      value:
+        payloadPath: idPedido
+    - _type: set
+      path: codPreparacionDePedido
+      value:
+        payloadPath: codPreparacionDePedido              
+  onLotesItemSelected:
+    - _type: set
+      path: selectedLote
+      value:
+        payloadPath: item
+  onAnadirMoviloteProvCLiked:
+    - _type: patch
+      action: anadirMoviloteProv
+      schema: lineasPedidoCompra
+      id:
+        payloadPath: idLinea
+      data:
+        - key: codlote
+          value:
+            payloadPath: codLote
+        - key: ncodlote
+          value:
+            payloadPath: ncodLote
+        - key: caducidad
+          value:
+            payloadPath: caducidad
+      success: onAnadirMoviloteProvCLikedSuccess
+  onAnadirMoviloteProvCLikedSuccess:
+    - _type: grape
+      name: getMovilotes
+    - _type: grape
+      name: getLinea
+    - _type: grape
+      name: onCerrarModalLotesAlmacen
+    - _type: set
+      path: selectedLote
+      value:
+        const: false
+    - _type: set
+      path: ncodlote
+      value:
+        const: false
+    - _type: set
+      path: caducidad
+      value:
+        const: false
+  onAnadirLoteClicked:
+    - _type: set
+      path: idLineaModal
+      value:
+        payloadPath: idLinea
+    - _type: set
+      path: modalLotesTipo
+      value:
+        const: movilotescli
+    - _type: patch
+      action: get_lotes_prov_almacen
+      schema: lotesPorAlmacen
+      data:
+        - key: idlinea
+          value: 
+            payloadPath: idLinea
+      success: onMostrarModalLotesSuccess
+  onMostrarModalLotesSuccess:
+    - _type: set
+      path: lotesAlmacen
+      value:
+        payloadPath: response.data
+    - _type: set
+      path: modalLotesAlmacenVisible
+      value:
+        toggleStatePath: modalLotesAlmacenVisible
+  onBorrarMoviloteProvClickConfirmed:
+    # - _type: log
+    #   desc: miMensajeBorrarMovilote
+    #   value: 
+    #     payloadPath: codLote
+    - _type: patch
+      action: deleteMoviloteProv
+      schema: lineasPedidoCompra
+      id:
+        payloadPath: idLinea
+      data:
+        - key: idLote
+          value:
+            payloadPath: idLote
+      success: onBorrarMoviloteProvClickSuccess
+  onCantidadLoteCambiada:
+    - _type: patch
+      action: cambiarCantidadLoteProv
+      schema: moviLote
+      id:
+        payloadPath: idLote
+      data:
+        - key: cantidadNueva
+          value:
+            payloadPath: nuevaCantidadMovilote
+      success: onBorrarMoviloteProvClickSuccess
+  onBorrarMoviloteProvClickSuccess:
+    - _type: grape
+      name: getMovilotes
+    - _type: grape
+      name: getLinea
+  onCerrarModalLotesAlmacen:
+    - _type: set
+      path: modalLotesAlmacenVisible
+      value:
+        const: false
+    - _type: set
+      path: loteAnadir
+      value:
+        const: null
+    - _type: set
+      path: fechaAnadir
+      value:
+        const: null
+  onAnadirMoviloteCliCLiked:
+    - _type: patch
+      action: anadirMoviloteProv
+      schema: lineasPedidoCompra
+      id:
+        payloadPath: idLinea
+      data:
+        - key: codlote
+          value:
+            payloadPath: codLote
+        - key: ncodlote
+          value:
+            payloadPath: ncodLote
+        - key: caducidad
+          value:
+            payloadPath: caducidad
+      success: onAnadirMoviloteCliCLikedSuccess
+  onAnadirMoviloteCliCLikedSuccess:
+    - _type: grape
+      name: getMovilotes
+    - _type: grape
+      name: getLinea
+    - _type: grape
+      name: onCerrarModalLotesAlmacen
+    - _type: set
+      path: selectedLote
+      value:
+        const: false
+    - _type: set
+      path: ncodlote
+      value:
+        const: false
+    - _type: set
+      path: caducidad
+      value:
+        const: false

@@ -1,0 +1,79 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: orden
+    id: codOrden
+    schemaName: ordenesproduccion  
+    action: "get_ordenes_produccion"
+state: 
+  vistaDetalle: principal
+  urlAtras: null
+  idTarea: null
+bunch:
+  onInit:
+    - _type: set
+      path: vistaDetalle
+      value:
+        const: principal
+    - condition:
+        operator: A is defined
+        A:
+          payloadPath: urlAtrasProp
+      _type: grape
+      name: setUrl   
+    - condition:
+        operator: A is defined
+        A:
+          payloadPath: idTareaProp
+      _type: grape
+      name: setIdTarea 
+  setUrl: 
+    - _type: set
+      path: urlAtras
+      value:
+        payloadPath: urlAtrasProp  
+  setIdTarea: 
+    - _type: set
+      path: idTarea
+      value:
+        payloadPath: idTareaProp            
+  onAtrasClicked:
+    - _type: if
+      if:
+        operator: A is defined
+        A:
+          statePath: urlAtras
+      then:
+        _type: navigate
+        url:
+          statePath: urlAtras
+      else:
+        _type: grape
+        name: cancelOrden                
+  onIrPedidoClicked:
+    - _type: grape
+      condition:
+          operator: A is defined
+          A:
+            payloadPath: codPedido
+      name: navegaAPedido  
+  navegaAPedido:       
+    - _type: if
+      if:
+        operator: A is defined
+        A:
+          statePath: idTarea
+      then:
+        _type: navigate
+        url:
+          code: "return '/tareas/tareasterminal/' + state.idTarea + '/pedido/' + payload.codOrden + '/' + payload.idPedido"
+      else:
+        _type: navigate
+        url:
+          code: "return '/ordenesprod/pedido/' + payload.codOrden + '/' + payload.idPedido"     
+  # onCompraBufferSectionAccepted:
+  #   - _type: grape
+  #     name: saveCompra
+  # onCompraBufferSectionCancelled:
+  #   - _type: grape
+  #     name: loadBufferCompra

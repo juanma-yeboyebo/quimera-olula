@@ -1,0 +1,147 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: pedido
+    id: idPedido
+    schemaName: pedidos
+    deleteConfirmQuestion:
+      titulo: Borrar pedido
+      cuerpo: El pedido se borrará
+  - type: Model
+    name: lineas
+    id: idLinea
+    schema: lineasPedidosCli
+state:
+  generandoPedidoProv: false
+  generandoAlbaran: false
+  modalVistaEnviarDocumento:  false
+  vistaDetalle: principal
+bunch:
+  onInit:
+    - condition:
+        operator: A is defined
+        A:
+          statePath: pedido.data.idPedido
+      _type: grape
+      name: getLineas
+  onPedidoBufferSectionAccepted:
+    - _type: grape
+      name: savePedido
+  onPedidoBufferSectionCancelled:
+    - _type: grape
+      name: loadBufferPedido
+  onLineasItemChanged:
+    - _type: grape
+      name: reloadPedido
+  onLineaCreada:
+    - _type: grape
+      name: reloadPedido
+    - _type: grape
+      name: addLineasItem
+  onAtrasClicked:
+    - _type: grape
+      name: cancelPedido
+  onMasClicked:
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          statePath: vistaDetalle
+        B:
+          const: principal
+      then:
+        _type: set
+        path: vistaDetalle
+        value:
+          const: otra
+      else:
+        _type: set
+        path: vistaDetalle
+        value:
+          const: principal
+  onGenerarPedidoProvClicked:
+    - _type: set
+      path: generandoPedidoProv
+      value:
+        const: true  
+    - _type: patch
+      action: generar_enviar_pedidoprov
+      schema: pedidos
+      id:
+        statePath: pedido.data.idPedido
+      success: onGenerarPedidoProvSuccess
+      error: onGenerarPedidoProvError
+  onGenerarPedidoProvSuccess:
+    - _type: set
+      path: generandoPedidoProv
+      value:
+        const: false
+    - _type: alert
+      text: Pedido Generado
+      severity: success
+  onGenerarPedidoProvError:
+    - _type: set
+      path: generandoPedidoProv
+      value:
+        const: false
+    - _type: alert
+      text: Error al generar pedido
+      severity: error
+  onImprimirPedidoCliClicked:
+    - _type: download
+      schema: pedidos
+      params:
+        - key: idpedido
+          value:
+            statePath: pedido.buffer.idPedido
+      action: pedido_to_pdf
+      filename:
+        const: pedido.pdf
+      success: none
+  onGenerarAlbaranClicked:
+    - _type: set
+      path: generandoAlbaran
+      value:
+        const: true   
+    - _type: patch
+      action: generar_albaran
+      schema: pedidos
+      id:
+        statePath: pedido.data.idPedido
+      data:
+        - key: servircompleto
+          value:
+            const: true
+      success: onGenerarAlbaranSuccess
+      error: onGenerarAlbaranError
+  onGenerarAlbaranSuccess:
+    - _type: set
+      path: generandoAlbaran
+      value:
+        const: false
+    - _type: alert
+      text: Albaran Generado
+      severity: success
+  onGenerarAlbaranError:
+    - _type: set
+      path: generandoAlbaran
+      value:
+        const: false  
+    - _type: alert
+      text: Error al generar albaran
+      severity: error
+  onEnviarEmailClicked:
+    - _type: set 
+      path: modalVistaEnviarDocumento
+      value:
+        const: true
+  onCancelEnviarEmailClicked:
+    - _type: set 
+      path: modalVistaEnviarDocumento
+      value:
+        const: false 
+  onEmailEnviado:
+    - _type: set 
+      path: modalVistaEnviarDocumento
+      value:
+        const: false               

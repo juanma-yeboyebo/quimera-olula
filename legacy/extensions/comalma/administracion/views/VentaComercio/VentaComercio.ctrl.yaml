@@ -1,0 +1,25 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: ventaComercio
+    id: idVenta
+    schemaName: ventasComercio  
+    deleteConfirmQuestion:
+      titulo: Borrar venta
+      cuerpo: La venta seleccionada será borrada permanentemente. ¿Desea continuar?    
+state: {}
+bunch:
+  onInit:
+    - _type: set
+      path: vistaDetalle
+      value:
+        const: principal
+  onVentaBufferSectionAccepted:
+    - _type: grape
+      name: saveVenta
+  onVentaBufferSectionCancelled:
+    - _type: grape
+      name: loadBufferVenta
+  onAtrasClicked:
+    - _type: grape
+      name: cancelVenta  

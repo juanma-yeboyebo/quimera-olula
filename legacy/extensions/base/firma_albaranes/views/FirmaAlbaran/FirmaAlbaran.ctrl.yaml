@@ -1,0 +1,144 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: albaran
+    id: idAlbaran
+    schemaName: albaranescli
+  - type: Model
+    name: lineas
+    id: idLinea
+    schema: lineasAlbaranCli
+state:
+  indicarFirmando: false
+  callbackCerrado: null
+  firmaDocumento: true
+bunch:
+  onInit:
+    - condition:
+        operator: A is defined
+        A:
+          statePath: albaran.data.idAlbaran
+      _type: grape
+      name: getLineas
+  onGuardaCallback:
+    - _type: set
+      path: callbackCerrado
+      value:
+        payloadPath: callbackCerrado
+  onFirmaAlbaranCodContactoChanged:
+    - _type: get
+      condition:
+        operator: A is defined
+        A:
+          payloadPath: value
+      schema: contacto
+      filter:
+        - const: codcontacto
+        - const: eq
+        - payloadPath: value
+      success: onDatosContactoRecibidos
+  onDatosContactoRecibidos:
+    - _type: set
+      path: firmaAlbaran.codContacto
+      value:
+        payloadPath: value
+    - _type: set
+      path: firmaAlbaran.firmadopor
+      value:
+        code: 'return payload.response.data[0]?.nombre ?? ""'
+    - _type: set
+      path: firmaAlbaran.cifnif
+      value:
+        code: 'return payload.response.data[0]?.nif ?? ""'
+  onFirmarClicked:
+    - _type: if
+      if:
+        operator: A is true
+        A:
+          statePath: firmaDocumento
+      then:
+        _type: grape
+        name: firmaDocumentoCli
+      else:
+        _type: grape
+        name: firmaAlbaranCli
+  firmaDocumentoCli:
+    - _type: set
+      path: indicarFirmando
+      value:
+        const: true
+    - _type: post
+      schema: firmasdealbaranes
+      data:
+        - key: idDocumento
+          value:
+            statePath: albaran.buffer.idAlbaran
+        - key: tipoDocumento
+          value:
+            const: "albaranescli"
+        - key: codigo
+          value:
+            statePath: albaran.buffer.codigo
+        - key: codContacto
+          value:
+            statePath: firmaAlbaran.codContacto
+        - key: firmadopor
+          value:
+            statePath: firmaAlbaran.firmadopor
+        - key: cifnif
+          value:
+            statePath: firmaAlbaran.cifnif
+        - key: puesto
+          value:
+            statePath: firmaAlbaran.puesto
+        - key: fecha
+          value:
+            statePath: firmaAlbaran.fecha
+        - key: hora
+          value:
+            statePath: firmaAlbaran.hora
+        - key: estado
+          value:
+            const: "Firmado"
+        - key: firma
+          value:
+            payloadPath: firma
+      success: onFirmarCompleted
+  onFirmarCompleted:
+    - _type: patch
+      schema: albaranescli
+      id:
+        statePath: albaran.buffer.idAlbaran
+      data:
+        - key: firmado
+          value:
+            const: true
+      success: firmarSucceded
+      error: firmarError
+  firmarSucceded:
+    - _type: set
+      path: albaran.buffer.firmado
+      value:
+        const: true
+    - _type: set
+      path: indicarFirmando
+      value:
+        const: false
+    - _type: alert
+      text: Se ha firmado el albarán
+      severity: success
+    - _type: call
+      function:
+        statePath: callbackCerrado
+      params:
+        - key: albaran
+          value:
+            statePath: albaran.buffer
+  firmarError:
+    - _type: set
+      path: indicarFirmando
+      value:
+        const: false
+    - _type: alert
+      text: Se ha producido un error y no se ha firmado el albarán
+      severity: error

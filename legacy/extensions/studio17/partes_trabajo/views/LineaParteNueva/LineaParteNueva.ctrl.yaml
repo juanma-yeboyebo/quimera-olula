@@ -1,0 +1,87 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: linea
+    id: idLinea
+    parentId: codParte
+    schemaName: lineasParte
+    mode: insert     
+state:
+  inline: true
+  nuevaLineaHoras: 0
+  nuevaLineaMinutos: 0
+  codParte: null
+bunch:    
+  guardarCodparte:
+    - _type: set
+      path: codParte
+      value:
+        payloadPath: codParte   
+  onExpandirClicked:
+    - _type: set
+      path: inline
+      value:
+        toggleStatePath: inline
+  onLineaExpandidaSectionAccepted:
+    - _type: grape
+      name: saveLinea
+  onLineaExpandidaSectionCancelled:
+    - _type: grape
+      name: onExpandirClicked
+    - _type: grape
+      name: seteaNuevaHoras   
+    - _type: grape
+      name: initBufferLinea         
+  onLineaSaved:
+    - _type: grape
+      name: initBufferLinea
+    - seteaNuevaHoras   
+    - _type: set
+      path: inline
+      value:
+        const: true
+  seteaNuevaHoras:
+    - _type: set
+      path: nuevaLineaHoras
+      value:
+        const: 0  
+    - _type: set
+      path: nuevaLineaMinutos
+      value:
+        const: 0            
+  onNuevaLineaHorasChanged:
+    - _type: set
+      path: nuevaLineaHoras
+      value:
+        code: 'return payload.value'
+    - _type: grape
+      name: actualizarBufferHoras             
+  onNuevaLineaMinutosChanged:
+    - _type: set
+      path: nuevaLineaMinutos
+      value:
+        code: 'return payload.value'
+    - _type: grape
+      name: actualizarBufferHoras          
+  actualizarBufferHoras:  
+    - _type: grape
+      name: onLineaBufferChanged 
+      payload:
+        field:
+          const: "codParte"   
+        value:
+          statePath: codParte                  
+    - _type: grape
+      name: onLineaBufferChanged 
+      payload:
+        field:
+          const: "horas"   
+        value:
+          code: 'return (state.nuevaLineaHoras + (state.nuevaLineaMinutos / 60 ))' 
+    - _type: grape
+      name: onLineaBufferChanged 
+      payload:
+        field:
+          const: "s17horas"   
+        value:
+          code: 'return (state.nuevaLineaHoras + state.nuevaLineaMinutos / 100).toFixed(2)'                                               

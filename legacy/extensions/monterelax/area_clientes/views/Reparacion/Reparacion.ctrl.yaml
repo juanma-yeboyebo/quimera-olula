@@ -1,0 +1,14 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: reparacion
+    id: idReparacion
+    schemaName: reparaciones
+state: {}
+bunch: 
+  onAtrasClicked:
+    - _type: grape
+      name: cancelReparacion
+  # onInit:
+  #   - _type: grape
+  #     name: getCurso

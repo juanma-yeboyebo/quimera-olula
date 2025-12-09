@@ -1,0 +1,95 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: nuevoParte
+    id: idParte
+    schemaName: partescarros
+    mode: insert
+state: 
+  independiente: true
+  buscarPor: null
+  buscarPorOptions: [
+    { key: "cliente", value: "Cliente", aplicadoA: "Cliente", porCliente: true },
+    { key: "transportista", value: "Transportista", aplicadoA: "Transportista", porCliente: true },
+    { key: "proveedor", value: "Proveedor", aplicadoA: "Cliente", porCliente: false }
+    ]
+  savingParte: false
+bunch: 
+  onBuscarPorChanged:
+    - _type: grape
+      name: loadBufferNuevoParte
+    - _type: set 
+      path: buscarPor
+      value:
+        payloadPath: value
+    - _type: set
+      condition:
+          operator: not A
+          A:
+            statePath: nuevoParte.buffer.codAgente
+      path: nuevoParte.buffer.codAgente
+      value:
+        payloadPath: codAgente
+    - _type: grape
+      name: seteaValoresEspecificos
+  onNuevoParteSeccionConfirmada:
+    - _type: set 
+      path: savingParte
+      value:
+        const: true    
+    - _type: grape
+      name: saveNuevoParte  
+  onNuevoParteSeccionCancelada:
+    - _type: set 
+      path: savingParte
+      value:
+        const: false  
+    - _type: grape
+      name: cancelParte   
+  onNuevoParteBufferChanged:
+    - _type: set
+      condition:
+        operator: A = B
+        A:
+          payloadPath: field
+        B:
+          const: "codCliente"
+      path: nuevoParte.buffer.nombreCliente
+      value:
+        payloadPath: option.nombre
+    - _type: set
+      condition:
+        operator: A = B
+        A:
+          payloadPath: field
+        B:
+          const: "codTransportista"
+      path: nuevoParte.buffer.nombreTrans
+      value:
+        payloadPath: option.nombre
+    - _type: grape
+      condition:
+        operator: A = B
+        A:
+          payloadPath: field
+        B:
+          const: "codProveedor"    
+      name: actualizaDatosProv
+  actualizaDatosProv:
+    - _type: set
+      path: nuevoParte.buffer.nombreProv
+      value:
+        payloadPath: option.nombre
+    - _type: set
+      path: nuevoParte.buffer.aliasProv
+      value:
+        payloadPath: option.aliasprov
+  seteaValoresEspecificos: 
+    - _type: set
+      path: nuevoParte.buffer.aplicadoA
+      value:
+        payloadPath: option.aplicadoA
+    - _type: set
+      path: nuevoParte.buffer.porCliente
+      value:
+        payloadPath: option.porCliente        

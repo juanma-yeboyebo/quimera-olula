@@ -1,0 +1,117 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: campania
+    id: idCampania
+    schemaName: campania
+    mode: insert
+state:
+  producto: null
+  listProductos: {}
+  listaCampania: 'lista_incluidos'
+  modoListaIncluidos: 'alguno'
+  modoListaExcluidos: 'alguno'
+bunch:
+  onAtrasClicked:
+    - _type: grape
+      name: cancelCampania
+    - _type: navigate
+      url:
+        const: /ss/campanias    
+  onCrearCampaniaClicked:
+    - _type: set
+      path: campania.buffer.cuentaMarketing
+      value:
+        const: 'sanhigia'
+    - _type: grape
+      name: saveCampania
+  onCampaniaSaved:
+    - _type: alert
+      text: Campaña creada correctamente
+      severity: success
+    - _type: navigate
+      url:
+        const: /ss/campanias            
+  onDeleteChildProductosListaIncluidosClicked:
+    - _type: deleteItemByIndex
+      path: campania.buffer.productos.lista_incluidos.refs
+      index:
+        payloadPath: index
+  onDeleteChildProductosListaExcluidosClicked:
+    - _type: deleteItemByIndex
+      path: campania.buffer.productos.lista_excluidos.refs
+      index:
+        payloadPath: index
+  onListaCampaniaChanged:
+    - _type: set
+      path: listaCampania
+      value:
+        payloadPath: value     
+  onModoListaIncluidosChanged:
+    - _type: set
+      path: modoListaIncluidos
+      value:
+        payloadPath: value    
+    - _type: grape
+      name: onTipoListaChanged
+      payload:
+        lista:
+          const: lista_incluidos      
+  onModoListaExcluidosChanged:
+    - _type: set
+      path: modoListaExcluidos
+      value:
+        payloadPath: value    
+    - _type: grape
+      name: onTipoListaChanged
+      payload:
+        lista:
+          const: lista_excluidos              
+  onProductoOfertarChanged:
+    - _type: appendItem
+      path: campania.buffer.productosOfertar
+      value:
+        payloadPath: option
+  onDeleteChildProductosOfertarClicked:
+    - _type: deleteItemByIndex
+      path: campania.buffer.productosOfertar
+      index:
+        payloadPath: index        
+  onCampaniaBufferTipoChanged:      
+    - _type: setItem 
+      path: campania
+      value:
+        payloadPath: value
+      key:
+        const: buffer
+      prop:
+        const: tipo
+    - _type: setItem 
+      path: campania
+      condition:
+          operator: A in list B
+          A:
+            payloadPath: value
+          B:
+            const: ['ventaCruzada', 'marketingDigital']            
+      value:
+        const: listadearticulos
+      key:
+        const: buffer
+      prop:
+        const: tipoProducto
+    - _type: setItem 
+      path: campania
+      condition:
+          operator: A = B
+          A:
+            payloadPath: value
+          B:
+            const: 'marketingDigital'            
+      value:
+        const: []
+      key:
+        const: buffer
+      prop:
+        const: productos
+    

@@ -1,0 +1,18 @@
+{
+  "translation": {
+    "clearFilterButton": {
+      "text": "Limpiar Filtros"
+    },
+    "deleteFilterButton": {
+      "text": "Eliminar"
+    },
+    "filterButton": {
+      "text": "Filtrar"
+    },
+    "qSection": {
+      "guardar": "Guardar",
+      "cancelar": "Cancelar",
+      "cerrar": "Cerrar"
+    }
+  }
+}

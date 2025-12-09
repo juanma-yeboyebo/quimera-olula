@@ -1,0 +1,224 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: presupuestoNoRegistrado
+    id: idPresupuesto
+    schemaName: presupuestoCliNuevoNoRegistrado
+    mode: insert
+state: 
+  isRegistrado: true
+  tratosAgente: []
+  modalNuevoTratoVisible: false
+  idTratoProp: null
+  callbackPresupuestoChanged: null
+  codAgente: null
+  codAgenteMkt: null
+  dirCanaria: false
+  origenMercanciaOptions: [{ key: "Exportaciones", value: "Península" },{ key: "IGIC", value: "Canarias" }]
+bunch:     
+  onInit:
+    - _type: set
+      path: callbackPresupuestoChanged
+      value:
+        payloadPath: callbackPresupuestoChanged  
+    - _type: set
+      condition:
+          operator: A is defined
+          A:
+            payloadPath: codAgenteProp
+      path: codAgente
+      value:
+        payloadPath: codAgenteProp      
+    - _type: set
+      condition:
+          operator: A is defined
+          A:
+            payloadPath: codAgenteMktProp
+      path: codAgenteMkt
+      value:
+        payloadPath: codAgenteMktProp                  
+    - _type: grape
+      condition:
+          operator: A is defined
+          A:
+            payloadPath: idTratoProp     
+      name: seteaTratos
+  seteaTratos:
+    - _type: set
+      path: idTratoProp
+      value:
+        payloadPath: idTratoProp 
+    - _type: set
+      path: presupuesto.buffer.idTrato
+      value:
+        payloadPath: idTratoProp   
+  setRegistrado:
+    - _type: set
+      path: isRegistrado
+      value:
+        toggleStatePath: isRegistrado
+  onNuevoPresupuestoNoRegistradoSectionAccepted: 
+    - _type: if
+      if:
+        operator: A is defined
+        A:
+          statePath: presupuestoNoRegistrado.buffer.direccion
+      then:
+        _type: grape
+        name: savePresupuestoNoRegistrado
+      else:
+        _type: grape
+        name: setDireccionDefault
+  onNuevoPresupuestoSectionCancelled:  
+    patch: override
+    grapes:  
+      - _type: if
+        if:
+          operator: A is defined
+          A:
+            statePath: idTratoProp
+        then:
+          _type: call 
+          function: 
+            statePath: callbackPresupuestoChanged  
+        else:
+          _type: navigate
+          url:
+            const: "/ventas/presupuestos"
+  onNuevoPresupuestoNoRegistradoSectionCancelled:
+    - _type: if
+      if:
+        operator: A is defined
+        A:
+          statePath: idTratoProp
+      then:
+        _type: call 
+        function: 
+          statePath: callbackPresupuestoChanged  
+      else:
+        _type: navigate
+        url:
+          const: "/ventas/presupuestos"
+  callPresupuestoNoRegistradoBufferChanged:
+    patch: override
+    grapes: 
+      - _type: set
+        condition:
+            operator: A is true
+            A:
+              code: 'return !!state.idTratoProp && !state.presupuestoNoRegistrado.buffer.idTrato'
+        path: presupuestoNoRegistrado.buffer.idTrato
+        value:
+          statePath: idTratoProp             
+  setDireccionDefault:
+    - _type: set
+      path: presupuestoNoRegistrado.buffer.direccion
+      value:
+        const: "-"
+    - _type: grape
+      name: savePresupuestoNoRegistrado
+  onNuevoTratoClicked:
+    - _type: set
+      path: modalNuevoTratoVisible
+      value:
+        const: true  
+  onCerrarCrearTrato:
+    - _type: set
+      path: modalNuevoTratoVisible
+      value:
+        const: false
+    - condition:
+        operator: A is defined
+        A:
+          payloadPath: idTrato
+      _type: grape
+      name: addNuevoTrato
+  addNuevoTrato:
+    - _type: set
+      path: presupuesto.buffer.idTrato
+      value:
+        payloadPath: idTrato 
+  savePresupuesto:
+    patch: prepend
+    grapes:
+      - _type: set
+        condition:
+          operator: A is defined
+          A:
+            statePath: codAgente
+        path: presupuesto.buffer.agente
+        value:
+          statePath: codAgente  
+      - _type: set
+        condition:
+          operator: A is defined
+          A:
+            statePath: codAgenteMkt
+        path: presupuesto.buffer.codAgenteMkt
+        value:
+          statePath: codAgenteMkt
+  savePresupuestoNoRegistrado:
+    patch: prepend
+    grapes:
+      - _type: set
+        condition:
+          operator: A is defined
+          A:
+            statePath: codAgente
+        path: presupuestoNoRegistrado.buffer.agente
+        value:
+          statePath: codAgente   
+      - _type: set
+        condition:
+          operator: A is defined
+          A:
+            statePath: codAgenteMkt
+        path: presupuestoNoRegistrado.buffer.codAgenteMkt
+        value:
+          statePath: codAgenteMkt
+  onDireccionCambiada:
+  - _type: if
+    if:
+      operator: A is defined
+      A:
+        payloadPath: codDir
+    then:
+      _type: grape
+      name: compruebaCanarias
+    else:
+      _type: grape
+      name: setDirCanarias
+      payload:
+        esCanariasValue:
+          const: false
+  compruebaCanarias:
+    - _type: get 
+      schema: dirClientes
+      action: check_dir_canarias
+      id:
+        payloadPath: codDir
+      success: compruebaCanariasSuccess 
+      error: compruebaCanariasError
+  compruebaCanariasSuccess:
+    - _type: grape 
+      name: setDirCanarias
+      payload:
+        esCanariasValue:
+          payloadPath: response.esCanarias          
+  compruebaCanariasError:
+    - _type: alert
+      text: Error al comprobar si la dirección es de Canarias
+      severity: error
+  setDirCanarias:
+    - _type: set
+      path: dirCanaria
+      value:
+        payloadPath: esCanariasValue    
+    - _type: grape
+      name: onPresupuestoBufferChanged
+      payload:
+        field:
+          const: "regimenIva"   
+        value:
+          code: 'return payload.esCanariasValue ? "Exportaciones" : null'           
+

@@ -1,0 +1,108 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: linea
+    id: idLinea
+    schemaName: lineasParte
+    deleteConfirmQuestion:
+      titulo: Borrar línea
+      cuerpo: La línea se borrará
+state: 
+  lineaHoras: null
+  lineaMinutos: null
+bunch:
+  onLineaSectionAccepted:
+    - _type: grape
+      condition:
+          operator: A = B
+          A:
+            payloadPath: section
+          B:
+            const: 'proyecto'
+      name: checkLimpiaObservaciones 
+    - _type: grape
+      name: saveLinea
+  limpiaObservaciones: 
+    - _type: set
+      path: linea.buffer.observaciones
+      value:
+        const: ""       
+  onLineaSectionCancelled:
+    - _type: grape
+      name: loadBufferLinea
+  onBufferLineaLoaded:
+    patch: append
+    grapes:
+      - condition:
+          operator: A is defined
+          A:
+            payloadPath: initLinea
+        _type: grape
+        name: seteaHoras 
+  seteaHoras:
+    - _type: set
+      path: lineaHoras
+      value:
+        code: 'return Math.trunc(payload.initLinea.horas)'       
+    - _type: set
+      path: lineaMinutos
+      value:
+        code: 'return Math.round((payload.initLinea.horas - Math.trunc(payload.initLinea.horas)) * 60)'                  
+  onLineaHorasChanged:
+    - _type: set
+      path: lineaHoras
+      value:
+        code: 'return payload.value'
+    - _type: grape
+      name: actualizarBufferHoras             
+  onLineaMinutosChanged:
+    - _type: set
+      path: lineaMinutos
+      value:
+        code: 'return payload.value'
+    - _type: grape
+      name: actualizarBufferHoras 
+  onLineaBufferChanged:
+      patch: append
+      grapes:
+      - condition:
+          operator: A = B
+          A:
+            payloadPath: field
+          B:
+            const: referencia
+        _type: grape
+        name: cambiaDescripcionTrabajo      
+      - condition:
+          operator: A = B
+          A:
+            payloadPath: field
+          B:
+            const: proyecto
+        _type: grape
+        name: cambiaDescripcionProyecto        
+  cambiaDescripcionProyecto:    
+      - _type: set
+        path: linea.buffer.descripcionCentro
+        value:
+          code: 'return payload?.option?.descripcion'      
+  cambiaDescripcionTrabajo:      
+      - _type: set
+        path: linea.buffer.descripcionArticulo
+        value:
+          code: 'return payload?.option?.descripcion'            
+  actualizarBufferHoras:                          
+    - _type: grape
+      name: onLineaBufferChanged 
+      payload:
+        field:
+          const: "horas"   
+        value:
+          code: 'return (state.lineaHoras + (state.lineaMinutos / 60 ))' 
+    - _type: grape
+      name: onLineaBufferChanged 
+      payload:
+        field:
+          const: "s17horas"   
+        value:
+          code: 'return (state.lineaHoras + state.lineaMinutos / 100).toFixed(2)' 

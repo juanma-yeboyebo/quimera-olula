@@ -1,0 +1,23 @@
+---
+shortcuts: []
+state:
+  carrito:
+    id:
+    lineas: []
+bunch:
+  setCarrito:
+    - _type: set
+      path: carrito
+      value:
+        payloadPath: carrito
+  setCarritoActivo:
+    - _type: grape
+      name: setCarrito
+      payload:
+        carrito:
+          payloadPath: response.data
+  getCarritoActivo:
+    - _type: get
+      action: get_carrito_activo
+      schema: carrito
+      success: setCarritoActivo

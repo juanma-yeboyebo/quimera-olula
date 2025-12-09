@@ -1,0 +1,89 @@
+---
+shortcuts:
+  - type: Model
+    name: lineasCarrito
+    id: idlinea
+    schema: lineasCarrito
+    logicDelete: true
+  - type: DetailBuffer
+    name: carrito
+    id: idCarrito
+    schemaName: carrito
+    remoteBufferChanged: false
+state:
+  smState: edicion
+  idCarrito:
+bunch:
+  onInitCarritoChangedLocal:
+    - condition:
+        operator: list A is not empty
+        A:
+          payloadPath: initCarrito.lineas
+      _type: grape
+      name: onInitCarritoChanged
+    - if:
+        operator: list A is empty
+        A:
+          payloadPath: initCarrito.lineas
+      then:
+        _type: smTransition
+        current: edicion
+        target: vacio
+      else:
+        _type: smTransition
+        current: vacio
+        target: edicion
+  onCarritoSectionAccepted:
+    - _type: grape
+      name: saveCarrito
+  onCarritoSectionCancelled:
+    - _type: grape
+      name: loadBufferCarrito
+  onConfirmarPedidoClicked:
+    - _type: smTransition
+      current: edicion
+      target: confirmando
+      actions:
+        # - _type: alert
+        #   text: TRANSICION de edicion a confirmacion
+        #   severity: info
+        - _type: patch
+          schema: carrito
+          action: confirmar
+          id:
+            statePath: carrito.data.idCarrito
+          success: onPedidoConfirmado
+  onPedidoConfirmado:
+    - _type: smTransition
+      current: confirmando
+      target: confirmacion
+      actions:
+        - _type: alert
+          text: TRANSICION de confirmando a confirmacion
+          severity: info
+        - _type: appDispatch
+          name: setCarrito
+          payload:
+            carrito:
+              const:
+                id:
+                lineas: []
+  onCambiarCantidadLineaClicked:
+    - _type: patch
+      schema: lineaCarrito
+      id:
+        payloadPath: idLinea
+      data:
+        - key: cantidad
+          value:
+            payloadPath: cantidad
+      success: onCantidadLineaCambiada
+  onCarritoSaved:
+    - _type: grape
+      name: recargaCarrito
+  onCantidadLineaCambiada:
+    - _type: grape
+      name: recargaCarrito
+  recargaCarrito:
+    - _type: appDispatch
+      name: getCarritoActivo

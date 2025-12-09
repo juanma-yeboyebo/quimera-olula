@@ -1,0 +1,58 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: pedido
+    id: idPedido
+    schemaName: pedidos
+    deleteConfirmQuestion:
+      titulo: Borrar pedido
+      cuerpo: El pedido se borrará
+  - type: Model
+    name: lineas
+    id: idLinea
+    schema: lineasPedidosCli
+state:
+  vistaDetalle: principal
+bunch:
+  onInit:
+    - condition:
+        operator: A is defined
+        A:
+          statePath: pedido.data.idPedido
+      _type: grape
+      name: getLineas
+  onPedidoBufferSectionAccepted:
+    - _type: grape
+      name: savePedido
+  onPedidoBufferSectionCancelled:
+    - _type: grape
+      name: loadBufferPedido
+  onLineasItemChanged:
+    - _type: grape
+      name: reloadPedido
+  onLineaCreada:
+    - _type: grape
+      name: reloadPedido
+    - _type: grape
+      name: addLineasItem
+  onAtrasClicked:
+    - _type: grape
+      name: cancelPedido
+  onMasClicked:
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          statePath: vistaDetalle
+        B:
+          const: principal
+      then:
+        _type: set
+        path: vistaDetalle
+        value:
+          const: otra
+      else:
+        _type: set
+        path: vistaDetalle
+        value:
+          const: principal

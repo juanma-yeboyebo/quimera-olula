@@ -1,0 +1,66 @@
+---
+state: 
+  puesto: null,
+  # miFinca: {}
+  puestosFirma: []
+  callbackCerrar: null
+bunch:
+  onInit:
+    - _type: set
+      path: puesto
+      value: 
+        localStorageValue: puestoFirma.puesto
+    - _type: set
+      path: callbackCerrar
+      value: 
+        payloadPath: callbackCerrar   
+    - _type: grape 
+      name: dameMisPuestosFirma
+  dameMisPuestosFirma:
+    - _type: get
+      schema: mispuestosdefirma
+      filter:
+        - const: tipofirma
+        - const: eq
+        - const: WEB
+      success: misPuestosFirmaRecibidos 
+      error: errorDamePuestosFirma  
+  misPuestosFirmaRecibidos:  
+    - _type: set 
+      path: puestosFirma
+      value:
+        payloadPath: response.data  
+  errorDamePuestosFirma:
+    - _type: alert
+      text: No se han podido cargar los puestos de firma.
+      severity: error             
+  onCerrarPuestoFirmaConfirm: 
+    - _type: if
+      if:
+        operator: A is defined
+        A:
+          statePath: callbackCerrar
+      then:
+        _type: grape
+        name: 'llamaCallbackCerrar'
+      else:
+        _type: navigate
+        url:
+          const: "/"
+  onPuestoFirmaConfirmClicked:
+    - _type: get
+      schema: puestosdefirma
+      id:
+        statePath: puesto
+      success: puestosFirmaRecibidos       
+  puestosFirmaRecibidos: 
+    - _type: setToLocalStorage
+      key: puestoFirma
+      value: 
+        code: return payload.response.data[0]
+    - _type: grape
+      name: onCerrarPuestoFirmaConfirm
+    - _type: alert
+      text: Puesto de firma seleccionado.
+      severity: success            
+                                     

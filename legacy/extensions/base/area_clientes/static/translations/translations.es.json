@@ -1,0 +1,12 @@
+{
+  "translation": {
+    "appmenu": {
+      "areaClientes": {
+        "title": "Área de clientes",
+        "items": {
+          "pedidoscli": "Pedidos"
+        }
+      }
+    }
+  }
+}

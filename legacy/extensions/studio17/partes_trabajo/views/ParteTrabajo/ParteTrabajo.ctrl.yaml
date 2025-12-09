@@ -1,0 +1,70 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: parte
+    id: codParte
+    schemaName: partesTrabajo
+    deleteConfirmQuestion:
+      titulo: Borrar parte
+      cuerpo: El parte se borrará
+  - type: Model
+    name: lineas
+    id: idLinea
+    schema: lineasParte
+state:
+  vistaDetalle: principal
+bunch:
+  onInit:
+    - _type: grape
+      name: getLineas
+  onParteSectionAccepted:
+    - _type: grape
+      name: saveParte
+  onParteSectionCancelled:
+    - _type: grape
+      name: loadBufferParte
+  onParteBufferSectionAccepted:
+    - _type: grape
+      name: saveParte
+  onParteBufferSectionCancelled:
+    - _type: grape
+      name: loadBufferParte
+  onAtrasClicked:
+    - _type: grape
+      name: cancelParte
+  onMasClicked:
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          statePath: vistaDetalle
+        B:
+          const: principal
+      then:
+        _type: set
+        path: vistaDetalle
+        value:
+          const: otra
+      else:
+        _type: set
+        path: vistaDetalle
+        value:
+          const: principal
+  onLineaCreada:       
+    - onLineasNewItemChanged
+    - addLineasItem
+    - reloadParte 
+  onLineasItemChanged:    
+    patch: append
+    grapes:
+    - reloadParte
+  onFirmarParteConfrimado:              
+    - _type: grape
+      name: onParteBufferChanged 
+      payload:
+        field:
+          const: "estadoParte"   
+        value:
+          const: 'Firmado'  
+    - _type: grape
+      name: saveParte                      

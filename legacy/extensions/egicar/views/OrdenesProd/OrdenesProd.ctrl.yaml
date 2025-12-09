@@ -1,0 +1,50 @@
+---
+shortcuts:
+  - type: Model
+    name: ordenes
+    id: codOrden
+    schema: ordenesproduccion
+    url: "/ordenesprod"
+    action: "get_ordenes_produccion"
+    logicDelete: false
+state:
+  filtroVisible: false
+  idTarea: null
+bunch: 
+  onInit:
+    - _type: if
+      if:
+        operator: not A
+        A:
+          payloadPath: idTareaProp
+      then:
+        _type: grape
+        name: dameTodasOrdenes
+      else:
+        _type: grape
+        name: dameUnaOrden
+  dameTodasOrdenes:
+    - _type: grape
+      name: getOrdenes
+  dameUnaOrden:
+    - _type: set
+      path: idTarea
+      value:
+        payloadPath: idTareaProp        
+    - _type: set 
+      path: ordenes.filter
+      value:
+        code: 'return { and: [["codorden", "eq", payload.codOrdenProp]]}'
+    - _type: grape
+      name: getOrdenes      
+  # onMostrarFiltroClicked:
+  #   - _type: set
+  #     path: filtroVisible
+  #     value:
+  #       toggleStatePath: filtroVisible            
+  # onNuevaCompraClicked:
+  #   - _type: navigate
+  #     url:
+  #       const: "/compras/nueva"
+  # onNewCompraChanged:
+  #  - addComprasItem

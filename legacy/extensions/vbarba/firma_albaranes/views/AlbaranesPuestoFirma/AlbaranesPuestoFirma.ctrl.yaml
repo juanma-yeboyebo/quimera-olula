@@ -1,0 +1,68 @@
+---
+shortcuts:
+  - type: Model
+    name: albaranesPuesto
+    id: idAlbaran
+    schema: albaranescli
+    # url: "/albaranesVenta"
+    logicDelete: true
+state: 
+  modalFirmaVisible: false
+  modalVistaEnviarAlbaran: false
+  albaranSeleccionado: null
+  fechaHoy: 'util.today()'
+  puestoLocal: null
+bunch: 
+  onInit: 
+    - _type: grape
+      name: getAlbaranesPuesto
+  onInitPuestoFirma:
+    - _type: set
+      path: puestoLocal
+      value: 
+        localStorageValue: puestoFirma.puesto  
+  onFirmarAlbaranClicked:     
+    - _type: set
+      path: modalFirmaVisible
+      value:
+        const: true 
+    - _type: set
+      path: albaranSeleccionado
+      value:
+        payloadPath: data.albaran 
+  onCerrarFirmaAlbaran:
+    - _type: set
+      path: modalFirmaVisible
+      value:
+        const: false
+    - _type: grape
+      condition:
+          operator: A is defined
+          A:
+            payloadPath: albaran
+      name: onRecargarPaginaClicked
+  onRecargarPaginaClicked:
+    - _type: grape
+      name: getAlbaranesPuesto
+  onCallbackEnviaEmail:
+    - _type: set 
+      path: modalVistaEnviarAlbaran
+      value:
+        const: true
+  onCancelEnviarEmailClicked:
+    - _type: set 
+      path: modalVistaEnviarAlbaran
+      value:
+        const: false
+  onEmailEnviado:
+    - _type: set 
+      path: modalVistaEnviarAlbaran
+      value:
+        const: false           
+  onCallbackEstadoFirmaModificado: 
+    - _type: alert
+      text: El albarán ya no está disponible para firmar.
+      severity: error
+    - _type: grape
+      name: onCerrarFirmaAlbaran
+         

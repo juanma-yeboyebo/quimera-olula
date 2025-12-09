@@ -1,0 +1,8 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: linea
+    id: idLinea
+    schemaName: misLineasCarrito
+state: {}
+bunch: {}

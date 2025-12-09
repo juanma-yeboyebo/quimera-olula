@@ -1,0 +1,267 @@
+---
+shortcuts: 
+  - type: DetailBuffer
+    name: linea
+    id: idLinea
+    schemaName: lineasPedidoCliPreparacion
+    action: get_lineas_pedidos_ubicacion
+    deleteConfirmQuestion:
+      titulo: Borrar línea
+      cuerpo: La línea se borrará
+state:
+  codUbicacionArticulo: null
+  sustitutivo: {}
+  stock:
+    disponible: null
+  cambio: 0
+  tipoCambio: edited
+  onSuccess: null
+  modalLotesAlmacenVisible: false
+  modalLotesTipo: false
+  modalLotesInventarioVisible: false
+  lotesAlmacen: []
+  idLineaModal: false
+  selectedLote: false
+bunch:
+  onBufferLineaLoaded:
+    patch: append
+    grapes:
+      - condition:
+          operator: A is defined
+          A:
+            payloadPath: initLinea
+        _type: grape
+        name: seteaCodUbicacionArticulo 
+  seteaCodUbicacionArticulo:
+    - _type: set
+      path: codUbicacionArticulo
+      value:
+        code: 'return payload.initLinea.codUbicacionArticulo'        
+  onLineaSectionAccepted:
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          payloadPath: section
+        B:
+          const: 'ubicacion'
+      then:
+        _type: grape
+        name: cambiaUbicacionArticulo  
+      else:
+        _type: grape
+        name: saveLinea        
+  onLineaSectionCancelled:
+    - _type: grape
+      name: loadBufferLinea
+  onLineaUbicacionChanged:
+    - _type: set
+      path: linea.buffer.codUbicacionArticulo
+      value:
+        payloadPath: value
+  cambiaUbicacionArticulo:    
+    - _type: patch
+      schema: lineasPedidosCliVentaUbi
+      action: cambiar_ubicacion_articulo
+      data:
+        - key: referencia
+          value:
+            statePath: linea.buffer.referencia
+        - key: codUbicacionArticulo
+          value:
+            statePath: codUbicacionArticulo
+      success: onUbicacionArticuloCambiada    
+      error: onCambiaUbicacionArticuloError    
+  onUbicacionArticuloCambiada:
+    - _type: grape
+      name: reloadLinea        
+  onCambiaUbicacionArticuloError:
+    - _type: alert
+      text: Error al actualizar la ubicación del artículo
+      severity: error          
+  setSustitutivo:
+    - _type: set
+      path: sustitutivo.referencia
+      value:
+        payloadPath: response.resource.refSustitutivo
+    - _type: set
+      path: sustitutivo.factor
+      value:
+        payloadPath: response.resource.factorSustitucion
+    - _type: get
+      schema: articulos
+      id:
+        payloadPath: response.resource.refSustitutivo
+      success: onSustitutivoRecibido
+  onSustitutivoRecibido:
+    - _type: set
+      path: sustitutivo.descripcion
+      value:
+        payloadPath: response.resource.descripcion
+  onSustituirClicked:
+    - _type: grape
+      name: setChangesForBufferLinea
+      payload:
+        changes:
+          paramValues:
+            - key: referencia
+              value:
+                statePath: sustitutivo.referencia
+            - key: cantidad
+              value:
+                code: return state.linea.buffer.cantidad * state.sustitutivo.factor
+  onLineaDtoPorChanged:
+    - _type: set
+      path: linea.buffer.dtoManual
+      value:
+        code: return payload.value != 0
+    - _type: set
+      path: linea.buffer.dtoPor
+      value:
+        payloadPath: value
+  onVerPedidoClicked:
+    - _type: navigate
+      url:
+        payloadPath: urlPedido
+  onInventarioAlVuelo:
+    - _type: set
+      path: idLineaModal
+      value:
+        payloadPath: idLinea
+    - _type: patch
+      action: get_lotes_almacen
+      schema: lotesPorAlmacen
+      data:
+        - key: idlinea
+          value: 
+            payloadPath: idLinea
+      success: onInventarioAlVueloSuccess
+  onInventarioAlVueloSuccess:
+    - _type: set
+      path: lotesAlmacen
+      value:
+        payloadPath: response.data
+    - _type: set
+      path: modalLotesInventarioVisible
+      value:
+        toggleStatePath: modalLotesInventarioVisible
+  onCompletarLineaLoteClicked:
+    - _type: grape
+      name: onMostrarModalLotes
+    - _type: set
+      path: modalLotesTipo
+      value:
+        const: completar
+  onLoteInfoClicked:
+    - _type: grape
+      name: onMostrarModalLotes
+    - _type: set
+      path: modalLotesTipo
+      value:
+        const: info
+  onMostrarModalLotes:
+    - _type: set
+      path: idLineaModal
+      value:
+        payloadPath: idLinea
+    - _type: patch
+      action: get_lotes_almacen
+      schema: lotesPorAlmacen
+      data:
+        - key: idlinea
+          value: 
+            payloadPath: idLinea
+      success: onMostrarModalLotesSuccess
+  onMostrarModalLotesSuccess:
+    - _type: set
+      path: lotesAlmacen
+      value:
+        payloadPath: response.data
+    - _type: set
+      path: modalLotesAlmacenVisible
+      value:
+        toggleStatePath: modalLotesAlmacenVisible
+  onCerrarLineaClicked:
+    - _type: patch
+      action: cerrar_linea_preparacion
+      schema: lineasPedidoCliPreparacion
+      id:
+        payloadPath: idLineaCerrar
+      success: onCerrarLineaSuccess
+  onCerrarLineaSuccess:
+    - _type: grape
+      name: reloadLinea
+    - _type: grape
+      name: focusCodBarras  
+  onCerrarModalLotesAlmacen:
+    - _type: set
+      path: modalLotesAlmacenVisible
+      value:
+        const: false
+    - _type: grape
+      name: focusCodBarras  
+  onCerrarModalLotesInventario:
+    - _type: set
+      path: modalLotesInventarioVisible
+      value:
+        const: false
+    - _type: grape
+      name: focusCodBarras  
+  onLotesItemSelected:
+    - _type: set
+      path: selectedLote
+      value:
+        payloadPath: item
+  onInventariarLote:
+    - _type: patch
+      action: inventariar
+      schema: lineasPedidoCliPreparacion
+      id:
+        payloadPath: idLinea
+      data:
+        - key: codlote
+          value:
+            payloadPath: codLote
+        - key: cantidadStock
+          value:
+            payloadPath: cantidadInventariar
+      success: onInventariarLoteSuccess
+  onInventariarLoteSuccess:
+    - _type: grape
+      name: onCerrarModalLotesInventario
+    - _type: set
+      path: selectedLote
+      value:
+        const: false
+    - _type: set
+      path: cantidadInventariar
+      value:
+        const: 0
+    - _type: grape
+      name: reloadLinea
+  onVerTodos:
+    - _type: log
+      desc: miMensajeLineaguarda
+      value: 
+        payloadPath: idLinea
+    - _type: patch
+      action: get_lotes_almacen
+      schema: lotesPorAlmacen
+      data:
+        - key: idlinea
+          value: 
+            payloadPath: idLinea
+        - key: verTodos
+          value: 
+            const: true
+      success: onVerTodosLotesClickedSuccess
+  onVerTodosLotesClickedSuccess:
+    - _type: set
+      path: lotesAlmacen
+      value:
+        payloadPath: response.data
+  onCantCambiada:        
+    - _type: set
+      path: linea.buffer.shCantAlbaran
+      value:
+        payloadPath: cantidad           

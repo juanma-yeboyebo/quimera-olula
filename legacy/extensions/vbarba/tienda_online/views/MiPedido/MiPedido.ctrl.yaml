@@ -1,0 +1,31 @@
+---
+shortcuts: []
+state: {}
+bunch: 
+  onDescargarPedidoClicked:
+    - _type: download
+      schema: misPedidos
+      params:
+        - key: idpedido
+          value:
+            statePath: pedido.buffer.idPedido
+      action: pedido_to_pdf
+      filename:
+        const: pedido.pdf
+      success: none
+  onExportarPedidoClicked:
+    - _type: download
+      schema: misPedidos
+      action: descargar_pedido_xls
+      params:
+        - key: idpedido
+          value:
+            statePath: pedido.buffer.idPedido
+      filename:
+        const: pedido.xlsx
+      success: none
+      error: onExportarPedidoError
+  onExportarPedidoError:
+    - _type: alert
+      text: Error al exportar pedido
+      severity: error    

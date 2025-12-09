@@ -1,0 +1,23 @@
+import { applyBunch, shortcutsBunch, shortcutsState } from "quimera/lib";
+import { util } from "quimera";
+
+import data from "./ShPreparacionDePedidos.ctrl.yaml";
+
+export const state = parent => ({
+  ...parent,
+  ...shortcutsState(data.shortcuts),
+  ...data.state,
+});
+
+export const bunch = parent => {
+  const parentConShortCuts = {
+    ...parent,
+    ...shortcutsBunch(data.shortcuts),
+  };
+
+  return {
+    ...parentConShortCuts,
+    ...applyBunch(data.bunch, parentConShortCuts),
+  };
+};
+

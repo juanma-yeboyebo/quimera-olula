@@ -1,0 +1,105 @@
+---
+shortcuts: 
+  - type: DetailBuffer
+    name: consumidor
+    id: idconsumidor
+    schemaName: nuevoConsumidor
+state: 
+  email: ""
+  smState: send_email
+  error: null
+  hashcode: null
+bunch: 
+  onInit:
+    - _type: set
+      path: hashcode
+      value:
+        payloadPath: hash
+    - _type: grape
+      condition:
+        operator: A is defined
+        A:
+          payloadPath: hash
+      name: iniciaEstadoEstableceNuevoConsumidor      
+  iniciaEstadoEstableceNuevoConsumidor:
+    - _type: smTransition
+      current: send_email
+      target: check_hash_link
+    - _type: get
+      schema: checkHashlink
+      id:
+        payloadPath: hash
+      action: create_user
+      success: hashLinkCorrecto
+      error: hashLinkIncorrecto
+  hashLinkIncorrecto:
+    - _type: smTransition
+      current: check_hash_link
+      target: hash_incorrecto
+  hashLinkCorrecto:
+    - _type: smTransition
+      current: check_hash_link
+      target: establecer_nuevo_consumidor
+  onEnviarCorreoClicked:
+    - _type: post
+      schema: createUser
+      success: onEmailSent
+      error: onSendEmailFailed
+      data:
+        - key: email
+          value:
+            statePath: email
+  onSendEmailFailed:
+    - _type: smTransition
+      current: send_email
+      target: send_email_failed
+    - _type: set
+      path: error
+      value:
+        payloadPath: response
+  onEmailSent:
+    - _type: smTransition
+      current: send_email
+      target: email_sent     
+  onVolverYLimpiar:
+    - _type: smTransition
+      current: hash_incorrecto
+      target: send_email
+    - _type: navigate
+      url:
+        const: "/signup"   
+  onConsumidorBufferChanged:
+    patch: override
+    grapes:
+      - _type: grape
+        name: cambiaDatos    
+  cambiaDatos:            
+    - _type: setItem 
+      path: consumidor
+      value:
+        payloadPath: value
+      key:
+        const: buffer
+      prop:
+        payloadPath: field
+  onConfirmarRegistroClicked:
+    - _type: smTransition
+      current: establecer_nuevo_consumidor
+      target: creando_consumidor      
+    - _type: post
+      schema: createUserConfirm
+      data:
+        - key: action
+          value:
+            const: create_user_confirm
+        - key: hashcode
+          value:
+            statePath: hashcode
+        - key: user_data
+          value:
+            statePath: consumidor.buffer
+      success: onUsuarioCreado
+  onUsuarioCreado:
+    - _type: smTransition
+      current: creando_consumidor
+      target: usuario_creado      

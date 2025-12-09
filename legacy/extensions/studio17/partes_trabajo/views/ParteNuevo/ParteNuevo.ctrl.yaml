@@ -1,0 +1,15 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: parte
+    id: codParte
+    schemaName: partesTrabajo
+    mode: insert
+state: {}
+bunch:
+  onNuevoParteSectionAccepted:
+    - _type: grape
+      name: saveParte
+  # onNuevoParteSectionCancelled:
+  #   - _type: grape
+  #     name: cancelParte

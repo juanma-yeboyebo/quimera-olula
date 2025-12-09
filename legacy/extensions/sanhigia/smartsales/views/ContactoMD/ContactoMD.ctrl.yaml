@@ -1,0 +1,153 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: contacto
+    id: codContacto
+    schemaName: contacto
+    remoteBufferChanged: false
+  - type: Model
+    name: eventos
+    action: "get_eventos_contacto"
+    id: codEvento
+    schema: eventosContacto
+  - type: Model
+    name: tratos
+    id: idTrato
+    schema: trato
+  - type: Model
+    name: tareas
+    action: "get_by_contacto"
+    id: idTarea
+    schema: tareaContacto      
+  - type: Model
+    name: notas
+    action: "get_notas"
+    id: idNota
+    schema: notaContacto           
+state: 
+  mostrarHistoricoTratos: false
+  mostrarHistoricoTareas: false
+  nuevaNota: ""
+bunch: 
+  onInit:
+    - condition:
+        operator: A is defined
+        A:
+          statePath: contacto.data.codContacto
+      _type: grape
+      name: dameEventos
+    - _type: grape
+      name: dameTratos  
+    - _type: grape
+      name: dameTareas              
+    - _type: grape
+      name: dameNotas          
+  dameTratos:
+    - _type: set
+      path: tratos.filter
+      value:
+        code: 'return { and: [["estado", "not_in", ["Ganado", "Perdido"]],["codcontacto", "eq", state.contacto.data.codContacto]] }'
+    - _type: grape
+      name: getTratos
+      payload:
+        getTratosParams:
+          code: 'return {sinAgenteObservador: true}'
+  dameTareas:
+    - _type: set
+      path: tareas.filter
+      value:
+        code: 'return { and: [["completada", "eq", "false"],["codcontacto", "eq", state.contacto.data.codContacto]] }'          
+    - _type: grape
+      name: getTareas
+      payload:
+        getTratosParams:
+          code: 'return {sinAgenteObservador: true}' 
+  dameNotas:
+    - _type: set
+      path: notas.filter
+      value:
+        code: 'return { and: [["codcontacto", "eq", state.contacto.data.codContacto]] }'
+    - _type: grape
+      name: getNotas                      
+  dameEventos:
+    - _type: set
+      path: eventos.filter
+      value:
+        code: 'return { and: [["codcontacto", "eq", state.contacto.data.codContacto]]}'  
+    - _type: grape
+      name: getEventos        
+  onAtrasClicked:
+    - _type: grape
+      name: cancelContacto    
+  onContactoBufferSeccionConfirmada:
+    - _type: grape
+      name: saveContacto
+  onContactoBufferDatosRevisadosChanged:
+    - _type: set 
+      path: contacto.buffer.datosRevisados
+      value:
+        payloadPath: value     
+    - _type: grape
+      name: saveContacto       
+  onMostrarHistoricoTratosChanged:
+    - _type: set 
+      path: mostrarHistoricoTratos
+      value:
+        toggleStatePath: mostrarHistoricoTratos  
+    - _type: set
+      condition:
+          operator: A is true
+          A:
+            statePath: mostrarHistoricoTratos
+      path: tratos.filter
+      value:
+        code: 'return { and: [["codcontacto", "eq", state.contacto.data.codContacto]] }'
+    - _type: set
+      condition:
+          operator: A is true
+          A:
+            code: 'return !state.mostrarHistoricoTratos'
+      path: tratos.filter
+      value:
+        code: 'return { and: [["estado", "not_in", ["Ganado", "Perdido"]],["codcontacto", "eq", state.contacto.data.codContacto]] }'        
+    - _type: grape
+      name: getTratos
+      payload:
+        getTratosParams:
+          code: 'return {sinAgenteObservador: true}' 
+  onMostrarHistoricoTareasChanged:
+    - _type: set 
+      path: mostrarHistoricoTareas
+      value:
+        toggleStatePath: mostrarHistoricoTareas  
+    - _type: set
+      condition:
+          operator: A is true
+          A:
+            statePath: mostrarHistoricoTareas
+      path: tareas.filter
+      value:
+        code: 'return { and: [["codcontacto", "eq", state.contacto.data.codContacto]] }' 
+    - _type: set
+      condition:
+          operator: A is true
+          A:
+            code: 'return !state.mostrarHistoricoTareas'
+      path: tareas.filter
+      value:
+        code: 'return { and: [["completada", "eq", "false"],["codcontacto", "eq", state.contacto.data.codContacto]] }'        
+    - _type: grape
+      name: getTareas
+      payload:
+        getTratosParams:
+          code: 'return {sinAgenteObservador: true}'
+  onNotaCreated:
+    - _type: alert 
+      text: Nota añadida correctamente
+      severity: success 
+    - _type: set 
+      path: nuevaNota
+      value:
+        const: ""
+    - _type: grape
+      name: getNotas           

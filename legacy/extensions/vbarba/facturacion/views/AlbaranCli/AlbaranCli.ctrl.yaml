@@ -1,0 +1,155 @@
+---
+shortcuts: []
+state:
+  modalFirmaVisible: false
+  modalVistaEnviarAlbaran: false
+  modalFirmanteExterno: false
+  albaranSeleccionado: null
+  estadoEnviarPuestoFirma: null
+  generandoFactura: false
+bunch:
+  onImprimirAlbaranClicked:
+    - _type: download
+      schema: albaranescli
+      params:
+        - key: idalbaran
+          value:
+            statePath: albaran.buffer.idAlbaran
+      action: albaran_to_pdf
+      filename:
+        const: albaran.pdf
+      success: none
+  onFirmarAlbaranClicked:
+    - _type: set
+      path: modalFirmaVisible
+      value:
+        const: true
+    - _type: set
+      path: albaranSeleccionado
+      value:
+        statePath: albaran.data
+  onCerrarFirmaAlbaran:
+    - _type: set
+      path: modalFirmaVisible
+      value:
+        const: false
+    - _type: grape
+      condition:
+        operator: A is defined
+        A:
+          payloadPath: albaran
+      name: reloadAlbaran
+  onGenerarFacturaClicked:
+    - _type: set
+      path: generandoFactura
+      value:
+        const: true  
+    - _type: patch
+      action: generar_factura
+      schema: albaranescli
+      id:
+        statePath: albaran.data.idAlbaran
+      data:
+        - key: servircompleto
+          value:
+            const: true
+      success: onGenerarFacturaSuccess
+      error: onGenerarFacturaError
+  onGenerarFacturaSuccess:
+    - _type: set
+      path: generandoFactura
+      value:
+        const: false
+    - _type: alert
+      text: Factura Generada
+      severity: success
+  onGenerarFacturaError:
+    - _type: set
+      path: generandoFactura
+      value:
+        const: false
+    - _type: alert
+      text: Error al generar factura
+      severity: error
+  onEnviarEmailClicked:
+    - _type: set 
+      path: modalVistaEnviarAlbaran
+      value:
+        const: true
+  onCancelEnviarEmailClicked:
+    - _type: set 
+      path: modalVistaEnviarAlbaran
+      value:
+        const: false
+  onEmailEnviado:
+    - _type: set 
+      path: modalVistaEnviarAlbaran
+      value:
+        const: false    
+  onAbrirModalFirmaExternaClicked:
+    - _type: set 
+      path: modalFirmanteExterno
+      value:
+        const: true     
+  onCloseFirmaExterna:
+    - _type: set 
+      path: modalFirmanteExterno
+      value:
+        const: false
+  onEnviadoFirmaPuesto:
+    - _type: grape
+      name: reloadAlbaran  
+  onModalCancelarFirmaExternaClicked:
+    - _type: set
+      path: modalFirmanteExterno
+      value:
+        const: false
+    - _type: grape
+      name: onCancelarFirmaExternaClicked
+  onCancelarFirmaExternaClicked:      
+    - _type: patch
+      schema: firmasdealbaranes
+      id:
+        statePath: albaran.data.idFirma     
+      data:   
+        - key: firmadopor
+          value:
+            const: ' '
+        - key: cifnif
+          value:
+            const: ' '
+        - key: puesto
+          value:
+            statePath: puesto 
+        - key: observacionesfirma
+          value:
+            const: ' '
+        - key: estado
+          value:
+            const: "Pendiente"      
+      success: onCancelarFirmaPuestoCompleted  
+      error: onCancelarFirmaPuestoError 
+  onCancelarFirmaPuestoError:
+    - _type: alert   
+      text: No se ha podido cancelar la operación de firma externa.
+      severity: error
+    - _type: set 
+      path: estadoEnviarPuestoFirma 
+      value: 
+        const: null
+  onCancelarFirmaPuestoCompleted:
+    - _type: grape
+      name: reloadAlbaran  
+    - _type: alert   
+      text: Operación de firma externa cancelada.
+      severity: success   
+  onAlbaranFirmaPuestoFirmado: 
+    - _type: set
+      path: modalFirmanteExterno
+      value:
+        const: false  
+    - _type: grape
+      name: reloadAlbaran    
+    - _type: alert   
+      text: Albarán firmado correctamente.
+      severity: success                          

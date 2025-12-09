@@ -1,0 +1,50 @@
+// .HomeAreaClientes {
+//   max-width: 100% !important;
+//   @include mobile {
+//     &Items{
+//     .AreaClientesItem {
+//       min-width: 100% !important;
+//       &Button {
+//         .MuiButton-label {
+//           width: 500px;
+//         }
+//       }
+//     }
+//   }
+//   }
+//   &Items {
+//     justify-content: space-evenly;
+//     .AreaClientesItem {
+//       border: 1px solid rgb(200, 200, 200);
+//       border-radius: 10px;
+//       max-width: none;
+//       min-width: 32%;
+//       margin-bottom: 30px;
+//       &Button {
+//         .MuiButton-label {
+//           flex-direction: column;
+//           font-weight: lighter;
+//           text-transform: none;
+//           font-size: 120%;
+//           height: 100px;
+          
+//           .MuiButton-iconSizeLarge > *:first-child {
+//             font-size: 46px;
+//             stroke: white;
+//             stroke-width: 1;
+//           }
+//           // .MuiButton-startIcon{
+
+//           // }
+//         }
+//         &:hover {
+//           background-color: inherit;
+//           .MuiButton-label {
+//             font-weight: normal;
+//           }
+
+//         }
+//       }
+//     }
+//   }
+// }

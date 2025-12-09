@@ -1,0 +1,20 @@
+---
+shortcuts: []
+state: 
+  firmaDocumento: true
+bunch: 
+  #Solo necesito apartir de aqui
+  firmarSucceded:
+    - _type: grape
+      name: enviaMailAlbaran
+  enviaMailAlbaran:
+    - _type: patch
+      action: envio_mail_albaran
+      schema: albaranescli
+      id:
+        statePath: albaran.buffer.idAlbaran
+      success: enviaMailAlbaranSuccess
+  enviaMailAlbaranSuccess:
+    - _type: alert 
+      text: Email enviado.
+      severity: success 

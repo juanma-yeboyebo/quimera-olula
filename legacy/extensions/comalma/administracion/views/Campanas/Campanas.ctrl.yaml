@@ -1,0 +1,26 @@
+---
+shortcuts:
+  - type: Model
+    name: campanas
+    id: idCampana
+    schema: campanas
+    url: "/campanas"
+    action: "get"
+    logicDelete: false
+state:
+  filtroVisible: false
+bunch:
+  onInit:
+    - _type: grape
+      name: getCampanas
+  onMostrarFiltroClicked:
+    - _type: set
+      path: filtroVisible
+      value:
+        toggleStatePath: filtroVisible            
+  onNuevaCampanaClicked:
+    - _type: navigate
+      url:
+        const: "/campanas/nueva"
+  onNewCampanaChanged:
+   - addCampanasItem

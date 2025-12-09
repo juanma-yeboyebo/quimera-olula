@@ -1,0 +1,208 @@
+---
+shortcuts: []
+state:
+  albaran: {}
+  callbackCancelarEnvio: null
+  callbackCerrado: null
+  callbackEnviado: null
+  callbackFirmado: null
+  compruebaFirmado: false
+  estadoEnviarPuestoFirma: null
+bunch:
+  onInit:
+    - _type: set
+      path: albaran
+      value:
+        payloadPath: albaranProp
+    - _type: set
+      path: callbackCancelarEnvio
+      value:
+        payloadPath: callbackCancelarEnvioProp
+    - _type: set
+      path: callbackCerrado
+      value:
+        payloadPath: callbackCerradoProp
+    - _type: set
+      path: callbackEnviado
+      value:
+        payloadPath: callbackEnviadoProp
+    - _type: set
+      path: callbackFirmado
+      value:
+        payloadPath: callbackFirmadoProp
+  onConfirmarEnviarPuestoFirmaClicked:
+    - _type: set
+      path: estadoEnviarPuestoFirma
+      value:
+        const: Enviando
+    - _type: if
+      if:
+        operator: A is defined
+        A:
+          statePath: albaran.idFirma
+      then:
+        _type: grape
+        name: firmaExistenteEnviarPuesto
+      else:
+        _type: grape
+        name: firmaNuevaEnviarPuesto
+  firmaNuevaEnviarPuesto:
+    - _type: post
+      schema: firmasdealbaranes
+      data:
+        - key: idAlbaran
+          value:
+            statePath: albaran.idAlbaran
+        - key: codigo
+          value:
+            statePath: albaran.codigo
+        - key: firmadopor
+          value:
+            statePath: mandarPuestoFirmaData.firmadopor
+        - key: cifnif
+          value:
+            statePath: mandarPuestoFirmaData.cifnif
+        - key: fecha
+          value:
+            statePath: mandarPuestoFirmaData.fecha
+        - key: hora
+          value:
+            statePath: mandarPuestoFirmaData.hora
+        - key: observacionesfirma
+          value:
+            statePath: mandarPuestoFirmaData.observacionesfirma
+        - key: estado
+          value:
+            const: "En espera"
+        - key: puesto
+          value:
+            const: "web"
+      success: onEnviarFirmaPuestoCompleted
+      error: onEnviarFirmaPuestoError
+  firmaExistenteEnviarPuesto:
+    - _type: patch
+      schema: firmasdealbaranes
+      id:
+        statePath: albaran.idFirma
+      data:
+        - key: firmadopor
+          value:
+            statePath: mandarPuestoFirmaData.firmadopor
+        - key: cifnif
+          value:
+            statePath: mandarPuestoFirmaData.cifnif
+        - key: fecha
+          value:
+            statePath: mandarPuestoFirmaData.fecha
+        - key: hora
+          value:
+            statePath: mandarPuestoFirmaData.hora
+        - key: observacionesfirma
+          value:
+            statePath: mandarPuestoFirmaData.observacionesfirma
+        - key: estado
+          value:
+            const: "En espera"
+        - key: puesto
+          value:
+            const: "web"
+      success: onEnviarFirmaPuestoCompleted
+      error: onEnviarFirmaPuestoError
+  onEnviarFirmaPuestoError:
+    - _type: grape
+      name: setInitMandarPuestoFirmaData
+    - _type: alert
+      text: No se ha podido enviar el albarán al puesto de firma.
+      severity: error
+    - _type: set
+      path: estadoEnviarPuestoFirma
+      value:
+        const: null
+  onEnviarFirmaPuestoCompleted:
+    - _type: set
+      condition:
+        operator: A is defined
+        A:
+          payloadPath: response.pk
+      path: albaran.idFirma
+      value:
+        payloadPath: response.pk
+    - _type: set
+      path: estadoEnviarPuestoFirma
+      value:
+        const: Enviado
+    - _type: set
+      path: compruebaFirmado
+      value:
+        const: true
+    - _type: call
+      function:
+        statePath: callbackEnviado
+    - _type: alert
+      text: Se ha enviado el albarán al puesto de firma.
+      severity: success
+  onCancelarEnvioPuestoFirmaClicked:
+    - _type: set
+      path: compruebaFirmado
+      value:
+        const: false
+    - _type: call
+      function:
+        statePath: callbackCancelarEnvio
+  onCerrarEnviarPuestoFirmaClicked:
+    - _type: set
+      path: compruebaFirmado
+      value:
+        const: false
+    - _type: call
+      function:
+        statePath: callbackCerrado
+  compruebaFirmado:
+    - _type: get
+      schema: albaranescli
+      id:
+        statePath: albaran.idAlbaran
+      success: compruebaFirmadoSuccess
+      error: compruebaFirmadoError
+  compruebaFirmadoSuccess:
+    - _type: if
+      if:
+        operator: A is true
+        A:
+          code: "return payload.response.data[0].firmado"
+      then:
+        _type: grape
+        name: albaranExternoFirmado
+  albaranExternoFirmado:
+    - _type: set
+      path: compruebaFirmado
+      value:
+        const: false
+    - _type: call
+      function:
+        statePath: callbackFirmado
+  onMandarPuestoFirmaDataCodContactoChanged:
+    - _type: get
+      condition:
+        operator: A is defined
+        A:
+          payloadPath: value
+      schema: contacto
+      filter:
+        - const: codcontacto
+        - const: eq
+        - payloadPath: value
+      success: onDatosContactoRecibidos
+  onDatosContactoRecibidos:
+    - _type: set
+      path: mandarPuestoFirmaData.codContacto
+      value:
+        payloadPath: value
+    - _type: set
+      path: mandarPuestoFirmaData.firmadopor
+      value:
+        code: 'return payload.response.data[0]?.nombre ?? ""'
+    - _type: set
+      path: mandarPuestoFirmaData.cifnif
+      value:
+        code: 'return payload.response.data[0]?.nif ?? ""'

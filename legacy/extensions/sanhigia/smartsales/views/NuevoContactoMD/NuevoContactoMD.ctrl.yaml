@@ -1,0 +1,22 @@
+shortcuts:
+  - type: DetailBuffer
+    name: contacto
+    id: codContacto
+    schemaName: contacto
+    mode: insert
+    remoteBufferChanged: false
+state: 
+  estadoEmail: null
+  codContacto: null
+bunch:
+  # onContactoBufferChanged: 
+  #   - _type: log 
+  #     desc: mimensaje_sssssssssssssssssssssssssssssssss
+  #     value:
+  #       statePath: data  
+  onNuevoContactoSectionAccepted:
+    - _type: grape
+      name: saveContacto
+  onNuevoContactoSectionCancelled:
+    - _type: grape
+      name: cancelContacto

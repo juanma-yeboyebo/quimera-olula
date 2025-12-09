@@ -1,0 +1,96 @@
+export default parent => {
+  return theme => {
+    const _p = parent(theme);
+
+    return {
+      ..._p,
+      lineChartv1: {
+        // width: '100%',
+        marginLeft: "0%",
+      },
+      lineChartv2: {
+        width: "80%",
+        position: "relative",
+        float: "left",
+      },
+      mediaContainerv1: {
+        border: "1px solid darkslateblue",
+        backgroundColor: "white",
+        color: "black",
+        // width: '48%',
+        // marginLeft: '32%',
+        borderRadius: 8,
+        marginBottom: 5,
+        marginRight: 5,
+        fontSize: 19,
+        fontWeight: "normal",
+        fontStretch: "normal",
+        fontStyle: "normal",
+        lineHeight: "normal",
+        letterSpacing: "normal",
+        padding: 0,
+        overflow: "hidden",
+      },
+      mediaContainerTitlev1: {
+        letterSpacing: 1.86,
+        textTransform: "uppercase",
+        textAlign: "center",
+        position: "relative",
+        float: "left",
+        width: "60%",
+      },
+      mediaContainerValuev1: {
+        backgroundColor: "darkslateblue",
+        color: "white",
+        fontSize: 25,
+        textAlign: "center",
+        position: "relative",
+        float: "left",
+        width: "40%",
+      },
+      mediaContainerTitlev2: {
+        letterSpacing: 1.86,
+        textTransform: "uppercase",
+        height: 40,
+        padding: 10,
+        textAlign: "center",
+      },
+      mediaContainerValuev2: {
+        height: 70,
+        // backgroundColor: 'darkslateblue',
+        // color: 'white',
+        padding: 7,
+        fontSize: 25,
+        textAlign: "center",
+      },
+      loading: {
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        textAlign: "center",
+        backgroundColor: "black",
+        top: 0,
+        opacity: 0.5,
+        color: "black",
+      },
+      infoBoxv1: {
+        //width: '94vw',
+        overflow: "hidden",
+        padding: 10,
+        margin: 20,
+        border: "1px solid lightgrey",
+        borderRadius: 20,
+        backgroundColor: "white",
+        boxShadow: "0 4px 20px 0 rgba(0, 0, 0,.14), 0 7px 10px -5px rgba(76, 175, 80,.4)",
+      },
+      infoBoxv2: {
+        //width: '94vw',
+        overflow: "hidden",
+        padding: 10,
+        margin: 20,
+        border: "1px solid lightgrey",
+        borderRadius: 20,
+      },
+    };
+  };
+};

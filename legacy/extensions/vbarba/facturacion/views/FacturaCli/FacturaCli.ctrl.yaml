@@ -1,0 +1,32 @@
+---
+shortcuts: []
+state: 
+  modalVistaEnviarDocumento:  false
+bunch:
+  onImprimirFacturaClicked:
+    - _type: download
+      schema: facturascli
+      params:
+        - key: idfactura
+          value:
+            statePath: factura.buffer.idFactura
+      action: factura_to_pdf
+      filename:
+        const: factura.pdf
+      success: none
+  onEnviarEmailClicked:
+    - _type: set 
+      path: modalVistaEnviarDocumento
+      value:
+        const: true
+  onCancelEnviarEmailClicked:
+    - _type: set 
+      path: modalVistaEnviarDocumento
+      value:
+        const: false
+  onEmailEnviado:
+    - _type: set 
+      path: modalVistaEnviarDocumento
+      value:
+        const: false          
+

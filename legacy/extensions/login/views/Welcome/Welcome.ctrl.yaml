@@ -1,0 +1,72 @@
+---
+shortcuts: []
+state: 
+  onLoginFunc: null
+bunch: 
+  onInit:
+    - _type: set
+      path: onLoginFunc 
+      value: 
+        payloadPath: onLogin 
+    - _type: grape 
+      name: onWhoami
+  onWhoami: 
+    - _type: get
+      condition:
+          operator: A is defined
+          A:
+            code: 'return state.util.getUserToken()'
+      schema: whoami
+      action: whoami
+      params:
+        - key: loginType
+          value:
+            code: 'return state.util.getEnvironment()?.loginType'
+      success: onWhoamiSucceeded 
+      error: onWhoamiError
+    - _type: grape
+      condition:
+          operator: not A
+          A:
+            code: 'return state.util.getUserToken()'
+      name: onCheckAuthentication
+      payload:
+        authenticated:
+          const: false      
+  onWhoamiSucceeded:
+    - _type: appDispatch
+      name: setUserData
+      payload:
+        response:
+          payloadPath: response
+    - _type: grape 
+      name: setAuthenticationKeys
+    - _type: grape 
+      name: goOnLogin
+  onWhoamiError:
+    - _type: navigate 
+      url:
+        const: '/login'              
+  setAuthenticationKeys:     
+    - _type: set
+      path: autenticado 
+      value: 
+        const: true 
+    - _type: set
+      path: autenticando 
+      value: 
+        const: false 
+    - _type: set
+      path: error 
+      value: 
+        const: false  
+  onCheckAuthentication:     
+    - _type: set
+      path: autenticando 
+      value: 
+        payloadPath: authenticated   
+  onLinkClicked:
+    - _type: navigate
+      url:
+        payloadPath: link
+                                                

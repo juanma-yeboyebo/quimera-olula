@@ -1,0 +1,184 @@
+---
+shortcuts:
+  - type: Model
+    name: eventos
+    id: codProyecto
+    schema: eventos
+    logicDelete: true
+state: 
+  modo: 'mes'
+  mes: null
+  anyo: null
+  mesYAnyo: null
+  inicioVisible: null
+  finVisible: null
+  articuloProyectoFiltro: null
+  calendario: []
+  diasSemana: ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
+  mesesAnyo: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+  dibujandoCalendario: false
+  modalNuevoEvento: false
+  anchorFiltro: null
+  modalFiltroVisible: false
+  numFiltros: null
+  modalDatosDia: false
+  datosDia: null
+  fechaSeleccionada: null
+bunch: 
+  onInit:
+    - _type: grape 
+      name: obtenerMesAnyoActual   
+  cargaEventos:
+    - _type: if
+      if:
+        operator: A is defined
+        A:
+          statePath: articuloProyectoFiltro
+      then:
+        _type: set
+        path: eventos.filter
+        value:
+          code: 'return { and: [["referencia", "eq", state.articuloProyectoFiltro],["finicio", "gte", state.inicioVisible],["finicio", "lte", state.finVisible]]}' 
+      else:
+        _type: set
+        path: eventos.filter
+        value:
+          code: 'return { and: [["finicio", "gte", state.inicioVisible],["finicio", "lte", state.finVisible]]}'  
+    - _type: grape 
+      name: getEventos 
+  onGetEventosSucceded:      
+    - _type: if
+      if:
+        operator: A = B
+        A:
+          statePath: modo
+        B:
+          const: 'mes'
+      then:
+        _type: grape 
+        name: addEventosACalendarioMensual 
+      else:
+        _type: grape 
+        name: addEventosACalendarioAnual 
+  onCambiarModoClicked:
+    - _type: set
+      path: modo
+      value:
+        code: 'return state.modo === "mes" ? "anyo" : "mes"'
+    - _type: grape 
+      name: obtenerMesAnyoActual   
+  calendarioDibujado:
+    - _type: set
+      path: dibujandoCalendario
+      value:
+        const: false
+  onAddEventClicked:
+    - _type: set 
+      path: modalNuevoEvento
+      value:
+        toggleStatePath: modalNuevoEvento
+  onCerrarCrearEvento:
+    - _type: set 
+      path: modalNuevoEvento
+      value:
+        toggleStatePath: modalNuevoEvento  
+  onEventoCreado:
+    - _type: grape
+      name: onCerrarCrearEvento  
+    - _type: grape
+      name: cargaEventos
+  onMostrarFiltroClicked:
+    - _type: set
+      path: modalFiltroVisible
+      value:
+        const: true
+    - _type: set 
+      path: anchorFiltro
+      value:
+        payloadPath: anchor
+  onCerrarFiltroClicked:
+    - _type: set
+      path: modalFiltroVisible
+      value:
+        const: false  
+    - _type: set 
+      path: anchorFiltro
+      value:
+        const: null
+  onEventosFilterChanged:
+    patch: override
+    grapes:
+      - _type: set
+        condition:
+            operator: A = B
+            A:
+              payloadPath: type
+            B:
+              const: 'clearFilter'
+        path: articuloProyectoFiltro
+        value:
+          const: null    
+      - _type: if
+        if:
+          operator: A = B
+          A:
+            payloadPath: type
+          B:
+            const: 'clearFilter'
+        then:
+          _type: set
+          path: numFiltros
+          value:
+            const: null 
+        else:
+          _type: set
+          path: numFiltros
+          value:
+            const: 1
+      - _type: grape 
+        name: cargaEventos  
+      - _type: grape
+        name: onCerrarFiltroClicked
+  onDiaClicked:
+    - _type: set 
+      path: modalDatosDia
+      value:
+        toggleStatePath: modalDatosDia  
+    - _type: set 
+      path: datosDia
+      value:
+        payloadPath: datosDia
+    - _type: set 
+      path: fechaSeleccionada
+      value:
+        payloadPath: fechaDia        
+  onCerrarDatosDia:
+    - _type: set 
+      path: modalDatosDia
+      value:
+        toggleStatePath: modalDatosDia   
+    - _type: set 
+      path: datosDia
+      value:
+        const: null
+    - _type: set 
+      path: fechaSeleccionada
+      value:
+        const: null   
+  onDownloadCalendarClicked:             
+    - _type: post
+      schema: guardaCalendario
+      action: guardar_calendario
+      data:
+        - key: datos
+          value:
+           code: 'return {modo: state.modo, anyo:state.anyo, mes:state.mes, eventos: state.eventos.idList.map((codProyecto) => { return { codProyecto: codProyecto, fechaInicio: state.eventos.dict[codProyecto].fechaInicio, descripcion: state.eventos.dict[codProyecto].descripcion }})}' 
+      success: onCalendarioCreado  
+      error: onCalendarioNoCreado
+  onCalendarioNoCreado:
+    - _type: alert
+      text: No se ha podido guardar el calendario
+      severity: error
+
+
+              

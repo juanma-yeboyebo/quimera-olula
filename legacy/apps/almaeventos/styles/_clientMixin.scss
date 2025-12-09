@@ -1,0 +1,55 @@
+@mixin calendario {
+  .cajaDia {
+    color: var(--palette-menu-main-color);
+    width: 14.2857%;
+    overflow: hidden;
+    height: 120px;
+    border-right: 1px solid lightgrey;
+    border-left: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;    
+    :hover {
+      background-color: #FBFBFB;
+    }
+  }
+
+  .cajaDiaConDatos {
+    color: #FBFBFB;
+    background-color: var(--palette-secondary-light-color);
+    width: 14.2857%;
+    overflow: hidden;
+    height: 120px;
+    border-right: 1px solid lightgrey;
+    border-left: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;    
+    :hover {
+      background-color: var(--palette-secondary-dark-color);
+    }
+  }
+
+  .cajaNumDia {
+    // background-color: transparent;
+    // background-color: var(--palette-secondary-light-color);
+    cursor: default;
+    opacity: 0.5;
+  }
+
+  .lineaEvento {
+    background-color: var(--palette-secondary-main-color);
+    min-height: 5px;
+    margin: 2px;
+  }
+
+  @include mobile {
+    .cajaDia {
+      height: 110px;
+    }
+  }
+
+  .contenidoDia {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    min-height: 70px;
+    max-height: 70px;
+  }
+}

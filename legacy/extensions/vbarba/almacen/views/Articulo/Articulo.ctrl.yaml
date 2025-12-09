@@ -1,0 +1,311 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: articulo
+    id: referencia
+    schemaName: articulos
+    deleteConfirmQuestion:
+      titulo: Borrar articulo
+      cuerpo: El articulo se borrará
+state:
+  articulosProv: []
+  nuevoProveedor:
+    { id: null, codproveedor: null, descuento: 0, coste: 0, costeReal: 0, porDefecto: false }
+  modalAddProveedor: false
+  handleErrorProveedor: { error: false, text: "" }
+bunch:
+  onInit:
+    - _type: grape
+      name: dameProvProveedores
+  onCargaArticulo:
+    - _type: get
+      schema: articulos
+      id:
+        payloadPath: referenciaArticulo
+      success: onArticuloRecibido
+  onArticuloRecibido:
+    - _type: grape
+      name: onInitArticulo
+      payload:
+        initArticulo:
+          payloadPath: response.resource
+  dameProvProveedores:
+    - _type: get
+      schema: condiciones_compra
+      action: get_codiciones_compra
+      id:
+        statePath: articulo.buffer.referencia
+      params:
+        - key: referencia
+          value:
+            statePath: articulo.buffer.referencia
+      success: onGetProveedoresSucceded
+  onGetProveedoresSucceded:
+    - _type: set
+      path: articulosProv
+      value:
+        payloadPath: response.data
+  onGuardarArticuloClicked:
+    - _type: grape
+      name: saveArticulo
+    - _type: alert
+      text: Artículo modificado.
+      severity: success
+  onAddProveedorClicked:
+    - _type: set
+      path: modalAddProveedor
+      value:
+        const: true
+  onCerrarAddProveedorConfirm:
+    - _type: set
+      path: modalAddProveedor
+      value:
+        const: false
+    - _type: set
+      path: nuevoProveedor
+      value:
+        const: { codproveedor: null, descuento: 0, coste: 0, costeReal: 0, porDefecto: false }
+  onNuevoProveedorCosteChanged:
+    - _type: set
+      path: nuevoProveedor.coste
+      value:
+        payloadPath: value
+    - _type: set
+      path: nuevoProveedor.costeReal
+      value:
+        code: return payload.value * ((100 - state.nuevoProveedor.descuento) / 100)
+  onNuevoProveedorDescuentoChanged:
+    - _type: set
+      path: nuevoProveedor.descuento
+      value:
+        payloadPath: value
+    - _type: set
+      path: nuevoProveedor.costeReal
+      value:
+        code: return state.nuevoProveedor.coste * ((100 - payload.value) / 100)
+  onAddProveedorConfirmClicked:
+    - _type: if
+      if:
+        operator: A is defined
+        A:
+          statePath: nuevoProveedor.codproveedor
+      then:
+        _type: grape
+        name: agregarProveedor
+      else:
+        _type: grape
+        name: setearErrorProveedor
+  limpiarErrorProveedor:
+    - _type: set
+      path: handleErrorProveedor
+      value:
+        const: { error: false, text: "" }
+  setearErrorProveedor:
+    - _type: set
+      path: handleErrorProveedor
+      value:
+        const: { error: true, text: "El proveedor no puede estar vacío" }
+  agregarProveedor:
+    - condition:
+        operator: list A is not empty
+        A:
+          code: "return state.articulosProv.filter(a => a.codproveedor === state.nuevoProveedor.codproveedor)"
+      _type: grape
+      name: esActualizarProveedor
+    - condition:
+        operator: list A is empty
+        A:
+          code: "return state.articulosProv.filter(a => a.codproveedor === state.nuevoProveedor.codproveedor)"
+      _type: grape
+      name: esCrearProveedor
+  esActualizarProveedor:
+    - _type: patch
+      schema: condiciones_compra
+      action: update_condicion_compra
+      id:
+        statePath: articulo.buffer.referencia
+      data:
+        - key: id
+          value:
+            code: "return state.articulosProv.filter(a => a.codproveedor === state.nuevoProveedor.codproveedor)[0].id"
+        - key: codproveedor
+          value:
+            statePath: nuevoProveedor.codproveedor
+        - key: dto
+          value:
+            statePath: nuevoProveedor.descuento
+        - key: coste
+          value:
+            statePath: nuevoProveedor.coste
+        - key: costereal
+          value:
+            code: return state.nuevoProveedor.coste * ((100 - state.nuevoProveedor.descuento) / 100)
+      success: onProveedorModificado
+  esCrearProveedor:
+    - _type: patch
+      schema: condiciones_compra
+      action: add_condicion_compra
+      id:
+        statePath: articulo.buffer.referencia
+      data:
+        - key: id
+          value:
+            statePath: nuevoProveedor.id
+        - key: codproveedor
+          value:
+            statePath: nuevoProveedor.codproveedor
+        - key: dto
+          value:
+            statePath: nuevoProveedor.descuento
+        - key: coste
+          value:
+            statePath: nuevoProveedor.coste
+        - key: costereal
+          value:
+            statePath: nuevoProveedor.costeReal
+        - key: pordefecto
+          value:
+            statePath: nuevoProveedor.porDefecto
+      success: onProveedorAgregado
+  onProveedorModificado:
+    - _type: alert
+      text: Proveedor modificado.
+      severity: success
+    - _type: grape
+      name: onCondicionesCompraChanged
+  onProveedorAgregado:
+    - _type: alert
+      text: Nuevo proveedor añadido.
+      severity: success
+    - _type: grape
+      name: onCondicionesCompraChanged
+  onCondicionesCompraChanged:
+    - _type: grape
+      name: onCerrarAddProveedorConfirm
+    - _type: grape
+      name: dameProvProveedores
+  onTdbProveedoresRowClicked:
+    - _type: set
+      path: modalAddProveedor
+      value:
+        const: true
+    - _type: set
+      path: nuevoProveedor
+      value:
+        code: "return { id:payload.id, codproveedor: payload.codproveedor, descuento: payload.descuento, coste: payload.coste, costeReal: payload.costeReal, porDefecto: payload.porDefecto } "
+  onVerImagenClicked:
+    - _type: get
+      schema: articuloimages
+      action: get_url_image
+      id:
+        statePath: articulo.buffer.referencia
+      success: onGetUrlImageSucceded
+  onGetUrlImageSucceded:
+    - _type: navigate
+      url:
+        payloadPath: response.direccion
+  onImagenAdjuntada:
+    - _type: patch
+      schema: articuloimages
+      action: update_image
+      id:
+        statePath: articulo.buffer.referencia
+      files:
+        payloadPath: files
+      data:
+        - key: esPortada
+          value:
+            payloadPath: esPortada
+        - key: idPlanta
+          value:
+            payloadPath: idPlanta
+      success: onImagenActualizada
+      error: onImagenActualizadaError
+  onImagenActualizada:
+    - _type: grape
+      name: reloadArticulo
+    - _type: alert
+      text: Imagen añadida.
+      severity: success
+  onImagenActualizadaError:
+    - _type: alert
+      text: "Error: La imagen no se ha podido almacenar."
+      severity: error
+  onPublicadoWebClicked:
+    - _type: patch
+      schema: articulos
+      action: cambiar_publicadoweb
+      id:
+        statePath: articulo.data.referencia
+      data:
+        - key: vb_publicadoweb
+          value:
+            code: return !state.articulo.data.publicadoWeb
+        - key: referencia
+          value:
+            statePath: articulo.data.referencia
+      success: onPublicadoWebActualizado
+  onPublicadoWebActualizado:
+    - _type: set
+      path: articulo.data.publicadoWeb
+      value:
+        payloadPath: response.vb_publicadoweb
+    - _type: alert
+      text: Artículo modificado.
+      severity: success
+    - _type: grape
+      name: loadBufferArticulo
+  onArticuloBufferChanged:
+    patch: override
+    grapes:
+      - _type: setItem
+        path: articulo
+        value:
+          code: "return payload.value || null"
+        key:
+          const: buffer
+        prop:
+          payloadPath: field
+  onArticuloSaved:
+    - _type: grape
+      name: reloadArticulo
+  onCallPorDefectoChanged:
+    - _type: patch
+      schema: articulos
+      action: cambiar_proveedor_defecto
+      id:
+        statePath: articulo.buffer.referencia
+      data:
+        - key: codproveedor
+          value:
+            statePath: nuevoProveedor.codproveedor
+        - key: pordefecto
+          value:
+            statePath: nuevoProveedor.porDefecto
+      success: onPorDefectoModificado
+  onNuevoProveedorPorDefectoChanged:
+    - _type: if
+      if:
+        operator: A is true
+        A:
+          statePath: nuevoProveedor.porDefecto
+      then:
+        _type: grape
+        name: onPorDefectoTrue
+      else:
+        _type: grape
+        name: onCallPorDefectoChanged
+  onPorDefectoTrue:
+    - _type: alert
+      text: Ya es por defecto.
+      severity: success
+  onPorDefectoModificado:
+    - _type: grape
+      name: dameProvProveedores
+    - _type: set
+      path: nuevoProveedor.porDefecto
+      value:
+        const: true
+    - _type: alert
+      text: Artículo modificado.
+      severity: success

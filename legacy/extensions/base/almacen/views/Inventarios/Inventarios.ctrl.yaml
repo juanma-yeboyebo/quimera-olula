@@ -1,0 +1,34 @@
+---
+shortcuts:
+  - type: Model
+    name: inventarios
+    id: codInventario
+    schema: inventarios
+    url: "/almacen/inventarios"
+state:
+  filtroVisible: false
+bunch:
+  onInit:
+    - _type: grape
+      name: getInventarios
+  onMostrarFiltroClicked:
+    - _type: set
+      path: filtroVisible
+      value:
+        toggleStatePath: filtroVisible
+  onInventariosFilterChanged:
+    - _type: grape
+      name: onMostrarFiltroClicked
+    - _type: set
+      path: inventarios.filter
+      value:
+        payloadPath: value
+    - _type: grape
+      name: getInventarios
+  onNuevoInventarioClicked:
+    - _type: navigate
+      url:
+        const: "/almacen/inventarios/nuevo"
+  onNewInventarioChanged:
+    - onInventariosNewItemChanged
+    - addInventariosItem

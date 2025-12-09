@@ -1,0 +1,35 @@
+---
+shortcuts:
+  - type: Model
+    name: templateName
+    id: templatePK
+    schema: templateSchema
+    url: "/templateName"
+    logicDelete: true
+state:
+  filtroVisible: false
+bunch:
+  onInit:
+    - _type: grape
+      name: getTemplateName
+  onMostrarFiltroClicked:
+    - _type: set
+      path: filtroVisible
+      value:
+        toggleStatePath: filtroVisible
+  onTemplateNameFilterChanged:
+    - _type: grape
+      name: onMostrarFiltroClicked
+    - _type: set
+      path: templateName.filter
+      value:
+        payloadPath: value
+    - _type: grape
+      name: getTemplateName
+  onNuevoTemplateNameClicked:
+    - _type: navigate
+      url:
+        const: "/templateName/nuevo"
+  onNewTemplateNameChanged:
+    - onTemplateNameNewItemChanged
+    - addTemplateNameItem

@@ -1,0 +1,30 @@
+{
+  "translation": {
+    "login": {
+      "forgotPassword": {
+        "formatoPasswordIncorrecto": "La contraseña debe tener al menos {{minLength}} caracteres",
+        "passwordsDistintas": "La contraseñas no coinciden",
+        "botonCambiar": "Cambiar contraseña",
+        "tituloCambioContrasena": "Cambio de contraseña",
+        "enlaceIncorrecto": "El enlace que has usado es incorrecto o ha caducado",
+        "campoPass1": "Nueva contraseña",
+        "campoPass2": "Repite contaseña",
+        "aceptar": "Aceptar",
+        "confirmacionCambioPassword": "La contraseña se ha modificado correctamente",
+        "irALogin": "Ir a Login",
+        "comprobando": "Comprobando enlace..."
+      },
+      "signup": {
+        "crearUsuarioPasswordIncorrecto": "La contraseña debe tener al menos {{minLength}} caracteres",
+        "passwordsDistintas": "La contraseñas no coinciden",
+        "enlaceIncorrecto": "El enlace que has usado es incorrecto o ha caducado",
+        "campoPass1": "Contraseña",
+        "campoPass2": "Repite contaseña",
+        "aceptar": "Aceptar",
+        "confirmacionCreacionUsuario": "El usuario se ha creado correctamente",
+        "irALogin": "Comenzar",
+        "comprobando": "Comprobando enlace..."
+      }
+    }
+  }
+}

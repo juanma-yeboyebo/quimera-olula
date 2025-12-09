@@ -1,0 +1,31 @@
+---
+shortcuts: []
+state: {}
+bunch: 
+  onDescargarAlbaranClicked:
+    - _type: download
+      schema: misAlbaranes
+      params:
+        - key: idalbaran
+          value:
+            statePath: albaran.buffer.idAlbaran
+      action: albaran_to_pdf
+      filename:
+        const: albaran.pdf
+      success: none
+  onExportarAlbaranClicked:
+    - _type: download
+      schema: misAlbaranes
+      action: descargar_albaran_xls
+      params:
+        - key: idalbaran
+          value:
+            statePath: albaran.buffer.idAlbaran
+      filename:
+        const: albaran.xlsx
+      success: none
+      error: onExportarAlbaranError
+  onExportarAlbaranError:
+    - _type: alert
+      text: Error al exportar albaran
+      severity: error    

@@ -1,0 +1,64 @@
+---
+shortcuts: []
+state: {}
+bunch:
+  onInit:
+    - _type: get
+      schema: comercios
+      filter:
+        - const: email
+        - const: eq
+        - payloadPath: email
+      success: onGetComerciosSuccess
+      error: onGetComerciosError  
+  onGetComerciosSuccess:
+    - _type: if
+      if: 
+        operator: A is defined
+        A:
+          code: 'return payload.response.data[0]'
+      then:
+        _type: set   
+        path: comercio
+        value:
+          code: 'return payload.response.data[0]'
+      else:
+        _type: grape
+        name: onGetComerciosError 
+  onGetComerciosError:      
+    - _type: alert
+      text: No se ha encontrado el comercio
+      severity: error  
+  onComercioTipoChanged:
+    - _type: set
+      path: comercio.tipo
+      value:
+        payloadPath: value        
+  onComercioSeccionConfirmada:
+    - _type: patch
+      schema: comercios
+      id:
+        statePath: comercio.idComercio
+      data:
+        - key: nombre
+          value:
+            statePath: comercio.nombre
+        - key: email
+          value:
+            statePath: comercio.email
+        - key: cifnif
+          value:
+            statePath: comercio.cifnif               
+        - key: tipo
+          value:
+            statePath: comercio.tipo                        
+      success: guardarComercioSuccess
+      error: guardarComercioError
+  guardarComercioSuccess:      
+    - _type: alert
+      text: Datos guardados correctamente
+      severity: success
+  guardarComercioError:      
+    - _type: alert
+      text: Error al guardar los datos
+      severity: error        

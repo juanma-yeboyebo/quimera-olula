@@ -1,0 +1,72 @@
+---
+shortcuts:
+  - type: Model
+    name: eventos
+    id: codProyecto
+    schema: eventos
+    logicDelete: true
+state: 
+  modo: 'mes'
+  mes: null
+  anyo: null
+  mesYAnyo: null
+  inicioVisible: null
+  finVisible: null
+  codProyectoFiltro: null
+  calendario: []
+  diasSemana: ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
+  mesesAnyo: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+  dibujandoCalendario: false
+  modalNuevoEvento: false
+  anchorFiltro: null
+  modalFiltroVisible: false
+  numFiltros: null
+  modalDatosDia: false
+  datosDia: null
+  fechaSeleccionada: null
+  datosGuardados: []
+bunch: 
+  onInit:
+    - _type: get
+      schema: checkHashCalendario
+      id:
+        payloadPath: hash
+      action: datos_calendario
+      success: hashcodeCorrecto
+      error: hashcodeIncorrecto  
+  hashcodeCorrecto:
+    - _type: grape 
+      name: dibujaCalendarioGuardado                     
+  calendarioDibujado:
+    - _type: set
+      path: dibujandoCalendario
+      value:
+        const: false
+  onDiaClicked:
+    - _type: set 
+      path: modalDatosDia
+      value:
+        toggleStatePath: modalDatosDia  
+    - _type: set 
+      path: datosDia
+      value:
+        payloadPath: datosDia
+    - _type: set 
+      path: fechaSeleccionada
+      value:
+        payloadPath: fechaDia
+  onCerrarDatosDia:
+    - _type: set 
+      path: modalDatosDia
+      value:
+        toggleStatePath: modalDatosDia   
+    - _type: set 
+      path: datosDia
+      value:
+        const: null
+    - _type: set 
+      path: fechaSeleccionada
+      value:
+        const: null          
+
+              

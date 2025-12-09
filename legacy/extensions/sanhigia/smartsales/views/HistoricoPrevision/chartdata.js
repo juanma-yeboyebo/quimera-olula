@@ -1,0 +1,132 @@
+export default {
+  dataHistoricoPrevision: [
+    {
+      x: [],
+      y: [],
+      mode: "lines+markers",
+      connectgaps: true,
+      name: "Ventas",
+      line: {
+        color: "blue",
+        dash: "solid",
+        width: 1,
+      },
+    },
+    {
+      x: [],
+      y: [],
+      mode: "lines+markers",
+      connectgaps: true,
+      name: "Ventas (E)",
+      line: {
+        color: "red",
+        dash: "solid",
+        width: 1,
+      },
+    },
+    {
+      x: [],
+      y: [],
+      mode: "lines",
+      connectgaps: true,
+      name: "Previsión lo80",
+      line: {
+        color: "lightblue",
+        dash: "dashdot",
+        width: 1,
+      },
+    },
+    {
+      x: [],
+      y: [],
+      mode: "lines",
+      connectgaps: true,
+      name: "Objetivo",
+      line: {
+        color: "lightblue",
+        dash: "solid",
+        width: 1,
+      },
+    },
+    {
+      x: [],
+      y: [],
+      mode: "lines",
+      connectgaps: true,
+      name: "Objetivo (E)",
+      line: {
+        color: "lightred",
+        dash: "solid",
+        width: 1,
+      },
+    },
+    {
+      x: [],
+      y: [],
+      mode: "lines",
+      connectgaps: true,
+      name: "Previsión hi80",
+      line: {
+        color: "lightblue",
+        dash: "dashdot",
+        width: 1,
+      },
+    },
+    {
+      x: [],
+      y: [],
+      mode: "lines",
+      connectgaps: true,
+      name: "Predicción",
+      line: {
+        color: "blue",
+        dash: "dashdot",
+        width: 1,
+      },
+    },
+    {
+      x: [],
+      y: [],
+      mode: "lines",
+      connectgaps: true,
+      name: "Predicción (E)",
+      line: {
+        color: "red",
+        dash: "dashdot",
+        width: 1,
+      },
+    },
+  ],
+  layoutHistoricoPrevision: {
+    title: false,
+    xaxis: {
+      autorange: true,
+    },
+    yaxis: {
+      autorange: true,
+      title: false,
+    },
+    margin: {
+      l: 30,
+      r: 15,
+      b: 15,
+      t: 15,
+    },
+    paper_bgcolor: "rgba(0,0,0,0)",
+    // plot_bgcolor: 'rgba(0,0,0,0)',
+    legend: {
+      orientation: "h",
+      yanchor: "bottom",
+      y: 1.02,
+      xanchor: "right",
+      x: 1,
+      font: {
+        size: 10,
+      },
+    },
+    showlegend: true,
+    autosize: false,
+    width: 420,
+    height: 275,
+  },
+};

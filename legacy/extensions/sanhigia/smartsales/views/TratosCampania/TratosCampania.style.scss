@@ -1,0 +1,11 @@
+.SincronizarAC{
+  width: 41px;
+  height: 41px;
+  border-radius: 50%;
+  background: transparent;
+  &:hover {
+    transform: scale(1.2);
+    background: #E5E5E5;
+    transition: all .2s ease-in-out;
+  }
+}

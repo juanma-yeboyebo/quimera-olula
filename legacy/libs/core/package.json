@@ -1,0 +1,19 @@
+{
+  "name": "@quimera/core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@quimera/comps": "workspace:*",
+    "@quimera/styles": "workspace:*",
+    "@quimera/thirdparty": "workspace:*",
+    "jquery": "^3.6.0",
+    "prop-types": "^15.7.2",
+    "i18next-browser-languagedetector": "^7.0.1",
+    "hookrouter": "^1.2.3",
+    "i18next": "^22.0.4"
+  }
+}

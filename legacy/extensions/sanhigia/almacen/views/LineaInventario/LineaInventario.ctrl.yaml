@@ -1,0 +1,48 @@
+---
+shortcuts: 
+  - type: DetailBuffer
+    name: linea
+    id: idLinea
+    schemaName: lineasInventario
+state:
+  codUbicacionArticulo: null
+  onSuccess: null
+bunch:
+  onLineaInternoSaved:   
+    patch: append
+    grapes:
+      # - _type: log
+      #   desc: miMensajeCambiaCantidadPrevio
+      #   value: 
+      #     payloadPath: section
+      - _type: grape
+        name: comprobarSiCantidadFinal 
+  comprobarSiCantidadFinal:
+      # - _type: log
+      #   desc: miMensajeCambiaCantidadFuncion
+      #   value: 
+      #     payloadPath: section
+      - _type: if
+        if:
+          operator: A = B
+          A:
+            payloadPath: section
+          B:
+            const: 'cantidad'
+        then:
+          _type: grape
+          name: cerrarLinea 
+  cerrarLinea:
+    - _type: patch
+      action: cerrar_linea
+      schema: lineasInventario
+      id:
+        payloadPath: response.pk
+      success: onCerrarLineaSuccess
+  onCerrarLineaSuccess:
+    - _type: log
+      desc: LLamagetlinea
+      value: 
+        const: response
+    - _type: grape
+      name: onLineasItemChanged

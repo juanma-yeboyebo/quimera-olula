@@ -1,0 +1,13 @@
+.factura_summary__title {
+  line-height: 25px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  background-color: #3cff64;
+  padding: 0.1rem 0.2rem;
+}
+
+.factura_summary__body {
+  display: flex;
+  flex-direction: column;
+  padding: 0.1rem 0.2rem;
+}

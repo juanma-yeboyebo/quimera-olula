@@ -1,0 +1,31 @@
+---
+shortcuts:
+  - type: DetailBuffer
+    name: presupuesto
+    id: idPresupuesto
+    schemaName: presupuestoCliNuevo
+    mode: insert
+state: 
+    savingPresupuesto: false
+bunch:
+  onNuevoPresupuestoSectionAccepted:
+    - _type: set 
+      path: savingPresupuesto
+      value:
+        const: true  
+    - _type: grape
+      name: savePresupuesto
+  onNuevoPresupuestoSectionCancelled:
+    - _type: set 
+      path: savingPresupuesto
+      value:
+        const: false    
+    - _type: navigate
+      url:
+        const: "/ventas/presupuestos"
+  onSavePresupuestoFailed:
+    - _type: set 
+      path: savingPresupuesto
+      value:
+        const: false  
+    
