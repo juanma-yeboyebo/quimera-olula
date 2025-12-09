@@ -1,4 +1,5 @@
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
+import { ClausulaFiltro } from "@olula/lib/diseño.js";
 import { criteriaQuery } from "@olula/lib/infraestructura.ts";
 import {
     Caja,
@@ -33,7 +34,11 @@ export const getCajas: GetCajas = async (
     orden,
     paginacion?
 ) => {
-    const q = criteriaQuery(filtro, orden, paginacion);
+    const filtroCombinado = [
+        ...filtro,
+        ["codigo_almacen", "ALG"] as ClausulaFiltro
+    ];
+    const q = criteriaQuery(filtroCombinado, orden, paginacion);
     const respuesta = await RestAPI.get<{ datos: CajaAPI[]; total: number }>(baseUrlCaja + q);
     return { datos: respuesta.datos.map(cajaFromApi), total: respuesta.total };
 };
@@ -59,7 +64,8 @@ export const deleteCaja: DeleteCaja = async (id) => {
 export const postLineaCaja = async (caja: Caja, sku: string, cantidad: string) => {
     const cajaConLinea = {
         id: caja.id,
-        caja_id: caja.id,
+        caja_origen: "",
+        caja_destino: caja.id,
         almacen_destino_id: caja.codigo_almacen,
         almacen_origen_id: "",
         sku,

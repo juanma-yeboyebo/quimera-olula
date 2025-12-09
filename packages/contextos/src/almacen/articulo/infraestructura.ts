@@ -6,6 +6,7 @@ import {
     DeleteArticulo,
     GetArticulo,
     GetArticulos,
+    LeerCodBarras,
     PatchArticulo,
     PostArticulo
 } from "./diseño.ts";
@@ -64,3 +65,7 @@ export const deleteArticulo: DeleteArticulo = async (id) => {
     await RestAPI.delete(`${baseUrlArticulo}/${id}`, "Error al borrar Articulo");
 };
 
+export const leerCodBarras: LeerCodBarras = async (codigo) =>
+    await RestAPI.get<{ datos: ArticuloAPI }>(`${baseUrlArticulo}/get_sku/${codigo}`).then((respuesta) =>
+        ArticuloFromApi(respuesta.datos)
+    );

@@ -1,20 +1,17 @@
-import { Almacen } from "#/almacen/comun/componentes/Almacen.tsx";
-import { Articulo } from "#/almacen/comun/componentes/Articulo.tsx";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
-import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
-import { Tab, Tabs } from "@olula/componentes/detalle/tabs/Tabs.tsx";
 import { ContextoError } from "@olula/lib/contexto.ts";
 import { EmitirEvento, Entidad } from "@olula/lib/diseño.ts";
 import { ConfigMaquina4, useMaquina4 } from "@olula/lib/useMaquina.ts";
 import { useModelo } from "@olula/lib/useModelo.ts";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { useParams } from "react-router";
 import { Caja } from "../../diseño.ts";
 import { cajaVacia, metaCaja } from "../../dominio.ts";
-import { getCaja, patchCaja, postLineaCaja } from "../../infraestructura.ts";
+import { getCaja, patchCaja } from "../../infraestructura.ts";
 import { BorrarCaja } from "./BorrarCaja.tsx";
 import "./DetalleCaja.css";
+import { MovimientoCajaLista } from "./Movimientos.tsx";
 
 type Estado = "Editando" | "Borrando";
 type Contexto = Record<string, unknown>;
@@ -36,7 +33,7 @@ const configMaquina: ConfigMaquina4<Estado, Contexto> = {
   },
 };
 
-const titulo = (caja: Entidad) => caja.codigo_almacen as string;
+const titulo = (caja: Entidad) => ("Caja " + caja.id) as string;
 
 export const DetalleCaja = ({
   cajaInicial = null,
@@ -46,27 +43,11 @@ export const DetalleCaja = ({
   publicar?: EmitirEvento;
 }) => {
   const params = useParams();
-  const [valor, setValor] = useState("");
-  const [cantidad, setCantidad] = useState("0");
+
   const { intentar } = useContext(ContextoError);
 
-  const onChangeValor = (
-    opcion: { valor: string; descripcion: string } | null
-  ): void => {
-    setValor(opcion?.valor ?? "");
-  };
-
-  const onChangeCantidad = (nuevoValor: string): void => {
-    setCantidad(nuevoValor);
-  };
-
-  const crear = async () => {
-    console.log("Crear transferencia de caja con:", { valor, cantidad });
-    await intentar(() => postLineaCaja(modelo, valor, cantidad));
-  };
-
   const caja = useModelo(metaCaja, cajaVacia);
-  const { modelo, uiProps, init } = caja;
+  const { modelo, init } = caja;
 
   const guardar = async () => {
     await intentar(() => patchCaja(modelo.id, modelo));
@@ -102,47 +83,17 @@ export const DetalleCaja = ({
     >
       {!!cajaId && (
         <>
-          <div className="maestro-botones ">
+          {/* <div className="maestro-botones ">
             <QBoton onClick={() => emitir("borrar")}>Borrar</QBoton>
-          </div>
+          </div> */}
           <div className="DetalleCaja">
-            <Tabs
-              children={[
-                <Tab key="general" label="general">
-                  <div className="transferencia-caja">
-                    <quimera-formulario>
-                      <Articulo
-                        label="Artículo"
-                        valor={valor}
-                        onChange={onChangeValor}
-                        nombre="referencia_transferencia"
-                      />
-                      <QInput
-                        label="Cantidad"
-                        tipo="numero"
-                        valor={cantidad}
-                        onChange={onChangeCantidad}
-                        nombre="cantidad_transferencia"
-                      />
-                    </quimera-formulario>
-                    <div className="botones maestro-botones ">
-                      <QBoton onClick={crear} deshabilitado={false}>
-                        Guardar
-                      </QBoton>
-                    </div>
-                  </div>
-                </Tab>,
-                <Tab key="datos" label="Datos">
-                  <quimera-formulario>
-                    <QInput label="Código" {...uiProps("id")} />
-                    <Almacen
-                      label="Almacen"
-                      {...caja.uiProps("codigo_almacen", "codigo_almacen")}
-                    />
-                  </quimera-formulario>
-                </Tab>,
-              ]}
-            ></Tabs>
+            <div className="transferencia-caja">
+              <MovimientoCajaLista
+                idCaja={cajaId}
+                publicar={emitir}
+                modelo={modelo}
+              />
+            </div>
           </div>
           {caja.modificado && (
             <div className="botones maestro-botones">

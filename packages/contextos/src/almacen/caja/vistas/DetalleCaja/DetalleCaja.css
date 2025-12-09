@@ -4,7 +4,7 @@
         grid-column: 1 / span 12;
     }
 
-    quimera-autocompletar[nombre="referencia_transferencia"] {
+    quimera-input[nombre="codigo_barras"] {
         grid-column: 1 / span 8;
     }
 

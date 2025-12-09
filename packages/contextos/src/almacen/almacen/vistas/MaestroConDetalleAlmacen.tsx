@@ -123,6 +123,7 @@ export const MaestroConDetalleAlmacen = () => {
           </>
         }
         metaTabla={metaTablaAlmacen}
+        modoDisposicion="maestro-50"
         entidades={almacenes.lista}
         setEntidades={setEntidades}
         setSeleccionada={setSeleccionada}

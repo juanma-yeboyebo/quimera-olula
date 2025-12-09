@@ -1,3 +1,4 @@
+import { almacenLocal } from "#/almacen/almacen/infraestructura.ts";
 import { MaestroDetalle, QBoton } from "@olula/componentes/index.ts";
 import { ListaSeleccionable } from "@olula/lib/diseño.ts";
 import {
@@ -93,6 +94,8 @@ export const MaestroConDetalleCaja = () => {
     config: configMaquina,
   });
   const { cajas } = contexto;
+  const almacenActual = almacenLocal.obtener();
+  console.log("Almacén actual en MaestroConDetalleCaja:", almacenActual);
 
   const setEntidades = useCallback(
     (payload: Caja[]) => emitir("cajas_cargadas", payload),
@@ -105,13 +108,23 @@ export const MaestroConDetalleCaja = () => {
 
   const seleccionada = getSeleccionada(cajas);
 
+  if (!almacenActual) {
+    console.log("No hay almacén seleccionado");
+    return (
+      <div>
+        Seleccione un almacén para ver las cajas.
+        <a href="./almacenes">Ir a Almacenes</a>
+      </div>
+    );
+  }
+
   return (
     <div className="Caja">
       <MaestroDetalle<Caja>
         seleccionada={seleccionada}
         preMaestro={
           <>
-            <h2>Cajas</h2>
+            <h2>Cajas: {almacenActual}</h2>
             <div className="maestro-botones">
               <QBoton onClick={() => emitir("crear")}>Nueva</QBoton>
             </div>

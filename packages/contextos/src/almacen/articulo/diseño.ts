@@ -23,6 +23,7 @@ export type GetArticulos = (
     orden: Orden,
     paginacion?: Paginacion
 ) => RespuestaLista<Articulo>;
+export type LeerCodBarras = (codigo: string) => Promise<ArticuloAlmacen>;
 
 export type PostArticulo = (Articulo: Partial<Articulo>) => Promise<string>;
 export type PatchArticulo = (id: string, Articulo: Partial<Articulo>) => Promise<void>;

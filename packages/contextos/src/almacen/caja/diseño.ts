@@ -10,7 +10,7 @@ export interface CajaAPI extends Entidad {
     codigo_almacen: string;
 }
 
-export interface MovimientoCaja {
+export interface MovimientoCaja extends Entidad {
     id: string;
     sku: string;
     descripcion: string;

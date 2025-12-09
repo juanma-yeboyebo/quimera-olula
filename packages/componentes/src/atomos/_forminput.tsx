@@ -15,6 +15,7 @@ export type FormFieldProps = {
     valor: string,
     evento: React.ChangeEvent<HTMLInputElement>
   ) => void;
+  onKeyDown?: (evento: React.KeyboardEvent<HTMLInputElement>) => void;
   onBlur?: (valor: string, evento: React.FocusEvent<HTMLElement>) => void;
 };
 
@@ -43,6 +44,7 @@ export type FormInputProps = FormFieldProps & {
   autocompletar?: "off" | "on";
   onInput?: (valor: string, evento: React.FormEvent<HTMLInputElement>) => void;
   tipo?: keyof typeof tiposFormInput;
+  ref?: React.Ref<HTMLInputElement>;
 };
 
 type InputProps = Omit<FormInputProps, "label"> & {
@@ -63,6 +65,8 @@ export const FormInput = ({
   onChange,
   onBlur,
   onInput,
+  onKeyDown,
+  ref,
 }: InputProps) => {
   const obtenerValorPorDefecto = () => {
     if (valor !== undefined && valor !== "" && valor != null) return valor;
@@ -99,6 +103,7 @@ export const FormInput = ({
 
   return (
     <input
+      ref={ref}
       type={tiposFormInput[tipo] ?? "text"}
       name={nombre}
       placeholder={placeholder}
@@ -114,6 +119,7 @@ export const FormInput = ({
       onBlur={manejarBlur}
       onFocus={manejarFocus}
       onInput={manejarInput}
+      onKeyDown={onKeyDown}
     />
   );
 };

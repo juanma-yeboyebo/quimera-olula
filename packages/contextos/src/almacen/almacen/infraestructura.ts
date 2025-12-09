@@ -61,3 +61,10 @@ export const patchAlmacen: PatchAlmacen = async (id, almacen) => {
 export const deleteAlmacen: DeleteAlmacen = async (id) => {
     await RestAPI.delete(`${baseUrlAlmacen}/${id}`, "Error al borrar Almacen");
 };
+
+
+export const almacenLocal = {
+    actualizar: (codAlmacen: string) => localStorage.setItem("almacen-local", codAlmacen),
+    obtener: () => localStorage.getItem("almacen-local"),
+    eliminar: () => localStorage.removeItem("almacen-local"),
+}

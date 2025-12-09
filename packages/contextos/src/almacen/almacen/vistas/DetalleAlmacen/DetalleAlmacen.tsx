@@ -10,7 +10,11 @@ import { useContext } from "react";
 import { useParams } from "react-router";
 import { Almacen } from "../../diseño.ts";
 import { almacenVacio, metaAlmacen } from "../../dominio.ts";
-import { getAlmacen, patchAlmacen } from "../../infraestructura.ts";
+import {
+  almacenLocal,
+  getAlmacen,
+  patchAlmacen,
+} from "../../infraestructura.ts";
 import { BorrarAlmacen } from "./BorrarAlmacen.tsx";
 import "./DetalleAlmacen.css";
 
@@ -72,6 +76,12 @@ export const DetalleAlmacen = ({
 
   const almacenId = almacenInicial?.id ?? params.id;
 
+  const actualizaAlmacenLocal = async () => {
+    const actual = almacenLocal.obtener();
+    console.log("Almacén local actual:", actual);
+    almacenLocal.actualizar(modelo.id);
+  };
+
   return (
     <Detalle
       id={almacenId}
@@ -85,6 +95,9 @@ export const DetalleAlmacen = ({
         <>
           <div className="maestro-botones ">
             <QBoton onClick={() => emitir("borrar")}>Borrar</QBoton>
+            <QBoton onClick={() => actualizaAlmacenLocal()}>
+              Almacen local
+            </QBoton>
           </div>
           <div className="DetalleAlmacen">
             <Tabs

@@ -1,6 +1,6 @@
 import { MetaTabla } from "@olula/componentes/index.js";
 import { MetaModelo, stringNoVacio } from "@olula/lib/dominio.ts";
-import { Caja, NuevaCaja } from "./diseño";
+import { Caja, MovimientoCaja, NuevaCaja } from "./diseño";
 
 export const cajaVacia: Caja = {
     id: "",
@@ -30,3 +30,8 @@ export const metaTablaCaja: MetaTabla<Caja> = [
     { id: "codigo_almacen", cabecera: "Descripcion" },
 ];
 
+export const metaTablaMovimientosCaja: MetaTabla<MovimientoCaja> = [
+    { id: "sku", cabecera: "Referencia" },
+    { id: "descripcion", cabecera: "Descripción" },
+    { id: "cantidad", cabecera: "Cantidad", tipo: "numero" },
+];
