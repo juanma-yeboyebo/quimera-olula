@@ -1,6 +1,5 @@
-import { MetaTabla } from "@olula/componentes/atomos/qtabla.tsx";
 import { EstadoModelo, initEstadoModelo, MetaModelo, stringNoVacio } from "@olula/lib/dominio.ts";
-import { NuevaOportunidadVenta, OportunidadVenta } from "./diseño.ts";
+import { OportunidadVenta } from "./diseño.ts";
 
 export const oportunidadVentaVacia: OportunidadVenta = {
     id: '',
@@ -22,18 +21,6 @@ export const oportunidadVentaVacia: OportunidadVenta = {
     agente_id: null,
 };
 
-export const nuevaOportunidadVentaVacia: NuevaOportunidadVenta = {
-    descripcion: '',
-    valor_defecto: false,
-    probabilidad: '',
-    estado_id: '',
-    importe: 0,
-    cliente_id: '',
-    contacto_id: '',
-    fecha_cierre: '',
-    tarjeta_id: '',
-};
-
 export const metaOportunidadVenta: MetaModelo<OportunidadVenta> = {
     campos: {
         descripcion: { requerido: true, validacion: (oportunidad: OportunidadVenta) => stringNoVacio(oportunidad.descripcion) },
@@ -47,29 +34,7 @@ export const metaOportunidadVenta: MetaModelo<OportunidadVenta> = {
     },
 };
 
-export const metaNuevaOportunidadVenta: MetaModelo<NuevaOportunidadVenta> = {
-    campos: {
-        descripcion: { requerido: true, validacion: (oportunidad: NuevaOportunidadVenta) => stringNoVacio(oportunidad.descripcion) },
-        nombre_cliente: { requerido: true, validacion: (oportunidad: NuevaOportunidadVenta) => stringNoVacio(oportunidad.descripcion) },
-        valor_defecto: { requerido: true },
-        importe: { requerido: false, tipo: "moneda" },
-        probabilidad: { requerido: true, tipo: "numero" },
-        estado_id: { requerido: true, tipo: "selector" },
-        fecha_cierre: { requerido: true, tipo: "fecha" },
-        cliente_id: { requerido: false, tipo: "autocompletar" },
-        responsable_id: { requerido: true, tipo: "autocompletar" },
-    },
-};
-
 export const initEstadoOportunidadVenta = (oportunidad: OportunidadVenta): EstadoModelo<OportunidadVenta> =>
     initEstadoModelo(oportunidad);
 
 export const initEstadoOportunidadVentaVacia = () => initEstadoOportunidadVenta(oportunidadVentaVacia);
-
-export const metaTablaOportunidadVenta: MetaTabla<OportunidadVenta> = [
-    { id: "id", cabecera: "Código" },
-    { id: "descripcion", cabecera: "Descripción" },
-    { id: "nombre_cliente", cabecera: "Cliente" },
-    { id: "importe", cabecera: "Total", tipo: "moneda" },
-    { id: "fecha_cierre", cabecera: "Fecha Cierre" },
-];

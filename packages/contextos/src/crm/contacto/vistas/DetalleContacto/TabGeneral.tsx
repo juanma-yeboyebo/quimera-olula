@@ -5,7 +5,6 @@ import "./TabGeneral.css";
 
 interface TabGeneralProps {
   contacto: HookModelo<Contacto>;
-  recargarContacto: () => void;
 }
 
 export const TabGeneral = ({ contacto }: TabGeneralProps) => {

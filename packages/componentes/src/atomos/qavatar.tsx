@@ -7,7 +7,7 @@ interface QAvatarProps {
 
 export const QAvatar = ({ nombre, tamaño = "md" }: QAvatarProps) => {
   const obtenerIniciales = (nombre: string) => {
-    const palabras = nombre.split(" ");
+    const palabras = nombre.trim().split(" ");
 
     if (palabras.length >= 2) {
       // Si hay 2 o más palabras, tomamos la primera letra de las dos primeras

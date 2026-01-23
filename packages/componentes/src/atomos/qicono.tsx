@@ -12,6 +12,7 @@ type Icono = {
   nombre: string;
   tipo?: "solid" | "regular" | "logo";
 };
+
 const iconos: Record<string, string | Icono> = {
   añadir: "plus-circle",
   buscar: "search-alt-2",
@@ -59,6 +60,7 @@ export const QIcono = ({
   ...props
 }: QIconoProps) => {
   let nombreIcono, tipo;
+
   if (typeof iconos[nombre] === "object") {
     nombreIcono = iconos[nombre].nombre;
     tipo = iconos[nombre].tipo;
@@ -66,6 +68,7 @@ export const QIcono = ({
     nombreIcono = iconos[nombre];
     tipo = undefined;
   }
+
   return (
     <quimera-icono>
       <box-icon

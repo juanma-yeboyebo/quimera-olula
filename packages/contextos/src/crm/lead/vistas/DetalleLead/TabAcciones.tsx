@@ -1,3 +1,7 @@
+import { BorrarAccion } from "#/crm/accion/borrar/BorrarAccion.tsx";
+import { nuevaAccionVacia } from "#/crm/accion/crear/crear.ts";
+import { CrearAccion } from "#/crm/accion/crear/CrearAccion.tsx";
+import { metaTablaAccion } from "#/crm/accion/maestro/maestro.ts";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QTabla } from "@olula/componentes/atomos/qtabla.tsx";
 import { ContextoError } from "@olula/lib/contexto.ts";
@@ -18,9 +22,6 @@ import {
 import { HookModelo } from "@olula/lib/useModelo.ts";
 import { useContext, useEffect } from "react";
 import { Accion } from "../../../accion/diseño.ts";
-import { metaTablaAccion } from "../../../accion/dominio.ts";
-import { AltaAccion } from "../../../accion/vistas/AltaAccion.tsx";
-import { BajaAccion } from "../../../accion/vistas/BajaAccion.tsx";
 import { Lead } from "../../diseño.ts";
 import { getAccionesLead } from "../../infraestructura.ts";
 type Estado = "Inactivo" | "Creando" | "Borrando" | "Cargando";
@@ -75,7 +76,7 @@ const configMaquina: ConfigMaquina4<Estado, Contexto> = {
           setEstado("Inactivo"),
           setAcciones(incluirItem(payload as Accion, {}))
         ),
-      creacion_cancelada: "Inactivo",
+      creacion_accion_cancelada: "Inactivo",
     },
     Borrando: {
       accion_borrada: ({ maquina, setEstado }) => {
@@ -89,7 +90,7 @@ const configMaquina: ConfigMaquina4<Estado, Contexto> = {
           setAcciones(quitarItem(idActivo))
         );
       },
-      borrado_cancelado: "Inactivo",
+      borrado_accion_cancelado: "Inactivo",
     },
   },
 };
@@ -127,18 +128,21 @@ export const TabAcciones = ({ lead }: { lead: HookModelo<Lead> }) => {
         </QBoton>
       </div>
 
-      <AltaAccion
-        emitir={emitir}
-        activo={estado === "Creando"}
-        key={lead.modelo.id}
-        idLead={lead.modelo.id}
-      />
+      {estado === "Creando" && (
+        <CrearAccion
+          publicar={emitir}
+          modeloVacio={{ ...nuevaAccionVacia, tarjeta_id: lead.modelo.id }}
+        />
+      )}
 
-      <BajaAccion
-        publicar={emitir}
-        activo={estado === "Borrando"}
-        idAccion={acciones.idActivo || undefined}
-      />
+      {estado === "Borrando" && (
+        <BorrarAccion
+          publicar={emitir}
+          accion={
+            acciones.lista.find((accion) => accion.id === acciones.idActivo)!
+          }
+        />
+      )}
 
       <QTabla
         metaTabla={metaTablaAccion}

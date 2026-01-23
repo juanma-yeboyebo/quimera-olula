@@ -1,20 +1,16 @@
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
 import { Tab, Tabs } from "@olula/componentes/detalle/tabs/Tabs.tsx";
-import { QModalConfirmacion } from "@olula/componentes/moleculas/qmodalconfirmacion.tsx";
 import { ContextoError } from "@olula/lib/contexto.ts";
 import { EmitirEvento, Entidad } from "@olula/lib/diseño.ts";
 import { ConfigMaquina4, useMaquina4 } from "@olula/lib/useMaquina.ts";
 import { useModelo } from "@olula/lib/useModelo.ts";
 import { useContext } from "react";
 import { useParams } from "react-router";
+import { BorrarContacto } from "../../borrar/BorrarContacto.tsx";
 import { Contacto } from "../../diseño.ts";
 import { contactoVacio, metaContacto } from "../../dominio.ts";
-import {
-  deleteContacto,
-  getContacto,
-  patchContacto,
-} from "../../infraestructura.ts";
+import { getContacto, patchContacto } from "../../infraestructura.ts";
 import { TabClientes } from "./Clientes/TabClientes.tsx";
 import "./DetalleContacto.css";
 import { TabAcciones } from "./TabAcciones.tsx";
@@ -36,7 +32,7 @@ const configMaquina: ConfigMaquina4<Estado, Contexto> = {
       cancelar_seleccion: ({ publicar }) => publicar("cancelar_seleccion"),
     },
     borrando: {
-      borrado_cancelado: "edicion",
+      borrado_contacto_cancelado: "edicion",
       contacto_borrado: ({ publicar }) => publicar("contacto_borrado"),
     },
   },
@@ -73,12 +69,6 @@ export const DetalleContacto = ({
     publicar("contacto_cambiado", contactoRecargado);
   };
 
-  const onBorrarConfirmado = async () => {
-    await intentar(() => deleteContacto(modelo.id));
-    emitir("contacto_borrado", modelo);
-    emitir("borrado_cancelado");
-  };
-
   return (
     <div className="DetalleContacto">
       <Detalle
@@ -95,47 +85,31 @@ export const DetalleContacto = ({
             <div className="maestro-botones ">
               <QBoton onClick={() => emitir("borrar")}>Borrar</QBoton>
             </div>
-            <Tabs
-              children={[
-                <Tab
-                  key="tab-1"
-                  label="General"
-                  children={
-                    <TabGeneral
-                      contacto={contacto}
-                      recargarContacto={onRecargarContacto}
-                    />
-                  }
-                />,
-                <Tab
-                  key="tab-2"
-                  label="Clientes"
-                  children={
-                    <div className="detalle-cliente-tab-contenido">
-                      <TabClientes contacto={contacto} />
-                    </div>
-                  }
-                />,
-                <Tab
-                  key="tab-4"
-                  label="Oportunidades"
-                  children={
-                    <div className="detalle-cliente-tab-contenido">
-                      <TabOportunidades contacto={contacto} />
-                    </div>
-                  }
-                />,
-                <Tab
-                  key="tab-5"
-                  label="Acciones"
-                  children={
-                    <div className="detalle-cliente-tab-contenido">
-                      <TabAcciones contacto={contacto} />
-                    </div>
-                  }
-                />,
-              ]}
-            />
+
+            <Tabs>
+              <Tab label="General">
+                <TabGeneral contacto={contacto} />
+              </Tab>
+
+              <Tab label="Clientes">
+                <div className="detalle-cliente-tab-contenido">
+                  <TabClientes contacto={contacto} />
+                </div>
+              </Tab>
+
+              <Tab label="Oportunidades">
+                <div className="detalle-cliente-tab-contenido">
+                  <TabOportunidades contacto={contacto} />
+                </div>
+              </Tab>
+
+              <Tab label="Acciones">
+                <div className="detalle-cliente-tab-contenido">
+                  <TabAcciones contacto={contacto} />
+                </div>
+              </Tab>
+            </Tabs>
+
             {contacto.modificado && (
               <div className="maestro-botones ">
                 <QBoton onClick={onGuardarClicked} deshabilitado={!valido}>
@@ -151,14 +125,10 @@ export const DetalleContacto = ({
                 </QBoton>
               </div>
             )}
-            <QModalConfirmacion
-              nombre="borrarContacto"
-              abierto={estado === "borrando"}
-              titulo="Confirmar borrar"
-              mensaje="¿Está seguro de que desea borrar este contacto?"
-              onCerrar={() => emitir("borrado_cancelado")}
-              onAceptar={onBorrarConfirmado}
-            />
+
+            {estado === "borrando" && (
+              <BorrarContacto publicar={emitir} contacto={modelo} />
+            )}
           </div>
         )}
       </Detalle>

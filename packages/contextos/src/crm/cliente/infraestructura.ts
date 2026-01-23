@@ -4,7 +4,8 @@ import { Filtro, Orden, Paginacion, RespuestaLista } from "@olula/lib/diseño.ts
 import { criteriaQuery, criteriaQueryUrl } from "@olula/lib/infraestructura.ts";
 import { Accion } from "../accion/diseño.ts";
 import UrlsCrmClass from "../comun/urls.ts";
-import { NuevaOportunidadVenta, OportunidadVenta } from "../oportunidadventa/diseño.ts";
+import { NuevaOportunidadVenta } from "../oportunidadventa/crear/diseño.ts";
+import { OportunidadVenta } from "../oportunidadventa/diseño.ts";
 import { Cliente, GetCliente, PatchCliente } from "./diseño.ts";
 
 const UrlsCrm = new UrlsCrmClass();

@@ -1,3 +1,6 @@
+import { BorrarOportunidadVenta } from "#/crm/oportunidadventa/borrar/BorrarOportunidadVenta.tsx";
+import { nuevaOportunidadVentaVacia } from "#/crm/oportunidadventa/crear/crear.ts";
+import { CrearOportunidadVenta } from "#/crm/oportunidadventa/crear/CrearOportunidadVenta.tsx";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QTabla } from "@olula/componentes/atomos/qtabla.tsx";
 import { ContextoError } from "@olula/lib/contexto.ts";
@@ -18,9 +21,7 @@ import {
 import { HookModelo } from "@olula/lib/useModelo.ts";
 import { useContext, useEffect } from "react";
 import { OportunidadVenta } from "../../../oportunidadventa/diseño.ts";
-import { metaTablaOportunidadVenta } from "../../../oportunidadventa/dominio.ts";
-import { AltaOportunidadVenta } from "../../../oportunidadventa/vistas/AltaOportunidadVenta.tsx";
-import { BajaOportunidadVenta } from "../../../oportunidadventa/vistas/BajaOportunidadVenta.tsx";
+import { metaTablaOportunidadVenta } from "../../../oportunidadventa/maestro/maestro.ts";
 import { Cliente } from "../../diseño.ts";
 import { getOportunidadesVentaCliente } from "../../infraestructura.ts";
 
@@ -136,18 +137,26 @@ export const TabOportunidades = ({
         </QBoton>
       </div>
 
-      <AltaOportunidadVenta
-        emitir={emitir}
-        activo={estado === "Creando"}
-        key={cliente.modelo.id}
-        idCliente={cliente.modelo.id}
-      />
+      {estado === "Creando" && (
+        <CrearOportunidadVenta
+          publicar={emitir}
+          modeloVacio={{
+            ...nuevaOportunidadVentaVacia,
+            cliente_id: cliente.modelo.id,
+          }}
+        />
+      )}
 
-      <BajaOportunidadVenta
-        emitir={emitir}
-        activo={estado === "Borrando"}
-        idOportunidadVenta={oportunidades.idActivo || undefined}
-      />
+      {estado === "Borrando" && (
+        <BorrarOportunidadVenta
+          oportunidad={
+            oportunidades.lista.find(
+              (oportunidad) => oportunidad.id === oportunidades.idActivo
+            )!
+          }
+          publicar={emitir}
+        />
+      )}
 
       <QTabla
         metaTabla={metaTablaOportunidadVenta}

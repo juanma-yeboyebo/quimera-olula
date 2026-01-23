@@ -1,5 +1,10 @@
 .MoleculaContacto {
     .MoleculaContactoCampos {
         display: flex;
+        justify-content: space-between;
+
+        quimera-autocompletar {
+            flex-grow: 1;
+        }
     }
 }

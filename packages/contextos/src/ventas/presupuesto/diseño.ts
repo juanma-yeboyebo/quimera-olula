@@ -36,7 +36,7 @@ export type NuevoPresupuesto = {
   cliente_id: string;
   direccion_id: string;
   empresa_id: string;
-};
+}
 
 export type NuevoPresupuestoClienteNoRegistrado = {
   empresa_id: string;

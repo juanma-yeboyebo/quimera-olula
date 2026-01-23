@@ -36,7 +36,7 @@ export const Cliente = ({
 }: ClienteProps) => {
   const obtenerOpciones = async (texto: string) => {
     const criteria = {
-      filtro: ["nombre", texto],
+      filtro: ["nombre", "~", texto],
       orden: ["id", "DESC"],
       paginacion: { pagina: 1, limite: 10 },
     };

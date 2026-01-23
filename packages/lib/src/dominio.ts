@@ -654,10 +654,14 @@ export const procesarEvento = async <E extends string, C extends Contexto<E>>(
     }
 };
 
-export const publicar = <E extends string, C extends Contexto<E>>(evento: string, payload?: unknown) => {
+export const publicar = <E extends string, C extends Contexto<E>>(evento: string, payload?: ((c: C, np: unknown) => unknown) | null | string | Entidad) => {
 
-    const f: ProcesarContexto<E, C> = async (contexto) => {
-        return [contexto, [[evento, payload]]]
+    const f: ProcesarContexto<E, C> = async (contexto, new_payload) => {
+        const valorPayload = payload && typeof payload === 'function'
+            ? payload(contexto, new_payload)
+            : payload;
+
+        return [contexto, [[evento, valorPayload]]]
     }
 
     return f

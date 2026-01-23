@@ -1,7 +1,7 @@
 import { QTextArea } from "@olula/componentes/atomos/qtextarea.tsx";
 import { HookModelo } from "@olula/lib/useModelo.ts";
 import { OportunidadVenta } from "../../diseño.ts";
-// import "./TabObservaciones.css";
+import "./TabObservaciones.css";
 
 export const TabObservaciones = ({
   oportunidad,

@@ -1,0 +1,13 @@
+.DetalleEstadoOportunidad {
+    quimera-input[nombre="descripcion"] {
+        grid-column: 1 / span 9;
+    }
+
+    quimera-input[nombre="probabilidad"] {
+        grid-column: span 3;
+    }
+
+    quimera-checkbox[nombre="valor_defecto"] {
+        grid-column: 1 / span 5;
+    }
+}

@@ -2,7 +2,7 @@ import { Entidad } from "@olula/lib/diseño.ts";
 
 export interface Accion extends Entidad {
     id: string;
-    fecha: string;
+    fecha: Date | null;
     descripcion: string;
     estado: string;
     observaciones: string;
@@ -16,17 +16,3 @@ export interface Accion extends Entidad {
     incidencia_id: string;
     responsable_id: string;
 }
-
-export type NuevaAccion = {
-    fecha: string;
-    descripcion: string;
-    tipo: string;
-    estado: "Pendiente" | "En Progreso" | "Completada" | "Cancelada";
-    observaciones: string;
-    incidencia_id: string;
-    tarjeta_id: string;
-    responsable_id: string;
-    oportunidad_id: string;
-    contacto_id: string;
-    cliente_id: string;
-};

@@ -17,10 +17,10 @@ import {
   useMaquina4,
 } from "@olula/lib/useMaquina.ts";
 import { useCallback } from "react";
+import { CrearOportunidadVenta } from "../crear/CrearOportunidadVenta.tsx";
 import { OportunidadVenta } from "../diseño.ts";
-import { metaTablaOportunidadVenta } from "../dominio.ts";
 import { getOportunidadesVenta } from "../infraestructura.ts";
-import { AltaOportunidadVenta } from "./AltaOportunidadVenta.tsx";
+import { metaTablaOportunidadVenta } from "../maestro/maestro.ts";
 import { DetalleOportunidadVenta } from "./DetalleOportunidadVenta/DetalleOportunidadVenta.tsx";
 import { TarjetaOportunidadVenta } from "./TarjetaOportunidadVenta.tsx";
 // import "./MaestroConDetalleOportunidadVenta.css";
@@ -148,7 +148,7 @@ export const MaestroConDetalleOportunidadVenta = () => {
           />
         }
       />
-      <AltaOportunidadVenta emitir={emitir} activo={estado === "creando"} />
+      {estado === "creando" && <CrearOportunidadVenta publicar={emitir} />}
     </div>
   );
 };

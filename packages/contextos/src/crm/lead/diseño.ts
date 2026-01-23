@@ -44,14 +44,6 @@ export type LeadToAPI = Omit<LeadAPI, "direccion"> & {
     direccion: DireccionLead;
 };
 
-export type NuevoLead = {
-    cliente_id: string;
-    nombre: string;
-    tipo: string;
-    fuente_id: string;
-    estado_id: string;
-};
-
 export type DireccionLead = {
     nombre_via: string;
     cod_postal: string;

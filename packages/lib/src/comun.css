@@ -10,6 +10,7 @@
 }
 
 .logo-imagen {
-    width: 400px;
+    width: 225px;
     height: auto;
+    filter: drop-shadow(5px 5px 5px grey)
 }

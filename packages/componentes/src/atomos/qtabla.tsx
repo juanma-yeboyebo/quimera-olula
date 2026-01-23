@@ -1,9 +1,10 @@
 import { Entidad, Orden, Paginacion } from "@olula/lib/diseño.ts";
 import {
   calcularPaginacionSimplificada,
+  formatearFechaDate,
   formatearFechaString,
   formatearHoraString,
-  formatearMoneda
+  formatearMoneda,
 } from "@olula/lib/dominio.ts";
 import { ReactNode } from "react";
 import { QBoton } from "./qboton.tsx";
@@ -59,17 +60,21 @@ const fila = <T extends Entidad>(entidad: Entidad, metaTabla: MetaTabla<T>) => {
     divisa,
     ancho,
   }: MetaColumna<T>) => {
-    let datos = render?.(entidad as T) ?? (entidad[id] as string);
+    let datos = render?.(entidad as T) ?? (entidad[id] as unknown);
 
     // Formateo automático según tipo
     if (tipo === "moneda" && typeof datos === "number") {
       datos = formatearMoneda(datos, divisa ?? "EUR");
     } else if (tipo === "fecha" && typeof datos === "string") {
       datos = formatearFechaString(datos);
+    } else if (tipo === "fecha" && typeof datos === "object") {
+      datos = formatearFechaDate(datos as Date);
     } else if (tipo === "hora" && typeof datos === "string") {
       datos = formatearHoraString(datos);
     } else if (tipo === "numero" && typeof datos === "number") {
       datos = datos.toLocaleString();
+    } else if (tipo === "booleano" && typeof datos === "boolean") {
+      datos = datos ? "Sí" : "No";
     }
 
     return (
@@ -78,7 +83,7 @@ const fila = <T extends Entidad>(entidad: Entidad, metaTabla: MetaTabla<T>) => {
         className={`${id} ${tipo ?? ""}`}
         style={ancho ? { width: ancho } : undefined}
       >
-        {datos}
+        {datos as string}
       </td>
     );
   };

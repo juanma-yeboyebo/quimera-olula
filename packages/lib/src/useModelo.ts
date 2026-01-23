@@ -35,10 +35,8 @@ export function useModelo<T extends Modelo>(
             }
         }
         if (!formatoValorCampoValido(meta)(campo, valor)) {
-            console.log(`El valor de ${campo} ${valor} no es válido`);
             return;
         }
-        console.log(`El valor de ${campo} ${valor} SI es válido`);
 
         const valorModelo = convertirCampoDesdeUI(meta)(campo, valor as string);
 
@@ -100,8 +98,6 @@ export function useModelo<T extends Modelo>(
         // const tipo = conversionTipo[tipoCampo] || tipoCampo;
         const tipo = (conversionTipo[tipoCampo as keyof typeof conversionTipo] || tipoCampo) as TipoInput;
         const valorUI = convertirCampoHaciaUI(meta)(campo, valor);
-
-        console.log('> UI campo', campo, 'valor', valor, 'valorUI', valorUI);
 
         return {
             nombre: campo,

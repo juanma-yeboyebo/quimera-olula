@@ -4,8 +4,15 @@ import { criteriaQuery } from "@olula/lib/infraestructura.ts";
 import ApiUrls from "../comun/urls.ts";
 import { Accion } from "./diseño.ts";
 
+type AccionAPI = Accion & { fecha: string };
+
+const accionDesdeAPI = (accionAPI: AccionAPI): Accion => ({
+    ...accionAPI,
+    fecha: new Date(Date.parse(accionAPI.fecha))
+})
+
 export const getAccion = async (id: string): Promise<Accion> =>
-    await RestAPI.get<{ datos: Accion }>(`${new ApiUrls().ACCION}/${id}`).then((respuesta) => respuesta.datos);
+    await RestAPI.get<{ datos: AccionAPI }>(`${new ApiUrls().ACCION}/${id}`).then((respuesta) => accionDesdeAPI(respuesta.datos));
 
 export const getAcciones = async (
     filtro: Filtro,
@@ -13,11 +20,18 @@ export const getAcciones = async (
     paginacion: Paginacion
 ): RespuestaLista<Accion> => {
     const q = criteriaQuery(filtro, orden, paginacion);
-    return await RestAPI.get<{ datos: Accion[]; total: number }>(new ApiUrls().ACCION + q);
+
+    const respuesta = await RestAPI.get<{ datos: AccionAPI[]; total: number }>(new ApiUrls().ACCION + q);
+    return { datos: respuesta.datos.map(accionDesdeAPI), total: respuesta.total };
 };
 
 export const postAccion = async (accion: Partial<Accion>): Promise<string> => {
-    return await RestAPI.post(new ApiUrls().ACCION, accion, "Error al guardar acción").then((respuesta) => respuesta.id);
+    const body = {
+        ...accion,
+        fecha: accion.fecha?.toISOString().slice(0, 10)
+    };
+
+    return await RestAPI.post(new ApiUrls().ACCION, body, "Error al guardar acción").then((respuesta) => respuesta.id);
 };
 
 export const patchAccion = async (id: string, accion: Partial<Accion>): Promise<void> => {
