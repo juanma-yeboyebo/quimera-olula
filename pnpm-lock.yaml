@@ -111,6 +111,10 @@ importers:
       quimera:
         specifier: workspace:@quimera/core@*
         version: link:../../legacy/libs/core
+    devDependencies:
+      baseline-browser-mapping:
+        specifier: ^2.9.19
+        version: 2.9.19
 
   apps/ecofricalia:
     dependencies:
@@ -4015,6 +4019,10 @@ packages:
   baseline-browser-mapping@2.10.0:
     resolution: {integrity: sha512-lIyg0szRfYbiy67j9KN8IyeD7q7hcmqnJ1ddWmNt19ItGpNN64mnllmxUNFIOdOm6by97jlL6wfpTTJrmnjWAA==}
     engines: {node: '>=6.0.0'}
+    hasBin: true
+
+  baseline-browser-mapping@2.9.19:
+    resolution: {integrity: sha512-ipDqC8FrAl/76p2SSWKSI+H9tFwm7vYqXQrItCuiVPt26Km0jS+NzSsBWAaBusvSbQcfJG+JitdMm+wZAgTYqg==}
     hasBin: true
 
   binary-search-bounds@2.0.5:
@@ -8766,6 +8774,8 @@ snapshots:
   base64-arraybuffer@1.0.2: {}
 
   baseline-browser-mapping@2.10.0: {}
+
+  baseline-browser-mapping@2.9.19: {}
 
   binary-search-bounds@2.0.5: {}
 
