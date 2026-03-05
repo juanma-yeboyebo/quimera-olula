@@ -2,6 +2,11 @@
     "extends": "../../tsconfig.app.json",
     "compilerOptions": {
         "baseUrl": "./src",
+        "ignoreDeprecations": "6.0",
+        "types": [
+            "node",
+            "vitest"
+        ],
         "paths": {
             "#/*": [
                 "../node_modules/@olula/ctx/src/*"

@@ -15,6 +15,7 @@ const environment = {
     return tk ? `Token ${tk}` : false;
   },
   renderHeader: false,
+  loginType: "elganso_stores",
 };
 
 const LegacyAppComp = (

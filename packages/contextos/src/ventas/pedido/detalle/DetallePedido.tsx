@@ -7,11 +7,7 @@ import { QuimeraAcciones } from "@olula/componentes/index.js";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { FactoryCtx } from "@olula/lib/factory_ctx.js";
 import { useModelo } from "@olula/lib/useModelo.js";
-<<<<<<< HEAD
 import { useCallback, useContext, useEffect } from "react";
-=======
-import { useCallback, useEffect } from "react";
->>>>>>> 43321f5b9316761987b14512367ab287753a0a69
 import { useNavigate, useParams } from "react-router";
 import { BorrarPedido } from "../borrar/BorrarPedido.tsx";
 import { Pedido } from "../diseño.ts";
@@ -68,26 +64,25 @@ export const DetallePedidoBase = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pedidoId]);
 
-  
   const { estado, lineaActiva } = ctx;
-  
+
   const titulo = (pedido: Pedido) => pedido.codigo || "Nuevo Pedido";
-  
+
   const handleGuardar = useCallback(() => {
     emitir("edicion_de_pedido_lista", pedido.modelo);
   }, [emitir, pedido]);
-  
+
   const handleCancelar = useCallback(() => {
     emitir("edicion_de_pedido_cancelada");
   }, [emitir]);
-  
+
   const handleAlbaranar = useCallback(() => {
     const id = ctx.pedido.id ?? params.id;
     if (id) navigate(`/ventas/albaranar-pedido/${id}`);
   }, [navigate, ctx.pedido, params.id]);
-  
+
   if (!ctx.pedido.id) return;
-  
+
   const acciones = [
     {
       texto: "Albaranar",
@@ -110,9 +105,7 @@ export const DetallePedidoBase = ({
       entidad={ctx.pedido}
       cerrarDetalle={() => emitir("pedido_deseleccionado", null)}
     >
-      {editable(ctx.pedido) && (
-        <QuimeraAcciones acciones={acciones} vertical />
-      )}
+      {editable(ctx.pedido) && <QuimeraAcciones acciones={acciones} vertical />}
 
       <Tabs>
         <Tab label="Cliente">
