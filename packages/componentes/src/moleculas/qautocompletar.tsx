@@ -4,7 +4,10 @@ import { QInput } from "../atomos/qinput.tsx";
 
 type Opcion = { valor: string; descripcion: string };
 
-export type QAutocompletarProps = Omit<FormFieldProps, "onChange" | "onBlur"> & {
+export type QAutocompletarProps = Omit<
+  FormFieldProps,
+  "onChange" | "onBlur"
+> & {
   tiempoEspera?: number;
   longitudMinima?: number;
   descripcion?: string;
@@ -37,7 +40,9 @@ export const QAutocompletar = ({
   const [valorDescrito, setValorDescrito] = useState<string>("");
 
   const valorReal = useRef<HTMLInputElement>(null);
-  const temporizador = useRef<number | undefined>(undefined);
+  const temporizador = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  );
 
   const renderOpciones = opciones.map((opcion) => (
     <option key={opcion.valor} value={opcion.descripcion}>

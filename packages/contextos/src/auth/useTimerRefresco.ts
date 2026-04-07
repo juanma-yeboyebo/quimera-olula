@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { comprobarToken } from "./login/dominio.ts";
 
 export const useTimerRefresco = ({ segundos_refresco = 60 }: { segundos_refresco?: number } = {}) => {
-    const timerRef = useRef<number | null>(null);
+    const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
     useEffect(() => {
         timerRef.current = setInterval(async () => {
