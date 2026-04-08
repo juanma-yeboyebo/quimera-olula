@@ -1,8 +1,18 @@
 import { FactoryAuthOlula } from "#/auth/factory.ts";
+import { CabeceraSanhigia } from "./componentes/CabeceraSanhigia";
+import { ExtraLogoSanhigia } from "./componentes/ExtraLogoSanhigia";
+import { MenuUsuarioSanhigia } from "./componentes/MenuUsuarioSanhigia";
 import { FactoryAlmacenLegacy } from "./contextos/almacen/factory.ts";
 import { FactoryInformesLegacy } from "./contextos/informes/factory.ts";
 import { FactorySmartsalesLegacy } from "./contextos/smartsales/factory.ts";
 import { FactoryVentasLegacy } from "./contextos/ventas/factory.ts";
+
+class FactoryComponentesSanhigia {
+    static cabecera = CabeceraSanhigia;
+    // static cabecera_acciones = AccionesCabeceraSanhigia;
+    static cabecera_menu_usuario = MenuUsuarioSanhigia;
+    static cabecera_extra_logo = ExtraLogoSanhigia;
+}
 
 export class FactoryLegacy {
     Almacen = FactoryAlmacenLegacy;
@@ -10,6 +20,7 @@ export class FactoryLegacy {
     Informes = FactoryInformesLegacy;
     Smartsales = FactorySmartsalesLegacy;
     Auth = FactoryAuthOlula;
+    Componentes = FactoryComponentesSanhigia;
 }
 
 export default FactoryLegacy;
