@@ -88,7 +88,7 @@ function ListItemLinea({ selected = false, funPrimaryLeft, funPrimaryRight, hide
                   variant="body2"
                   color="textPrimary"
                 >{`${linea.referencia}`}</Typography>
-                {linea.canServida < linea.cantidad && <Chip label={`${linea.canServida}/${linea.cantidad}`} size="small" className={classes.chipServidoParcial} />}
+                {linea.canServida > 0 && linea.canServida < linea.cantidad && <Chip label={`${linea.canServida}/${linea.cantidad}`} size="small" className={classes.chipServidoParcial} />}
               </Box>
               <Box display="inline">
                 <Typography component="span" variant="body2" color="textPrimary">{`${linea.cantidad
