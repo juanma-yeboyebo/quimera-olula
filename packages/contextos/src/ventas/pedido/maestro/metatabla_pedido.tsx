@@ -37,6 +37,7 @@ const metaTablaPedido: MetaTabla<Pedido> = [
   {
     id: "nombre_cliente",
     cabecera: "Cliente",
+    render: (p) => p.cliente.nombre_cliente,
   },
   {
     id: "total",

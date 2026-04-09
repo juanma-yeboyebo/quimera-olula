@@ -8,6 +8,7 @@ import {
     borrarPedido,
     cambiarCantidadLinea,
     cambiarCliente,
+    cambiarDescuento,
     cambiarLinea,
     cambiarPedido,
     cancelarCambioPedido,
@@ -43,6 +44,8 @@ export const getMaquina = (): Maquina<EstadoPedido, ContextoPedido> => {
             borrar_solicitado: "BORRANDO_PEDIDO",
 
             cambio_cliente_solicitado: "CAMBIANDO_CLIENTE",
+
+            descuento_solicitado: "CAMBIANDO_DESCUENTO",
 
             pedido_cargado: [abiertoOServido],
 
@@ -86,6 +89,13 @@ export const getMaquina = (): Maquina<EstadoPedido, ContextoPedido> => {
             cambio_cliente_listo: cambiarCliente,
 
             cambio_cliente_cancelado: "ABIERTO",
+        },
+
+        CAMBIANDO_DESCUENTO: {
+
+            descuento_aplicado: [cambiarDescuento],
+
+            descuento_cancelado: "ABIERTO",
         },
 
         CREANDO_LINEA: {

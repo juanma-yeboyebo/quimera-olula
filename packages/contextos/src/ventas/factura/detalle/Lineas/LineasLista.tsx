@@ -1,4 +1,5 @@
-import { QTabla } from "@olula/componentes/atomos/qtabla.tsx";
+import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiControlado.tsx";
+import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { LineaFactura as Linea } from "../../diseño.ts";
 import { EditarCantidadLinea } from "./EditarCantidadLinea.tsx";
 
@@ -16,21 +17,22 @@ export const LineasLista = ({
   publicar: (evento: string, payload?: unknown) => void;
 }) => {
   const setSeleccionada = (linea: Linea) => {
+    if (!facturaEditable) return;
     publicar("linea_seleccionada", linea);
   };
 
   return (
-    <>
-      <QTabla
-        metaTabla={getMetaTablaLineas(onCambioCantidad, facturaEditable)}
-        datos={lineas}
-        cargando={false}
-        seleccionadaId={seleccionada}
-        onSeleccion={setSeleccionada}
-        orden={["id", "ASC"]}
-        onOrdenar={(_: string) => null}
-      />
-    </>
+    <ListadoSemiControlado
+      metaTabla={getMetaTablaLineas(onCambioCantidad, facturaEditable)}
+      entidades={lineas}
+      totalEntidades={lineas.length}
+      cargando={false}
+      seleccionada={lineas.find((linea) => linea.id === seleccionada) ?? null}
+      onSeleccion={setSeleccionada}
+      criteriaInicial={criteriaDefecto}
+      onCriteriaChanged={() => null}
+      modo="tabla"
+    />
   );
 };
 

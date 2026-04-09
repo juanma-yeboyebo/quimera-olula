@@ -2,11 +2,14 @@ import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
 import { Tab, Tabs } from "@olula/componentes/detalle/tabs/Tabs.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
+import { QuimeraAcciones } from "@olula/componentes/moleculas/qacciones.tsx";
+import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useModelo } from "@olula/lib/useModelo.js";
 import { useCallback, useEffect } from "react";
 import { useParams } from "react-router";
 import { BorrarCliente } from "../borrar/BorrarCliente.tsx";
+import { BajaCliente } from "../dar_de_baja/BajaCliente.tsx";
 import { Cliente } from "../diseño.ts";
 import { TabCrmContactos } from "./CRMContactos/TabCrmContactos.tsx";
 import { TabCuentasBanco } from "./CuentasBanco/TabCuentasBanco.tsx";
@@ -71,9 +74,30 @@ export const DetalleCliente = ({
         {!!ctx.cliente.id && (
           <div className="DetalleCliente-contenido">
             <div className="maestro-botones">
-              <QBoton onClick={() => emitir("borrado_solicitado")}>
-                Borrar
-              </QBoton>
+              <QuimeraAcciones
+                acciones={[
+                  {
+                    icono: "eliminar",
+                    texto: "Borrar",
+                    onClick: () => emitir("borrado_solicitado"),
+                    advertencia: true,
+                  },
+                  ...(!ctx.cliente.de_baja
+                    ? [
+                        {
+                          texto: "Dar de baja",
+                          onClick: () => emitir("baja_solicitada"),
+                        },
+                      ]
+                    : [
+                        {
+                          texto: "Dar de alta",
+                          onClick: () => emitir("dar_de_alta_solicitado"),
+                        },
+                      ]),
+                ]}
+                vertical
+              />
             </div>
             <Tabs
               children={[
@@ -88,7 +112,6 @@ export const DetalleCliente = ({
                       recargarCliente={() =>
                         emitir("cliente_id_cambiado", ctx.cliente.id)
                       }
-                      estado={estado}
                     />
                   }
                 />,
@@ -150,6 +173,15 @@ export const DetalleCliente = ({
                 onCancelar={() => emitir("borrado_cancelado")}
               />
             )}
+
+            <QModal
+              nombre="modal-baja"
+              abierto={estado === "BAJANDO_CLIENTE"}
+              onCerrar={() => emitir("baja_cancelada")}
+            >
+              <h2>Dar de baja</h2>
+              <BajaCliente clienteId={ctx.cliente.id} publicar={emitir} />
+            </QModal>
           </div>
         )}
       </Detalle>

@@ -1,23 +1,64 @@
 .totales-venta {
     margin-top: 1rem;
+    margin-inline: var(--padding-horizontal);
     padding: 1rem;
+    box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 8px;
-    background-color: #f9f9f9;
+    background-color: var(--color-superficie-elevada);
     margin-bottom: 1rem;
     display: flex;
     flex-direction: row;
-    gap: 0.5rem;
+    gap: 1rem;
+    align-items: baseline;
     justify-content: flex-end;
+    min-width: 0;
 }
 
 .totales-venta-item {
     display: flex;
     align-items: baseline;
     justify-content: flex-end;
+    min-width: 0;
 }
 
 .totales-venta-item label {
     font-weight: bold;
     margin-right: 0.5rem;
+    white-space: nowrap;
+}
+
+.totales-venta-item span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 768px) {
+    .totales-venta {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.4rem;
+        padding: 0.6rem;
+    }
+
+    .totales-venta-item {
+        flex: 1 1 0;
+        justify-content: center;
+        align-items: baseline;
+        min-width: 0;
+        font-size: clamp(0.90rem, 2.8vw, 0.95rem);
+        white-space: nowrap;
+    }
+
+    .totales-venta-item label {
+        margin-right: 0.25rem;
+        font-size: inherit;
+    }
+
+    .totales-venta-item span {
+        font-size: inherit;
+        white-space: nowrap;
+        overflow-wrap: normal;
+    }
 }

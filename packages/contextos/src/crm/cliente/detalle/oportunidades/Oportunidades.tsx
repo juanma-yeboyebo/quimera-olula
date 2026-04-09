@@ -3,8 +3,9 @@ import { nuevaOportunidadVentaVacia } from "#/crm/oportunidadventa/crear/crear.t
 import { CrearOportunidadVenta } from "#/crm/oportunidadventa/crear/CrearOportunidadVenta.tsx";
 import { OportunidadVenta } from "#/crm/oportunidadventa/diseño.ts";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
-import { QTabla } from "@olula/componentes/atomos/qtabla.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
+import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiControlado.tsx";
+import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { listaEntidadesInicial } from "@olula/lib/ListaEntidades.js";
 import { HookModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useEffect, useState } from "react";
@@ -69,16 +70,17 @@ export const Oportunidades = ({
         />
       )}
 
-      <QTabla
+      <ListadoSemiControlado
         metaTabla={metaTablaOportunidades}
-        datos={ctx.oportunidades.lista}
+        entidades={ctx.oportunidades.lista}
+        totalEntidades={ctx.oportunidades.lista.length}
         cargando={cargando}
-        seleccionadaId={ctx.oportunidades.activo?.id}
+        seleccionada={ctx.oportunidades.activo ?? null}
         onSeleccion={(oportunidad) =>
           emitir("oportunidad_seleccionada", oportunidad)
         }
-        orden={["id", "ASC"]}
-        onOrdenar={() => null}
+        criteriaInicial={criteriaDefecto}
+        onCriteriaChanged={() => null}
       />
     </div>
   );

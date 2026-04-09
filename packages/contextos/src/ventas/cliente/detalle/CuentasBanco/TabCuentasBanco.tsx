@@ -1,4 +1,3 @@
-import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
 import { QuimeraAcciones } from "@olula/componentes/index.js";
 import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
@@ -41,14 +40,16 @@ export const TabCuentasBanco = ({
 
   const acciones = [
     {
-      texto: "Editar",
-      onClick: () => ctx.cuentas.activo && emitir("edicion_solicitada"),
-      deshabilitado: !ctx.cuentas.activo,
+      texto: "Nueva",
+      onClick: () => emitir("alta_solicitada"),
     },
     {
-      icono: "eliminar",
-      texto: "Borrar",
-      onClick: () => emitir("borrado_solicitado"),
+      texto: "Desmarcar domiciliación",
+      onClick: () => emitir("desmarcar_domiciliacion"),
+    },
+    {
+      texto: "Editar",
+      onClick: () => ctx.cuentas.activo && emitir("edicion_solicitada"),
       deshabilitado: !ctx.cuentas.activo,
     },
     {
@@ -57,8 +58,11 @@ export const TabCuentasBanco = ({
       deshabilitado: !ctx.cuentas.activo,
     },
     {
-      texto: "Desmarcar domiciliación",
-      onClick: () => emitir("desmarcar_domiciliacion"),
+      icono: "eliminar",
+      texto: "Borrar",
+      advertencia: true,
+      onClick: () => emitir("borrado_solicitado"),
+      deshabilitado: !ctx.cuentas.activo,
     },
   ];
 
@@ -66,7 +70,6 @@ export const TabCuentasBanco = ({
     <div className="CuentasBanco">
       <>
         <div className="detalle-cliente-tab-contenido maestro-botones">
-          <QBoton onClick={() => emitir("alta_solicitada")}>Nueva</QBoton>
           <QuimeraAcciones acciones={acciones} vertical />
         </div>
         <TabCuentasBancoLista

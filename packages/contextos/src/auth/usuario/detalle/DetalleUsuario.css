@@ -34,7 +34,7 @@ quimera-modal[nombre="generarToken"] {
     }
 
     quimera-textarea[nombre="token"] textarea {
-        font-size: 0.9em;
+        font-size: var(--tamaño-letra-m);
         height: 100px;
     }
 }
@@ -51,7 +51,7 @@ quimera-modal[nombre="generarToken"] {
 
 .token-textarea {
     width: 100%;
-    font-size: 0.9em;
+    font-size: var(--tamaño-letra-m);
     height: 100px;
     margin-top: 12px;
     border: none;

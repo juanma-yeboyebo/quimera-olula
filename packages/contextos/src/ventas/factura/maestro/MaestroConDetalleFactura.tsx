@@ -52,12 +52,15 @@ export const MaestroConDetalleFactura = () => {
               onCriteriaChanged={(payload) =>
                 emitir("criteria_cambiado", payload)
               }
+              onSiguientePagina={(payload) =>
+                emitir("siguiente_pagina", payload)
+              }
             />
           </>
         }
         Detalle={<DetalleFactura id={ctx.facturas.activo} publicar={emitir} />}
         seleccionada={ctx.facturas.activo}
-        modoDisposicion="maestro-50"
+        // modoDisposicion="maestro-50"
       />
 
       {ctx.estado === "CREANDO_FACTURA" && (

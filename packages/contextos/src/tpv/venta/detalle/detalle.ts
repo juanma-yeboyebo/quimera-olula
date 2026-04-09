@@ -5,7 +5,7 @@ import { ProcesarContexto } from "@olula/lib/diseño.js";
 import { accionesListaEntidades, ListaEntidades, ProcesarListaEntidades } from "@olula/lib/ListaEntidades.js";
 import { CambioClienteFactura, LineaFactura, PagoVentaTpv, VentaTpv } from "../diseño.ts";
 import { ventaTpvVacia } from "../dominio.ts";
-import { getLineas, getPagos, getVenta, patchFechaVenta, patchVenta, postEmitirVale, postLineaPorBarcode } from "../infraestructura.ts";
+import { getLineas, getPagos, getVenta, patchCambiarDescuento, patchFechaVenta, patchVenta, postEmitirVale, postLineaPorBarcode } from "../infraestructura.ts";
 
 
 export const cambioClienteFacturaVacio: CambioClienteFactura = cambioClienteVentaVacio;
@@ -18,7 +18,7 @@ export type EstadoVentaTpv = (
     'INICIAL' | "ABIERTA" | "EMITIDA"
     | "BORRANDO_VENTA"
     | "PAGANDO_EN_EFECTIVO" | "PAGANDO_CON_TARJETA" | "PAGANDO_CON_VALE"
-    | "BORRANDO_PAGO" | "CAMBIANDO_CLIENTE"
+    | "BORRANDO_PAGO" | "CAMBIANDO_CLIENTE" | "CAMBIANDO_DESCUENTO"
     | "CREANDO_LINEA" | "BORRANDO_LINEA" | "CAMBIANDO_LINEA"
     | "DEVOLVIENDO_VENTA"
 );
@@ -283,6 +283,16 @@ export const onLineaBorrada: ProcesarVentaTpv = async (contexto, payload) => {
         refrescarCabecera,
         refrescarLineas,
         activarLineaPorIndice(indiceLineaActiva),
+        'ABIERTA',
+    ]);
+}
+
+export const cambiarDescuento: ProcesarVentaTpv = async (contexto, payload) => {
+    const { dto_porcentual } = payload as { dto_porcentual: number };
+    await patchCambiarDescuento(contexto.venta.id, dto_porcentual);
+
+    return pipeVentaTpv(contexto, [
+        refrescarCabecera,
         'ABIERTA',
     ]);
 }

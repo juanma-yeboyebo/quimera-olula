@@ -20,7 +20,7 @@
             border: 1px solid var(--gris-6);
             border-radius: 15px;
             padding: 2px 2px;
-            font-size: 16px;
+            font-size: var(--tamaño-letra-m);
             cursor: pointer;
             color: var(--gris-6);
             transition: background-color 0.3s, transform 0.3s, border-color 0.3s;

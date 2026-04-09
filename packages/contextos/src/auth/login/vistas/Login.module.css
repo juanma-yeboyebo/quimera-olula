@@ -26,13 +26,13 @@
     h1 {
         background: var(--color-texto-primario);
         padding: var(--espaciado-m);
-        color: #fff;
+        color: var(--blanco);
         text-align: center;
     }
 }
 
 .loginForm {
-    background: #fff;
+    background: var(--color-superficie);
     padding: var(--espaciado-m);
 
     & p {

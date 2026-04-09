@@ -68,3 +68,8 @@
 .tarjeta-linea-total {
     font-weight: 600;
 }
+
+.tarjeta-linea-cantidad-envases {
+    font-size: 0.875rem;
+    color: var(--color-texto-secundario, #666);
+}

@@ -51,8 +51,8 @@ export function Detalle<T extends Entidad>({
     <div className={`${detalle} ${className || ""}`.trim()}>
       {" "}
       {obtenerTitulo && (
-        <h2>
-          <span>{obtenerTitulo(entidad)}</span>
+        <div className={estilos["detalle-cabecera"]}>
+          <h2>{obtenerTitulo(entidad)}</h2>
           {cerrarDetalle && (
             <QBoton
               onClick={cerrarDetalle}
@@ -63,7 +63,7 @@ export function Detalle<T extends Entidad>({
               <QIcono nombre="cerrar" tamaño="sm" />
             </QBoton>
           )}
-        </h2>
+        </div>
       )}
       {children}
     </div>

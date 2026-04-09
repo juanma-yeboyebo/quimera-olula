@@ -11,6 +11,7 @@ import {
     getLineas,
     patchAlbaran,
     patchCambiarCliente,
+    patchCambiarDescuento,
     patchCantidadLinea
 } from "../infraestructura.ts";
 import { ContextoAlbaran, EstadoAlbaran } from "./diseño.ts";
@@ -140,6 +141,17 @@ export const borrarAlbaran: ProcesarAlbaran = async (contexto) => {
 export const cambiarCliente: ProcesarAlbaran = async (contexto, payload) => {
     const cambio = payload as CambioClienteAlbaran;
     await patchCambiarCliente(contexto.albaran.id, cambio);
+
+    return pipeAlbaran(contexto, [
+        refrescarAlbaran,
+        refrescarLineas,
+        'ABIERTO',
+    ]);
+}
+
+export const cambiarDescuento: ProcesarAlbaran = async (contexto, payload) => {
+    const { dto_porcentual } = payload as { dto_porcentual: number };
+    await patchCambiarDescuento(contexto.albaran.id, dto_porcentual);
 
     return pipeAlbaran(contexto, [
         refrescarAlbaran,

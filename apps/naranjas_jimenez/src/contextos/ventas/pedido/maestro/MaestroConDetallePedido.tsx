@@ -8,7 +8,7 @@ import { Listado } from "@olula/componentes/maestro/Listado.js";
 import { MaestroDetalle } from "@olula/componentes/maestro/MaestroDetalle.tsx";
 import { useEsMovil } from "@olula/componentes/maestro/useEsMovil.js";
 import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
-import { MetaFiltro } from "@olula/componentes/maestro/maestroFiltros/MaestroFiltrosActivoControlado.js";
+import { filtroFechas, MetaFiltro } from "@olula/componentes/maestro/maestroFiltros/MaestroFiltrosActivoControlado.js";
 import { ClausulaFiltro } from "@olula/lib/diseño.ts";
 import { criteriaDefecto, formatearFechaDate } from "@olula/lib/dominio.js";
 import { listaActivaEntidadesInicial } from "@olula/lib/ListaActivaEntidades.js";
@@ -38,14 +38,7 @@ const metaFiltroPedidoNrj: MetaFiltro = {
     id: "fecha",
     label: "Fecha",
     tipo: "intervalo_fechas",
-    filtro: (v) => {
-      const [desde, hasta] = v as [Date | undefined, Date | undefined];
-      if (desde && hasta)
-        return ["fecha", "<>", `${desde.toISOString().slice(0, 10)}_${hasta.toISOString().slice(0, 10)}`];
-      if (desde) return ["fecha", ">=", desde.toISOString().slice(0, 10)];
-      if (hasta) return ["fecha", "<=", hasta.toISOString().slice(0, 10)];
-      return null;
-    },
+    filtro: (v) => filtroFechas("fecha", v),
   },
   cliente_id: {
     id: "cliente_id",

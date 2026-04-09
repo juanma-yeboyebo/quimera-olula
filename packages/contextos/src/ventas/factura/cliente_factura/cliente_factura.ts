@@ -1,4 +1,4 @@
-import { Venta } from "#/ventas/venta/diseño.ts";
+import { VentaTpv } from "#/tpv/venta/diseño.ts";
 import { Modelo } from "@olula/lib/diseño.js";
 import { MetaModelo } from "@olula/lib/dominio.js";
 
@@ -12,12 +12,12 @@ export const clienteFacturaRegistradoVacio: ModeloClienteFacturaRegistrado = {
     nombre: "",
 }
 
-export const clienteRegistradoDesdeFactura = (venta?: Venta): ModeloClienteFacturaRegistrado => {
+export const clienteRegistradoDesdeFactura = (venta?: VentaTpv): ModeloClienteFacturaRegistrado => {
 
-    return venta && venta.cliente_id
+    return venta && venta.cliente?.id
         ? {
-            idCliente: venta.cliente_id,
-            nombre: venta.nombre_cliente,
+            idCliente: venta.cliente.id,
+            nombre: venta.cliente.nombre,
         }
         : clienteFacturaRegistradoVacio;
 }

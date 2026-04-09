@@ -1,6 +1,6 @@
 .TabCliente .CambioCliente {
     quimera-autocompletar[nombre="cliente_id_cambio"] {
-        grid-column: span 12;
+        grid-column: 1 / span 8;
     }
 
     quimera-input[nombre="nombre_cliente"] {
@@ -20,6 +20,6 @@
     }
 
     quimera-input[nombre="id_fiscal"] {
-        grid-column: 1 / span 4;
+        grid-column: span 4;
     }
 }

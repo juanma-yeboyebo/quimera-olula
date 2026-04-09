@@ -38,7 +38,7 @@ export const ClienteVentaTpv = ({
     // );
 
     const [tipoCliente, setTipoCliente] = useState<"registrado" | "simplificada">(
-        venta.cliente_id
+        venta.cliente?.id
             ? "registrado"
             : "simplificada"
     );

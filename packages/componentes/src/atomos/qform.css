@@ -1,6 +1,7 @@
 quimera-formulario {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
+    /* gap: var(--espaciado-l) var(--espaciado-xl); */
     /* grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); */
     gap: var(--gap-formulario);
     place-items: stretch;

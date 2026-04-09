@@ -1,0 +1,44 @@
+name: Build Cliente (Offline Package)
+
+on:
+  push:
+    branches:
+      - deploy_<cliente>
+
+jobs:
+  build_and_package:
+    environment: <cliente>-prod
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar pnpm
+        run: npm install -g pnpm
+
+      - name: Instalar dependencias
+        run: pnpm install
+
+      - name: Crear env de producción
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_LEGACY_API_URL: ${{ secrets.VITE_LEGACY_API_URL }}
+        run: |
+          set -e
+          echo "VITE_API_URL=${VITE_API_URL}" > apps/<app>/.env.production
+
+          if [ -n "${VITE_LEGACY_API_URL}" ]; then
+            echo "VITE_LEGACY_API_URL=${VITE_LEGACY_API_URL}" >> apps/<app>/.env.production
+          fi
+
+      - name: Build app
+        run: pnpm run --filter @olula/<app> build
+
+      - name: Adjuntar artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: <cliente>-<app>-${{ github.sha }}
+          path: apps/<app>/dist/
+          retention-days: 30

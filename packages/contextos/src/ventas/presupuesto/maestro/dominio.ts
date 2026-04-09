@@ -15,3 +15,10 @@ export const recargarPresupuestos: ProcesarPresupuestos = async (contexto, paylo
 
     return Presupuestos.recargar(contexto, resultado);
 }
+
+export const ampliarPresupuestos: ProcesarPresupuestos = async (contexto, payload) => {
+    const criteria = payload as Criteria;
+    const resultado = await getPresupuestos(criteria.filtro, criteria.orden, criteria.paginacion);
+
+    return Presupuestos.ampliar(contexto, resultado);
+}

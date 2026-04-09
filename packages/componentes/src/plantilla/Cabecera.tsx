@@ -27,7 +27,7 @@ export const CabeceraBase = ({
 
   return (
     <>
-      <header>
+      <header className="cabecera-principal">
         <button
           id="boton-menu-lateral"
           aria-label="Abrir menú lateral"

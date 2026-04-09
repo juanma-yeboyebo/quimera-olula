@@ -22,7 +22,9 @@ import { getMaquina } from "./maquina.ts";
 
 type Layout = "TABLA" | "TARJETA";
 
+
 export const MaestroConDetalleVentaTpv = () => {
+  
   const criteriaBaseVentas = useMemo(() => {
     return {
       ...criteriaDefecto,
@@ -120,8 +122,8 @@ const TarjetaVentaTpv = (venta: VentaTpv) => {
         />
         <div className="tarjeta-venta-izquierda-textos">
           <div>{`${venta.codigo} - ${formatearFechaDate(venta.fecha)}`}</div>
-          {venta.nombre_cliente !== "VENTA AL CONTADO" && (
-            <div>{venta.nombre_cliente}</div>
+          {venta.cliente?.nombre !== "VENTA AL CONTADO" && (
+            <div>{venta.cliente?.nombre}</div>
           )}
         </div>
       </div>

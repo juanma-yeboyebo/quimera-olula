@@ -1,5 +1,7 @@
-import { MetaTabla, QTabla } from "@olula/componentes/atomos/qtabla.tsx";
+import { MetaTabla } from "@olula/componentes/atomos/qtabla.tsx";
+import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiControlado.tsx";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
+import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { LineaFactura as Linea, LineaFactura } from "../../diseño.ts";
 
 export const LineasLista = ({
@@ -11,7 +13,6 @@ export const LineasLista = ({
   seleccionada?: string;
   publicar: EmitirEvento;
 }) => {
-  
   // const { intentar } = useContext(ContextoError);
 
   // const cambiarCantidad = async (linea: Linea, cantidad: number) => {
@@ -24,18 +25,17 @@ export const LineasLista = ({
   };
 
   return (
-    <>
-      <QTabla
-        // metaTabla={getMetaTablaLineas(cambiarCantidad)}
-        metaTabla={getMetaTablaLineas()}
-        datos={lineas}
-        cargando={false}
-        seleccionadaId={seleccionada}
-        onSeleccion={setSeleccionada}
-        orden={["id", "ASC"]}
-        onOrdenar={(_: string) => null}
-      />
-    </>
+    <ListadoSemiControlado
+      metaTabla={getMetaTablaLineas()}
+      entidades={lineas}
+      totalEntidades={lineas.length}
+      cargando={false}
+      seleccionada={lineas.find((linea) => linea.id === seleccionada) ?? null}
+      onSeleccion={setSeleccionada}
+      criteriaInicial={criteriaDefecto}
+      onCriteriaChanged={() => null}
+      modo="tabla"
+    />
   );
 };
 
@@ -72,23 +72,23 @@ export const LineaVenta = ({
 };
 
 const getMetaTablaLineas = () => {
-    const meta:MetaTabla<LineaFactura> = [
-        {
-            id: "linea",
-            cabecera: "Lineas",
-            render: (linea: Linea) => `${linea.referencia}: ${linea.descripcion}`
-        },
-        { id: "pvp_unitario", cabecera: "Precio", tipo: "moneda" },
-        { id: "cantidad", cabecera: "Cantidad", tipo: "numero" },
-        {
-            id: "dto_porcentual",
-            cabecera: "% Dto.",
-            tipo: "numero",
-            render: (linea: Linea) =>
-                linea.dto_porcentual ? `${linea.dto_porcentual}%` : "",
-        },
-        { id: "pvp_total", cabecera: "Total", tipo: "moneda" },
-    ];
+  const meta: MetaTabla<LineaFactura> = [
+    {
+      id: "linea",
+      cabecera: "Lineas",
+      render: (linea: Linea) => `${linea.referencia}: ${linea.descripcion}`,
+    },
+    { id: "pvp_unitario", cabecera: "Precio", tipo: "moneda" },
+    { id: "cantidad", cabecera: "Cantidad", tipo: "numero" },
+    {
+      id: "dto_porcentual",
+      cabecera: "% Dto.",
+      tipo: "numero",
+      render: (linea: Linea) =>
+        linea.dto_porcentual ? `${linea.dto_porcentual}%` : "",
+    },
+    { id: "pvp_total", cabecera: "Total", tipo: "moneda" },
+  ];
 
-    return meta;
+  return meta;
 };

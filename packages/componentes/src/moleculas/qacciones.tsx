@@ -10,6 +10,7 @@ export type Accion =
       onClick: () => void;
       deshabilitado?: boolean;
       variante?: "solido" | "borde" | "texto";
+      advertencia?: boolean;
     }
   | false;
 
@@ -39,6 +40,7 @@ export const QuimeraAcciones = ({
           key={accion.texto || accion.icono}
           onClick={accion.onClick}
           deshabilitado={accion.deshabilitado}
+          advertencia={accion.advertencia}
           variante={accion.deshabilitado ? accion.variante : "solido"}
         >
           {accion.texto}
@@ -49,9 +51,12 @@ export const QuimeraAcciones = ({
     }
   };
 
-  const renderItemsAcciones = (acciones: (Accion | false)[]) => {
+  const renderItemsAcciones = (
+    acciones: (Accion | false)[],
+    inline = false
+  ) => {
     return (
-      <div className="acciones">
+      <div className={inline ? "acciones acciones-inline" : "acciones"}>
         {acciones.map((accion: Accion) => renderItemAccion(accion))}
       </div>
     );
@@ -71,16 +76,22 @@ export const QuimeraAcciones = ({
   };
 
   const render = () => {
-    const accionesGenerales = acciones.filter(Boolean);
+    const accionesGenerales = acciones.filter((accion): accion is Accion =>
+      Boolean(accion)
+    );
 
     return (
       <quimera-acciones className={vertical === true ? "vertical" : ""}>
+        {accionesGenerales.length === 1 &&
+          renderItemAccion(accionesGenerales[0])}
         {accionesGenerales.length > 0 &&
+          accionesGenerales.length > 1 &&
           vertical === true &&
           renderAcciones(accionesGenerales)}
         {accionesGenerales.length > 0 &&
+          accionesGenerales.length > 1 &&
           vertical !== true &&
-          renderItemsAcciones(accionesGenerales)}
+          renderItemsAcciones(accionesGenerales, true)}
       </quimera-acciones>
     );
   };

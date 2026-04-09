@@ -1,4 +1,4 @@
-import { QBoton } from "@olula/componentes/index.ts";
+import { QuimeraAcciones } from "@olula/componentes/index.js";
 import { EmitirEvento } from "@olula/lib/diseño.js";
 import { BorrarLinea } from "../../borrar_linea/BorrarLinea.tsx";
 import { CrearLinea } from "../../crear_linea/CrearLinea.tsx";
@@ -17,6 +17,25 @@ export const Lineas = ({
   estadoPresupuesto: string;
   publicar: EmitirEvento;
 }) => {
+  const acciones = [
+    {
+      texto: "Nueva",
+      onClick: () => publicar("alta_linea_solicitada"),
+    },
+    {
+      texto: "Editar",
+      onClick: () => publicar("cambio_linea_solicitado"),
+      deshabilitado: !lineaActiva,
+    },
+    {
+      icono: "eliminar",
+      texto: "Borrar",
+      advertencia: true,
+      onClick: () => publicar("baja_linea_solicitada"),
+      deshabilitado: !lineaActiva,
+    },
+  ];
+
   const handleCambioCantidad = (linea: LineaPresupuesto, cantidad: number) => {
     publicar("cambio_cantidad_linea_solicitado", {
       lineaId: linea.id,
@@ -28,23 +47,7 @@ export const Lineas = ({
     <>
       {estadoPresupuesto === "ABIERTO" && !presupuesto.aprobado && (
         <div className="botones maestro-botones ">
-          <QBoton onClick={() => publicar("alta_linea_solicitada")}>
-            Nueva
-          </QBoton>
-
-          <QBoton
-            deshabilitado={!lineaActiva}
-            onClick={() => publicar("cambio_linea_solicitado")}
-          >
-            Editar
-          </QBoton>
-
-          <QBoton
-            deshabilitado={!lineaActiva}
-            onClick={() => publicar("baja_linea_solicitada")}
-          >
-            Borrar
-          </QBoton>
+          <QuimeraAcciones acciones={acciones} />
         </div>
       )}
 

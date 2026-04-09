@@ -9,6 +9,7 @@ import {
     borrarPresupuesto,
     cambiarCantidadLinea,
     cambiarCliente,
+    cambiarDescuento,
     cambiarDivisa,
     cambiarLinea,
     cambiarPresupuesto,
@@ -55,6 +56,8 @@ export const getMaquina: () => Maquina<EstadoPresupuesto, ContextoPresupuesto> =
             cambio_divisa_solicitado: "CAMBIANDO_DIVISA",
 
             cambio_cliente_solicitado: "CAMBIANDO_CLIENTE",
+
+            descuento_solicitado: "CAMBIANDO_DESCUENTO",
 
             presupuesto_cargado: [abiertoOAprobadoContexto],
 
@@ -112,6 +115,13 @@ export const getMaquina: () => Maquina<EstadoPresupuesto, ContextoPresupuesto> =
             cambio_cliente_listo: [cambiarCliente],
 
             cambio_cliente_cancelado: "ABIERTO",
+        },
+
+        CAMBIANDO_DESCUENTO: {
+
+            descuento_aplicado: [cambiarDescuento],
+
+            descuento_cancelado: "ABIERTO",
         },
 
         CREANDO_LINEA: {

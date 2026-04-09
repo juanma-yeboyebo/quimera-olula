@@ -1,6 +1,6 @@
 import { Direccion } from "@olula/lib/diseño.js";
 import { MetaCampo, MetaModelo } from "@olula/lib/dominio.ts";
-import { CambioClienteVenta, LineaVenta, NuevaLineaVenta, NuevaVenta, Venta } from "./diseño.ts";
+import { CambioClienteVenta, ClienteVenta, LineaVenta, NuevaLineaVenta, NuevaVenta, Venta } from "./diseño.ts";
 
 export const direccionVacia = (): Direccion => ({
     nombre_via: "",
@@ -16,20 +16,22 @@ export const direccionVacia = (): Direccion => ({
     telefono: "",
 });
 
+export const clienteVentaVacio: ClienteVenta = {
+    cliente_id: null,
+    nombre_cliente: '',
+    id_fiscal: '',
+    direccion_id: null,
+    direccion: direccionVacia(),
+}
+
 export const ventaVacia: Venta = {
     id: '',
     codigo: '',
     fecha: new Date(),
-    cliente_id: '',
-    nombre_cliente: '',
-    id_fiscal: '',
-    direccion_id: '',
-    direccion: direccionVacia(),
     agente_id: '',
     nombre_agente: '',
     divisa_id: '',
     tasa_conversion: 1,
-    aprobado: false,
     total: 0,
     total_divisa_empresa: 0,
     neto: 0,
@@ -39,6 +41,8 @@ export const ventaVacia: Venta = {
     nombre_forma_pago: '',
     grupo_iva_negocio_id: '',
     observaciones: '',
+    dtoPorcentual: 0,
+    netoSinDto: 0,
 }
 
 export const nuevaVentaVacia: NuevaVenta = {
@@ -62,8 +66,6 @@ export const metaVenta: MetaModelo<Venta> = {
         tasa_conversion: { tipo: "numero", requerido: false },
         total_divisa_empresa: { tipo: "numero", bloqueado: true },
         codigo: { bloqueado: true },
-        id_fiscal: { bloqueado: true, requerido: true },
-        cliente_id: { bloqueado: true, requerido: true },
         divisa_id: { requerido: true },
     },
 };

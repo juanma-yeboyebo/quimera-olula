@@ -1,17 +1,52 @@
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
-import { Filtro, Orden, Paginacion } from "@olula/lib/diseño.ts";
+import { Direccion, Filtro, Orden, Paginacion } from "@olula/lib/diseño.ts";
 import { criteriaQuery } from "@olula/lib/infraestructura.ts";
 import ApiUrls from "../comun/urls.ts";
-import { DeleteLinea, Factura, GetFactura, GetFacturas, GetLineasFactura, LineaFactura, PatchArticuloLinea, PatchCantidadLinea, PatchClienteFactura, PatchLinea, PostFactura, PostLinea } from "./diseño.ts";
+import { direccionVacia } from "../venta/dominio.ts";
+import { DeleteLinea, Factura, GetFactura, GetFacturas, GetLineasFactura, GetReportFactura, LineaFactura, PatchArticuloLinea, PatchCantidadLinea, PatchClienteFactura, PatchLinea, PostFactura, PostLinea } from "./diseño.ts";
 
 const baseUrl = new ApiUrls().FACTURA;
 
 type LineaFacturaAPI = LineaFactura;
 
-type FacturaAPI = Factura & { fecha: string };
+interface FacturaAPI {
+  id: string;
+  codigo: string;
+  fecha: string;
+  cliente_id: string;
+  nombre_cliente: string;
+  id_fiscal: string;
+  direccion_id: string;
+  direccion: Direccion;
+  agente_id: string;
+  nombre_agente: string;
+  divisa_id: string;
+  tasa_conversion: number;
+  total: number;
+  neto: number;
+  total_iva: number;
+  total_irpf: number;
+  total_divisa_empresa: number;
+  por_descuento: number;
+  neto_sin_dto: number;
+  forma_pago_id: string;
+  nombre_forma_pago: string;
+  grupo_iva_negocio_id: string;
+  observaciones: string;
+  editable?: boolean;
+}
 export const facturaDesdeAPI = (p: FacturaAPI): Factura => ({
   ...p,
   fecha: new Date(Date.parse(p.fecha)),
+  dtoPorcentual: p.por_descuento,
+  netoSinDto: p.neto_sin_dto,
+  cliente: {
+    cliente_id: p.cliente_id ?? null,
+    nombre_cliente: p.nombre_cliente ?? "",
+    id_fiscal: p.id_fiscal ?? "",
+    direccion_id: p.direccion_id ?? null,
+    direccion: p.direccion ?? direccionVacia(),
+  },
   lineas: [],
 });
 export const lineaFacturaFromAPI = (l: LineaFacturaAPI): LineaFactura => l;
@@ -35,6 +70,8 @@ export const getFacturas: GetFacturas = async (
   return { datos: respuesta.datos.map(facturaDesdeAPI), total: respuesta.total };
 };
 
+export const getReportFactura: GetReportFactura = async (id) =>
+  RestAPI.blob(`${baseUrl}/${id}/report`, "Error al obtener el report de la factura");
 
 export const postFactura: PostFactura = async (factura) => {
   const cliente = factura.cliente_id
@@ -146,10 +183,10 @@ export const patchFactura = async (id: string, factura: Factura) => {
         tasa_conversion: factura.tasa_conversion,
       },
       fecha: factura.fecha,
-      cliente_id: factura.cliente_id,
-      nombre_cliente: factura.nombre_cliente,
-      id_fiscal: factura.id_fiscal,
-      direccion_id: factura.direccion_id,
+      cliente_id: factura.cliente.cliente_id,
+      nombre_cliente: factura.cliente.nombre_cliente,
+      id_fiscal: factura.cliente.id_fiscal,
+      direccion_id: factura.cliente.direccion_id,
       forma_pago_id: factura.forma_pago_id,
       grupo_iva_negocio_id: factura.grupo_iva_negocio_id,
       observaciones: factura.observaciones,
@@ -164,3 +201,11 @@ export const patchFactura = async (id: string, factura: Factura) => {
 export const borrarFactura = async (id: string) => {
   await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar factura");
 }
+
+export const patchCambiarDescuento = async (id: string, dto_porcentual: number): Promise<void> => {
+  await RestAPI.patch(`${baseUrl}/${id}`, {
+    cambios: {
+      por_descuento: dto_porcentual,
+    }
+  }, "Error al cambiar descuento de la factura");
+};

@@ -36,12 +36,16 @@ quimera-checkbox {
             padding: var(--espaciado-xxs);
             font-size: var(--tamaño-letra-m);
             background-color: transparent;
+            transition: background-color var(--transicion-rapida),
+                        border-color var(--transicion-rapida),
+                        box-shadow var(--transicion-rapida);
 
             &:focus {
                 background-color: var(--color-focus);
-                border-color: transparent;
+                border-color: var(--color-primario);
                 border-radius: var(--redondeo-borde-xs);
                 color: var(--color-texto-primario);
+                box-shadow: 0 2px 0 0 var(--color-primario);
             }
 
             &::placeholder {

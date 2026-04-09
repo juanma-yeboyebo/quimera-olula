@@ -1,12 +1,19 @@
 import { CambioClienteVenta, LineaVenta, NuevaLineaVenta, Venta } from "#/ventas/venta/diseño.ts";
-import { Entidad, Filtro, Orden, Paginacion, RespuestaLista } from "@olula/lib/diseño.ts";
+import { Direccion, Entidad, Filtro, Orden, Paginacion, RespuestaLista } from "@olula/lib/diseño.ts";
 import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
 
+export interface ClienteVentaTpv {
+    id: string | null;
+    nombre: string;
+    idFiscal: string;
+    idDireccion: string | null;
+    direccion: Direccion;
+}
+
 export interface VentaTpv extends Venta {
+    cliente: ClienteVentaTpv | null;
     pendiente: number;
     pagado: number;
-    // lineas: LineaFactura[];
-    // pagos: PagoVentaTpv[];
     puntoVentaId: string;
     puntoVenta: string;
     agenteId: string;

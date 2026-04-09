@@ -9,9 +9,11 @@ import {
 } from "#/tpv/venta/infraestructura.ts";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
-import { MetaTabla, QModal, QTabla } from "@olula/componentes/index.js";
+import { MetaTabla, QModal } from "@olula/componentes/index.js";
+import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiControlado.tsx";
 import { ContextoError } from "@olula/lib/contexto.js";
 import { EmitirEvento } from "@olula/lib/diseño.js";
+import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { useFocus } from "@olula/lib/useFocus.js";
 import { useCallback, useContext, useState } from "react";
 import { CantidadADevolver } from "./CantidadADevolver.tsx";
@@ -92,14 +94,15 @@ export const DevolverVentaTpv = ({
         )}
 
         {ventaADevolver && (
-          <QTabla
+          <ListadoSemiControlado
             metaTabla={getMetaTablaLineas(cambiarCantidadADevolver)}
-            datos={ventaADevolver.lineas}
+            entidades={ventaADevolver.lineas}
+            totalEntidades={ventaADevolver.lineas.length}
             cargando={false}
-            seleccionadaId={undefined}
+            seleccionada={null}
             onSeleccion={() => null}
-            orden={["id", "ASC"]}
-            onOrdenar={(_: string) => null}
+            criteriaInicial={criteriaDefecto}
+            onCriteriaChanged={() => null}
           />
         )}
 

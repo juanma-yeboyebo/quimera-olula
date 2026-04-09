@@ -1,8 +1,8 @@
 import { Pedido } from "#/ventas/pedido/diseño.ts";
 import {
-  QBoton,
   QModalConfirmacion,
   QTarjetas,
+  QuimeraAcciones,
 } from "@olula/componentes/index.ts";
 import { Criteria, ListaSeleccionable } from "@olula/lib/diseño.js";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
@@ -34,17 +34,19 @@ export const Lineas = ({
   const esAlbaranadoCompletado = estado === "ALBARANADO_COMPLETADO";
 
   const habilitarBoton = puedeAlbaranar({ pedido, lineas });
+  const acciones = [
+    {
+      texto: "Generar Albaran",
+      onClick: () => publicar("albaranado_solicitado"),
+      deshabilitado: !habilitarBoton,
+    },
+  ];
 
   return (
     <div className="DetalleAlbaranarPedido">
       <div className="CabeceraPedido">
         <div className="botones maestro-botones ">
-          <QBoton
-            deshabilitado={!habilitarBoton}
-            onClick={() => publicar("albaranado_solicitado")}
-          >
-            Generar Albaran
-          </QBoton>
+          <QuimeraAcciones acciones={acciones} />
         </div>
       </div>
       <QTarjetas
@@ -89,4 +91,4 @@ export const Lineas = ({
 const criteria_tarjetas: Criteria = {
   ...criteriaDefecto,
   orden: ["id", "DESC"],
-}
+};

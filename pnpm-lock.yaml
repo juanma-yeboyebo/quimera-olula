@@ -164,6 +164,18 @@ importers:
         specifier: workspace:@quimera/core@*
         version: link:../../legacy/libs/core
 
+  apps/crema_cafe:
+    dependencies:
+      '@olula/componentes':
+        specifier: workspace:*
+        version: link:../../packages/componentes
+      '@olula/ctx':
+        specifier: workspace:*
+        version: link:../../packages/contextos
+      '@olula/lib':
+        specifier: workspace:*
+        version: link:../../packages/lib
+
   apps/ecofricalia:
     dependencies:
       '@olula/componentes':

@@ -2,6 +2,7 @@ import { Criteria, Entidad } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { MetaTabla } from "../atomos/qtabla.tsx";
 import { QTablaControlada } from "../atomos/qtablacontrolada.tsx";
+import { QTarjetaGenerica } from "../atomos/qtarjeta_generica.tsx";
 import { QTarjetas } from "../atomos/qtarjetas.tsx";
 import { SinDatos } from "../SinDatos/SinDatos.tsx";
 import "./Listado.css";
@@ -78,6 +79,26 @@ export const Listado = <T extends Entidad>({
       );
     }
 
+    if (modo == "tarjetas" && metaTabla) {
+      return (
+        <QTarjetas
+          tarjeta={(entidad: T) => (
+            <QTarjetaGenerica entidad={entidad} metaTabla={metaTabla} />
+          )}
+          datos={datos}
+          cargando={cargando}
+          seleccionadaId={seleccionada}
+          onSeleccion={(e: T) => onSeleccion(e.id)}
+          onPaginacion={(pagina, limite) => {
+            onCriteriaChanged({ ...criteria, paginacion: { pagina, limite } });
+          }}
+          totalEntidades={totalEntidades}
+          criteria={criteria}
+          onSiguientePagina={onSiguientePagina}
+        />
+      );
+    }
+
     if (modo == "tabla" && metaTabla) {
       return (
         <QTablaControlada
@@ -111,6 +132,18 @@ export const Listado = <T extends Entidad>({
 
   return (
     <div className="Listado">
+      {/* {tarjeta && metaTabla && (
+            <div className="cambio-modo">
+            <span
+                className="cambio-modo-icono"
+                onClick={() =>
+                    setModo && setModo(modo === "tabla" ? "tarjetas" : "tabla")
+                }
+            >
+                <QIcono nombre={modo === "tabla" ? "lista" : "tabla"} tamaño="md" />
+            </span>
+            </div>
+        )} */}
       <MaestroFiltrosActivoControlado
         metaFiltro={
           metaFiltro ?? getMetaFiltroDefecto(metaTabla as MetaTabla<T>)

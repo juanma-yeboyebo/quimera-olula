@@ -29,7 +29,7 @@ export const ClienteVenta = ({
     );
 
     const [tipoCliente, setTipoCliente] = useState<"registrado" | "no-registrado">(
-        venta.cliente_id
+        venta.cliente?.id
             ? "registrado"
             : "no-registrado"
     );

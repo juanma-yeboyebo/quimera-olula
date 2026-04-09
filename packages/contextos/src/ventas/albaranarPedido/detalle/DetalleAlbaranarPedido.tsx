@@ -35,7 +35,7 @@ export const DetalleAlbaranarPedido = () => {
     <div className="AlbaranarPedido">
       <div className="DetalleAlbaranarPedido">
         <h2>
-          Albaranar Pedido: {pedido.nombre_cliente} - {pedido.codigo}
+          Albaranar Pedido: {pedido.cliente.nombre_cliente} - {pedido.codigo}
         </h2>
         <Lineas
           pedido={pedido}

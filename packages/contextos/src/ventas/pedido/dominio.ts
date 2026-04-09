@@ -1,5 +1,5 @@
 import { MetaTabla } from "@olula/componentes/index.js";
-import { Direccion } from "@olula/lib/diseño.js";
+import { cambioClienteVentaVacio, clienteVentaVacio, nuevaVentaVacia, ventaVacia } from "../venta/dominio.ts";
 import { CambioClientePedido, NuevoPedido, Pedido } from "./diseño.ts";
 
 export const metaTablaPedido: MetaTabla<Pedido> = [
@@ -10,6 +10,7 @@ export const metaTablaPedido: MetaTabla<Pedido> = [
     {
         id: "nombre_cliente",
         cabecera: "Cliente",
+        render: (p) => p.cliente.nombre_cliente,
     },
     {
         id: "total",
@@ -18,34 +19,20 @@ export const metaTablaPedido: MetaTabla<Pedido> = [
     },
 ];
 
-export const direccionVacia = (): Direccion => ({
-    nombre_via: "",
-    tipo_via: "",
-    numero: "",
-    otros: "",
-    cod_postal: "",
-    ciudad: "",
-    provincia_id: 0,
-    provincia: "",
-    pais_id: "",
-    apartado: "",
-    telefono: "",
+export const pedidoVacio = (): Pedido => ({
+    ...ventaVacia,
+    cliente: clienteVentaVacio,
+    servido: 'No',
+    lineas: [],
 });
 
-export const nuevoClienteRegistradoVacio: NuevoPedido = {
-    cliente_id: "",
-    direccion_id: "",
-    empresa_id: "1",
-} as NuevoPedido;
+export const nuevoPedidoVacio: NuevoPedido = nuevaVentaVacia;
 
-export const cambioClienteVacio = (): CambioClientePedido => ({
-    cliente_id: "",
-    direccion_id: "",
-});
+export const cambioClientePedidoVacio: CambioClientePedido = cambioClienteVentaVacio;
 
 export const cambioCliente = (pedido: Pedido): CambioClientePedido => ({
-    cliente_id: pedido.cliente_id,
-    direccion_id: pedido.direccion_id,
+    cliente_id: pedido.cliente.cliente_id ?? "",
+    direccion_id: pedido.cliente.direccion_id ?? "",
 });
 
 

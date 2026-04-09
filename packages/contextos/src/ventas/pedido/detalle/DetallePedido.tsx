@@ -1,5 +1,5 @@
+import { CambiarDescuento } from "#/ventas/comun/componentes/moleculas/CambiarDescuento/CambiarDescuento.tsx";
 import { TotalesVenta } from "#/ventas/venta/vistas/TotalesVenta.tsx";
-import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
 import { Tab, Tabs } from "@olula/componentes/detalle/tabs/Tabs.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
@@ -32,7 +32,7 @@ export const DetallePedido = (props: DetallePedidoProps) => {
   const DetallePedido_ = app.Ventas
     .pedido_DetallePedido as typeof DetallePedidoBase;
 
-  return DetallePedido_(props);
+  return <DetallePedido_ {...props} />;
 };
 
 export const DetallePedidoBase = ({
@@ -55,6 +55,11 @@ export const DetallePedidoBase = ({
   );
 
   const pedido = useModelo(metaPedido, ctx.pedido);
+  const { valido } = pedido;
+
+  const modificadoFormulario = (
+    Object.keys(metaPedido.campos ?? {}) as Array<keyof Pedido>
+  ).some((campo) => pedido.modelo[campo] !== ctx.pedido[campo]);
 
   useEffect(() => {
     emitir("pedido_id_cambiado", pedidoId, true);
@@ -89,8 +94,22 @@ export const DetallePedidoBase = ({
     {
       icono: "eliminar",
       texto: "Borrar",
+      advertencia: true,
       onClick: () => emitir("borrar_solicitado"),
       deshabilitado: false,
+    },
+  ];
+
+  const accionesEdicion = [
+    {
+      texto: "Guardar Cambios",
+      onClick: handleGuardar,
+      deshabilitado: !valido,
+    },
+    {
+      texto: "Cancelar",
+      variante: "texto" as const,
+      onClick: handleCancelar,
     },
   ];
 
@@ -118,21 +137,21 @@ export const DetallePedidoBase = ({
         </Tab>
       </Tabs>
 
-      {editable(ctx.pedido) && (
+      {editable(ctx.pedido) && modificadoFormulario && (
         <div className="botones maestro-botones">
-          <QBoton onClick={handleGuardar}>Guardar Cambios</QBoton>
+          {/* <QBoton onClick={handleGuardar}>Guardar Cambios</QBoton>
           <QBoton tipo="reset" variante="texto" onClick={handleCancelar}>
             Cancelar
-          </QBoton>
+          </QBoton> */}
+          <QuimeraAcciones acciones={accionesEdicion} />
         </div>
       )}
 
-      <TotalesVenta
-        neto={Number(ctx.pedido.neto ?? 0)}
-        totalIva={Number(ctx.pedido.total_iva ?? 0)}
-        total={Number(ctx.pedido.total ?? 0)}
-        divisa={String(ctx.pedido.coddivisa ?? "EUR")}
-      />
+      <TotalesVenta modeloVenta={pedido} publicar={emitir} />
+
+      {estado === "CAMBIANDO_DESCUENTO" && (
+        <CambiarDescuento publicar={emitir} venta={ctx.pedido} />
+      )}
 
       <Lineas
         pedido={ctx.pedido}

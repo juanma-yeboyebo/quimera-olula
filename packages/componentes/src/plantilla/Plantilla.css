@@ -6,9 +6,9 @@
         flex-grow: 0;
         background-color: var(--color-fondo-header);
         font-size: 1.5rem;
-        padding: 1.5rem;
+        /* padding: 1.5rem; */
         color: var(--color-fondo);
-        max-height: var(--alto-header);
+        height: var(--alto-header);
 
         & a:visited {
             color: var(--color-fondo);
@@ -20,7 +20,7 @@
         flex-grow: 1;
 
         &>*:not(menu-lateral):not(menu-usuario) {
-            padding: 1rem;
+            /* padding: 1rem; */
             flex-grow: 1;
         }
 
@@ -37,7 +37,7 @@
         height: var(--alto-footer);
         width: 100%;
         text-align: center;
-        padding: 0.5rem;
+        padding: var(--espaciado-s);
         align-self: flex-end;
     }
 

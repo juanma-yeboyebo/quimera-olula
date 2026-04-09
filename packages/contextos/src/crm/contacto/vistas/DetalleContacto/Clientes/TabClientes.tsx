@@ -1,4 +1,6 @@
-import { MetaTabla, QTabla } from "@olula/componentes/atomos/qtabla.tsx";
+import { MetaTabla } from "@olula/componentes/atomos/qtabla.tsx";
+import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiControlado.tsx";
+import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { useLista } from "@olula/lib/useLista.ts";
 import { Maquina, useMaquina } from "@olula/lib/useMaquina.ts";
 import { HookModelo } from "@olula/lib/useModelo.ts";
@@ -76,14 +78,15 @@ export const TabClientes = ({
         estado={estado}
         contacto={contacto}
       />
-      <QTabla
+      <ListadoSemiControlado
         metaTabla={metaTablaCliente}
-        datos={clientes.lista}
+        entidades={clientes.lista}
+        totalEntidades={clientes.lista.length}
         cargando={cargando}
-        seleccionadaId={clientes.seleccionada?.id}
+        seleccionada={clientes.seleccionada || null}
         onSeleccion={(cliente) => emitir("CLIENTE_SELECCIONADO", cliente)}
-        orden={["id", "ASC"]}
-        onOrdenar={() => null}
+        criteriaInicial={criteriaDefecto}
+        onCriteriaChanged={() => null}
       />
     </div>
   );

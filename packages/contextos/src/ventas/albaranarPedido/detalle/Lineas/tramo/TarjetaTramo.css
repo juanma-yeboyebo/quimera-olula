@@ -45,7 +45,7 @@
     .tramo-maximo {
         margin-top: var(--espaciado-s);
         color: var(--gris-7);
-        font-size: 0.9rem;
+        font-size: var(--tamaño-letra-m);
     }
 
     .botones {

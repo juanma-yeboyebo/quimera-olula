@@ -16,3 +16,10 @@ export const recargarAlbaranes: ProcesarAlbaranes = async (contexto, payload) =>
 
     return Albaranes.recargar(contexto, resultado);
 }
+
+export const ampliarAlbaranes: ProcesarAlbaranes = async (contexto, payload) => {
+    const criteria = payload as Criteria;
+    const resultado = await getAlbaranes(criteria.filtro, criteria.orden, criteria.paginacion);
+
+    return Albaranes.ampliar(contexto, resultado);
+}

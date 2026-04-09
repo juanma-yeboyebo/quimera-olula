@@ -9,9 +9,9 @@ export const cambioClienteVacio: CambioCliente = {
 };
 
 export const cambioCliente = (presupuesto: Presupuesto): CambioCliente => ({
-    cliente_id: presupuesto.cliente_id,
-    nombre_cliente: presupuesto.nombre_cliente,
-    direccion_id: presupuesto.direccion_id,
+    cliente_id: presupuesto.cliente.cliente_id ?? "",
+    nombre_cliente: presupuesto.cliente.nombre_cliente,
+    direccion_id: presupuesto.cliente.direccion_id ?? "",
 });
 
 export const metaCambioCliente: MetaModelo<CambioCliente> = {

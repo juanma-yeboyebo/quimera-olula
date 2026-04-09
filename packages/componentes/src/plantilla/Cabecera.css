@@ -1,14 +1,15 @@
-header {
+.cabecera-principal {
     gap: 1rem;
     align-items: center;
     flex-grow: 0;
-    background-color: var(--color-texto-primario);
+    /* background-color: var(--color-texto-primario); */
     font-size: 1.5rem;
     color: var(--color-fondo);
-    max-height: var(--alto-header);
+    height: var(--alto-header);
     width: 100%;
     color: #E0E0E0;
-    padding: 0 1.5rem !important;
+    padding: 0 var(--padding-horizontal);
+    /* padding: 0 1.5rem !important; */
     display: flex;
 
 

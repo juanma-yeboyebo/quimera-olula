@@ -1,4 +1,5 @@
-import { QTabla } from "@olula/componentes/atomos/qtabla.tsx";
+import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiControlado.tsx";
+import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { CrmContacto } from "../../diseño.ts";
 import { metaTablaCrmContactos } from "./dominio.ts";
 
@@ -15,14 +16,15 @@ export const TabCrmContactosLista = ({
 }) => {
   return (
     <div className="CrmContactos">
-      <QTabla
+      <ListadoSemiControlado
         metaTabla={metaTablaCrmContactos}
-        datos={contactos}
+        entidades={contactos}
+        totalEntidades={contactos.length}
         cargando={cargando}
-        seleccionadaId={seleccionado?.id}
+        seleccionada={seleccionado}
         onSeleccion={(contacto) => emitir("contacto_seleccionado", contacto)}
-        orden={["id", "ASC"]}
-        onOrdenar={() => null}
+        criteriaInicial={criteriaDefecto}
+        onCriteriaChanged={() => null}
       />
     </div>
   );

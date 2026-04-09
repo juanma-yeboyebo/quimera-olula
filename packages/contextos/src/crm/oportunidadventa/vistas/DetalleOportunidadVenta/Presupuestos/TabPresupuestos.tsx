@@ -1,5 +1,7 @@
 import { Presupuesto } from "#/ventas/presupuesto/diseño.ts";
-import { MetaTabla, QTabla } from "@olula/componentes/atomos/qtabla.tsx";
+import { MetaTabla } from "@olula/componentes/atomos/qtabla.tsx";
+import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiControlado.tsx";
+import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { useLista } from "@olula/lib/useLista.ts";
 import { Maquina, useMaquina } from "@olula/lib/useMaquina.ts";
 import { HookModelo } from "@olula/lib/useModelo.ts";
@@ -86,16 +88,17 @@ export const TabPresupuestos = ({
         estado={estado}
         oportunidad={oportunidad}
       />
-      <QTabla
+      <ListadoSemiControlado
         metaTabla={metaTablaPresupuesto}
-        datos={presupuestos.lista}
+        entidades={presupuestos.lista}
+        totalEntidades={presupuestos.lista.length}
         cargando={cargando}
-        seleccionadaId={presupuestos.seleccionada?.id}
+        seleccionada={presupuestos.seleccionada || null}
         onSeleccion={(presupuesto) =>
           emitir("PRESUPUESTO_SELECCIONADO", presupuesto)
         }
-        orden={["id", "ASC"]}
-        onOrdenar={() => null}
+        criteriaInicial={criteriaDefecto}
+        onCriteriaChanged={() => null}
       />
     </div>
   );

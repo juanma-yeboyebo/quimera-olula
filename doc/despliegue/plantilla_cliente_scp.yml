@@ -1,0 +1,62 @@
+name: Deploy Cliente (SCP)
+
+on:
+  push:
+    branches:
+      - deploy_<cliente>
+
+jobs:
+  build_and_upload:
+    environment: <cliente>-prod
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar pnpm
+        run: npm install -g pnpm
+
+      - name: Instalar dependencias
+        run: pnpm install
+
+      - name: Crear env de producción
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_LEGACY_API_URL: ${{ secrets.VITE_LEGACY_API_URL }}
+        run: |
+          set -e
+          echo "VITE_API_URL=${VITE_API_URL}" > apps/<app>/.env.production
+
+          if [ -n "${VITE_LEGACY_API_URL}" ]; then
+            echo "VITE_LEGACY_API_URL=${VITE_LEGACY_API_URL}" >> apps/<app>/.env.production
+          fi
+
+      - name: Build app
+        run: pnpm run --filter @olula/<app> build
+
+      - name: Comprimir artefacto
+        run: tar -czf <app>-${{ github.sha }}.tar.gz -C apps/<app> dist
+
+      - name: Subir por SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: <app>-${{ github.sha }}.tar.gz
+          target: /tmp/deploys/<app>/
+
+      - name: Desplegar remoto por SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            mkdir -p /var/www/<app>
+            tar -xzf /tmp/deploys/<app>/<app>-${{ github.sha }}.tar.gz -C /var/www/<app> --strip-components=1
+            # Opcional: recarga nginx
+            # sudo systemctl reload nginx

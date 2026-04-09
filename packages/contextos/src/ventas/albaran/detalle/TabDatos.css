@@ -28,3 +28,23 @@
         grid-column: span 2;
     }
 }
+
+@media (max-width: 768px) {
+    .Albaran .TabDatos quimera-formulario {
+        quimera-select[nombre="divisa_id"] {
+            grid-column: 1 / span 1 !important;
+        }
+
+        quimera-input[nombre="tasa_conversion"] {
+            grid-column: 2 / span 1 !important;
+        }
+
+        quimera-select[nombre="forma_pago_id"] {
+            grid-column: 1 / span 1 !important;
+        }
+
+        quimera-select[nombre="grupo_iva_negocio_id"] {
+            grid-column: 2 / span 1 !important;
+        }
+    }
+}

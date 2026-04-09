@@ -1,7 +1,9 @@
 import { Filtro, Orden, Paginacion, RespuestaLista } from "@olula/lib/diseño.ts";
-import { CambioClienteVenta, LineaVenta, NuevaLineaVenta, NuevaVenta, Venta } from "../venta/diseño.ts";
+import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
+import { CambioClienteVenta, ClienteVenta, LineaVenta, NuevaLineaVenta, NuevaVenta, Venta } from "../venta/diseño.ts";
 
 export interface Pedido extends Venta {
+  cliente: ClienteVenta;
   servido: string;
   lineas: LineaPedido[];
 }
@@ -37,4 +39,24 @@ export type PatchCantidadLinea = (id: string, linea: LineaPedido, cantidad: numb
 
 export type DeleteLinea = (id: string, lineaId: string) => Promise<void>;
 
+export type EstadoPedido = (
+    'INICIAL' | 'ABIERTO' | 'SERVIDO'
+    | 'BORRANDO_PEDIDO'
+    | 'CAMBIANDO_CLIENTE'
+    | 'CAMBIANDO_DESCUENTO'
+    | 'CREANDO_LINEA' | 'BORRANDO_LINEA' | 'CAMBIANDO_LINEA'
+);
 
+export type EstadoMaestroPedido = ('INICIAL' | 'CREANDO_PEDIDO');
+
+export type ContextoPedido<T extends Pedido = Pedido> = {
+    estado: EstadoPedido;
+    pedido: T;
+    pedidoInicial: T;
+    lineaActiva: LineaPedido | null;
+};
+
+export type ContextoMaestroPedido = {
+    estado: EstadoMaestroPedido;
+    pedidos: ListaActivaEntidades<Pedido>;
+};

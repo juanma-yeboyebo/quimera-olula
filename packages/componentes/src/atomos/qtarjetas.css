@@ -17,19 +17,31 @@ quimera-tarjeta {
     display: flex;
     flex-direction: column;
     background: var(--color-fondo);
-    border: var(--tamaño-borde-s) solid var(--gris-4);
+    border: var(--tamaño-borde-s) solid transparent;
     border-radius: var(--radio-borde-m);
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.04);
-    margin: var(--espaciado-xs);
+    margin: 0;
     padding: var(--espaciado-m);
     transition: box-shadow 0.15s, border-color 0.15s;
     cursor: pointer;
+
+    &:hover {
+        box-shadow: var(--sombra-m);
+        border-color: var(--color-primario-claro);
+        transform: translateY(-1px);
+    }
+}
+
+quimera-tarjetas .lista-contenedor-scroll {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaciado-xs);
 }
 
 quimera-tarjeta.seleccionada {
     border-color: var(--color-primario);
-    box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.10);
-    background: var(--gris-0);
+    box-shadow: var(--sombra-m);
+    background: var(--color-superficie-elevada);
 }
 
 quimera-tarjetas .cargando,

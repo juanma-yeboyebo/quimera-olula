@@ -1,5 +1,4 @@
-import { cambioClienteVentaVacio, metaLineaVenta, metaVenta, nuevaLineaVentaVacia, ventaVacia } from "#/ventas/presupuesto/detalle/dominio.ts";
-import { metaCambioClienteVenta, metaNuevaLineaVenta } from "#/ventas/venta/dominio.ts";
+import { cambioClienteVentaVacio, clienteVentaVacio, metaCambioClienteVenta, metaLineaVenta, metaNuevaLineaVenta, metaVenta, nuevaLineaVentaVacia, ventaVacia } from "#/ventas/venta/dominio.ts";
 import { ProcesarContexto } from "@olula/lib/diseño.js";
 import { ejecutarListaProcesos, MetaModelo, modeloEsEditable, modeloEsValido, publicar } from "@olula/lib/dominio.ts";
 import {
@@ -12,6 +11,7 @@ import {
     getLineas,
     getPedido,
     patchCambiarCliente,
+    patchCambiarDescuento,
     patchCantidadLinea,
     patchPedido
 } from "../infraestructura.ts";
@@ -20,6 +20,7 @@ import { ContextoPedido, EstadoPedido } from "./diseño.ts";
 
 export const pedidoVacio = (): Pedido => ({
     ...ventaVacia,
+    cliente: clienteVentaVacio,
     servido: 'No',
     lineas: [],
 })
@@ -200,6 +201,17 @@ export const borrarPedido: ProcesarPedido = async (contexto) => {
 export const cambiarCliente: ProcesarPedido = async (contexto, payload) => {
     const cambio = payload as CambioClientePedido;
     await patchCambiarCliente(contexto.pedido.id, cambio);
+
+    return pipePedido(contexto, [
+        refrescarPedido,
+        refrescarLineas,
+        'ABIERTO',
+    ]);
+}
+
+export const cambiarDescuento: ProcesarPedido = async (contexto, payload) => {
+    const { dto_porcentual } = payload as { dto_porcentual: number };
+    await patchCambiarDescuento(contexto.pedido.id, dto_porcentual);
 
     return pipePedido(contexto, [
         refrescarPedido,

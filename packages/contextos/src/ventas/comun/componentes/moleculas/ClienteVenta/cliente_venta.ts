@@ -1,4 +1,4 @@
-import { Venta } from "#/ventas/venta/diseño.ts";
+import { VentaTpv } from "#/tpv/venta/diseño.ts";
 import { Modelo } from "@olula/lib/diseño.js";
 import { MetaModelo } from "@olula/lib/dominio.js";
 
@@ -30,25 +30,25 @@ export const clienteRegistradoVacio: ModeloClienteVentaRegistrado = {
     nombre: "",
 }
 
-export const clienteRegistradoDesdeVenta = (venta?: Venta): ModeloClienteVentaRegistrado => {
+export const clienteRegistradoDesdeVenta = (venta?: VentaTpv): ModeloClienteVentaRegistrado => {
 
-    return venta && venta.cliente_id
+    return venta?.cliente?.id
         ? {
-            idCliente: venta.cliente_id,
-            idDireccion: venta.direccion_id,
-            nombre: venta.nombre_cliente,
+            idCliente: venta.cliente.id,
+            idDireccion: venta.cliente.idDireccion ?? "",
+            nombre: venta.cliente.nombre,
         }
         : clienteRegistradoVacio;
 }
 
-export const clienteNoRegistradoDesdeVenta = (venta?: Venta): ModeloClienteVentaNoRegistrado => {
+export const clienteNoRegistradoDesdeVenta = (venta?: VentaTpv): ModeloClienteVentaNoRegistrado => {
 
-    return venta && !venta.cliente_id
+    return venta?.cliente && !venta.cliente.id
         ? {
-            nombre: venta.nombre_cliente,
-            idFiscal: venta.id_fiscal,
-            nombreVia: venta.direccion.nombre_via,
-            codPostal: venta.direccion.cod_postal,
+            nombre: venta.cliente.nombre,
+            idFiscal: venta.cliente.idFiscal,
+            nombreVia: venta.cliente.direccion.nombre_via,
+            codPostal: venta.cliente.direccion.cod_postal,
         }
         : clienteVentaNoRegistradoVacio;
 }

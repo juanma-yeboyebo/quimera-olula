@@ -1,23 +1,73 @@
 .Presupuesto .TabCliente {
-    quimera-autocompletar[nombre="cliente_id"] {
-        grid-column: span 9;
+    >quimera-formulario {
+        quimera-autocompletar[nombre="cliente_id"] {
+            grid-column: 1 / span 7;
+            min-width: 0;
+        }
+
+        quimera-input[nombre="id_fiscal"] {
+            grid-column: 8 / span 3;
+            min-width: 0;
+        }
+
+        .TabCliente-accion {
+            grid-column: 11 / span 2;
+            display: flex;
+            justify-content: flex-end;
+            align-items: end;
+            margin: 0;
+            min-width: 0;
+        }
+
+        .TabCliente-accion quimera-boton {
+            width: max-content;
+        }
+
+        quimera-select[nombre="direccion_id"],
+        quimera-input[nombre="direccion_cliente"] {
+            grid-column: 1 / -1;
+        }
+
+        quimera-input[deshabilitado] input,
+        quimera-select[deshabilitado] select,
+        quimera-autocompletar quimera-input[deshabilitado] input {
+            background-color: var(--gris-0);
+            color: var(--color-texto-secundario);
+            border-bottom-color: var(--gris-2);
+            border-radius: var(--redondeo-borde-xs);
+            box-shadow: inset 0 0 0 1px var(--gris-1);
+        }
+
+        quimera-input[deshabilitado] .etiqueta,
+        quimera-select[deshabilitado] .etiqueta,
+        quimera-autocompletar quimera-input[deshabilitado] .etiqueta {
+            color: var(--color-texto-secundario);
+        }
     }
+}
 
-    quimera-input[nombre="id_fiscal"] {
+@media (max-width: 768px) {
+    .Presupuesto .TabCliente {
+        >quimera-formulario {
+            quimera-autocompletar[nombre="cliente_id"] {
+                grid-column: 1 / span 1 !important;
+            }
 
-        grid-column: span 2;
-    }
+            quimera-input[nombre="id_fiscal"] {
+                grid-column: 2 / span 1 !important;
+            }
 
-    quimera-input[nombre="nombre_cliente"] {
-        grid-column: span 12;
-    }
+            quimera-select[nombre="direccion_id"],
+            quimera-input[nombre="direccion_cliente"] {
+                grid-column: 1 / -1;
+                grid-row: 2;
+            }
 
-    label[id="id_fiscal"] {
-        grid-column: span 3;
-    }
-
-
-    div[id="cambiar_cliente"] {
-        grid-column: span 1;
+            .TabCliente-accion {
+                grid-column: 1 / -1;
+                grid-row: 3;
+                justify-content: flex-end;
+            }
+        }
     }
 }

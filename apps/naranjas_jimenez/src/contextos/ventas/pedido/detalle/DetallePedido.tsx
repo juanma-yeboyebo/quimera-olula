@@ -81,6 +81,7 @@ export const DetallePedidoNrj = ({
     {
       icono: "eliminar",
       texto: "Borrar",
+      advertencia: true,
       onClick: () => emitir("borrar_solicitado"),
       deshabilitado: false,
     },

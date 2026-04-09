@@ -3,9 +3,10 @@
 // import { CrearPresupuesto } from "#/crm/presupuesto/crear/CrearPresupuesto.tsx";
 import { Presupuesto } from "#/ventas/presupuesto/diseño.ts";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
-import { QTabla } from "@olula/componentes/atomos/qtabla.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
+import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiControlado.tsx";
 import { listaEntidadesInicial } from "@olula/lib/ListaEntidades.js";
+import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { HookModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useEffect, useState } from "react";
 import { OportunidadVenta } from "../../diseño.ts";
@@ -69,16 +70,17 @@ export const Presupuestos = ({
         />
       )} */}
 
-      <QTabla
+      <ListadoSemiControlado
         metaTabla={metaTablaPresupuesto}
-        datos={ctx.presupuestos.lista}
+        entidades={ctx.presupuestos.lista}
+        totalEntidades={ctx.presupuestos.lista.length}
         cargando={cargando}
-        seleccionadaId={ctx.presupuestos.activo?.id}
+        seleccionada={ctx.presupuestos.activo ?? null}
         onSeleccion={(presupuesto) =>
           emitir("presupuesto_seleccionado", presupuesto)
         }
-        orden={["id", "ASC"]}
-        onOrdenar={() => null}
+        criteriaInicial={criteriaDefecto}
+        onCriteriaChanged={() => null}
       />
     </div>
   );

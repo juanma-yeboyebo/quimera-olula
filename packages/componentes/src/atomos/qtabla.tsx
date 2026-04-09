@@ -13,6 +13,8 @@ import "./qtabla.css";
 type MetaColumna<T extends Entidad> = {
   id: string;
   cabecera: string;
+  prioridad?: "alta" | "media" | "baja";
+  esTitulo?: boolean;
   tipo?:
     | "texto"
     | "numero"
@@ -100,6 +102,9 @@ const paginacionControlador = (
     return null;
   }
   const { pagina, limite } = paginacion;
+  if (limite >= totalEntidades) {
+    return null;
+  }
   const { paginasMostradas, totalPaginas } = calcularPaginacionSimplificada(
     totalEntidades,
     pagina,

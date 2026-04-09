@@ -1,12 +1,13 @@
 import { ProcesarContexto } from "@olula/lib/diseño.js";
 import { ejecutarListaProcesos, publicar } from "@olula/lib/dominio.ts";
-import { Factura, LineaFactura } from "../diseño.ts";
+import { CambioClienteFactura, Factura, LineaFactura } from "../diseño.ts";
 import { facturaVacia } from "../dominio.ts";
 import {
     deleteLinea,
     getFactura,
     getLineas,
     patchCambiarCliente,
+    patchCambiarDescuento,
     patchCantidadLinea,
     patchFactura
 } from "../infraestructura.ts";
@@ -129,8 +130,19 @@ export const borrarFactura: ProcesarFactura = async (contexto) => {
 };
 
 export const cambiarCliente: ProcesarFactura = async (contexto, payload) => {
-    const cambio = payload as Partial<Factura>;
+    const cambio = payload as CambioClienteFactura;
     await patchCambiarCliente(contexto.factura.id, cambio);
+
+    return pipeFactura(contexto, [
+        refrescarFactura,
+        refrescarLineas,
+        "ABIERTO",
+    ]);
+};
+
+export const cambiarDescuento: ProcesarFactura = async (contexto, payload) => {
+    const { dto_porcentual } = payload as { dto_porcentual: number };
+    await patchCambiarDescuento(contexto.factura.id, dto_porcentual);
 
     return pipeFactura(contexto, [
         refrescarFactura,

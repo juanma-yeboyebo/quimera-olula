@@ -17,6 +17,17 @@
     --grosor-letra-8: 800;
     --grosor-letra-9: 900;
 
+    /* Alturas de línea */
+    --altura-linea-compacta: 1.2;
+    --altura-linea-normal: 1.5;
+    --altura-linea-relajada: 1.75;
+
+    /* Espaciado entre letras */
+    --espaciado-letra-compacto: -0.01em;
+    --espaciado-letra-normal: 0;
+    --espaciado-letra-ancho: 0.025em;
+    --espaciado-letra-mayusculas: 0.06em;
+
     --font-system-ui: system-ui, sans-serif;
     --font-transitional: Charter, Bitstream Charter, Sitka Text, Cambria, serif;
     --font-old-style: Iowan Old Style, Palatino Linotype, URW Palladio L, P052,

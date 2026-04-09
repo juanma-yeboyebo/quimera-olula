@@ -16,6 +16,7 @@ import {
   metaCrearLinea,
   postLineaNrj,
 } from "./crear_linea.ts";
+import { formateaCategoria } from "../dominio.ts";
 
 export const CrearLineaNrj = ({ pedidoId, publicar }: CrearLineaProps) => {
   const { modelo, uiProps, valido, set } = useModelo(
@@ -25,13 +26,13 @@ export const CrearLineaNrj = ({ pedidoId, publicar }: CrearLineaProps) => {
 
   useEffect(() => {
     if (!modelo.idTipoPalet) return;
-    getItemsListaTipoPalet([], []).then(items => {
-      const item = items.find(i => i.id === modelo.idTipoPalet);
-      if (item) {
+    getItemsListaTipoPalet([], []).then((items) => {
+      const item = items.find((i) => i.id === modelo.idTipoPalet);
+      if (item && item.cantidadEnvase !== modelo.envasesPorPalet) {
         set({ ...modelo, envasesPorPalet: item.cantidadEnvase });
       }
     });
-  }, [modelo.idTipoPalet]);
+  }, [modelo, set]);
 
   const crear = useCallback(async () => {
     await postLineaNrj(pedidoId, modelo);
@@ -69,7 +70,12 @@ export const CrearLineaNrj = ({ pedidoId, publicar }: CrearLineaProps) => {
             idVariedad={modelo.idVariedad}
             idMarca={modelo.idMarca}
           />
-          <QInput label="Categoria" {...uiProps("categoria")} deshabilitado={true} />
+          <QInput
+            label="Categoria"
+            nombre="categoria"
+            valor={modelo.categoria ? formateaCategoria(modelo.categoria) : ""}
+            deshabilitado={true}
+          />
           <QInput
             label="Cantidad Palets"
             {...uiProps("cantidadPalets")}

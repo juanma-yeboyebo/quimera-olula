@@ -1,8 +1,9 @@
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
-import { Filtro, Orden, Paginacion } from "@olula/lib/diseño.ts";
+import { Direccion, Filtro, Orden, Paginacion } from "@olula/lib/diseño.ts";
 import { FactoryObj } from "@olula/lib/factory_ctx.tsx";
 import { criteriaQuery } from "@olula/lib/infraestructura.ts";
 import ApiUrls from "../comun/urls.ts";
+import { direccionVacia } from "../venta/dominio.ts";
 import { DeleteLinea, GetLineasPedido, GetPedido, GetPedidos, LineaPedido, PatchArticuloLinea, PatchCantidadLinea, PatchClientePedido, PatchLinea, Pedido, PostLinea, PostPedido } from "./diseño.ts";
 
 export interface LineaPedidoAPI {
@@ -16,7 +17,32 @@ export interface LineaPedidoAPI {
   grupo_iva_producto_id: string;
 };
 
-type PedidoAPI = Pedido & { fecha: string };
+interface PedidoAPI {
+  id: string;
+  codigo: string;
+  fecha: string;
+  cliente_id: string;
+  nombre_cliente: string;
+  id_fiscal: string;
+  direccion_id: string;
+  direccion: Direccion;
+  agente_id: string;
+  nombre_agente: string;
+  divisa_id: string;
+  tasa_conversion: number;
+  total: number;
+  neto: number;
+  total_iva: number;
+  total_irpf: number;
+  total_divisa_empresa: number;
+  por_descuento: number;
+  neto_sin_dto: number;
+  forma_pago_id: string;
+  nombre_forma_pago: string;
+  grupo_iva_negocio_id: string;
+  observaciones: string;
+  servido: string;
+}
 
 const baseUrl = new ApiUrls().PEDIDO;
 
@@ -42,6 +68,15 @@ export const ventasPedidoInfra: VentasPedidoInfra = {
 export const pedidoDesdeAPI = (p: PedidoAPI): Pedido => ({
   ...p,
   fecha: new Date(Date.parse(p.fecha)),
+  dtoPorcentual: p.por_descuento,
+  netoSinDto: p.neto_sin_dto,
+  cliente: {
+    cliente_id: p.cliente_id ?? null,
+    nombre_cliente: p.nombre_cliente ?? "",
+    id_fiscal: p.id_fiscal ?? "",
+    direccion_id: p.direccion_id ?? null,
+    direccion: p.direccion ?? direccionVacia(),
+  },
   lineas: [],
 })
 
@@ -84,6 +119,14 @@ export const patchCambiarCliente: PatchClientePedido = async (id, cambio) => {
       }
     }
   }, "Error al cambiar cliente del pedido");
+}
+
+export const patchCambiarDescuento = async (id: string, dto_porcentual: number): Promise<void> => {
+  await RestAPI.patch(`${baseUrl}/${id}`, {
+    cambios: {
+      por_descuento: dto_porcentual,
+    }
+  }, "Error al cambiar descuento del pedido");
 }
 
 export const getLineas: GetLineasPedido = async (id) =>
@@ -170,10 +213,10 @@ export const payloadPatchPedido = (pedido: Pedido) => {
         tasa_conversion: pedido.tasa_conversion,
       },
       fecha: pedido.fecha,
-      cliente_id: pedido.cliente_id,
-      nombre_cliente: pedido.nombre_cliente,
-      id_fiscal: pedido.id_fiscal,
-      direccion_id: pedido.direccion_id,
+      cliente_id: pedido.cliente.cliente_id,
+      nombre_cliente: pedido.cliente.nombre_cliente,
+      id_fiscal: pedido.cliente.id_fiscal,
+      direccion_id: pedido.cliente.direccion_id,
       forma_pago_id: pedido.forma_pago_id,
       grupo_iva_negocio_id: pedido.grupo_iva_negocio_id,
       observaciones: pedido.observaciones,

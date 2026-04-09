@@ -1,4 +1,4 @@
-import { QIcono, QTarjetas } from "@olula/componentes/index.js";
+import { QIcono, QTarjetas, getIdUnico } from "@olula/componentes/index.js";
 import { ContextoError } from "@olula/lib/contexto.ts";
 import { Criteria } from "@olula/lib/diseño.js";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
@@ -72,10 +72,7 @@ export const TarjetaLinea = ({
     }
 
     const nuevo: Tramo = {
-      id:
-        crypto && typeof crypto.randomUUID === "function"
-          ? crypto.randomUUID()
-          : Date.now().toString(),
+      id: getIdUnico(),
       cantidad: disponible,
     };
     const actuales = tramos;

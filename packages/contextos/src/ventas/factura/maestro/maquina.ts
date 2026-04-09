@@ -1,6 +1,6 @@
 import { Maquina } from "@olula/lib/diseño.js";
 import { ContextoMaestroFactura, EstadoMaestroFactura } from "./diseño.ts";
-import { Facturas, recargarFacturas } from "./dominio.ts";
+import { ampliarFacturas, Facturas, recargarFacturas } from "./dominio.ts";
 
 
 export const getMaquina: () => Maquina<EstadoMaestroFactura, ContextoMaestroFactura> = () => {
@@ -22,6 +22,8 @@ export const getMaquina: () => Maquina<EstadoMaestroFactura, ContextoMaestroFact
             recarga_de_facturas_solicitada: recargarFacturas,
 
             criteria_cambiado: [Facturas.filtrar, recargarFacturas],
+
+            siguiente_pagina: [Facturas.filtrar, ampliarFacturas],
 
             crear_factura_solicitado: "CREANDO_FACTURA",
         },

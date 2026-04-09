@@ -3,8 +3,9 @@ import { nuevaAccionVacia } from "#/crm/accion/crear/crear.ts";
 import { CrearAccion } from "#/crm/accion/crear/CrearAccion.tsx";
 import { Accion } from "#/crm/accion/diseño.ts";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
-import { QTabla } from "@olula/componentes/atomos/qtabla.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
+import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiControlado.tsx";
+import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { listaEntidadesInicial } from "@olula/lib/ListaEntidades.js";
 import { HookModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useEffect, useState } from "react";
@@ -66,14 +67,15 @@ export const Acciones = ({
         <BorrarAccion publicar={emitir} accion={ctx.acciones.activo} />
       )}
 
-      <QTabla
+      <ListadoSemiControlado
         metaTabla={metaTablaAccion}
-        datos={ctx.acciones.lista}
+        entidades={ctx.acciones.lista}
+        totalEntidades={ctx.acciones.lista.length}
         cargando={cargando}
-        seleccionadaId={ctx.acciones.activo?.id}
+        seleccionada={ctx.acciones.activo ?? null}
         onSeleccion={(accion) => emitir("accion_seleccionada", accion)}
-        orden={["id", "ASC"]}
-        onOrdenar={() => null}
+        criteriaInicial={criteriaDefecto}
+        onCriteriaChanged={() => null}
       />
     </div>
   );

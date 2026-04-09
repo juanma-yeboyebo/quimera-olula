@@ -8,6 +8,7 @@ import {
 
 export const ventaTpvVacia: VentaTpv = {
     ...ventaVacia,
+    cliente: null,
     pagado: 0,
     pendiente: 0,
     lineas: [],

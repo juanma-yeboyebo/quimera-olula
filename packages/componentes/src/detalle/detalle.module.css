@@ -1,10 +1,14 @@
 .detalle {
-    & h2 {
-        margin-top: 0;
-        margin-bottom: 15px;
-        border-bottom: 1px solid #ccc;
+    .detalle-cabecera {
         display: flex;
         justify-content: space-between;
+        /* align-items: center; */
+        margin-bottom: 15px;
+        border-bottom: 1px solid #ccc;
+
+        h2 {
+            margin: 0;
+        }
     }
 
     &>form {

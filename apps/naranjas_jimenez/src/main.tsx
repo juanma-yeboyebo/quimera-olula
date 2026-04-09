@@ -4,13 +4,19 @@ import { Vista } from "@olula/componentes/index.ts";
 import "@olula/lib/comun.css";
 import { FactoryObj, FactoryProvider } from "@olula/lib/factory_ctx.tsx";
 import { crearMenu, MenuContextFactory } from "@olula/lib/menu.ts";
-import { StrictMode } from "react";
+import { StrictMode, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouteObject, RouterProvider } from "react-router";
 import FactoryOlula from "./factory.ts";
 import { router } from "./router_factory.ts";
 
 const root = createRoot(document.getElementById("root")!);
+const factoryOlula = new FactoryOlula();
+const appFactory =
+  factoryOlula as unknown as Record<string, Record<string, unknown>>;
+const menuFactory = crearMenu(
+  factoryOlula as unknown as Record<string, MenuContextFactory>
+);
 
 const rutas = createBrowserRouter([
   {
@@ -25,14 +31,10 @@ const rutas = createBrowserRouter([
 const App = () => {
   useTimerRefresco();
 
-  FactoryObj.setMenu(
-    crearMenu(
-      new FactoryOlula() as unknown as Record<string, MenuContextFactory>
-    )
-  );
-  FactoryObj.setApp(
-    new FactoryOlula() as unknown as Record<string, Record<string, unknown>>
-  );
+  useEffect(() => {
+    FactoryObj.setMenu(menuFactory);
+    FactoryObj.setApp(appFactory);
+  }, []);
 
   return <RouterProvider router={rutas} />;
 };

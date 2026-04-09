@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FormFieldProps } from "../atomos/_forminput.tsx";
 import { QInput } from "../atomos/qinput.tsx";
+import { getIdUnico } from "../helpers.ts";
 
 type Opcion = { valor: string; descripcion: string };
 
@@ -50,7 +51,7 @@ export const QAutocompletar = ({
     </option>
   ));
 
-  const listaId = nombre + "-datalist-" + crypto.randomUUID();
+  const listaId = nombre + "-datalist-" + getIdUnico();
 
   const regenerarOpciones = async (valor: string) => {
     clearTimeout(temporizador.current);

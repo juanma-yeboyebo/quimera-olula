@@ -32,19 +32,28 @@ export const TabCrmContactos = ({ clienteId }: { clienteId: string }) => {
 
   const acciones = [
     {
+      texto: "Nuevo",
+      onClick: () => emitir("alta_solicitada"),
+    },
+    {
+      texto: "Asociar Contacto",
+      onClick: () => emitir("asociar_solicitado"),
+    },
+    {
       texto: "Editar",
       onClick: () => ctx.contactoActivo && emitir("edicion_solicitada"),
       deshabilitado: !ctx.contactoActivo,
     },
     {
-      icono: "eliminar",
-      texto: "Borrar",
-      onClick: () => emitir("borrado_solicitado"),
+      texto: "Eliminar asociación",
+      onClick: () => emitir("eliminar_asociacion"),
       deshabilitado: !ctx.contactoActivo,
     },
     {
-      texto: "Eliminar asociación",
-      onClick: () => emitir("eliminar_asociacion"),
+      icono: "eliminar",
+      texto: "Borrar",
+      advertencia: true,
+      onClick: () => emitir("borrado_solicitado"),
       deshabilitado: !ctx.contactoActivo,
     },
   ];
@@ -53,10 +62,6 @@ export const TabCrmContactos = ({ clienteId }: { clienteId: string }) => {
     <div className="CrmContactos">
       <>
         <div className="detalle-cliente-tab-contenido maestro-botones">
-          <QBoton onClick={() => emitir("alta_solicitada")}>Nuevo</QBoton>
-          <QBoton onClick={() => emitir("asociar_solicitado")}>
-            Asociar Contacto
-          </QBoton>
           <QuimeraAcciones acciones={acciones} vertical />
         </div>
         <TabCrmContactosLista

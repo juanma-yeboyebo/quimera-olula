@@ -4,7 +4,6 @@ quimera-acciones {
     justify-content: flex-end;
 
     quimera-boton {
-        font-size: 1rem;
         cursor: pointer;
     }
 
@@ -15,7 +14,6 @@ quimera-acciones {
             margin: 0 5px;
 
             button {
-                font-size: 0.8rem;
                 cursor: pointer;
                 padding: var(--espaciado-s);
             }
@@ -27,12 +25,6 @@ quimera-acciones {
         align-items: flex-end;
         gap: 0.5rem;
 
-        .header {
-            quimera-boton button {
-                max-width: 100px;
-            }
-        }
-
         .acciones {
             quimera-boton {
                 margin: 0px;
@@ -40,23 +32,61 @@ quimera-acciones {
         }
     }
 
+    .actions {
+        position: relative;
+    }
+
     .acciones {
         display: flex;
         flex-direction: column;
-        border: 1px solid var(--color-primario);
-        width: 100%;
+        border: 0;
+        width: max-content;
+        min-width: 0;
         position: absolute;
-        max-width: 100px;
+        right: 0;
+        max-width: none;
         overflow: hidden;
         background: var(--color-fondo);
         border-radius: 5px;
+        /* box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12); */
+        padding: var(--espaciado-xs);
 
         quimera-boton {
             button {
                 width: 100%;
                 margin: 1px 0px;
-                font-size: 0.9rem;
-                padding: 10px;
+                padding: var(--espaciado-s);
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                line-height: 1;
+            }
+        }
+    }
+
+    .acciones.acciones-inline {
+        display: flex;
+        flex-direction: row;
+        position: static;
+        width: auto;
+        min-width: 0;
+        padding: 0;
+        border-radius: 0;
+        box-shadow: none;
+        background: transparent;
+        overflow: visible;
+
+        quimera-boton {
+            margin: 0 5px;
+
+            button {
+                width: auto;
+                margin: 0;
+                padding: var(--espaciado-s);
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                line-height: 1;
             }
         }
     }

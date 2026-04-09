@@ -7,6 +7,7 @@ interface DireccionesProps {
   valor?: string;
   nombre?: string;
   label?: string;
+  deshabilitado?: boolean;
   onChange: (opcion: { valor: string; descripcion: string } | null) => void;
 }
 
@@ -15,6 +16,7 @@ export const DirCliente = ({
   valor,
   nombre = "direccion_id",
   label = "Dirección",
+  deshabilitado = false,
   onChange,
   ...props
 }: DireccionesProps) => {
@@ -46,6 +48,7 @@ export const DirCliente = ({
       label={label}
       nombre={nombre}
       valor={valor}
+      deshabilitado={deshabilitado}
       opciones={opcionesDireccion}
       onChange={onChange}
     />

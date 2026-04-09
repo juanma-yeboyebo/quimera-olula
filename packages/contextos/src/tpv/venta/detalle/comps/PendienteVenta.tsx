@@ -5,9 +5,6 @@ import { VentaTpv } from "../../diseño.ts";
 import "./PendienteVenta.css";
 
 interface PendienteVentaProps {
-  // total: number;
-  // pagado: number;
-  // divisa: string;
   venta: VentaTpv;
   publicar: EmitirEvento,
 }

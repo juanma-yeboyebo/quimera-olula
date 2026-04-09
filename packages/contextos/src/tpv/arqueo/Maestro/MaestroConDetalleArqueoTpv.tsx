@@ -12,7 +12,9 @@ import "./MaestroConDetalleArqueoTpv.css";
 import { metaTablaArqueo } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
 
+
 export const MaestroConDetalleArqueoTpv = () => {
+  
   const puntoVentaActivo = puntoVentaLocal.obtenerSeguro();
   const miAgenteActivo = agenteActivo.obtenerSeguro();
 

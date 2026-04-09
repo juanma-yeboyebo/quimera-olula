@@ -9,6 +9,7 @@ import {
     cambiarAlbaran,
     cambiarCantidadLinea,
     cambiarCliente,
+    cambiarDescuento,
     cambiarLinea,
     cancelarCambioAlbaran,
     cargarContexto,
@@ -49,6 +50,8 @@ export const getMaquina: () => Maquina<EstadoAlbaran, ContextoAlbaran> = () => {
             borrar_solicitado: "BORRANDO_ALBARAN",
 
             cambio_cliente_solicitado: "CAMBIANDO_CLIENTE",
+
+            descuento_solicitado: "CAMBIANDO_DESCUENTO",
 
             albaran_cargado: [abiertoOFacturado],
 
@@ -92,6 +95,13 @@ export const getMaquina: () => Maquina<EstadoAlbaran, ContextoAlbaran> = () => {
             cambio_cliente_listo: [cambiarCliente, "ABIERTO"],
 
             cambio_cliente_cancelado: "ABIERTO",
+        },
+
+        CAMBIANDO_DESCUENTO: {
+
+            descuento_aplicado: [cambiarDescuento],
+
+            descuento_cancelado: "ABIERTO",
         },
 
         CREANDO_LINEA: {

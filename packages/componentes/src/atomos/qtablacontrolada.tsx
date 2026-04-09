@@ -22,6 +22,8 @@ type TipoColumna =
 type MetaColumna<T extends Entidad> = {
   id: string;
   cabecera: string;
+  prioridad?: "alta" | "media" | "baja";
+  esTitulo?: boolean;
   tipo?: TipoColumna;
   divisa?: string;
   ancho?: string; // Ancho específico para esta columna
@@ -143,7 +145,7 @@ const Paginador = (
   }
   const { pagina, limite } = paginacion;
 
-  if (limite > totalEntidades) {
+  if (limite >= totalEntidades) {
     return null;
   }
   const { paginasMostradas, totalPaginas } = calcularPaginacionSimplificada(

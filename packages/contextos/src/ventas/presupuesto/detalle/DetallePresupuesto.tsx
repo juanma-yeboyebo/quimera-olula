@@ -7,6 +7,7 @@ import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useModelo } from "@olula/lib/useModelo.js";
 import { useCallback, useEffect } from "react";
 import { useParams } from "react-router";
+import { CambiarDescuento } from "../../comun/componentes/moleculas/CambiarDescuento/CambiarDescuento.tsx";
 import { TotalesVenta } from "../../venta/vistas/TotalesVenta.tsx";
 import { AprobarPresupuesto } from "../aprobar/AprobarPresupuesto.tsx";
 import { BorrarPresupuesto } from "../borrar/BorrarPresupuesto.tsx";
@@ -41,6 +42,7 @@ export const DetallePresupuesto = ({
   );
 
   const presupuesto = useModelo(metaPresupuesto, ctx.presupuesto);
+  const { modificado, valido } = presupuesto;
 
   useEffect(() => {
     emitir("presupuesto_id_cambiado", presupuestoId, true);
@@ -70,6 +72,7 @@ export const DetallePresupuesto = ({
     {
       icono: "eliminar",
       texto: "Borrar",
+      advertencia: true,
       onClick: () => emitir("borrar_solicitado"),
       deshabilitado: ctx.presupuesto.aprobado,
     },
@@ -105,21 +108,22 @@ export const DetallePresupuesto = ({
         </Tab>
       </Tabs>
 
-      {estado === "ABIERTO" && !ctx.presupuesto.aprobado && (
+      {estado === "ABIERTO" && !ctx.presupuesto.aprobado && modificado && (
         <div className="botones maestro-botones">
-          <QBoton onClick={handleGuardar}>Guardar Cambios</QBoton>
+          <QBoton onClick={handleGuardar} deshabilitado={!valido}>
+            Guardar Cambios
+          </QBoton>
           <QBoton tipo="reset" variante="texto" onClick={handleCancelar}>
             Cancelar
           </QBoton>
         </div>
       )}
 
-      <TotalesVenta
-        neto={Number(ctx.presupuesto.neto ?? 0)}
-        totalIva={Number(ctx.presupuesto.total_iva ?? 0)}
-        total={Number(ctx.presupuesto.total ?? 0)}
-        divisa={ctx.presupuesto.divisa_id || "EUR"}
-      />
+      <TotalesVenta modeloVenta={presupuesto} publicar={emitir} />
+
+      {estado === "CAMBIANDO_DESCUENTO" && (
+        <CambiarDescuento publicar={emitir} venta={ctx.presupuesto} />
+      )}
 
       <Lineas
         presupuesto={ctx.presupuesto}

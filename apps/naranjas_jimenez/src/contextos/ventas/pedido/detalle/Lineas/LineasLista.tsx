@@ -1,8 +1,6 @@
 import { LineasListaProps } from "#/ventas/pedido/detalle/Lineas/LineasLista.tsx";
-import { QBoton, QModal } from "@olula/componentes/index.js";
 import { QTabla } from "@olula/componentes/atomos/qtabla.tsx";
 import { useEsMovil } from "@olula/componentes/maestro/useEsMovil.js";
-import { useState } from "react";
 import { LineaPedidoNrj } from "../../diseño.ts";
 import { formateaCategoria, formateaEstado } from "../../dominio.ts";
 import "./LineasLista.css";
@@ -75,12 +73,19 @@ const TarjetaLineaNrj = ({
       </div>
     </div>
     <div className="tarjeta-linea-cantidades">
-      <AsignacionesLinea linea={linea} />
+      <CantidadEnvasesLinea linea={linea} />
       <span className="tarjeta-linea-total">{linea.cantidadEnvases}</span>
     </div>
   </div>
 );
 
+const CantidadEnvasesLinea = ({ linea }: { linea: LineaPedidoNrj }) => (
+  <span className="tarjeta-linea-cantidad-envases">
+    {`Cantidad de envases: ${linea.cantidadEnvasesAsignados ?? 0}`}
+  </span>
+);
+
+/*
 const AsignacionesLinea = ({ linea }: { linea: LineaPedidoNrj }) => {
   const [mostrando, setMostrando] = useState(false);
 
@@ -112,6 +117,7 @@ const AsignacionesLinea = ({ linea }: { linea: LineaPedidoNrj }) => {
     <span>0</span>
   );
 };
+*/
 
 const getMetaTablaLineas = () => {
   return [
@@ -152,18 +158,21 @@ const getMetaTablaLineas = () => {
     },
     {
       id: "cantidad",
-      cabecera: "Cnt. Envases",
+      cabecera: "Cantidad de envases",
       tipo: "numero" as const,
     },
     {
       id: "cantidad_envases_asignados",
-      cabecera: "Asignada",
+      cabecera: "Cantidad de envases",
       tipo: "numero" as const,
-      render: (linea: LineaPedidoNrj) => AsignacionesLinea({ linea }),
+      // Si en el futuro vuelve a habilitarse el sumatorio por palets,
+      // sustituir esta renderización por `AsignacionesLinea({ linea })`.
+      render: (linea: LineaPedidoNrj) => linea.cantidadEnvasesAsignados ?? 0,
     },
   ];
 };
 
+/*
 const getMetaTablaPalets = () => {
   return [
     {
@@ -173,3 +182,4 @@ const getMetaTablaPalets = () => {
     },
   ];
 };
+*/

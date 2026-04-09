@@ -3,7 +3,7 @@
 @import "./tokens/borde.css";
 @import "./tokens/ratio.css";
 @import "./tokens/color.css";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
 :root {
     color-scheme: light dark;
@@ -11,9 +11,9 @@
     --color-fondo: light-dark(var(--blanco), var(--gris-8));
     --color-fondo-header: light-dark(var(--mg-1), #edededed);
 
-    --color-texto-primario: light-dark(var(--mg-1), var(--mg-1));
-    --color-texto-secundario: light-dark(var(--mg-2), var(--mg-2));
-    --color-texto-deshabilitado: light-dark(var(--mg-4), var(--mg-3));
+    --color-texto-primario: light-dark(var(--mg-1), var(--gris-1));
+    --color-texto-secundario: light-dark(var(--mg-2), var(--gris-3));
+    --color-texto-deshabilitado: light-dark(var(--mg-4), var(--gris-5));
 
     --color-texto-menu: light-dark(var(--blanco), var(--mg-1));
 
@@ -21,7 +21,7 @@
     --color-error: light-dark(var(--rojo-7), var(--rojo-6));
     --color-advertencia: light-dark(var(--naranja-7), var(--naranja-6));
     --color-exito: light-dark(var(--verde-7), var(--verde-6));
-    --color-deshabilitado: light-dark(#dee2e6, #dee2e6);
+    --color-deshabilitado: light-dark(var(--gris-3), var(--gris-6));
 
     --color-primario-claro: light-dark(var(--mg-6), var(--mg-6));
     --color-primario-oscuro: light-dark(var(--mg-4), var(--mg-4));
@@ -40,12 +40,38 @@
     --color-deshabilitado-claro: light-dark(var(--gris-1), var(--gris-5));
     --color-deshabilitado-oscuro: light-dark(var(--gris-5), var(--gris-9));
 
+    /* Superficie */
+    --color-superficie: light-dark(var(--blanco), var(--gris-8));
+    --color-superficie-elevada: light-dark(var(--gris-0), var(--gris-7));
+    --color-superficie-sunken: light-dark(var(--gris-1), var(--gris-9));
+
+    /* Bordes */
+    --color-borde-sutil: light-dark(var(--gris-3), var(--gris-6));
+    --color-borde-fuerte: light-dark(var(--gris-4), var(--gris-5));
+
+    /* Sombras */
+    --sombra-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --sombra-s: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.08);
+    --sombra-m: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+    --sombra-l: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.06);
+    --sombra-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
+
+    /* Transiciones */
+    --transicion-rapida: 150ms ease;
+    --transicion-normal: 250ms ease;
+    --transicion-lenta: 350ms ease;
+
     --alto-footer: 2rem;
-    --alto-header: 80px;
+    --alto-header: 35px;
 
     --color-head-tabla: light-dark(var(--gris-2), var(--gris-7));
 
-    --font-system-ui: 'Inter', sans-serif;
+    --font-system-ui: 'Plus Jakarta Sans', var(--font-geometric-humanist);
+
+    /* Acción / CTA */
+    --color-accion: light-dark(var(--naranja-7), var(--naranja-5));
+    --color-accion-claro: light-dark(var(--naranja-2), var(--naranja-3));
+    --color-accion-oscuro: light-dark(var(--naranja-9), var(--naranja-7));
 
     --width-menu: 275px;
 
@@ -80,8 +106,14 @@ html {
     -moz-osx-font-smoothing: grayscale;
 
     font-weight: 400;
+    line-height: var(--altura-linea-normal);
+    letter-spacing: var(--espaciado-letra-normal);
 
     section[role="main"]>div {
         width: calc(100% - var(--width-menu));
     }
+}
+
+h2 {
+    font-size: var(--tamaño-letra-xl);
 }

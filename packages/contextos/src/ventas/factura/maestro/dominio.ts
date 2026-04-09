@@ -16,3 +16,10 @@ export const recargarFacturas: ProcesarFacturas = async (contexto, payload) => {
 
     return Facturas.recargar(contexto, resultado);
 }
+
+export const ampliarFacturas: ProcesarFacturas = async (contexto, payload) => {
+    const criteria = payload as Criteria;
+    const resultado = await getFacturas(criteria.filtro, criteria.orden, criteria.paginacion);
+
+    return Facturas.ampliar(contexto, resultado);
+}

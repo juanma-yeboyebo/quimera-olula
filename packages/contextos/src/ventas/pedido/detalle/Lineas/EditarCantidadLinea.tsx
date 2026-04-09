@@ -44,7 +44,7 @@ export const EditarCantidadLinea = ({
   return (
     <quimera-formulario>
       <QInput
-        label="Cantidad"
+        label=""
         nombre="cantidad"
         valor={valor}
         erroneo={!!estado && estado.length > 0}

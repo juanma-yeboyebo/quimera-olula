@@ -1,0 +1,48 @@
+import { authMiddleware } from "#/auth/middlewares.ts";
+import { useTimerRefresco } from "#/auth/useTimerRefresco.ts";
+import { Vista } from "@olula/componentes/index.ts";
+import "@olula/lib/comun.css";
+import { FactoryObj, FactoryProvider } from "@olula/lib/factory_ctx.tsx";
+import { crearMenu, MenuContextFactory } from "@olula/lib/menu.ts";
+import { StrictMode, useEffect } from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouteObject, RouterProvider } from "react-router";
+import FactoryCremaCafe from "./factory.ts";
+import { router } from "./router_factory.ts";
+
+const root = createRoot(document.getElementById("root")!);
+const factoryCremaCafe = new FactoryCremaCafe();
+const appFactory =
+  factoryCremaCafe as unknown as Record<string, Record<string, unknown>>;
+const menuFactory = crearMenu(
+  factoryCremaCafe as unknown as Record<string, MenuContextFactory>
+);
+
+const rutas = createBrowserRouter([
+  {
+    path: "/",
+    middleware: [authMiddleware],
+    Component: Vista,
+    children: router as RouteObject[],
+  },
+]);
+
+// eslint-disable-next-line react-refresh/only-export-components
+const App = () => {
+  useTimerRefresco();
+
+  useEffect(() => {
+    FactoryObj.setMenu(menuFactory);
+    FactoryObj.setApp(appFactory);
+  }, []);
+
+  return <RouterProvider router={rutas} />;
+};
+
+root.render(
+  <StrictMode>
+    <FactoryProvider>
+      <App />
+    </FactoryProvider>
+  </StrictMode>
+);

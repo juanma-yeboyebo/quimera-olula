@@ -7,7 +7,7 @@
 
     .AccionesReglas button {
         padding: 0.5rem 1rem;
-        font-size: 1rem;
+        font-size: var(--tamaño-letra-m);
         border: 1px solid var(--blanco);
         cursor: pointer;
     }

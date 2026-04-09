@@ -45,7 +45,7 @@ export const FormEditarLineaDefecto: FormEditarLinea = {
     envasesPorPalet: 0
 };
 
-const onChange = (modelo: FormEditarLinea, campo: string, _: unknown, palet?: Record<string, unknown>) => {
+const onChange = (modelo: FormEditarLinea, campo: string, _: unknown, otro?: Record<string, unknown>) => {
 
     if (campo === "idVariedad") {
         return {
@@ -54,6 +54,7 @@ const onChange = (modelo: FormEditarLinea, campo: string, _: unknown, palet?: Re
             marca: "",
             idCalibre: "",
             calibre: "",
+            categoria: "",
         }
     }
     if (campo === "idMarca") {
@@ -61,11 +62,11 @@ const onChange = (modelo: FormEditarLinea, campo: string, _: unknown, palet?: Re
             ...modelo,
             idCalibre: "",
             calibre: "",
-            categoria: palet ? ((palet.idCategoria as string) ?? "") : "",
+            categoria: otro ? ((otro.idCategoria as string) ?? "") : "",
         }
     }
-    if (campo === "idTipoPalet" && palet) {
-        const envasesPorPalet = palet.cantidadEnvase as number;
+    if (campo === "idTipoPalet" && otro) {
+        const envasesPorPalet = otro.cantidadEnvase as number;
         return {
             ...modelo,
             envasesPorPalet,

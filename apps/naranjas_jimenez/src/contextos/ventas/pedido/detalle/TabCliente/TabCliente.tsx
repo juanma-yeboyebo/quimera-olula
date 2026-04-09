@@ -49,9 +49,9 @@ export const TabClienteNrj = ({
           </QBoton>
         </div>
 
-        {modelo.cliente_id !== "None" ? (
+        {modelo.cliente?.cliente_id !== "None" ? (
           <DirCliente
-            clienteId={modelo.cliente_id}
+            clienteId={modelo.cliente?.cliente_id ?? undefined}
             {...uiProps("direccion_id")}
           />
         ) : (

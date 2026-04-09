@@ -21,8 +21,12 @@ export const puntoVentaLocal = {
     obtenerSeguro: (): PuntoVentaTpv | null => {
         const puntoVentaStorage = localStorage.getItem(CLAVE_PUNTO_VENTA);
         if (puntoVentaStorage) {
-            const puntoVenta = JSON.parse(puntoVentaStorage);
-            return puntoVenta
+            try {
+                const puntoVenta = JSON.parse(puntoVentaStorage);
+                return puntoVenta
+            } catch {
+                return null;
+            }
         }
         return null;
     },
@@ -52,8 +56,12 @@ export const agenteActivo = {
     obtenerSeguro: (): AgenteTpv | null => {
         const agenteStorage = localStorage.getItem(CLAVE_AGENTE_TPV);
         if (agenteStorage) {
-            const agente = JSON.parse(agenteStorage);
-            return agente
+            try {
+                const agente = JSON.parse(agenteStorage);
+                return agente
+            } catch {
+                return null;
+            }
         }
         return null;
     },

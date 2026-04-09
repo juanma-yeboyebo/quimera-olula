@@ -15,6 +15,9 @@ const paginacionControlador = (
     return null;
   }
   const { pagina, limite } = paginacion;
+  if (limite >= totalEntidades) {
+    return null;
+  }
   const { paginasMostradas, totalPaginas } = calcularPaginacionSimplificada(
     totalEntidades,
     pagina,

@@ -109,7 +109,7 @@ const FormAltaPresupuesto = ({
 
   return (
     <div className="CrearPresupuesto">
-      <h2>Nueva Presupuesto</h2>
+      <h2>Nuevo Presupuesto</h2>
       <div className="modo-cliente">
         <QBoton onClick={onToggleModoCliente} variante="texto" tipo="button">
           {modoNoRegistrado ? "Cliente no registrado" : "Cliente registrado"}

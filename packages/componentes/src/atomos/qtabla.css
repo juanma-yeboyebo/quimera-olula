@@ -30,9 +30,13 @@ quimera-tabla {
     }
 
     tr {
-        background: var(--blanco);
-        border: var(--tamaño-borde-s) solid var(--gris-1);
-        border-radius: 8px;
+        background: var(--color-superficie);
+        border: var(--tamaño-borde-s) solid var(--color-borde-sutil);
+        border-radius: var(--redondeo-borde-xs);
+    }
+
+    tbody tr:nth-child(even) {
+        background: var(--color-superficie-elevada);
     }
 
     tbody tr {
@@ -49,6 +53,7 @@ quimera-tabla {
 
     thead tr {
         background: var(--color-head-tabla);
+        font-weight: var(--grosor-letra-6);
     }
 
     tbody[data-cargando="true"] td {
@@ -58,6 +63,7 @@ quimera-tabla {
     tbody tr:hover {
         background-color: var(--color-primario-hover);
         cursor: pointer;
+        transition: background-color var(--transicion-rapida);
     }
 
     tbody[data-cargando="true"] td::before {

@@ -1,4 +1,3 @@
-import { Factura } from "#/ventas/factura/diseño.ts";
 import { MetaTabla } from "@olula/componentes/index.js";
 
 import { Criteria, ProcesarContexto } from "@olula/lib/diseño.js";
@@ -7,7 +6,7 @@ import { ContextoMaestroVentasTpv, EstadoMaestroVentasTpv, VentaTpv } from "../d
 import { getVenta, getVentas, postVenta } from "../infraestructura.ts";
 
 
-export const metaTablaFactura: MetaTabla<Factura> = [
+export const metaTablaFactura: MetaTabla<VentaTpv> = [
     {
         id: "codigo",
         cabecera: "Código",
@@ -18,8 +17,9 @@ export const metaTablaFactura: MetaTabla<Factura> = [
         tipo: "fecha",
     },
     {
-        id: "nombre_cliente",
+        id: "cliente",
         cabecera: "Cliente",
+        render: (venta) => venta.cliente?.nombre ?? "Factura Simplificada",
     },
     {
         id: "total",

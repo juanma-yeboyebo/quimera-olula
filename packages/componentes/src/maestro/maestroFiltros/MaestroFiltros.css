@@ -35,7 +35,7 @@ etiquetas-filtro {
         border-radius: var(--redondeo-borde-s);
         padding: var(--espaciado-xxs) var(--espaciado-xs);
         background-color: var(--color-primario);
-        font-size: 0.9rem;
+        font-size: var(--tamaño-letra-m);
         position: relative;
         min-height: 30px;
 
@@ -63,7 +63,7 @@ etiquetas-filtro {
             position: absolute;
             right: 2px;
             top: -2px;
-            fill: #fff;
+            fill: var(--blanco);
         }
 
     }

@@ -1,3 +1,25 @@
+@keyframes modalIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes backdropIn {
+    from {
+        backdrop-filter: blur(0);
+    }
+
+    to {
+        backdrop-filter: blur(3px);
+    }
+}
+
 quimera-modal {
     position: fixed;
 
@@ -7,10 +29,13 @@ quimera-modal {
         max-width: 1280px;
         min-width: 400px;
         margin: auto;
-        box-shadow: var(--gris-5) 3px 3px 10px 2px;
+        box-shadow: var(--sombra-xl);
+        animation: modalIn var(--transicion-normal) ease-out;
 
         &::backdrop {
-            backdrop-filter: blur(1.5px);
+            backdrop-filter: blur(3px);
+            background: rgba(0, 0, 0, 0.15);
+            animation: backdropIn var(--transicion-normal) ease-out;
         }
 
         main {
@@ -21,44 +46,69 @@ quimera-modal {
 
         header form quimera-boton {
             position: absolute;
-            top: 0;
-            right: 0;
+            top: var(--espaciado-xxs);
+            right: var(--espaciado-xxs);
 
             button {
-                --color-primario: var(--color-texto-primario);
+                --color-primario: var(--color-texto-secundario);
                 --color-primario-oscuro: var(--color-texto-primario);
                 --color-primario-claro: transparent;
+                padding: var(--espaciado-xs);
+                line-height: 1;
+                transform-origin: center;
 
-                transition: all 0.3s ease-in-out;
+                transition: transform 0.2s ease, filter 0.2s ease;
 
                 &:hover {
-                    font-size: 2.5rem;
-                    filter: drop-shadow(2px 2px 2.5px var(--color-texto-secundario));
+                    transform: scale(1.28);
+                    filter: drop-shadow(1px 1px 1.5px var(--color-texto-secundario));
                 }
 
                 &:focus-visible {
-                    outline: none;
-                    filter: drop-shadow(1px 1px 1px var(--color-texto-secundario));
+                    outline: 2px solid var(--color-primario);
+                    outline-offset: 2px;
                 }
             }
         }
     }
 
+    &[data-con-titulo] {
+        dialog header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--espaciado-s);
+            padding: var(--espaciado-s) var(--espaciado-l) 0;
+
+            h2 {
+                margin: 0;
+                font-size: var(--tamaño-letra-xl);
+            }
+
+            form {
+                margin: 0;
+            }
+
+            form quimera-boton {
+                position: static;
+            }
+        }
+    }
+
     .mensaje {
-        margin: 2rem 0;
+        margin: var(--espaciado-2xl) 0;
     }
 
     .botones {
         display: flex;
         justify-content: end;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
+        gap: var(--espaciado-s);
+        margin-bottom: var(--espaciado-l);
     }
-
 
     .botones button {
         padding: 0.5rem 1rem;
-        font-size: 1rem;
+        font-size: var(--tamaño-letra-m);
         cursor: pointer;
     }
 }

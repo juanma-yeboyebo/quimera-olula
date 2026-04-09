@@ -13,6 +13,7 @@ const acciones = [
     },
     {
         texto: "Borrar",
+        advertencia: true,
         onClick: () => { },
         variante: "borde" as const,
         deshabilitado: true,

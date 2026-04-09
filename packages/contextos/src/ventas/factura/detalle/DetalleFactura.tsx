@@ -6,6 +6,7 @@ import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useModelo } from "@olula/lib/useModelo.js";
 import { useCallback, useEffect } from "react";
 import { useParams } from "react-router";
+import { CambiarDescuento } from "../../comun/componentes/moleculas/CambiarDescuento/CambiarDescuento.tsx";
 import { TotalesVenta } from "../../venta/vistas/TotalesVenta.tsx";
 import { BorrarFactura } from "../borrar/BorrarFactura.tsx";
 import { Factura } from "../diseño.ts";
@@ -40,29 +41,29 @@ export const DetalleFactura = ({
   );
 
   const factura = useModelo(metaFactura, ctx.factura);
+  const { modificado, valido } = factura;
 
   useEffect(() => {
     emitir("factura_id_cambiado", facturaId, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [facturaId]);
 
-  
   const { estado, lineaActiva } = ctx;
-  
+
   const titulo = (factura: Factura) => factura.codigo || "Nueva Factura";
-  
+
   const handleBorrar = useCallback(() => {
     emitir("borrar_solicitado");
   }, [emitir]);
-  
+
   const handleGuardar = useCallback(() => {
     emitir("edicion_de_factura_lista", factura.modelo);
   }, [emitir, factura]);
-  
+
   const handleCancelar = useCallback(() => {
     emitir("edicion_de_factura_cancelada");
   }, [emitir]);
-  
+
   if (!ctx.factura.id) return;
 
   return (
@@ -93,21 +94,22 @@ export const DetalleFactura = ({
         </Tab>
       </Tabs>
 
-      {editable(ctx.factura) && (
+      {editable(ctx.factura) && modificado && (
         <div className="botones maestro-botones">
-          <QBoton onClick={handleGuardar}>Guardar Cambios</QBoton>
+          <QBoton onClick={handleGuardar} deshabilitado={!valido}>
+            Guardar Cambios
+          </QBoton>
           <QBoton tipo="reset" variante="texto" onClick={handleCancelar}>
             Cancelar
           </QBoton>
         </div>
       )}
 
-      <TotalesVenta
-        neto={Number(ctx.factura.neto ?? 0)}
-        totalIva={Number(ctx.factura.total_iva ?? 0)}
-        total={Number(ctx.factura.total ?? 0)}
-        divisa={String(ctx.factura.divisa_id || "EUR")}
-      />
+      <TotalesVenta modeloVenta={factura} publicar={emitir} />
+
+      {estado === "CAMBIANDO_DESCUENTO" && (
+        <CambiarDescuento publicar={emitir} venta={ctx.factura} />
+      )}
 
       <Lineas
         factura={ctx.factura}

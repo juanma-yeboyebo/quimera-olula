@@ -19,6 +19,7 @@ import {
   metaEditarLinea,
   patchLineaNrj,
 } from "./editar_linea.ts";
+import { formateaCategoria } from "../dominio.ts";
 
 export const EditarLineaNrj = ({
   pedidoId,
@@ -49,24 +50,24 @@ export const EditarLineaNrj = ({
     await intentar(() => patchLineaNrj(pedidoId, linea.id, modelo));
     setCambiando(true);
     publicar("linea_actualizada");
-  }, [modelo, publicar, pedidoId, intentar]);
+  }, [intentar, linea.id, modelo, pedidoId, publicar]);
 
   const cancelar = useCallback(() => {
     if (!cambiando) publicar("editar_linea_cancelado");
   }, [cambiando, publicar]);
 
   useEffect(() => {
-    getItemsListaTipoPalet([], []).then(items => {
-      const item = items.find(i => i.id === formEditarLineaInicial.idTipoPalet);
-      if (item) {
-        set({ ...formEditarLineaInicial, envasesPorPalet: item.cantidadEnvase });
+    if (!modelo.idTipoPalet) return;
+    getItemsListaTipoPalet([], []).then((items) => {
+      const item = items.find((i) => i.id === modelo.idTipoPalet);
+      if (item && item.cantidadEnvase !== modelo.envasesPorPalet) {
+        set({ ...modelo, envasesPorPalet: item.cantidadEnvase });
       }
     });
-  }, [formEditarLineaInicial]);
+  }, [modelo, set]);
 
   const focus = useFocus();
   const cantidadEnvasesNominal = modelo.cantidadPalets * modelo.envasesPorPalet;
-  console.log("EL", cantidadEnvasesNominal, modelo);
 
   return (
     <QModal abierto={true} nombre="mostrar" onCerrar={cancelar}>
@@ -91,7 +92,13 @@ export const EditarLineaNrj = ({
             idVariedad={modelo.idVariedad}
             idMarca={modelo.idMarca}
           />
-          <QInput label="Categoria" {...uiProps("categoria")} deshabilitado={true} />
+          <QInput
+            key={modelo.categoria}
+            label="Categoria"
+            nombre="categoria"
+            valor={modelo.categoria ? formateaCategoria(modelo.categoria) : ""}
+            deshabilitado={true}
+          />
           <QInput
             label="Cantidad Palets"
             {...uiProps("cantidadPalets")}

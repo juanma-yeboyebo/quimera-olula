@@ -1,6 +1,6 @@
 import { Maquina } from "@olula/lib/diseño.js";
 import { ContextoMaestroAlbaran, EstadoMaestroAlbaran } from "./diseño.ts";
-import { Albaranes, recargarAlbaranes } from "./dominio.ts";
+import { Albaranes, ampliarAlbaranes, recargarAlbaranes } from "./dominio.ts";
 
 
 export const getMaquina: () => Maquina<EstadoMaestroAlbaran, ContextoMaestroAlbaran> = () => {
@@ -22,6 +22,8 @@ export const getMaquina: () => Maquina<EstadoMaestroAlbaran, ContextoMaestroAlba
             recarga_de_albaranes_solicitada: recargarAlbaranes,
 
             criteria_cambiado: [Albaranes.filtrar, recargarAlbaranes],
+
+            siguiente_pagina: [Albaranes.filtrar, ampliarAlbaranes],
 
             crear_albaran_solicitado: "CREANDO_ALBARAN",
         },

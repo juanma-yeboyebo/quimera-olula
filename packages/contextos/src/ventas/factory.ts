@@ -24,5 +24,5 @@ export class FactoryVentasOlula {
     static metaTablaPedido = getMetaTablaPedido
     static api_payloadPatchPedido = payloadPatchPedido
     static metaPedido = metaPedido
-    static menu = menuVentas
+    static menu: Record<string, { icono?: string; url?: string; regla?: string }> = menuVentas
 }
