@@ -7,6 +7,7 @@ quimera-tarjetas {
     display: block;
 
     .lista-contenedor-scroll {
+        padding-top: 1px;
         overflow-y: scroll;
         max-height: 64vh;
         width: 100%;
@@ -18,11 +19,11 @@ quimera-tarjeta {
     flex-direction: column;
     background: var(--color-fondo);
     border: var(--tamaño-borde-s) solid transparent;
-    border-radius: var(--radio-borde-m);
+    border-radius: var(--redondeo-borde-m);
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.04);
     margin: 0;
     padding: var(--espaciado-m);
-    transition: box-shadow 0.15s, border-color 0.15s;
+    transition: all 0.25s;
     cursor: pointer;
 
     &:hover {

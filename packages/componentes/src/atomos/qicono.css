@@ -1,3 +1,4 @@
 quimera-icono {
-    font-size: var(--tamaño-letra-m)
+    font-size: var(--tamaño-letra-m);
+    line-height: var(--tamaño-letra-m);
 }
