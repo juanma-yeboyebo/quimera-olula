@@ -2,8 +2,8 @@ import { Criteria, Entidad } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { MetaTabla } from "../atomos/qtabla.tsx";
 import { QTablaControlada } from "../atomos/qtablacontrolada.tsx";
-import { QTarjetaGenerica } from "../atomos/qtarjeta_generica.tsx";
 import { QTarjetas } from "../atomos/qtarjetas.tsx";
+import { QTarjetaMetatabla } from "../moleculas/qtarjeta_metatabla.tsx";
 import { SinDatos } from "../SinDatos/SinDatos.tsx";
 import "./Listado.css";
 import {
@@ -83,7 +83,7 @@ export const Listado = <T extends Entidad>({
       return (
         <QTarjetas
           tarjeta={(entidad: T) => (
-            <QTarjetaGenerica entidad={entidad} metaTabla={metaTabla} />
+            <QTarjetaMetatabla entidad={entidad} metaTabla={metaTabla} />
           )}
           datos={datos}
           cargando={cargando}

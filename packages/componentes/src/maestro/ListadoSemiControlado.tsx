@@ -3,9 +3,9 @@ import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { useCallback, useEffect, useState } from "react";
 import { MetaTabla } from "../atomos/qtabla.tsx";
 import { QTablaControlada } from "../atomos/qtablacontrolada.tsx";
-import { QTarjetaGenerica } from "../atomos/qtarjeta_generica.tsx";
 import { QTarjetas } from "../atomos/qtarjetas.tsx";
 import { expandirEntidad } from "../detalle/helpers.tsx";
+import { QTarjetaMetatabla } from "../moleculas/qtarjeta_metatabla.tsx";
 import { SinDatos } from "../SinDatos/SinDatos.tsx";
 import "./Listado.css";
 import { filtrarEntidad } from "./maestroFiltros/filtro.ts";
@@ -77,7 +77,7 @@ export const ListadoSemiControlado = <T extends Entidad>({
   const tarjetaGenerica =
     metaTabla !== undefined
       ? (entidad: T) => (
-          <QTarjetaGenerica entidad={entidad} metaTabla={metaTabla} />
+          <QTarjetaMetatabla entidad={entidad} metaTabla={metaTabla} />
         )
       : undefined;
 

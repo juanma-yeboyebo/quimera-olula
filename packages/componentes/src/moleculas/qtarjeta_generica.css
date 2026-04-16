@@ -1,0 +1,29 @@
+.qtarjeta-generica {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaciado-s);
+    width: 100%;
+}
+
+.qtarjeta-generica-grid {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--espaciado-s);
+
+    > :nth-child(2n) {
+        justify-self: end;
+    }
+}
+
+.qtarjeta-generica-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: var(--espaciado-xxs);
+}
+
+@media (max-width: 768px) {
+    .qtarjeta-generica-grid {
+        gap: var(--espaciado-xs);
+    }
+}
