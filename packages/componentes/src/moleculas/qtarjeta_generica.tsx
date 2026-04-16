@@ -4,6 +4,7 @@ import "./qtarjeta_generica.css";
 
 type QTarjetaGenericaProps = {
   mostrarTodo?: boolean;
+  avatar?: React.ReactNode;
   arribaIzquierda?: React.ReactNode;
   arribaDerecha?: React.ReactNode;
   abajoIzquierda?: React.ReactNode;
@@ -13,6 +14,7 @@ type QTarjetaGenericaProps = {
 
 export const QTarjetaGenerica = ({
   mostrarTodo = false,
+  avatar,
   arribaIzquierda = <div></div>,
   arribaDerecha = <div></div>,
   abajoIzquierda = <div></div>,
@@ -23,25 +25,20 @@ export const QTarjetaGenerica = ({
 
   return (
     <article className="qtarjeta-generica" data-expandida={expandida}>
-      {/* {columnaTitulo && (
-            <header className="qtarjeta-generica-cabecera">
-              <span className="qtarjeta-generica-titulo-label">
-                {columnaTitulo.cabecera}
-              </span>
-              <strong className="qtarjeta-generica-titulo-valor">
-                {valorColumna(entidad, columnaTitulo, placeholderVacio)}
-              </strong>
-            </header>
-          )} */}
+      <section className="qtarjeta-generica-principal">
+        {avatar && (
+          <section className="qtarjeta-generica-avatar">{avatar}</section>
+        )}
 
-      <section
-        className="qtarjeta-generica-grid"
-        aria-label="Campos prioritarios"
-      >
-        {arribaIzquierda}
-        {arribaDerecha}
-        {abajoIzquierda}
-        {abajoDerecha}
+        <section
+          className="qtarjeta-generica-grid"
+          aria-label="Campos prioritarios"
+        >
+          {arribaIzquierda ?? <div></div>}
+          {arribaDerecha ?? <div></div>}
+          {abajoIzquierda ?? <div></div>}
+          {abajoDerecha ?? <div></div>}
+        </section>
       </section>
 
       {expansion && (

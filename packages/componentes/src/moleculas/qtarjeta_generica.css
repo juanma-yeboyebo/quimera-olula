@@ -5,7 +5,27 @@
     width: 100%;
 }
 
+.qtarjeta-generica-principal {
+    display: flex;
+    gap: var(--espaciado-l);
+    align-items: center;
+}
+
+.qtarjeta-generica-avatar {
+    flex-grow: 0;
+    flex-shrink: 0;
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    display: grid;
+    place-content: center;
+    text-align: center;
+    background-color: var(--color-primario);
+    color: var(--blanco);
+}
+
 .qtarjeta-generica-grid {
+    flex-grow: 1;
     display: grid;
     grid-template-rows: 1fr 1fr;
     grid-template-columns: 1fr 1fr;
