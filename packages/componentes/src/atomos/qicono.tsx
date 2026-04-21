@@ -38,6 +38,7 @@ const iconos: Record<string, string | Icono> = {
   menu: "menu",
   calendario_vacio: "calendar-alt",
   check: "check",
+  checkdoble: "check-double",
   x_circle: "x-circle",
   minus: "minus",
   lista: "list-ul",
@@ -57,6 +58,8 @@ const iconos: Record<string, string | Icono> = {
   casa: "home",
   tarea: "task",
   llaveinglesa: "wrench",
+  estrella: "star",
+  relojarena: "hourglass",
 };
 
 export const QIcono = ({
