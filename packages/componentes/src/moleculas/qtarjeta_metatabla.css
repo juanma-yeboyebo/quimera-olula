@@ -33,9 +33,6 @@
     flex-direction: column;
     gap: var(--espaciado-xxs);
     flex: 0 0 calc((100% - var(--espaciado-s)) / 2);
-    width: calc((100% - var(--espaciado-s)) / 2);
-    max-width: calc((100% - var(--espaciado-s)) / 2);
-    min-width: calc((100% - var(--espaciado-s)) / 2);
 }
 
 .qtarjeta-metatabla-campo.campo--corto {
