@@ -1,4 +1,4 @@
-import { Box, QListItemModel } from "@quimera/comps";
+import { Box, Chip, QListItemModel } from "@quimera/comps";
 import { makeStyles } from "@quimera/styles";
 import { Avatar, ListItemAvatar, ListItemText, Typography } from "@quimera/thirdparty";
 import { useStateValue, util } from "quimera";
@@ -19,6 +19,14 @@ const useStyles = makeStyles(theme => ({
   },
   avatarServidoParcial: {
     backgroundColor: `${theme.palette.warning.main} !important`,
+  },
+  chipServidoParcial: {
+    borderRadius: 4,
+    marginLeft: theme.spacing(0.5),
+    fontSize: "0.8rem",
+    backgroundColor: `${theme.palette.warning.main} !important`,
+    color: `${theme.palette.common.white} !important`,
+    textTransform: "uppercase",
   },
 }));
 
@@ -80,6 +88,7 @@ function ListItemLinea({ selected = false, funPrimaryLeft, funPrimaryRight, hide
                   variant="body2"
                   color="textPrimary"
                 >{`${linea.referencia}`}</Typography>
+                {linea.canServida > 0 && linea.canServida < linea.cantidad && <Chip label={`${linea.canServida}/${linea.cantidad}`} size="small" className={classes.chipServidoParcial} />}
               </Box>
               <Box display="inline">
                 <Typography component="span" variant="body2" color="textPrimary">{`${linea.cantidad
