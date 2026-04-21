@@ -20,19 +20,30 @@
     display: grid;
     place-content: center;
     text-align: center;
-    background-color: var(--color-primario);
-    color: var(--blanco);
 }
 
 .qtarjeta-generica-grid {
     flex-grow: 1;
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: var(--espaciado-s);
 
-    > :nth-child(2n) {
-        justify-self: end;
+    >section {
+        display: flex;
+        justify-content: space-between;
+
+        >div {
+            min-width: 180px;
+        }
+
+        >div:nth-child(2n) {
+            text-align: right;
+        }
+    }
+
+    .qtarjeta-generica-grid-arriba {
+        font-size: large;
+        font-weight: bold;
     }
 }
 
