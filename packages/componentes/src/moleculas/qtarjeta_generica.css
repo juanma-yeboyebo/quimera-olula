@@ -32,10 +32,6 @@
         display: flex;
         justify-content: space-between;
 
-        >div {
-            min-width: 180px;
-        }
-
         >div:nth-child(2n) {
             text-align: right;
         }

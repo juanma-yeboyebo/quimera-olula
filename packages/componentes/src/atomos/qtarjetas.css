@@ -33,6 +33,14 @@ quimera-tarjeta {
     }
 }
 
+@media (max-width: 768px) {
+    quimera-tarjeta {
+        padding: var(--espaciado-m) 0;
+    }
+
+}
+
+
 quimera-tarjetas .lista-contenedor-scroll {
     display: flex;
     flex-direction: column;
