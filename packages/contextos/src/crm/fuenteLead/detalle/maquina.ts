@@ -10,7 +10,7 @@ export const getMaquina: () => Maquina<EstadoDetalleFuenteLead, ContextoDetalleF
 
             fuente_lead_cambiada: cambiarFuenteLead,
 
-            marcar_fuente_lead_por_defecto: marcarPorDefecto,
+            marcar_fuente_lead_por_defecto: [marcarPorDefecto, publicar("fuente_lead_marcada_defecto")],
 
             edicion_fuente_lead_cancelada: [getContextoVacio, publicar("fuente_lead_deseleccionada", null)],
 

@@ -11,6 +11,8 @@ export const getMaquina: () => Maquina<EstadoMaestroEstadosOportunidad, Contexto
 
             estado_oportunidad_deseleccionado: EstadosOportunidad.desactivar,
 
+            estado_oportunidad_marcado_defecto: (ctx) => recargarEstadosOportunidad(ctx, ctx.estados_oportunidad.criteria),
+
             estado_oportunidad_borrado: EstadosOportunidad.quitar,
 
             recarga_de_estados_oportunidad_solicitada: recargarEstadosOportunidad,

@@ -11,6 +11,8 @@ export const getMaquina: () => Maquina<EstadoMaestroFuentesLead, ContextoMaestro
 
             fuente_lead_deseleccionada: FuentesLead.desactivar,
 
+            fuente_lead_marcada_defecto: (ctx) => recargarFuentesLead(ctx, ctx.fuentes_lead.criteria),
+
             fuente_lead_borrada: FuentesLead.quitar,
 
             recarga_de_fuentes_lead_solicitada: recargarFuentesLead,

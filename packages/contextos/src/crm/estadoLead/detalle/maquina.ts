@@ -10,7 +10,7 @@ export const getMaquina: () => Maquina<EstadoDetalleEstadoLead, ContextoDetalleE
 
             estado_lead_cambiado: cambiarEstadoLead,
 
-            marcar_estado_lead_por_defecto: marcarPorDefecto,
+            marcar_estado_lead_por_defecto: [marcarPorDefecto, publicar("estado_lead_marcado_defecto")],
 
             edicion_estado_lead_cancelada: [getContextoVacio, publicar("estado_lead_deseleccionado", null)],
 

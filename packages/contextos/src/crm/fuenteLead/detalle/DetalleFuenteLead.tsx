@@ -1,10 +1,5 @@
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
-import {
-  Detalle,
-  QBoton,
-  QCheckbox,
-  QInput,
-} from "@olula/componentes/index.js";
+import { Detalle, QBoton, QInput } from "@olula/componentes/index.js";
 import { EmitirEvento, Entidad } from "@olula/lib/diseño.js";
 import { useModelo } from "@olula/lib/useModelo.js";
 import { useEffect } from "react";
@@ -69,10 +64,6 @@ export const DetalleFuenteLead = ({
 
           <quimera-formulario>
             <QInput label="Descripción" {...uiProps("descripcion")} />
-            <QCheckbox
-              label="Valor por defecto"
-              {...uiProps("valor_defecto")}
-            />
           </quimera-formulario>
 
           {modificado && (

@@ -10,7 +10,7 @@ export const getMaquina: () => Maquina<EstadoDetalleEstadoOportunidad, ContextoD
 
             estado_oportunidad_cambiado: cambiarEstadoOportunidad,
 
-            marcar_estado_oportunidad_por_defecto: marcarPorDefecto,
+            marcar_estado_oportunidad_por_defecto: [marcarPorDefecto, publicar("estado_oportunidad_marcado_defecto")],
 
             edicion_estado_oportunidad_cancelada: [getContextoVacio, publicar("estado_oportunidad_deseleccionado", null)],
 

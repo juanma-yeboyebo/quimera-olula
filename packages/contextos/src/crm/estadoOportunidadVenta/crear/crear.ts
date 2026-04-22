@@ -5,7 +5,6 @@ export const metaNuevoEstadoOportunidad: MetaModelo<EstadoOportunidad> = {
     campos: {
         descripcion: { requerido: true, validacion: (estado: EstadoOportunidad) => stringNoVacio(estado.descripcion) },
         probabilidad: { requerido: true, tipo: "numero" },
-        valor_defecto: { requerido: true, tipo: "checkbox" },
     },
 };
 
