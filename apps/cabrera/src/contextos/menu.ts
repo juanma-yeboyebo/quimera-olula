@@ -1,10 +1,10 @@
 import { MenuUsuarioElementos } from "@olula/componentes/menu/menu-usuario.tsx";
 
 /**
- * Elementos del menú de usuario personalizados para Sanhigia
+ * Elementos del menú de usuario personalizados para Cabrera
  * Nota: El nombre del usuario se actualiza dinámicamente en el componente
  */
-export const MenuUsuarioElementosSanhigia: MenuUsuarioElementos = [
+export const MenuUsuarioElementosCabrera: MenuUsuarioElementos = [
     {
         nombre: "Usuario",
         subelementos: [
@@ -14,23 +14,6 @@ export const MenuUsuarioElementosSanhigia: MenuUsuarioElementos = [
                 url: "/user",
                 color: "success",
                 variant: "main",
-            },
-        ],
-    },
-    {
-        nombre: "Administración",
-        subelementos: [
-            {
-                nombre: "Usuarios",
-                icono: "lista",
-                url: "/users",
-                // regla: "Users:visit",
-            },
-            {
-                nombre: "Grupos",
-                icono: "group",
-                url: "/groups",
-                // regla: "Groups:visit",
             },
         ],
     },

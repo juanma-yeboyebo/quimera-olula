@@ -1,0 +1,15 @@
+/**
+ * Estilos personalizados para el logo de Cabrera
+ */
+
+.logo-app {
+    transform: scale(0.5);
+    transition: all 0.4s ease-in-out;
+    filter: brightness(0) invert(1);
+    margin-left: -5rem;
+    margin-top: 0.5rem;
+}
+
+.logo-app:hover {
+    transform: scale(0.55);
+}
