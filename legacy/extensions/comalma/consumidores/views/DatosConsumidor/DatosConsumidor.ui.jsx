@@ -41,7 +41,7 @@ function DatosConsumidor({ callbackGuardado, useStyles, ...props }) {
             alwaysActive
             dynamicComp={() => (
               <Grid container>
-                <Grid item xs={mobile ? 12 : 5}>
+                <Grid size={mobile ? 12 : 5}>
                   <Field.Schema
                     id="consumidor.nombre"
                     label={"Nombre"}
@@ -50,8 +50,8 @@ function DatosConsumidor({ callbackGuardado, useStyles, ...props }) {
                     onClick={event => event.target.select()}
                   />
                 </Grid>
-                <Grid item xs={mobile ? 0 : 1} />
-                <Grid item xs={mobile ? 12 : 6}>
+                <Grid size={mobile ? 0 : 1} />
+                <Grid size={mobile ? 12 : 6}>
                   <Field.Schema
                     id="consumidor.apellidos"
                     label={"Apellidos"}
@@ -61,7 +61,7 @@ function DatosConsumidor({ callbackGuardado, useStyles, ...props }) {
                   />
                 </Grid>
 
-                <Grid item xs={mobile ? 12 : 8}>
+                <Grid size={mobile ? 12 : 8}>
                   <Field.Schema
                     id="consumidor.email"
                     label={"Email"}
@@ -70,8 +70,8 @@ function DatosConsumidor({ callbackGuardado, useStyles, ...props }) {
                     autoComplete="off"
                   />
                 </Grid>
-                <Grid item xs={mobile ? 0 : 1} />
-                <Grid item xs={mobile ? 12 : 3}>
+                <Grid size={mobile ? 0 : 1} />
+                <Grid size={mobile ? 12 : 3}>
                   <Field.Schema
                     id="consumidor.telefono"
                     label={"Teléfono"}
@@ -81,7 +81,7 @@ function DatosConsumidor({ callbackGuardado, useStyles, ...props }) {
                   />
                 </Grid>
 
-                <Grid item xs={mobile ? 12 : 5}>
+                <Grid size={mobile ? 12 : 5}>
                   <Field.Schema
                     id="consumidor.cifnif"
                     label={"D.N.I./Pasaporte/Tarjeta Residencia"}
@@ -90,8 +90,8 @@ function DatosConsumidor({ callbackGuardado, useStyles, ...props }) {
                     onClick={event => event.target.select()}
                   />
                 </Grid>
-                <Grid item xs={mobile ? 0 : 4} />
-                <Grid item xs={mobile ? 12 : 3}>
+                <Grid size={mobile ? 0 : 4} />
+                <Grid size={mobile ? 12 : 3}>
                   <Field.Date
                     id="consumidor.fechaNacimiento"
                     label="Fecha de nacimiento"
@@ -99,7 +99,7 @@ function DatosConsumidor({ callbackGuardado, useStyles, ...props }) {
                     autoComplete="off"
                   />
                 </Grid>
-                <Grid item xs={mobile ? 12 : 3}>
+                <Grid size={mobile ? 12 : 3}>
                   <Field.Text
                     id="consumidor.ciudad"
                     label="Ciudad"
@@ -108,8 +108,8 @@ function DatosConsumidor({ callbackGuardado, useStyles, ...props }) {
                     onClick={event => event.target.select()}
                   />
                 </Grid>
-                <Grid item xs={mobile ? 0 : 1} />
-                <Grid item xs={mobile ? 12 : 3}>
+                <Grid size={mobile ? 0 : 1} />
+                <Grid size={mobile ? 12 : 3}>
                   <Field.Text
                     id="consumidor.codPostal"
                     label="Código postal"
@@ -118,21 +118,17 @@ function DatosConsumidor({ callbackGuardado, useStyles, ...props }) {
                     onClick={event => event.target.select()}
                   />
                 </Grid>
-                <Grid item xs={mobile ? 0 : 1} />
-                <Grid item xs={mobile ? 12 : 4}>
+                <Grid size={mobile ? 0 : 1} />
+                <Grid size={mobile ? 12 : 4}>
                   <Provincia id="consumidor.provincia" label="Provincia" fullWidth />
                 </Grid>
 
-                {/* <Grid item xs={mobile ? 0 : 1} /> */}
-                <Grid
-                  item
-                  xs={mobile ? 12 : 3}
-                  style={{
+                {/* <Grid size={mobile ? 0 : 1} /> */}
+                <Grid size={mobile ? 12 : 3} style={{
                     display: "flex",
                     alignItems: "flex-end",
                     paddingBottom: "4px",
-                  }}
-                >
+                  }}>
                   <SelectorValores
                     id="consumidor.genero"
                     stateField="genero"
@@ -150,7 +146,7 @@ function DatosConsumidor({ callbackGuardado, useStyles, ...props }) {
                   flexDirection={"column"}
                   style={{ gap: mobile ? "15px" : "none" }}
                 >
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <Field.CheckBox
                       id="consumidor.aceptaCondiciones"
                       label={
@@ -167,7 +163,7 @@ function DatosConsumidor({ callbackGuardado, useStyles, ...props }) {
                       checked={consumidor.aceptaCondiciones}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <Field.CheckBox
                       id="consumidor.aceptaComunicacion"
                       label="Quiero recibir novedades y comunicaciones promocionales de almansaentucorazon"

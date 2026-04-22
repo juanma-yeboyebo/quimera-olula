@@ -171,7 +171,7 @@ function ItemCatalogo({ renderAvatar, model, modelName, selected = false, ...pro
   // ];
 
   return (
-    <Grid item key={modelName}>
+    <Grid key={modelName}>
       <Box m={1}>
         <Box
           minWidth={width}

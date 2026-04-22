@@ -33,7 +33,7 @@ function FacturasCliNueva({ callbackGuardado, useStyles, ...props }) {
         alwaysActive
         dynamicComp={() => (
           <Grid container direction="column" spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Cliente
                 id="factura.buffer/codCliente"
                 label={`Cliente ${factura.buffer.codCliente ?? ""}`}
@@ -42,7 +42,7 @@ function FacturasCliNueva({ callbackGuardado, useStyles, ...props }) {
                 autoFocus
               />
             </Grid>
-            <Grid item xs={12} style={{ visibility: "hidden", height: "0px" }}>
+            <Grid size={12} style={{ visibility: "hidden", height: "0px" }}>
               <DirCliente
                 id="factura.buffer/codDir"
                 codCliente={factura.buffer.codCliente}

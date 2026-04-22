@@ -43,7 +43,7 @@ function ParteCarroNuevo({ callbackGuardado, useStyles, ...props }) {
         alwaysActive
         dynamicComp={() => (
           <Grid container direction="column" spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Field.Select
                 id="buscarPor"
                 label="Buscar por"
@@ -55,7 +55,7 @@ function ParteCarroNuevo({ callbackGuardado, useStyles, ...props }) {
               />
             </Grid>
             {buscarPor === "cliente" && (
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Cliente
                   id="nuevoParte.buffer/codCliente"
                   label={`Cliente ${nuevoParte.buffer.codCliente ?? ""}`}
@@ -65,7 +65,7 @@ function ParteCarroNuevo({ callbackGuardado, useStyles, ...props }) {
               </Grid>
             )}
             {buscarPor === "proveedor" && (
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Proveedor
                   id="nuevoParte.buffer/codProveedor"
                   label={`Proveedor ${nuevoParte.buffer.codProveedor ?? ""}`}
@@ -75,7 +75,7 @@ function ParteCarroNuevo({ callbackGuardado, useStyles, ...props }) {
               </Grid>
             )}
             {buscarPor === "transportista" && (
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Proveedor
                   id="nuevoParte.buffer/codTransportista"
                   transportista={buscarPor === "transportista"}
@@ -87,7 +87,7 @@ function ParteCarroNuevo({ callbackGuardado, useStyles, ...props }) {
             )}
             {buscarPor && (
               <>
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <Agente
                     id="nuevoParte.buffer/codAgente"
                     label={`Agente ${nuevoParte.buffer.codAgente ?? ""}`}
@@ -97,11 +97,11 @@ function ParteCarroNuevo({ callbackGuardado, useStyles, ...props }) {
                   />
                 </Grid>
 
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Field.Date id="nuevoParte.buffer/fecha" label="Fecha" fullWidth />
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <Typography variant="overline">Observaciones</Typography>
                   <Field.TextArea id="nuevoParte.buffer.observaciones" label="" fullWidth />
                 </Grid>

@@ -263,7 +263,7 @@ function PedidoGenerarPreparaciones({ callbackChanged, callbackPedidoEnviadoPda,
                 <DocDirCliente />
 
                 <Grid container direction="column" spacing={1}>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
                     <QSection
                       title={`Trabajador asignado: ${pedido.buffer.codTrabajador || ""}`}
                       actionPrefix="pedido.buffer/codTrabajador"
@@ -278,7 +278,7 @@ function PedidoGenerarPreparaciones({ callbackChanged, callbackPedidoEnviadoPda,
                   </Grid>
 
                   {pedido.buffer.descPreparaciones && (
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                       <QSection
                         title="Preparaciones"
                         actionPrefix="pedido.descPreparaciones"
@@ -407,7 +407,7 @@ function PedidoGenerarPreparaciones({ callbackChanged, callbackPedidoEnviadoPda,
                     order="sh_codubicacionarticulo"
                     value={(linea, idx) => (
                       <Grid container direction="column" spacing={1}>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                           <Ubicacion
                             id="linea/codUbicacionArticulo"
                             value={linea.codUbicacionArticulo}

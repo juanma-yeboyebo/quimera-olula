@@ -23,7 +23,7 @@ function PresupuestosCliNuevoNoRegistrado({ callback, presupuesto, tratosAgente 
         alwaysActive
         dynamicComp={() => (
           <Grid container direction="column">
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Field.Text
                 id="presupuestoNoRegistrado.buffer/nombre"
                 label="Nombre"
@@ -32,7 +32,7 @@ function PresupuestosCliNuevoNoRegistrado({ callback, presupuesto, tratosAgente 
                 autoFocus
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Field.Text
                 id="presupuestoNoRegistrado.buffer/direccion"
                 label="Direccion"
@@ -40,7 +40,7 @@ function PresupuestosCliNuevoNoRegistrado({ callback, presupuesto, tratosAgente 
                 async
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Evento
                 id="presupuestoNoRegistrado.buffer/codEvento"
                 codEvento={presupuesto.buffer.codEvento}
@@ -50,7 +50,7 @@ function PresupuestosCliNuevoNoRegistrado({ callback, presupuesto, tratosAgente 
               />
             </Grid>
             {!idTratoProp && (
-              <Grid item xs={12} container justifyContent="flex-end">
+              <Grid container size={12} justifyContent="flex-end">
                 <TratosPresupuesto
                   id="presupuestoNoRegistrado.buffer/idTrato"
                   idTrato={presupuesto.buffer.idTrato}

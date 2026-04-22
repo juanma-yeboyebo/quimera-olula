@@ -87,8 +87,8 @@ function Articulo({
             >{`${articulo.buffer.referencia} / ${articulo.buffer.descripcion} / ${articulo.buffer.precioRef} €`}</Typography>
           </Grid>
           <Grid container align="center" justifyContent="flex-end" style={{ gap: 8 }}>
-            <Grid item xs={6} justifyContent="flex-start" style={{ gap: 8 }}>
-              <Grid item>
+            <Grid size={6} justifyContent="flex-start" style={{ gap: 8 }}>
+              <Grid>
                 <Button
                   id="publicadoWeb"
                   text="Cambiar visible web"
@@ -98,7 +98,7 @@ function Articulo({
                 />
               </Grid>
             </Grid>
-            <Grid item container style={{ gap: 8 }}>
+            <Grid container style={{ gap: 8 }}>
               <InputImagenConPortada
                 tieneFoto={articulo.buffer.tieneFoto}
                 onImagenChange={(files, esPortada) => {
@@ -119,20 +119,14 @@ function Articulo({
         </Box>
         <Box pt={2}>
           <Grid container justifyContent="flex-start">
-            <Grid item xs={12} pb={1} justifyContent="space-between">
+            <Grid size={12} pb={1} justifyContent="space-between">
               <Typography variant="subtittle1">General</Typography>
               <Typography variant="subtittle1">{`Visible web: ${articulo.buffer.publicadoWeb ? "Si" : "No"
                 }`}</Typography>
             </Grid>
           </Grid>
           <Grid container driection="column" justifyContent="space-between" style={{ display: "block" }}>
-            <Grid
-              container
-              xs={12}
-              direction="row"
-              justifyContent="space-between"
-              style={{ gap: 20 }}
-            >
+            <Grid container size={12} direction="row" justifyContent="space-between" style={{ gap: 20 }}>
               <Box flexGrow={1}>
                 <Field.Text
                   id="articulo.buffer/descripcion"
@@ -162,13 +156,7 @@ function Articulo({
                 />
               </Box>
             </Grid>
-            <Grid
-              container
-              xs={12}
-              direction="row"
-              justifyContent="flex-start"
-              style={{ gap: 20 }}
-            >
+            <Grid container size={12} direction="row" justifyContent="flex-start" style={{ gap: 20 }}>
               <Box flexGrow={1}>
                 <Field.Text
                   id="articulo.buffer/litraje"
@@ -197,14 +185,7 @@ function Articulo({
                 />
               </Box>
             </Grid>
-            <Grid
-              container
-              item
-              xs={12}
-              direction="row"
-              justifyContent="flex-start"
-              style={{ gap: 20 }}
-            >
+            <Grid container size={12} direction="row" justifyContent="flex-start" style={{ gap: 20 }}>
               <Box flexGrow={1}>
                 <Field.Text
                   id="articulo.buffer/perimetro"
@@ -233,13 +214,7 @@ function Articulo({
                 />
               </Box>
             </Grid>
-            <Grid
-              container
-              xs={12}
-              direction="row"
-              justifyContent="flex-start"
-              style={{ gap: 20 }}
-            >
+            <Grid container size={12} direction="row" justifyContent="flex-start" style={{ gap: 20 }}>
               <Box flexGrow={1}>
                 <Field.Float
                   id="articulo.buffer/precioBnp"
@@ -290,7 +265,7 @@ function Articulo({
         </Box>
         <Box>
           <Grid container driection="row" className={classes.cajaStock}>
-            <Grid item container xs={12} pb={1} justifyContent="space-between">
+            <Grid container size={12} pb={1} justifyContent="space-between">
               <Typography variant="subtittle1">Artículos proveedor</Typography>
             </Grid>
             <Grid container driection="row" justifyContent="flex-end">

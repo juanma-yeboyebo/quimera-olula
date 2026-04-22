@@ -50,8 +50,8 @@ function InformeRepeticiones({ useStyles }) {
       <Box my={1} p={1}>
         <Quimera.SubView id="InformeRepeticiones/InformeRepeticionesFiltro" />
       </Box>
-      <Grid container direction="column" xs={12} item justify="center" alignItems="center">
-        <Grid item>
+      <Grid container size={12} direction="column" justify="center" alignItems="center">
+        <Grid>
           <Box px={3} align="right">
             <Button
               id="cargarDatos"
@@ -62,7 +62,7 @@ function InformeRepeticiones({ useStyles }) {
             />
           </Box>
         </Grid>
-        <Grid item>
+        <Grid>
           <Button
             id="dameReport"
             text="Descargar informe"
@@ -75,14 +75,14 @@ function InformeRepeticiones({ useStyles }) {
       <Box my={1}>
         <Paper>
           <Box p={1}>
-            <Grid item>Total de clientes que han repetido: {clientesTotal}</Grid>
+            <Grid>Total de clientes que han repetido: {clientesTotal}</Grid>
           </Box>
         </Paper>
       </Box>
       <Box my={1}>
         <Paper>
           <Box p={1}>
-            <Grid item>
+            <Grid>
               Total de clientes que no han repetido: {clientesNoRepetidos.noRepetidos}
             </Grid>
           </Box>

@@ -53,7 +53,7 @@ export default function LineasCausasPerdidaTrato({ lineas, ...props }) {
             </IconButton>
           </Box>
           <Box flexGrow={10} direction="row" alignItems="center">
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Typography
                 variant="body1"
                 align="left"

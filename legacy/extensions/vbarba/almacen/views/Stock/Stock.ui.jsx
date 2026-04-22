@@ -94,18 +94,18 @@ function Stock({ idStock, initStock, referencia, callbackChanged, callbackVolver
       <Container>
         <Box mt={1}>
           <Grid container direction="column" style={{ marginBottom: "10px" }}>
-            <Grid item container xs={12} md={2} pb={1} justifyContent="flex-start">
+            <Grid container size={{ xs: 12, md: 2 }} pb={1} justifyContent="flex-start">
               <Typography variant="subtittle1">{`Finca: ${miFinca.descripcion}`}</Typography>
             </Grid>
-            <Grid item container xs={12} md={8} pb={1} justifyContent="center">
+            <Grid container size={{ xs: 12, md: 8 }} pb={1} justifyContent="center">
               <Typography component="span" variant="h6">{`${stock?.buffer?.referencia ?? ""} / ${stock?.buffer?.descripcion ?? ""
                 } / ${stock?.buffer?.precioRef ?? "0"} €`}</Typography>
             </Grid>
-            <Grid xs={0} md={2} />
+            <Grid size={{ xs: 0, md: 2 }} />
           </Grid>
           <Grid container align="center" justifyContent="space-between">
-            <Grid item container xs={6} justifyContent="flex-start" style={{ gap: 8 }}>
-              <Grid item xs={3}>
+            <Grid container size={6} justifyContent="flex-start" style={{ gap: 8 }}>
+              <Grid size={3}>
                 <Button
                   id="cambiarDisponible"
                   text={`${stock.buffer.disponible ? "Disponible" : "No disponible"}`}
@@ -115,7 +115,7 @@ function Stock({ idStock, initStock, referencia, callbackChanged, callbackVolver
                   startIcon={<Icon>swap_horiz</Icon>}
                 />
               </Grid>
-              <Grid item>
+              <Grid>
                 <Button
                   id="editarArticulo"
                   text="Editar"
@@ -125,8 +125,8 @@ function Stock({ idStock, initStock, referencia, callbackChanged, callbackVolver
                 />
               </Grid>
             </Grid>
-            <Grid item container xs={6} justifyContent="flex-end" style={{ gap: 8 }}>
-              <Grid item>
+            <Grid container size={6} justifyContent="flex-end" style={{ gap: 8 }}>
+              <Grid>
                 <Button
                   id="verImagen"
                   text="Ver imagen"
@@ -136,7 +136,7 @@ function Stock({ idStock, initStock, referencia, callbackChanged, callbackVolver
                   startIcon={<Icon>image</Icon>}
                 />
               </Grid>
-              <Grid item>
+              <Grid>
                 <Button
                   id="cambiarImagen"
                   onClick={() => document.getElementById("hiddenAttachInputImage").click()}
@@ -151,7 +151,7 @@ function Stock({ idStock, initStock, referencia, callbackChanged, callbackVolver
         </Box>
         <Box>
           <Grid container driection="row" className={classes.cajaStock}>
-            <Grid item container xs={12} pb={1} justifyContent="space-between">
+            <Grid container size={12} pb={1} justifyContent="space-between">
               <Typography variant="subtittle1">{`Total Stock: ${totalStockFinca}`}</Typography>
             </Grid>
             <Grid container driection="row" justifyContent="flex-end">

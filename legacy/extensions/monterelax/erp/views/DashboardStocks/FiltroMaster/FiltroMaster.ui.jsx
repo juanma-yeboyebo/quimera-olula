@@ -16,7 +16,7 @@ function FiltroMaster({ useStyles }) {
         <Box px={1}>
           <Box>
             <Grid container spacing={1} direction="column" >
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Field.Select
                   id="filtro.estado"
                   label="Estado"
@@ -25,16 +25,16 @@ function FiltroMaster({ useStyles }) {
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Modelo id="filtro.modelo" label="Modelo" fullWidth async />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <QArticulo id="filtro.reftela" label="Tela" fullWidth async />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Field.Int id="filtro.cantidad" label="Cantidad" fullWidth async />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Box display="flex" alignItems="flex-end" justifyContent="flex-end" height={1}>
                   <Box
                     className={classes.container}

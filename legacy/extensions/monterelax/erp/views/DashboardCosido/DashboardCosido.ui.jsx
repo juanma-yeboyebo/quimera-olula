@@ -40,13 +40,13 @@ function DashboardCosido({ tipo, useStyles }) {
           </Box>
         </Hidden>
         <Grid container spacing={1} direction="column" >
-          <Grid item xs={6} sm={6} md={4}>
+          <Grid size={{ xs: 6, sm: 6, md: 4 }}>
             <Box component="div" className={classes.mediaContainer}>
               <div className={classes.mediaContainerTitle}>Media UP Cosidas</div>
               <div className={classes.mediaContainerValue}> {mediaPiezas}</div>
             </Box>
           </Grid>
-          <Grid item xs={6} sm={6} md={4}>
+          <Grid size={{ xs: 6, sm: 6, md: 4 }}>
             <Box component="div" className={classes.mediaContainer}>
               <div className={classes.mediaContainerTitle}>Total UP Cosidas</div>
               <div className={classes.mediaContainerValue}> {totalPiezas}</div>

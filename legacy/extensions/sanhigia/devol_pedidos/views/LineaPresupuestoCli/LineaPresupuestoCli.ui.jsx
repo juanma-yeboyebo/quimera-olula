@@ -50,7 +50,7 @@ function LineaPresupuestoCli({ callbackGuardada, disabled, lineaInicial, useStyl
       )}
       <Collapse in={linea.buffer._status !== "deleting"}>
         <Grid container direction="column" spacing={0}>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Box display="flex" justifyContent="right" mt={1}>
               {!disabled && (
                 <Button
@@ -67,14 +67,14 @@ function LineaPresupuestoCli({ callbackGuardada, disabled, lineaInicial, useStyl
             </Box>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={12}>
             <QSection
               title={buffer.referencia}
               actionPrefix="linea/articulo"
               alwaysInactive={disabled}
               dynamicComp={() => (
                 <Grid container direction="column" spacing={1}>
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <QArticulo
                       id="linea.buffer/referencia"
                       label="Artículo"
@@ -83,10 +83,10 @@ function LineaPresupuestoCli({ callbackGuardada, disabled, lineaInicial, useStyl
                       fullWidth
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <Field.Schema id="linea.buffer/descripcion" schema={schema} fullWidth />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     {controlesSanhigia}
                   </Grid>
                 </Grid>
@@ -97,16 +97,16 @@ function LineaPresupuestoCli({ callbackGuardada, disabled, lineaInicial, useStyl
             </QSection>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={12}>
             <QSection
               actionPrefix="linea/cantidad"
               alwaysInactive={disabled}
               dynamicComp={() => (
                 <Grid container direction="column" spacing={1}>
-                  <Grid item xs={6}>
+                  <Grid size={6}>
                     <Field.Schema id="linea.buffer/cantidad" schema={schema} fullWidth autoFocus />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={6}>
                     <Field.Schema id="linea.buffer/pvpUnitario" schema={schema} fullWidth disabled={true} />
                   </Grid>
                 </Grid>
@@ -120,7 +120,7 @@ function LineaPresupuestoCli({ callbackGuardada, disabled, lineaInicial, useStyl
             </QSection>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={12}>
             <QSection actionPrefix="totales" alwaysInactive>
               <Totales
                 totales={[
@@ -132,18 +132,18 @@ function LineaPresupuestoCli({ callbackGuardada, disabled, lineaInicial, useStyl
             </QSection>
           </Grid>
 
-          <Grid container item size={{ xs: 12 }} spacing={1}>
-            <Grid item size={{ xs: 6 }}>
+          <Grid container size={{ xs: 12 }} spacing={1}>
+            <Grid size={{ xs: 6 }}>
               <QSection
                 title="Descuentos"
                 actionPrefix="linea/descuentos"
                 alwaysInactive={disabled}
                 dynamicComp={() => (
                   <Grid container direction="column" spacing={1}>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                       <Field.Schema id="linea.buffer/dtoLineal" schema={schema} fullWidth />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                       <Field.Schema id="linea.buffer/dtoPor" schema={schema} fullWidth />
                     </Grid>
                   </Grid>
@@ -162,23 +162,23 @@ function LineaPresupuestoCli({ callbackGuardada, disabled, lineaInicial, useStyl
               </QSection>
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid size={6}>
               <QSection
                 title="Impuestos"
                 actionPrefix="linea/Impuestos"
                 alwaysInactive={true}
                 dynamicComp={() => (
                   <Grid container direction="column" spacing={1}>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                       <Field.Schema id="linea.buffer/codImpuesto" schema={schema} fullWidth />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                       <Field.Schema id="linea.buffer/iva" schema={schema} fullWidth />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                       <Field.Schema id="linea.buffer/recargo" schema={schema} fullWidth />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                       <Field.Schema id="linea.buffer/irpf" schema={schema} fullWidth />
                     </Grid>
                   </Grid>

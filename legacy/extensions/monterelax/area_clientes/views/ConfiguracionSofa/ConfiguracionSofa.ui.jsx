@@ -63,16 +63,9 @@ function ConfiguracionSofa({ idModeloProp, callbackVolver, useStyles }) {
               onDragStart={result => dispatch({ type: "handleDragStart", payload: { result } })}
             >
               <Grid container justifyContent="center" direction="row" >
-                <Grid container item xs={1} justifyContent="center" direction="column" style={{ width: '75%' }}>
-                  <Grid
-                    container
-                    item
-                    // xs={12}
-                    justifyContent="center"
-                  // style={{ height: "300px" }}
-
-                  >
-                    <Grid container item xs={6} justifyContent="center" alignItems="flex-start">
+                <Grid container size={1} justifyContent="center" direction="column" style={{ width: '75%' }}>
+                  <Grid container size={12} justifyContent="center" style={{ height: "300px" }}>
+                    <Grid container size={6} justifyContent="center" alignItems="flex-start">
                       <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
                         <img
                           src={srcImage}
@@ -91,7 +84,7 @@ function ConfiguracionSofa({ idModeloProp, callbackVolver, useStyles }) {
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid item container xs={6} justifyContent="center">
+                    <Grid container size={6} justifyContent="center">
                       <Box mx={2} width={1}>
                         <QTela
                           id="idTela"
@@ -116,25 +109,19 @@ function ConfiguracionSofa({ idModeloProp, callbackVolver, useStyles }) {
                       </Box>
                     </Grid>
                   </Grid>
-                  <Grid container item>
+                  <Grid container>
                     <Box className={classes.cajaDropArea} minHeight={alturaDropArea} width={1}>
                       <Quimera.SubView id="ConfiguracionSofa/Montador" />
                     </Box>
                   </Grid>
                 </Grid>
-                <Grid
-                  container
-                  item
-                  xs={6}
-                  justifyContent="center"
-                  style={{ borderLeft: "1px solid lightgrey", width: '25%' }}
-                >
+                <Grid container size={6} justifyContent="center" style={{ borderLeft: "1px solid lightgrey", width: '25%' }}>
                   {!idTela ? (
                     <Typography variant="h4" align="center">
                       Escoja una tela para cargar las posibles configuraciones
                     </Typography>
                   ) : (
-                    <Grid container item style={{ overflow: "scroll", maxHeight: `${altura}` }}>
+                    <Grid container style={{ overflow: "scroll", maxHeight: `${altura}` }}>
                       <Quimera.SubView id="ConfiguracionSofa/Configuraciones" />
                     </Grid>
                   )}
@@ -145,7 +132,7 @@ function ConfiguracionSofa({ idModeloProp, callbackVolver, useStyles }) {
           <DialogActions>
             {!mobile ? (
               <Grid container justifyContent="space-between">
-                <Grid xs={4} item container alignItems="center">
+                <Grid container size={4} alignItems="center">
                   <Button
                     id="cancelar"
                     text="Volver al catálogo"
@@ -154,7 +141,7 @@ function ConfiguracionSofa({ idModeloProp, callbackVolver, useStyles }) {
                     onClick={() => dispatch({ type: "volverCatalogo" })}
                   />
                 </Grid>
-                <Grid xs={5} item container justifyContent="flex-end">
+                <Grid container size={5} justifyContent="flex-end">
                   <Box mr={2}>
                     <Typography variant="h3">{util.euros(totalPrecio)}</Typography>
                   </Box>
@@ -175,12 +162,12 @@ function ConfiguracionSofa({ idModeloProp, callbackVolver, useStyles }) {
               </Grid>
             ) : (
               <Grid container justifyContent="space-between" flexDirection="column">
-                <Grid item container alignItems="center" justifyContent="flex-end">
+                <Grid container alignItems="center" justifyContent="flex-end">
                   <Box mr={2}>
                     <Typography variant="h3">{util.euros(150)}</Typography>
                   </Box>
                 </Grid>
-                <Grid item container justifyContent="space-between">
+                <Grid container justifyContent="space-between">
                   <Button
                     id="cancelar"
                     text="Volver al catálogo"

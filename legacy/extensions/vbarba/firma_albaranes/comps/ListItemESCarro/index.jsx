@@ -111,7 +111,7 @@ function ListItemParteCarro({ renderAvatar, model, modelName, disabled = false, 
           }}
           dynamicComp={desactivar => (
             <Grid container justifyContent="center">
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <SelectorValores
                   id={`${tipo}TipoCarro`}
                   valores={arrayCarros}

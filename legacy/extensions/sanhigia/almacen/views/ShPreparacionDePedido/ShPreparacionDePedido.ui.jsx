@@ -352,7 +352,7 @@ function ShPreparacionDePedido({
                       order="sh_codubicacionarticulo"
                       value={(linea, idx) => (
                         <Grid container direction="column" spacing={1}>
-                          <Grid item xs={12}>
+                          <Grid size={12}>
                             <Ubicacion
                               id="linea/codUbicacionArticulo"
                               value={linea.codUbicacionArticulo}
@@ -384,7 +384,7 @@ function ShPreparacionDePedido({
                           estilos={estilosUbicacion}
                           dynamicComp={() => (
                             <Grid container direction="column" spacing={1}>
-                              <Grid item xs={12}>
+                              <Grid size={12}>
                                 <Ubicacion
                                   id="linea/codUbicacionArticulo"
                                   value={linea.codUbicacionArticulo}

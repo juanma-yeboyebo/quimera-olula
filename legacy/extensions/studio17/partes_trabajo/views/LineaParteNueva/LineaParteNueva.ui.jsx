@@ -80,7 +80,7 @@ function LineaParteNueva({
           alwaysActive
           dynamicComp={() => (
             <Grid container spacing={1} direction="column" >
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <S17Articulo
                   id="linea.buffer/referencia"
                   label="Trabajo"
@@ -89,10 +89,10 @@ function LineaParteNueva({
                   estatico={false}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Proyecto id="linea.buffer/proyecto" label="Proyecto" fullWidth estatico={false} />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 {linea.buffer.proyecto === codCentroEspecial ?
                   <Box width={1}>
                     <Field.TextArea id="linea.buffer.observaciones" label="Observaciones" fullWidth />
@@ -100,8 +100,8 @@ function LineaParteNueva({
                   : <></>
                 }
               </Grid>
-              <Grid container item xs={12} spacing={2}>
-                <Grid item xs={mobile ? 6 : 2}>
+              <Grid container size={12} spacing={2}>
+                <Grid size={mobile ? 6 : 2}>
                   <SelectorValores
                     id="nuevaLineaHoras"
                     label="Horas"
@@ -110,7 +110,7 @@ function LineaParteNueva({
                     fullWidth
                   ></SelectorValores>
                 </Grid>
-                <Grid item xs={mobile ? 6 : 2}>
+                <Grid size={mobile ? 6 : 2}>
                   <SelectorValores
                     id="nuevaLineaMinutos"
                     label="Minutos"

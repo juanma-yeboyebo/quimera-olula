@@ -68,7 +68,7 @@ function InformeClientesNuevos({ useStyles }) {
       <Container className={classes.container} disableGutters={width === "xs" || width === "sm"}>
         <Box my={1} mx={desktop ? "default" : 1}>
           <Grid container direction="column">
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <QArticulo
                 id="refs/ref1"
                 label={`Ref. 1${refs["ref1"] ? ` (${refs["ref1"]})` : ""}`}
@@ -76,7 +76,7 @@ function InformeClientesNuevos({ useStyles }) {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <QArticulo
                 id="refs/ref2"
                 label={`Ref. 2${refs["ref2"] ? ` (${refs["ref2"]})` : ""}`}
@@ -84,7 +84,7 @@ function InformeClientesNuevos({ useStyles }) {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <QArticulo
                 id="refs/ref3"
                 label={`Ref. 3${refs["ref3"] ? ` (${refs["ref3"]})` : ""}`}
@@ -94,7 +94,7 @@ function InformeClientesNuevos({ useStyles }) {
             </Grid>
           </Grid>
           <Grid container direction="column" align="center" justifyContent="space-between">
-            <Grid item container xs={6} justifyContent="flex-start">
+            <Grid container size={6} justifyContent="flex-start">
               <Field.Date
                 id="fechaDesde"
                 field="fechaDesde"
@@ -102,16 +102,9 @@ function InformeClientesNuevos({ useStyles }) {
                 className={classes.field}
               />
             </Grid>
-            <Grid
-              item
-              container
-              xs={6}
-              justifyContent="flex-end"
-              alignContent="flex-end"
-              style={{ gap: 8 }}
-            >
+            <Grid container size={6} justifyContent="flex-end" alignContent="flex-end" style={{ gap: 8 }}>
               {cliNuevos.filter(cli => cli.seleccionada === true)?.length > 0 && (
-                <Grid item>
+                <Grid>
                   <Box display="flex" alignItems="center">
                     <IconButton id="marcarSoloSeleccionados" size="small">
                       {soloSeleccionados ? (
@@ -124,7 +117,7 @@ function InformeClientesNuevos({ useStyles }) {
                   </Box>
                 </Grid>
               )}
-              <Grid item>
+              <Grid>
                 <Button
                   id="obtenerEmails"
                   text="Obtener emails"
@@ -134,7 +127,7 @@ function InformeClientesNuevos({ useStyles }) {
                   startIcon={<Icon>email</Icon>}
                 />
               </Grid>
-              <Grid item>
+              <Grid>
                 <Button
                   id="limpiarDatos"
                   text="Limpiar"
@@ -144,7 +137,7 @@ function InformeClientesNuevos({ useStyles }) {
                   startIcon={<Icon>cleaning_services_outlined</Icon>}
                 />
               </Grid>
-              <Grid item>
+              <Grid>
                 <Button
                   id="lanzarInforme"
                   text="Lanzar"

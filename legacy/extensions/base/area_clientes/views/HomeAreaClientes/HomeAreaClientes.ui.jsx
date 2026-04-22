@@ -24,7 +24,7 @@ function HomeAreaClientes({ useStyles }) {
       <br />
       <Container maxWidth="md" className="container HomeAreaClientes">
         <Grid container className="HomeAreaClientesItems">
-          <Grid item xs={8} sm={3} md={3} className="gridElement AreaClientesItem">
+          <Grid size={{ xs: 8, sm: 3, md: 3 }} className="gridElement AreaClientesItem">
             <Box mx={1}>
               <Button
                 className="AreaClientesItemButton"
@@ -40,7 +40,7 @@ function HomeAreaClientes({ useStyles }) {
             </Box>
           </Grid>
 
-          <Grid item xs={8} sm={3} md={3} className="gridElement AreaClientesItem">
+          <Grid size={{ xs: 8, sm: 3, md: 3 }} className="gridElement AreaClientesItem">
             <Box mx={1}>
               <Button
                 className="AreaClientesItemButton"
@@ -56,7 +56,7 @@ function HomeAreaClientes({ useStyles }) {
             </Box>
           </Grid>
 
-          <Grid item xs={8} sm={3} md={3} className="gridElement AreaClientesItem">
+          <Grid size={{ xs: 8, sm: 3, md: 3 }} className="gridElement AreaClientesItem">
             <Box mx={1}>
               <Button
                 className="AreaClientesItemButton"

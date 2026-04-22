@@ -31,7 +31,7 @@ function ToCarritoNuevo({ callbackGuardado, useStyles, ...props }) {
         alwaysActive
         dynamicComp={() => (
           <Grid container direction="column" spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Field.Schema id="carrito.buffer/referencia" schema={schema} fullWidth />
             </Grid>
           </Grid>

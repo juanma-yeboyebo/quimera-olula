@@ -30,7 +30,7 @@ function ToLineaCarrito({ callbackGuardada, disabled, lineaInicial, useStyles })
   return (
     <Quimera.Template id="ToLineaCarrito">
       <Grid container spacing={0} direction="column">
-        <Grid item xs={12}>
+        <Grid size={12}>
           <QTitleBox titulo={`REF ${linea.buffer.referencia ?? ""}`}>
             <Typography variant="h6">{linea.buffer.descripcion}</Typography>
           </QTitleBox>

@@ -255,7 +255,7 @@ function EstadoTrato({ tratoProp, refreshCallback, noMostrarBotonesProp }) {
             saveDisabled={() => !tratoBuffer.codEvento}
             dynamicComp={() => (
               <Grid container>
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <Evento
                     id="tratoBuffer.codEvento"
                     codEvento={tratoBuffer.codEvento}
@@ -281,7 +281,7 @@ function EstadoTrato({ tratoProp, refreshCallback, noMostrarBotonesProp }) {
                 saveDisabled={() => !tratoBuffer.codEvento || !codDirCli}
                 dynamicComp={() => (
                   <Grid container>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                       <DirCliente
                         id="codDirCli"
                         codCliente={trato?.cliente}
@@ -291,7 +291,7 @@ function EstadoTrato({ tratoProp, refreshCallback, noMostrarBotonesProp }) {
                       />
                     </Grid>
                     {dirCanaria && (
-                      <Grid item xs={12}>
+                      <Grid size={12}>
                         <SelectorValores
                           id="regimenIva"
                           label="Origen de salida"
@@ -302,7 +302,7 @@ function EstadoTrato({ tratoProp, refreshCallback, noMostrarBotonesProp }) {
                         ></SelectorValores>
                       </Grid>
                     )}
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                       <Evento
                         id="tratoBuffer.codEvento"
                         codEvento={tratoBuffer.codEvento}
@@ -342,7 +342,7 @@ function EstadoTrato({ tratoProp, refreshCallback, noMostrarBotonesProp }) {
                 alwaysActive
                 dynamicComp={() => (
                   <Grid container>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                       <DirCliente
                         id="codDirCli"
                         codCliente={trato?.cliente}
@@ -352,7 +352,7 @@ function EstadoTrato({ tratoProp, refreshCallback, noMostrarBotonesProp }) {
                       />
                     </Grid>
                     {dirCanaria && (
-                      <Grid item xs={12}>
+                      <Grid size={12}>
                         <SelectorValores
                           id="regimenIva"
                           label="Origen de salida"
@@ -363,7 +363,7 @@ function EstadoTrato({ tratoProp, refreshCallback, noMostrarBotonesProp }) {
                         ></SelectorValores>
                       </Grid>
                     )}
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                       <Evento
                         id="tratoBuffer.codEvento"
                         codEvento={tratoBuffer.codEvento}

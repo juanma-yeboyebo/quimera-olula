@@ -21,7 +21,7 @@ function DirCliente({ modelName, useStyles }) {
     <Quimera.Template id="DirCliente">
       <Box>
         <Grid container direction="column" spacing={1}>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Box display="flex" justifyContent="space-between">
               <Box width={1}>
                 {bloqueada ? (
@@ -50,7 +50,7 @@ function DirCliente({ modelName, useStyles }) {
           </Grid>
           {!bloqueada && (
             <>
-              <Grid item xs={2}>
+              <Grid size={2}>
                 <Field.Schema
                   id={`${modelName}/dirTipoVia`}
                   schema={schemas.dirClientes}
@@ -58,37 +58,37 @@ function DirCliente({ modelName, useStyles }) {
                   autoFocus
                 />
               </Grid>
-              <Grid item xs={8}>
+              <Grid size={8}>
                 <Field.Schema
                   id={`${modelName}/direccion`}
                   schema={schemas.dirClientes}
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={1}>
+              <Grid size={1}>
                 <Field.Schema id={`${modelName}/dirNum`} schema={schemas.dirClientes} fullWidth />
               </Grid>
-              <Grid item xs={1}>
+              <Grid size={1}>
                 <Field.Schema id={`${modelName}/dirOtros`} schema={schemas.dirClientes} fullWidth />
               </Grid>
-              <Grid item xs={10}>
+              <Grid size={10}>
                 <Field.Schema id={`${modelName}/ciudad`} schema={schemas.dirClientes} fullWidth />
               </Grid>
-              <Grid item xs={2}>
+              <Grid size={2}>
                 <Field.Schema
                   id={`${modelName}/codPostal`}
                   schema={schemas.dirClientes}
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={10}>
+              <Grid size={10}>
                 <Field.Schema
                   id={`${modelName}/provincia`}
                   schema={schemas.dirClientes}
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={2}>
+              <Grid size={2}>
                 <Field.Schema id={`${modelName}/codPais`} schema={schemas.dirClientes} fullWidth />
               </Grid>
             </>

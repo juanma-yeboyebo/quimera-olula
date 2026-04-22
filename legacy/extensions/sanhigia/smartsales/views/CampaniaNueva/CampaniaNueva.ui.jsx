@@ -208,7 +208,7 @@ function CampaniaNueva({ callbackChanged, initCampania }) {
                 //   campania.buffer.fechaInicioUltimaCompra && campania.buffer.fechaFinUltimaCompra,
                 dynamicComp: (
                   <Grid container>
-                    <Grid container item xs={5}>
+                    <Grid container size={5}>
                       <Box width={1}>
                         <Field.Schema
                           id={`campania.buffer.importeFacturadoMayorQue`}
@@ -219,8 +219,8 @@ function CampaniaNueva({ callbackChanged, initCampania }) {
                         />
                       </Box>
                     </Grid>
-                    <Grid container item xs={2} />
-                    <Grid container item xs={5}>
+                    <Grid container size={2} />
+                    <Grid container size={5}>
                       <Box width={1}>
                         <Field.Schema
                           id={`campania.buffer.importeFacturadoMenorQue`}
@@ -356,7 +356,7 @@ function CampaniaNueva({ callbackChanged, initCampania }) {
                       {!["repeticion", "captacion", "medicion"].includes(campania.buffer.tipo) ? (
                         <>
                           {(Object.values(listasProductos ?? {}) ?? []).map((lista, idx) => (
-                            <Grid item xs={6}>
+                            <Grid size={6}>
                               <Box>
                                 <Typography>{lista?.name}</Typography>
                                 <SelectorValores
@@ -398,7 +398,7 @@ function CampaniaNueva({ callbackChanged, initCampania }) {
                           ))}
                         </>
                       ) : (
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                           {(campania?.buffer?.productos?.["lista_incluidos"]?.refs ?? []).map(
                             (producto, idx) => (
                               <div key={producto?.referencia}>
@@ -428,7 +428,7 @@ function CampaniaNueva({ callbackChanged, initCampania }) {
                     {!["repeticion", "captacion", "medicion"].includes(campania.buffer.tipo) ? (
                       <>
                         {(Object.values(listasProductos ?? {}) ?? []).map((lista, idx) => (
-                          <Grid item xs={12}>
+                          <Grid size={12}>
                             <Box>
                               <Typography variant="overline">{`${lista?.name}${campania?.buffer?.productos[lista?.key]?.refs?.length > 0
                                   ? `(${campania.buffer.productos[lista?.key].tipo})`
@@ -542,18 +542,11 @@ function CampaniaNueva({ callbackChanged, initCampania }) {
                           </IconButton>
                         </Box>
                         <Grid container width={1} display={"flex"} alignItems={"center"}>
-                          <Grid item xs={7}>
+                          <Grid size={7}>
                             <span>{producto?.descripcion}</span>
                           </Grid>
-                          <Grid
-                            container
-                            item
-                            xs={5}
-                            display={"flex"}
-                            flexDirection="row"
-                            alignItems={"center"}
-                          >
-                            <Grid item xs={5} style={{ paddingLeft: "10px" }}>
+                          <Grid container size={5} display={"flex"} flexDirection="row" alignItems={"center"}>
+                            <Grid size={5} style={{ paddingLeft: "10px" }}>
                               <Field.Int
                                 id="productoOfertarList/cantidad"
                                 index={idx}
@@ -562,8 +555,8 @@ function CampaniaNueva({ callbackChanged, initCampania }) {
                                 onClick={event => event.target.select()}
                               />
                             </Grid>
-                            <Grid item xs={2} />
-                            <Grid item xs={5}>
+                            <Grid size={2} />
+                            <Grid size={5}>
                               <Field.Currency
                                 id="productoOfertarList/pvp"
                                 index={idx}

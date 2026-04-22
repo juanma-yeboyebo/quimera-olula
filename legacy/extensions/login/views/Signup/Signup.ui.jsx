@@ -32,15 +32,15 @@ function Signup() {
   return (
     <Quimera.Template id="Signup">
       <Grid container justify="center" className={classes.root}>
-        <Grid item xs={11} sm={8} md={4} lg={3} xl={2}>
+        <Grid size={{ xs: 11, sm: 8, md: 4, lg: 3, xl: 2 }}>
           <Paper>
             <Grid container direction="column">
-              <Grid item xs className={clsx(classes.gridItems, classes.header)}>
+              <Grid size="grow" className={clsx(classes.gridItems, classes.header)}>
                 <Typography className={classes.typography} variant="h5">
                   Suscríbete
                 </Typography>
               </Grid>
-              <Grid item xs className={classes.gridItems}>
+              <Grid size="grow" className={classes.gridItems}>
                 <Field.Text
                   id="user"
                   label="Usuario"
@@ -48,7 +48,7 @@ function Signup() {
                   startAdornment={<Icon>personrounded</Icon>}
                 />
               </Grid>
-              <Grid item xs className={classes.gridItems}>
+              <Grid size="grow" className={classes.gridItems}>
                 <Field.Text
                   id="email"
                   label="E-mail"
@@ -56,7 +56,7 @@ function Signup() {
                   startAdornment={<Icon>emailrounded</Icon>}
                 />
               </Grid>
-              <Grid item xs className={classes.gridItems}>
+              <Grid size="grow" className={classes.gridItems}>
                 <Field.Password
                   id="pass"
                   label="Contraseña"
@@ -64,7 +64,7 @@ function Signup() {
                   startAdornment={<Icon>lockrounded</Icon>}
                 />
               </Grid>
-              <Grid item xs={12} className={classes.gridItems}>
+              <Grid size={12} className={classes.gridItems}>
                 <Button id="registrarLogin" text="REGISTRO" variant="text" />
               </Grid>
             </Grid>

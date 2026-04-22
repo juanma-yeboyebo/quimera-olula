@@ -90,7 +90,7 @@ function Stocks({ useStyles, idRefStockProp, referenciaArticulo }) {
             <Container>
               <Box mx={1} my={1}>
                 <Grid container direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
-                  <Grid item sx={{
+                  <Grid sx={{
                     flex: '0 0 33.333%',
                     maxWidth: '33.333%',
                     width: '33.333%',
@@ -109,32 +109,20 @@ function Stocks({ useStyles, idRefStockProp, referenciaArticulo }) {
                     />
                   </Grid>
 
-                  <Grid
-                    item
-                    xs={6}
-                    md={4}
-                    pb={1}
-                    style={{
+                  <Grid size={{ xs: 6, md: 4 }} pb={1} style={{
                       textAlign: mobile ? "left" : "center",
                       margin: mobile ? "30px 0px 10px 0px" : "inherit"
-                    }}
-                  >
+                    }}>
                     <Typography variant="subtittle1">
                       {`Finca: ${miFinca?.descripcion}`}
                     </Typography>
                   </Grid>
 
 
-                  <Grid
-                    item
-                    xs={6}
-                    md={4}
-                    pb={1}
-                    style={{
+                  <Grid size={{ xs: 6, md: 4 }} pb={1} style={{
                       textAlign: "right",
                       margin: mobile ? "30px 0px 10px 0px" : "inherit"
-                    }}
-                  >
+                    }}>
                     <Button
                       id="crearStocks"
                       onClick={() =>

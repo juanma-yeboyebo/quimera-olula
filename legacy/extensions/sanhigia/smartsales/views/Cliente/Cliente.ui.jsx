@@ -61,7 +61,7 @@ function Cliente({ callbackChanged, codCliente, initCliente, useStyles }) {
         sideButtons={<></>}
       >
         <Grid container spacing={0} display="flex">
-          <Grid item xs={12} sm={12}>
+          <Grid size={{ xs: 12, sm: 12 }}>
             {/* <QSection title={`Nombre Cliente`} actionPrefix="cliente.buffer/nombre" alwaysInactive>
               <Box display="flex">
                 <Typography variant="body1">{cliente.buffer.nombre || ""}</Typography>
@@ -74,7 +74,7 @@ function Cliente({ callbackChanged, codCliente, initCliente, useStyles }) {
             </QSection>
           </Grid>
           <Box display={"flex"} justifyContent={"space-between"} width={1}>
-            <Grid item xs={6} sm={6}>
+            <Grid size={{ xs: 6, sm: 6 }}>
               <QSection
                 title={`Forma de pago`}
                 actionPrefix="cliente.buffer/formaPago"
@@ -85,7 +85,7 @@ function Cliente({ callbackChanged, codCliente, initCliente, useStyles }) {
                 </Box>
               </QSection>
             </Grid>
-            <Grid item xs={6} sm={6}>
+            <Grid size={{ xs: 6, sm: 6 }}>
               <QSection title={`Telefono`} actionPrefix="cliente.buffer/telefono" alwaysInactive>
                 <Box display="flex">
                   <Typography variant="body1">{cliente.buffer.telefono || ""}</Typography>
@@ -93,7 +93,7 @@ function Cliente({ callbackChanged, codCliente, initCliente, useStyles }) {
               </QSection>
             </Grid>
           </Box>
-          <Grid item xs={12} sm={12}>
+          <Grid size={{ xs: 12, sm: 12 }}>
             <QSection title={`Direccion`} actionPrefix="cliente.buffer/dirCliente" alwaysInactive>
               <Box display="flex">
                 <Typography variant="body1">{cliente.buffer.dirCliente || ""}</Typography>

@@ -30,13 +30,13 @@ function InformePedidosXAgente({ useStyles }) {
         titulo={`Pedidos por agente`}
         botonesCabecera={[{ icon: "close", id: "atras", text: "Atrás" }]}
       >
-        <Grid container direction="column" item spacing={1}>
-          <Grid item xs={12}>
+        <Grid container direction="column" spacing={1}>
+          <Grid size={12}>
             <Box width={1} border={0}>
               <Agente id="filtro.idAgente" label="Agente" fullWidth />
             </Box>
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Box width={1} border={0}>
               <Field.Select
                 id="filtro.intervaloFecha"
@@ -46,10 +46,10 @@ function InformePedidosXAgente({ useStyles }) {
               />
             </Box>
           </Grid>
-          <Grid item xs={6}>
+          <Grid size={6}>
             <Field.Date id="filtro.fechaDesde" label="Fecha desde" className={classes.field} />
           </Grid>
-          <Grid item xs={6}>
+          <Grid size={6}>
             <Field.Date id="filtro.fechaHasta" label="Fecha hasta" className={classes.field} />
           </Grid>
         </Grid>

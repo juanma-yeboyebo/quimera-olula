@@ -188,7 +188,7 @@ function Inventario({ callbackChanged, codInventario, initInventario, useStyles 
                   </Box>
                 </QTitleBox>
 
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <QSection
                     title="Observaciones"
                     actionPrefix="inventario.buffer"

@@ -39,7 +39,7 @@ function DatosComercio({ callbackGuardado, useStyles, ...props }) {
             alwaysActive
             dynamicComp={() => (
               <Grid container spacing={1} style={{ marginBottom: "8px" }}>
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <Field.Schema
                     id="comercio.nombre"
                     label={"Nombre"}
@@ -49,11 +49,11 @@ function DatosComercio({ callbackGuardado, useStyles, ...props }) {
                     onClick={event => event.target.select()}
                   />
                 </Grid>
-                <Grid item xs={mobile ? 12 : 8}>
+                <Grid size={mobile ? 12 : 8}>
                   <Field.Schema id="comercio.email" label={"Email"} fullWidth disabled />
                 </Grid>
-                <Grid item xs={mobile ? 0 : 1} />
-                <Grid item xs={mobile ? 12 : 3}>
+                <Grid size={mobile ? 0 : 1} />
+                <Grid size={mobile ? 12 : 3}>
                   <Field.Schema
                     id="comercio.cifnif"
                     label={"Cif/Nif"}
@@ -63,7 +63,7 @@ function DatosComercio({ callbackGuardado, useStyles, ...props }) {
                     onClick={event => event.target.select()}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <SelectorValores
                     id="comercio.tipo"
                     stateField="tipo"
@@ -75,7 +75,7 @@ function DatosComercio({ callbackGuardado, useStyles, ...props }) {
                     fullWidth
                   ></SelectorValores>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <Box mt={2}>
                     <Typography variant="body">
                       Si alguno de los datos no son correctos, desea cambiarlos o tiene alguna duda,

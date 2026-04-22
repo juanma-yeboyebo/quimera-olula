@@ -49,22 +49,22 @@ function DevolucionDetalle({ idPedido, callbackCerrado, useStyles }) {
                   <Icon>close</Icon>
                 </IconButton>
                 <Grid container direction="column" justify="space-around">
-                  <Grid item className={classes.codigoPedido}>
+                  <Grid className={classes.codigoPedido}>
                     <Typography variant="h5">{`Devolución  ${pedido?.codigo}`}</Typography>
                   </Grid>
-                  <Grid item>
+                  <Grid>
                     <Typography variant="h5">{`${util.formatDate(pedido?.fecha)}`}</Typography>
                   </Grid>
-                  <Grid item>
+                  <Grid>
                     <Typography variant="h5">{`${util.euros(pedido?.total)}`}</Typography>
                   </Grid>
                 </Grid>
               </Box>
-              <Grid xs={12} item className={classes.gridConfirmar}>
-                <Grid item>
+              <Grid size={12} className={classes.gridConfirmar}>
+                <Grid>
                   <Typography variant="subtitle1">{pedido?.nombreCliente}</Typography>
                 </Grid>
-                <Grid item>
+                <Grid>
                   <Button
                     id="prepararDevolucion"
                     variant="contained"

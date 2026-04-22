@@ -32,7 +32,7 @@ function PedidosCliNuevo({ callbackGuardado, useStyles, ...props }) {
         alwaysActive
         dynamicComp={() => (
           <Grid container direction="column" spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Cliente
                 id="pedido.buffer/codCliente"
                 label={`Cliente ${pedido.buffer.codCliente ?? ""}`}
@@ -41,7 +41,7 @@ function PedidosCliNuevo({ callbackGuardado, useStyles, ...props }) {
                 autoFocus
               />
             </Grid>
-            <Grid item xs={12} style={{ visibility: "hidden", height: "0px" }}>
+            <Grid size={12} style={{ visibility: "hidden", height: "0px" }}>
               <DirCliente
                 id="pedido.buffer/codDir"
                 codCliente={pedido.buffer.codCliente}

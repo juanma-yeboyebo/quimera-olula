@@ -41,14 +41,14 @@ function TesoreriaMaster({ useStyles }) {
                 <ListItemText
                   primary={
                     <Grid container display="flex" alignItems="center">
-                      <Grid item xs={2}>
+                      <Grid size={2}>
                         <Box display="flex" justifyContent="flex-start">
                           <Typography>
                             <strong>{util.formatDate(recibo.fechav)}</strong>
                           </Typography>
                         </Box>
                       </Grid>
-                      <Grid item xs={10}>
+                      <Grid size={10}>
                         <Box
                           display="flex"
                           alignItems="flex-end"
@@ -61,7 +61,7 @@ function TesoreriaMaster({ useStyles }) {
                             alignItems="center"
                             justifycontent="flex-end"
                           >
-                            <Grid item xs={12} md={8}>
+                            <Grid size={{ xs: 12, md: 8 }}>
                               <Box
                                 display="flex"
                                 justifyContent="flex-end"
@@ -70,7 +70,7 @@ function TesoreriaMaster({ useStyles }) {
                                 {util.euros(recibo.importerecibo)}
                               </Box>
                             </Grid>
-                            <Grid item xs={12} md={4}>
+                            <Grid size={{ xs: 12, md: 4 }}>
                               <Box
                                 display="flex"
                                 justifyContent="flex-end"

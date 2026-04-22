@@ -43,7 +43,7 @@ function LineaFacturaCli({ callbackGuardada, disabled, lineaInicial, useStyles }
       )}
       <Collapse in={linea.buffer._status !== "deleting"}>
         <Grid container spacing={0} direction="column">
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Box display="flex" justifyContent="right" mt={1}>
               {!disabled && (
                 <Button
@@ -60,14 +60,14 @@ function LineaFacturaCli({ callbackGuardada, disabled, lineaInicial, useStyles }
             </Box>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={12}>
             <QSection
               title={buffer.referencia}
               actionPrefix="linea/articulo"
               alwaysInactive={disabled}
               dynamicComp={() => (
                 <Grid container spacing={1} direction="column" >
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <QArticulo
                       id="linea.buffer/referencia"
                       label="Artículo"
@@ -76,10 +76,10 @@ function LineaFacturaCli({ callbackGuardada, disabled, lineaInicial, useStyles }
                       fullWidth
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <Field.Schema id="linea.buffer/descripcion" schema={schema} fullWidth />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <Quimera.Block id="afterDescripcion" />
                   </Grid>
                 </Grid>
@@ -90,16 +90,16 @@ function LineaFacturaCli({ callbackGuardada, disabled, lineaInicial, useStyles }
             </QSection>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={12}>
             <QSection
               actionPrefix="linea/cantidad"
               alwaysInactive={disabled}
               dynamicComp={() => (
                 <Grid container spacing={1} direction="column" >
-                  <Grid item xs={6}>
+                  <Grid size={6}>
                     <Field.Schema id="linea.buffer/cantidad" schema={schema} fullWidth autoFocus />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={6}>
                     <Field.Schema id="linea.buffer/pvpUnitario" schema={schema} fullWidth />
                   </Grid>
                 </Grid>
@@ -113,7 +113,7 @@ function LineaFacturaCli({ callbackGuardada, disabled, lineaInicial, useStyles }
             </QSection>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={12}>
             <QSection actionPrefix="totales" alwaysInactive>
               <Totales
                 totales={[
@@ -125,18 +125,18 @@ function LineaFacturaCli({ callbackGuardada, disabled, lineaInicial, useStyles }
             </QSection>
           </Grid>
 
-          <Grid container item size={{ xs: 12 }} spacing={1}>
-            <Grid item size={{ xs: 6 }}>
+          <Grid container size={{ xs: 12 }} spacing={1}>
+            <Grid size={{ xs: 6 }}>
               <QSection
                 title="Descuentos"
                 actionPrefix="linea/descuentos"
                 alwaysInactive={disabled}
                 dynamicComp={() => (
                   <Grid container spacing={1} direction="column" >
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                       <Field.Schema id="linea.buffer/dtoLineal" schema={schema} fullWidth />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                       <Field.Schema id="linea.buffer/dtoPor" schema={schema} fullWidth />
                     </Grid>
                   </Grid>
@@ -155,23 +155,23 @@ function LineaFacturaCli({ callbackGuardada, disabled, lineaInicial, useStyles }
               </QSection>
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid size={6}>
               <QSection
                 title="Impuestos"
                 actionPrefix="linea/Impuestos"
                 alwaysInactive={true}
                 dynamicComp={() => (
                   <Grid container spacing={1} direction="column" >
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                       <Field.Schema id="linea.buffer/codImpuesto" schema={schema} fullWidth />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                       <Field.Schema id="linea.buffer/iva" schema={schema} fullWidth />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                       <Field.Schema id="linea.buffer/recargo" schema={schema} fullWidth />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                       <Field.Schema id="linea.buffer/irpf" schema={schema} fullWidth />
                     </Grid>
                   </Grid>

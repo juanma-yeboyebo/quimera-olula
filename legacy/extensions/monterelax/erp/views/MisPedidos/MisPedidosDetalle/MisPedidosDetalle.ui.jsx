@@ -31,7 +31,7 @@ function MisPedidosDetalle({ useStyles }) {
             <Box px={0} my={1}>
               <Box width={1} border={0} borderColor="gray" height={"calc(100%)"}>
                 <Grid container spacing={0} direction="column">
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <Box display="flex" justifyContent="space-between">
                       <Box display="flex" flexDirection="inline">
                         <QSection title="Fecha de Pedido" actionPrefix="pedido" alwaysInactive>
@@ -68,7 +68,7 @@ function MisPedidosDetalle({ useStyles }) {
                     </Box>
                   </Grid>
 
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <Box display="flex" justifyContent="flex-end">
                       <QSection actionPrefix="totales" alwaysInactive>
                         <Totales
@@ -82,7 +82,7 @@ function MisPedidosDetalle({ useStyles }) {
                     </Box>
                   </Grid>
 
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <Box>
                       <Typography variant="overline">Líneas</Typography>
                       <List>

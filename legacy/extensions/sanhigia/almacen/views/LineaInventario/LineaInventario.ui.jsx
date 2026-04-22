@@ -53,7 +53,7 @@ function LineaInventario({
           }}
           dynamicComp={() => (
             <Grid container direction="column" spacing={2} justifyContent="space-between" alignItems="center">
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Field.Schema
                   label="Cantidad Inicial"
                   id="linea.buffer/cantidadIni"
@@ -62,7 +62,7 @@ function LineaInventario({
                   disabled
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Field.Schema
                   label="Cantidad Final"
                   id="linea.buffer/cantidad"

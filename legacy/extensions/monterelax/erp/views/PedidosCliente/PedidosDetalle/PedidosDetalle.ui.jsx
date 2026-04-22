@@ -51,7 +51,7 @@ function PedidosDetalle({ useStyles }) {
                 {indiceTab === 0 && (
                   <Box>
                     <Grid container spacing={1} direction="column" >
-                      <Grid item xs={12}>
+                      <Grid size={12}>
                         <Field.Text
                           id={`pedidos.dict.${pedidos.current}.nombreCliente`}
                           fullWidth
@@ -59,7 +59,7 @@ function PedidosDetalle({ useStyles }) {
                           disabled
                         />
                       </Grid>
-                      <Grid item xs={6}>
+                      <Grid size={6}>
                         <Field.Date
                           id={`pedidos.dict.${pedidos.current}.mx_fechaprevistainicial`}
                           fullWidth
@@ -67,7 +67,7 @@ function PedidosDetalle({ useStyles }) {
                           disabled
                         />
                       </Grid>
-                      <Grid item xs={6}>
+                      <Grid size={6}>
                         <Field.Date
                           id={`pedidos.dict.${pedidos.current}.fechasalidareal`}
                           fullWidth
@@ -75,7 +75,7 @@ function PedidosDetalle({ useStyles }) {
                           disabled
                         />
                       </Grid>
-                      <Grid item xs={6}>
+                      <Grid size={6}>
                         <Field.Currency
                           id={`pedidos.dict.${pedidos.current}.neto`}
                           fullWidth
@@ -84,7 +84,7 @@ function PedidosDetalle({ useStyles }) {
                           disabled
                         />
                       </Grid>
-                      <Grid item xs={6}>
+                      <Grid size={6}>
                         <Field.Currency
                           id={`pedidos.dict.${pedidos.current}.totaliva`}
                           fullWidth
@@ -93,7 +93,7 @@ function PedidosDetalle({ useStyles }) {
                           disabled
                         />
                       </Grid>
-                      <Grid item xs={6}>
+                      <Grid size={6}>
                         <Field.Float
                           id={`pedidos.dict.${pedidos.current}.total`}
                           fullWidth
@@ -102,7 +102,7 @@ function PedidosDetalle({ useStyles }) {
                           disabled
                         />
                       </Grid>
-                      <Grid item xs={6}>
+                      <Grid size={6}>
                         <Box
                           display="flex"
                           alignItems="flex-end"
@@ -124,7 +124,7 @@ function PedidosDetalle({ useStyles }) {
                         <Field.CheckBox id={`pedidos.dict.${pedidos.current}.reclamado`} checked={pedidos.dict[pedidos.current].reclamado} value={pedidos.dict[pedidos.current].reclamado} label='Reclamado' disabled/>
                       </Box> */}
                       </Grid>
-                      <Grid item xs={12}>
+                      <Grid size={12}>
                         <Box
                           display="flex"
                           alignItems="flex-end"
@@ -155,7 +155,7 @@ function PedidosDetalle({ useStyles }) {
                           </Button>
                         </Box>
                       </Grid>
-                      <Grid item xs={12}>
+                      <Grid size={12}>
                         <Box
                           display="flex"
                           alignItems="flex-end"

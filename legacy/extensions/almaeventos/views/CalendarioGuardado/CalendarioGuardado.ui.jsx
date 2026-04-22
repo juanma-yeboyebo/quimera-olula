@@ -53,7 +53,7 @@ function CalendarioGuardado({ useStyles, hash }) {
     <Quimera.Template id="CalendarioGuardado">
       <QBox width={1} titulo={`Calendario eventos`} className="CalendarioEventos" maxWidth>
         <Grid container alignItems="center" style={{ marginBottom: "10px" }}>
-          <Grid item xs={12} container alignItems="center" justify="center">
+          <Grid container size={12} alignItems="center" justify="center">
             <Box>
               <Typography color="primary" variant="h5">
                 {modo === "mes" ? mesYAnyo : anyo}
@@ -78,12 +78,7 @@ function CalendarioGuardado({ useStyles, hash }) {
                   <Box width="100%" style={{ borderRight: "1px solid lightgrey" }}>
                     <Grid container>
                       {diasSemana.map((nombreDia, index) => (
-                        <Grid
-                          style={{ width: "14.2857%" }}
-                          key={`${nombreDia}-${index}`}
-                          justify="center"
-                          item
-                        >
+                        <Grid style={{ width: "14.2857%" }} key={`${nombreDia}-${index}`} justify="center">
                           {
                             <Box
                               width={1}
@@ -102,13 +97,9 @@ function CalendarioGuardado({ useStyles, hash }) {
                       <Grid key={`${indexSemana}semana`} container>
                         {semana.map((dia, indexDia) =>
                           dia.ocultar ? null : (
-                            <Grid
-                              className={
+                            <Grid className={
                                 dia?.objetosDia?.length > 0 ? "cajaDiaConDatos" : "cajaDia"
-                              }
-                              item
-                              key={`${indexDia}-${dia.fecha}diasDeSemana`}
-                            >
+                              } key={`${indexDia}-${dia.fecha}diasDeSemana`}>
                               <Box
                                 minWidth={1}
                                 display="flex"

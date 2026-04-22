@@ -12,7 +12,7 @@ function FiltroMaster({ useStyles }) {
         <Box px={1}>
           <Box>
             <Grid container spacing={1} direction="column" >
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Box display="flex" alignItems="center" className={classes.texto}>
                   <Field.Switch
                     id="pendientes"

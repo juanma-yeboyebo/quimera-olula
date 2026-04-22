@@ -82,7 +82,7 @@ function NewPedido({ ...props }) {
           </AccordionSummary>
           <AccordionDetails className="bodyAccordion">
             <Grid container spacing={2}>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Field.Text
                   id="newPedido.datosCliente.nombre"
                   label="Nombre"
@@ -90,14 +90,14 @@ function NewPedido({ ...props }) {
                   value={datosCliente.nombre}
                 />
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Field.Text
                   id="newPedido.datosCliente.cifnif"
                   label="C.I.F/N.I.F*"
                   value={datosCliente.cifnif}
                 />
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Field.Text
                   id="newPedido.datosCliente.codTarjetaPuntos"
                   label="Tarjeta Puntos*"
@@ -123,7 +123,7 @@ function NewPedido({ ...props }) {
           </AccordionSummary>
           <AccordionDetails className="bodyAccordion">
             <Grid container spacing={2}>
-              <Grid item xs={12} md={2}>
+              <Grid size={{ xs: 12, md: 2 }}>
                 <Field.Text
                   id="newPedido.direccionCliente.tipovia"
                   label="Tipo Vía"
@@ -131,7 +131,7 @@ function NewPedido({ ...props }) {
                   value={direccionCliente.tipovia}
                 />
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Field.Text
                   id="newPedido.direccionCliente.direccion"
                   label="Dirección*"
@@ -140,7 +140,7 @@ function NewPedido({ ...props }) {
                   value={direccionCliente.direccion}
                 />
               </Grid>
-              <Grid item xs={6} md={1}>
+              <Grid size={{ xs: 6, md: 1 }}>
                 <Field.Text
                   id="newPedido.direccionCliente.numero"
                   label="Número"
@@ -148,7 +148,7 @@ function NewPedido({ ...props }) {
                   value={direccionCliente.numero}
                 />
               </Grid>
-              <Grid item xs={6} md={3}>
+              <Grid size={{ xs: 6, md: 3 }}>
                 <Field.Text
                   id="newPedido.direccionCliente.otros"
                   label="Otros"
@@ -156,7 +156,7 @@ function NewPedido({ ...props }) {
                   value={direccionCliente.otros}
                 />
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Field.Text
                   id="newPedido.direccionCliente.ciudad"
                   label="Ciudad"
@@ -164,7 +164,7 @@ function NewPedido({ ...props }) {
                   value={direccionCliente.ciudad}
                 />
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Field.Text
                   id="newPedido.direccionCliente.provincia"
                   label="Provincia"
@@ -172,7 +172,7 @@ function NewPedido({ ...props }) {
                   value={direccionCliente.provincia}
                 />
               </Grid>
-              <Grid item xs={6} md={2}>
+              <Grid size={{ xs: 6, md: 2 }}>
                 <Field.Text
                   id="newPedido.direccionCliente.cpostal"
                   label="Código Postal"
@@ -180,7 +180,7 @@ function NewPedido({ ...props }) {
                   value={direccionCliente.cpostal}
                 />
               </Grid>
-              <Grid item xs={6} md={2}>
+              <Grid size={{ xs: 6, md: 2 }}>
                 <Field.Text
                   id="newPedido.direccionCliente.pais"
                   label="País"
@@ -563,19 +563,19 @@ function NewPedido({ ...props }) {
       return (
         <div className="main-new-pedido">
           <Grid container spacing={2} className="order-info">
-            <Grid item xs={12} md={8}>
+            <Grid size={{ xs: 12, md: 8 }}>
               <Grid container spacing={2}>
-                <Grid item xs={6} md={4}>
+                <Grid size={{ xs: 6, md: 4 }}>
                   <Field.Date id="newPedido.fecha" label="Fecha" disabled />
                 </Grid>
-                <Grid item xs={6} md={4}>
+                <Grid size={{ xs: 6, md: 4 }}>
                   <Field.Time id="newPedido.hora" label="Hora" disabled />
                 </Grid>
-                <Grid item xs={12} md={4}></Grid>
-                <Grid item xs={4}>
+                <Grid size={{ xs: 12, md: 4 }}></Grid>
+                <Grid size={4}>
                   <Field.Text id="newPedido.codAgente" label="Agente" disabled />
                 </Grid>
-                <Grid item xs={8}>
+                <Grid size={8}>
                   <Field.Text
                     id="newPedido.descripcionAgente"
                     label="Descripción"
@@ -585,7 +585,7 @@ function NewPedido({ ...props }) {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <div className="main-new-pedido-totales">
                 <div className="main-new-pedido-totales-container">{renderTotales()}</div>
               </div>

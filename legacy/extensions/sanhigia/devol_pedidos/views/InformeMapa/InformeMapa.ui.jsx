@@ -49,28 +49,28 @@ function InformeMapa({ useStyles }) {
     <Quimera.Template id="InformeMapa">
       {showMap ? (
         <Grid container direction="column">
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <QBox
               titulo="Geolocalización de clientes"
               botonesCabecera={[{ icon: "close", id: "atras", text: "Atrás" }]}
             >
-              <Grid container direction="column" item spacing={1}>
-                <Grid item xs={12}>
+              <Grid container direction="column" spacing={1}>
+                <Grid size={12}>
                   <Cliente id="filter.codCliente" label="Cliente" fullWidth />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <QArticulo id="filter.ref1" label="Referencia 1" fullWidth />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <QArticulo id="filter.ref2" label="Referencia 2" fullWidth />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <QArticulo id="filter.ref3" label="Referencia 3" fullWidth />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <Field.Currency id="filter.minFacturacion" label="Mínimo facturación" fullWidth />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <Field.Select
                     id="filter.intervalo"
                     label="Intervalo"
@@ -78,7 +78,7 @@ function InformeMapa({ useStyles }) {
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Field.Date
                     id="filter.fechaDesde"
                     label="Fecha desde"
@@ -86,7 +86,7 @@ function InformeMapa({ useStyles }) {
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Field.Date
                     id="filter.fechaHasta"
                     label="Fecha hasta"
@@ -128,7 +128,7 @@ function InformeMapa({ useStyles }) {
               </Box>
             </QBox>
           </Grid>
-          <Grid item xs={12} md={8}>
+          <Grid size={{ xs: 12, md: 8 }}>
             {dataMap ? (
               <Plot
                 data={dataMap}

@@ -128,7 +128,7 @@ function DashboardEsqueletos({ useStyles }) {
                 <ListItem key={s.referencia} divider={true} className={classes.element}>
                   <ListItemAvatar>
                     <Grid container justify="center" spacing={1}>
-                      <Grid item xs>
+                      <Grid size="grow">
                         <Avatar variant="rounded" className={classes.green}>
                           {recepcionados ? s.canrecepcionada : s.contador}
                         </Avatar>
@@ -209,7 +209,7 @@ function DashboardEsqueletos({ useStyles }) {
                 >
                   <ListItemAvatar>
                     <Grid container justify="center" spacing={1}>
-                      <Grid item xs>
+                      <Grid size="grow">
                         <Avatar variant="rounded" className={classes.green}>
                           {s.contador}
                         </Avatar>

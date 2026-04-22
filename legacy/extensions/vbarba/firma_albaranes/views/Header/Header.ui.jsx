@@ -39,14 +39,14 @@ function Header({ useStyles }) {
     <Quimera.Template id="Header">
       <AppBar position="fixed" style={{ backgroundColor: "white" }}>
         <HGrid justify="space-between" alignItems="center">
-          <Grid item justify="flex-start" container direction="row">
+          <Grid container justify="flex-start" direction="row">
             <Toolbar style={{ paddingRight: 0 }}>
               <A href="/">
                 <img src="static/images/logoVbarba.png" />
               </A>
               <Hidden xsDown>
-                <Grid item style={{ marginLeft: "8px" }}>
-                  <Grid zeroMinWidth item xs>
+                <Grid style={{ marginLeft: "8px" }}>
+                  <Grid size="grow" zeroMinWidth>
                     {" "}
                     <Typography noWrap className={classes.tituloPaginaActualDesktop}>
                       {appState.nombrePaginaActual}
@@ -56,8 +56,8 @@ function Header({ useStyles }) {
               </Hidden>
             </Toolbar>
           </Grid>
-          <Grid item justify="flex-start" container direction="row"></Grid>
-          <Grid item justify="flex-end" container direction="row">
+          <Grid container justify="flex-start" direction="row"></Grid>
+          <Grid container justify="flex-end" direction="row">
             <IconButton id="menuDerecha">
               <Icon>person</Icon>
             </IconButton>
@@ -65,7 +65,7 @@ function Header({ useStyles }) {
         </HGrid>
         <Hidden smUp>
           <HGrid justify="center" alignItems="center" style={{ marginBottom: "4px" }}>
-            <Grid zeroMinWidth item xs>
+            <Grid size="grow" zeroMinWidth>
               <Typography align="center" noWrap className={classes.tituloPaginaActualMobile}>
                 {appState.nombrePaginaActual}
               </Typography>

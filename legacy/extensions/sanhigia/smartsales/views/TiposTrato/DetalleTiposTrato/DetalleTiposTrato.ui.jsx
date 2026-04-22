@@ -108,8 +108,8 @@ function DetalleTiposTrato({ useStyles }) {
             />
           </Box>
 
-          <Grid item container xs={12} justify="center">
-            <Grid item xs={4}>
+          <Grid container size={12} justify="center">
+            <Grid size={4}>
               <QSection
                 actionPrefix="eliminarTipoTrato"
                 title="Eliminar tipo de trato"
@@ -143,15 +143,15 @@ function DetalleTiposTrato({ useStyles }) {
               </QSection>
             </Grid>
           </Grid>
-          <Grid item xs={12} container justify="center">
-            <Grid xs={12} item container justify="flex-start">
+          <Grid container size={12} justify="center">
+            <Grid container size={12} justify="flex-start">
               <Typography variant="overline" align="left" className={classes.labelEdicion}>
                 Causas de pérdida de trato
               </Typography>
             </Grid>
-            <Grid xs={12} item container justify="space-between">
-              <Grid item xs={12} container>
-                <Grid item xs={12} md={10} className={classes.borde}>
+            <Grid container size={12} justify="space-between">
+              <Grid container size={12}>
+                <Grid size={{ xs: 12, md: 10 }} className={classes.borde}>
                   <Field.Text
                     id="nombreCausaNueva"
                     value={nombreCausaNueva}
@@ -170,7 +170,7 @@ function DetalleTiposTrato({ useStyles }) {
                     maxRows={4}
                   />
                 </Grid>
-                <Grid item xs={12} md={2} container justifyContent="flex-end" alignItems="center">
+                <Grid container size={{ xs: 12, md: 2 }} justifyContent="flex-end" alignItems="center">
                   <Button
                     id="anadirCausa"
                     color="primary"
@@ -181,7 +181,7 @@ function DetalleTiposTrato({ useStyles }) {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid xs={12} item container>
+            <Grid container size={12}>
               <LineasCausasPerdidaTrato lineas={causasPerdidaTrato} />
             </Grid>
           </Grid>

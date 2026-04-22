@@ -31,8 +31,8 @@ function InformeVentasFamilia({ useStyles }) {
         titulo={`Ventas por familia`}
         botonesCabecera={[{ icon: "close", id: "atras", text: "Atrás" }]}
       >
-        <Grid container direction="column" item spacing={1}>
-          <Grid item xs={12}>
+        <Grid container direction="column" spacing={1}>
+          <Grid size={12}>
             <Agente
               id="filtro.codAgente"
               label="Agente"
@@ -40,7 +40,7 @@ function InformeVentasFamilia({ useStyles }) {
               fullWidth
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Cliente
               id="filtro.codCliente"
               label="Cliente"
@@ -49,7 +49,7 @@ function InformeVentasFamilia({ useStyles }) {
             />
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid size={6}>
             <Field.Select
               id="filtro.intervaloFecha"
               label="Intervalo"
@@ -57,13 +57,13 @@ function InformeVentasFamilia({ useStyles }) {
               fullWidth
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid size={6}>
             <Serie id="filtro.codSerie" label={`Serie ${filtro.codSerie || ""}`} fullWidth />
           </Grid>
-          <Grid item xs={6}>
+          <Grid size={6}>
             <Field.Date id="filtro.fechaDesde" label="Fecha desde" className={classes.field} />
           </Grid>
-          <Grid item xs={6}>
+          <Grid size={6}>
             <Field.Date id="filtro.fechaHasta" label="Fecha hasta" className={classes.field} />
           </Grid>
         </Grid>

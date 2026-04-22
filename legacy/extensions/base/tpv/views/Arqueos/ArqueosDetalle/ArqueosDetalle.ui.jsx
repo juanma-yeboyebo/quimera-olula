@@ -24,7 +24,7 @@ function ArqueosDetalle({ useStyles }) {
           <Box px={0} my={1}>
             <Box width={1} border={0} borderColor="gray" height={"calc(100%)"}>
               <Grid container spacing={0} direction="column">
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <Box display="flex" justifyContent="space-between">
                     <Box display="flex" alignItems="center">
                       <Button
@@ -112,7 +112,7 @@ function ArqueosDetalle({ useStyles }) {
                   </Box>
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <QSection
                     title={`Agente Apertura ${arqueosBuffer.codtpv_agenteapertura ?? ""}`}
                     actionPrefix="arqueo"
@@ -127,11 +127,11 @@ function ArqueosDetalle({ useStyles }) {
                   </QSection>
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <QSection alwaysInactive>
                     <Box display="flex" alignItems="center" justifyContent="center">
                       <Grid container spacing={0} direction="column">
-                        <Grid item xs={4}>
+                        <Grid size={4}>
                           <Typography>EN CAJA</Typography>
                           <Box
                             display="flex"
@@ -173,7 +173,7 @@ function ArqueosDetalle({ useStyles }) {
                             />
                           </Box>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid size={4}>
                           <Typography>CALCULADO</Typography>
                           <Box
                             display="flex"
@@ -215,7 +215,7 @@ function ArqueosDetalle({ useStyles }) {
                             />
                           </Box>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid size={4}>
                           <Typography>DIFERENCIA</Typography>
                           <Box
                             display="flex"
@@ -261,7 +261,7 @@ function ArqueosDetalle({ useStyles }) {
                     </Box>
                   </QSection>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <Box width={1} border={0} borderColor="gray" height={"calc(100%)"}>
                     <Tabs
                       value={indiceTab}

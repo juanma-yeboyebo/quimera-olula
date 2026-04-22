@@ -643,7 +643,7 @@ function Campania({ callbackChanged, initCampania, origen, useStyles }) {
                   {!["repeticion", "captacion", "medicion"].includes(campania.buffer.tipo) ? (
                     <>
                       {(Object.values(listasProductos ?? {}) ?? []).map((lista, idx) => (
-                        <Grid item xs={6}>
+                        <Grid size={6}>
                           <Box>
                             <Typography>{lista?.name}</Typography>
                             <SelectorValores
@@ -685,7 +685,7 @@ function Campania({ callbackChanged, initCampania, origen, useStyles }) {
                       ))}
                     </>
                   ) : (
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                       {(campania?.buffer?.productos?.["lista_incluidos"]?.refs ?? []).map(
                         (producto, idx) => (
                           <div key={producto?.referencia}>
@@ -716,7 +716,7 @@ function Campania({ callbackChanged, initCampania, origen, useStyles }) {
                 {!["repeticion", "captacion", "medicion"].includes(campania.buffer.tipo) ? (
                   <>
                     {(Object.values(listasProductos ?? {}) ?? []).map((lista, idx) => (
-                      <Grid item xs={12}>
+                      <Grid size={12}>
                         <Box>
                           <Typography variant="overline">{`${lista?.name}${campania?.buffer?.productos[lista?.key]?.refs?.length > 0
                             ? `(${campania.buffer.productos[lista?.key].tipo})`
@@ -835,18 +835,11 @@ function Campania({ callbackChanged, initCampania, origen, useStyles }) {
                           </IconButton>
                         </Box>
                         <Grid container width={1} display={"flex"} alignItems={"center"}>
-                          <Grid item xs={7}>
+                          <Grid size={7}>
                             <span>{producto?.descripcion}</span>
                           </Grid>
-                          <Grid
-                            container
-                            item
-                            xs={5}
-                            display={"flex"}
-                            flexDirection="row"
-                            alignItems={"center"}
-                          >
-                            <Grid item xs={5} style={{ paddingLeft: "10px" }}>
+                          <Grid container size={5} display={"flex"} flexDirection="row" alignItems={"center"}>
+                            <Grid size={5} style={{ paddingLeft: "10px" }}>
                               <Field.Int
                                 id="productoOfertarList/cantidad"
                                 index={idx}
@@ -855,8 +848,8 @@ function Campania({ callbackChanged, initCampania, origen, useStyles }) {
                                 onClick={event => event.target.select()}
                               />
                             </Grid>
-                            <Grid item xs={2} />
-                            <Grid item xs={5}>
+                            <Grid size={2} />
+                            <Grid size={5}>
                               <Field.Currency
                                 id="productoOfertarList/pvp"
                                 index={idx}

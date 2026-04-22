@@ -71,8 +71,8 @@ function DetalleUsers({ useStyles }) {
 
           <SelectGroup id="usersBuffer.idgroup" value={usersBuffer?.idgroup ?? 0} />
 
-          <Grid item container xs={12} justify="center">
-            <Grid item xs={4}>
+          <Grid container size={12} justify="center">
+            <Grid size={4}>
               <QSection
                 actionPrefix="eliminarUsuario"
                 title="Eliminar usuario"

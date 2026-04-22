@@ -70,7 +70,7 @@ function ComparativaClientes({ useStyles }) {
         style={{ gap: 8 }}
       >
         <Grid container direction="column">
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Box mr={2}>
               <Field.Select
                 id="anyoUno"
@@ -81,7 +81,7 @@ function ComparativaClientes({ useStyles }) {
               />
             </Box>
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Box mr={2}>
               <Field.Select
                 id="anyoDos"
@@ -92,7 +92,7 @@ function ComparativaClientes({ useStyles }) {
               />
             </Box>
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Box>
               <Field.Select
                 id="trimestre"
@@ -105,16 +105,9 @@ function ComparativaClientes({ useStyles }) {
           </Grid>
         </Grid>
         <Grid container direction="column" align="center" justifyContent="space-between">
-          <Grid
-            item
-            container
-            xs={12}
-            justifyContent="flex-end"
-            alignContent="flex-end"
-            style={{ gap: 8 }}
-          >
+          <Grid container size={12} justifyContent="flex-end" alignContent="flex-end" style={{ gap: 8 }}>
             {cliComparativa.filter(cli => cli.seleccionada === true)?.length > 0 && (
-              <Grid item>
+              <Grid>
                 <Box display="flex" alignItems="center">
                   <IconButton id="marcarSoloSeleccionados" size="small">
                     {soloSeleccionados ? (
@@ -127,7 +120,7 @@ function ComparativaClientes({ useStyles }) {
                 </Box>
               </Grid>
             )}
-            <Grid item>
+            <Grid>
               <Button
                 id="obtenerEmails"
                 text="Obtener emails"
@@ -137,7 +130,7 @@ function ComparativaClientes({ useStyles }) {
                 startIcon={<Icon>email</Icon>}
               />
             </Grid>
-            <Grid item>
+            <Grid>
               <Button
                 id="limpiarDatos"
                 text="Limpiar"
@@ -147,7 +140,7 @@ function ComparativaClientes({ useStyles }) {
                 startIcon={<Icon>cleaning_services_outlined</Icon>}
               />
             </Grid>
-            <Grid item>
+            <Grid>
               <Button
                 id="lanzarInforme"
                 text="Lanzar"

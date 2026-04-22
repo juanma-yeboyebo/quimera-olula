@@ -39,8 +39,8 @@ function InformePedidosSan({ useStyles }) {
         titulo={`Pedidos y líneas`}
         botonesCabecera={[{ icon: "close", id: "atras", text: "Atrás" }]}
       >
-        <Grid container direction="column" item spacing={1}>
-          <Grid item xs={12}>
+        <Grid container direction="column" spacing={1}>
+          <Grid size={12}>
             <Box width={1} border={0}>
               <Agente
                 id="filtro.codAgente"
@@ -51,7 +51,7 @@ function InformePedidosSan({ useStyles }) {
             </Box>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Box width={1} border={0}>
               <Cliente
                 id="filtro.codCliente"
@@ -62,7 +62,7 @@ function InformePedidosSan({ useStyles }) {
             </Box>
           </Grid>
 
-          <Grid item xs={4}>
+          <Grid size={4}>
             <Field.Select
               id="filtro.intervaloFecha"
               label="Intervalo"
@@ -70,17 +70,17 @@ function InformePedidosSan({ useStyles }) {
               fullWidth
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid size={4}>
             <Field.Date id="filtro.fechaDesde" label="Fecha desde" className={classes.field} />
           </Grid>
-          <Grid item xs={4}>
+          <Grid size={4}>
             <Field.Date id="filtro.fechaHasta" label="Fecha hasta" className={classes.field} />
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid size={6}>
             <Serie id="filtro.codSerie" label={`Serie ${filtro.codSerie || ""}`} fullWidth />
           </Grid>
-          <Grid item xs={6} container alignItems="flex-end">
+          <Grid container size={6} alignItems="flex-end">
             <Field.Select
               id="filtro.servido"
               options={opcionesServido}
@@ -90,7 +90,7 @@ function InformePedidosSan({ useStyles }) {
             />
           </Grid>
 
-          <Grid item container xs={12}>
+          <Grid container size={12}>
             <Box display="flex" alignItems="flex-end" justifyContent="flex-start">
               <FormControlLabel
                 control={

@@ -72,7 +72,7 @@ function FirmaParteCarro({
           </Box>
           <Box m={2}>
             <Grid container direction="row" spacing={1}>
-              <Grid item xs={12} sm={12}>
+              <Grid size={{ xs: 12, sm: 12 }}>
                 <Contacto
                   id="firmaParteCarro.codContacto"
                   codcliente={parteCarro.codCliente}
@@ -81,22 +81,22 @@ function FirmaParteCarro({
                   pl={4}
                 />
               </Grid>
-              <Grid item xs={8} sm={8}>
+              <Grid size={{ xs: 8, sm: 8 }}>
                 <Field.Text id="firmaParteCarro.firmadopor" label="Firmado por" fullWidth />
               </Grid>
-              <Grid item xs={4} sm={4}>
+              <Grid size={{ xs: 4, sm: 4 }}>
                 <Field.Text id="firmaParteCarro.cifnif" label="DNI" />
               </Grid>
-              <Grid item xs={6} sm={6}>
+              <Grid size={{ xs: 6, sm: 6 }}>
                 <Field.Date id="firmaParteCarro.fecha" label="Fecha" />
               </Grid>
-              <Grid item xs={6} sm={6}>
+              <Grid size={{ xs: 6, sm: 6 }}>
                 <Field.Time id="firmaParteCarro.hora" label="Hora" />
               </Grid>
-              <Grid item xs={12} sm={12}>
+              <Grid size={{ xs: 12, sm: 12 }}>
                 <Field.TextArea id="firmaParteCarro.observacionesfirma" label="Observaciones" fullWidth />
               </Grid>
-              <Grid item xs={12} sm={12}>
+              <Grid size={{ xs: 12, sm: 12 }}>
                 <SignaturePad
                   id="sigpad"
                   onEnd={handleEnd}

@@ -23,11 +23,11 @@ function InformeProductosaCaducar({ useStyles }) {
         titulo={`Productos a caducar`}
         botonesCabecera={[{ icon: "close", id: "atras", text: "Atrás" }]}
       >
-        <Grid container direction="column" item spacing={1} alignItems="flex-end">
-          <Grid item xs={6}>
+        <Grid container direction="column" spacing={1} alignItems="flex-end">
+          <Grid size={6}>
             <Field.Int id="filtro.meses" label="Meses para caducar" className={classes.field} />
           </Grid>
-          <Grid item xs={6}>
+          <Grid size={6}>
             <Field.CheckBox
               id="filtro.incluirYaCaducados"
               label="Incluir productos ya caducados"

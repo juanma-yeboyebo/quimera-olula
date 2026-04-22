@@ -42,7 +42,7 @@ function AgruparPedidos({ callbackVolver, useStyles }) {
         </DialogTitle>
         <DialogContent>
           <Grid container direction="column" justifyContent="space-between">
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Field.Text
                 id="descripcionAgrupar"
                 label="Descripción"
@@ -51,7 +51,7 @@ function AgruparPedidos({ callbackVolver, useStyles }) {
                 autoFocus={true}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Ubicacion
                 id="ubicacionInicial"
                 label={`Ubicación inicial ${ubicacionInicial ? `: ${ubicacionInicial}` : ""}`}
@@ -64,7 +64,7 @@ function AgruparPedidos({ callbackVolver, useStyles }) {
                 async
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Ubicacion
                 id="ubicacionFinal"
                 label={`Ubicación final ${ubicacionFinal ? `: ${ubicacionFinal}` : ""}`}
@@ -80,8 +80,8 @@ function AgruparPedidos({ callbackVolver, useStyles }) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Grid item container justifyContent="space-between">
-            <Grid item xs={6} container justify="center" alignItems="center" >
+          <Grid container justifyContent="space-between">
+            <Grid container size={6} justify="center" alignItems="center">
               <Button
                 id="cancelar"
                 text="Cancelar"
@@ -92,7 +92,7 @@ function AgruparPedidos({ callbackVolver, useStyles }) {
               // onClick={() => dispatch({ type: "volverCatalogo" })}
               />
             </Grid>
-            <Grid item xs={6} container justify="center" alignItems="center" >
+            <Grid container size={6} justify="center" alignItems="center">
               {agrupandoPedidos ? (
                 <Grid container direction="column" justify="center" alignItems="center" >
                   <CircularProgress size={30} />

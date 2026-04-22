@@ -74,7 +74,7 @@ function LineaPresupuestoCliNueva({ callbackGuardada, idPresupuesto, useStyles }
           alwaysActive
           dynamicComp={() => (
             <Grid container spacing={1} direction="column" >
-              <Grid item xs={9}>
+              <Grid size={9}>
                 <QArticuloVbarbaMarcado
                   id="linea.buffer/referencia"
                   label="Artículo"
@@ -83,7 +83,7 @@ function LineaPresupuestoCliNueva({ callbackGuardada, idPresupuesto, useStyles }
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={3}>
+              <Grid size={3}>
                 <FieldConNavegacionEnter>
                   <Field.Schema
                     id="linea.buffer/cantidad"
@@ -94,13 +94,13 @@ function LineaPresupuestoCliNueva({ callbackGuardada, idPresupuesto, useStyles }
                 </FieldConNavegacionEnter>
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Field.Schema id="linea.buffer/descripcion" schema={schema} fullWidth />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Quimera.Block id="afterDescripcion" />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <ProveedorArticulo
                   id="linea.buffer/codProveedor"
                   label={`Proveedor`}
@@ -109,7 +109,7 @@ function LineaPresupuestoCliNueva({ callbackGuardada, idPresupuesto, useStyles }
                   async
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Field.Schema
                   id="linea.buffer/codImpuesto"
                   schema={schema}
@@ -117,7 +117,7 @@ function LineaPresupuestoCliNueva({ callbackGuardada, idPresupuesto, useStyles }
                   style={{ display: "none" }}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Field.Schema
                   id="linea.buffer/iva"
                   schema={schema}
@@ -125,7 +125,7 @@ function LineaPresupuestoCliNueva({ callbackGuardada, idPresupuesto, useStyles }
                   style={{ display: "none" }}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Field.Schema
                   id="linea.buffer/recargo"
                   schema={schema}
@@ -133,7 +133,7 @@ function LineaPresupuestoCliNueva({ callbackGuardada, idPresupuesto, useStyles }
                   style={{ display: "none" }}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Field.Schema
                   id="linea.buffer/irpf"
                   schema={schema}
@@ -141,7 +141,7 @@ function LineaPresupuestoCliNueva({ callbackGuardada, idPresupuesto, useStyles }
                   style={{ display: "none" }}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 {linea.buffer.aplicarPvpParticular
                   ? <Field.Schema
                     id="linea.buffer/pvpUnitario"
@@ -160,7 +160,7 @@ function LineaPresupuestoCliNueva({ callbackGuardada, idPresupuesto, useStyles }
                   />
                 }
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Field.Schema
                   id="linea.buffer/pvpSinDto"
                   label="importe*"
@@ -169,7 +169,7 @@ function LineaPresupuestoCliNueva({ callbackGuardada, idPresupuesto, useStyles }
                   style={{ backgroundColor: "#f5d6a0" }}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Field.Schema
                   id="linea.buffer/dtoPor"
                   label="%Dto"
@@ -178,7 +178,7 @@ function LineaPresupuestoCliNueva({ callbackGuardada, idPresupuesto, useStyles }
                   style={{ backgroundColor: "#f5d6a0" }}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Field.Schema
                   id="linea.buffer/dtoLineal"
                   schema={schema}
@@ -187,7 +187,7 @@ function LineaPresupuestoCliNueva({ callbackGuardada, idPresupuesto, useStyles }
                 />
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Box width={1} display="flex" flexDirection="column" alignItems="flex-end">
                   <Typography variant="overline">Total</Typography>
                   <Typography variant="h5">{util.euros(linea.buffer.pvpTotal)}</Typography>
