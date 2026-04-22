@@ -145,7 +145,6 @@ function LineaPresupuestoCli({ callbackGuardada, disabled, lineaInicial, useStyl
             <QSection
               title="Descuentos"
               actionPrefix="linea/descuentos"
-              mr={1}
               alwaysInactive={disabled}
               dynamicComp={() => (
                 <Grid container spacing={1} direction="column" >
