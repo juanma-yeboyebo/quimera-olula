@@ -138,71 +138,72 @@ function LineaAlbaranCli({ callbackGuardada, disabled, lineaInicial, useStyles }
             </QSection>
           </Grid>
 
-          <Grid item xs={6}>
-            <QSection
-              title="Descuentos"
-              actionPrefix="linea/descuentos"
-              mr={1}
-              alwaysInactive={disabled}
-              dynamicComp={() => (
-                <Grid container spacing={1} direction="column" >
-                  <Grid item xs={6}>
-                    <Field.Schema id="linea.buffer/dtoLineal" schema={schema} fullWidth />
+          <Grid container item size={{ xs: 12 }} spacing={1}>
+            <Grid item size={{ xs: 6 }}>
+              <QSection
+                title="Descuentos"
+                actionPrefix="linea/descuentos"
+                alwaysInactive={disabled}
+                dynamicComp={() => (
+                  <Grid container spacing={1} direction="column" >
+                    <Grid item xs={6}>
+                      <Field.Schema id="linea.buffer/dtoLineal" schema={schema} fullWidth />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Field.Schema id="linea.buffer/dtoPor" schema={schema} fullWidth />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={6}>
-                    <Field.Schema id="linea.buffer/dtoPor" schema={schema} fullWidth />
-                  </Grid>
-                </Grid>
-              )}
-              saveDisabled={() => !schema.isValid(buffer)}
-            >
-              {!!buffer.dtoLineal && (
-                <Typography variant="subtitle1">Lineal {util.euros(buffer.dtoLineal)}</Typography>
-              )}
-              {!!buffer.dtoPor && (
-                <Typography variant="subtitle1">Porcentual {buffer.dtoPor}%</Typography>
-              )}
-              {!buffer.dtoLineal && !buffer.dtoPor && (
-                <Typography variant="subtitle1">Sin descuentos</Typography>
-              )}
-            </QSection>
-          </Grid>
+                )}
+                saveDisabled={() => !schema.isValid(buffer)}
+              >
+                {!!buffer.dtoLineal && (
+                  <Typography variant="subtitle1">Lineal {util.euros(buffer.dtoLineal)}</Typography>
+                )}
+                {!!buffer.dtoPor && (
+                  <Typography variant="subtitle1">Porcentual {buffer.dtoPor}%</Typography>
+                )}
+                {!buffer.dtoLineal && !buffer.dtoPor && (
+                  <Typography variant="subtitle1">Sin descuentos</Typography>
+                )}
+              </QSection>
+            </Grid>
 
-          <Grid item xs={6}>
-            <QSection
-              title="Impuestos"
-              actionPrefix="linea/Impuestos"
-              alwaysInactive={true}
-              dynamicComp={() => (
-                <Grid container spacing={1} direction="column" >
-                  <Grid item xs={6}>
-                    <Field.Schema id="linea.buffer/codImpuesto" schema={schema} fullWidth />
+            <Grid item xs={6}>
+              <QSection
+                title="Impuestos"
+                actionPrefix="linea/Impuestos"
+                alwaysInactive={true}
+                dynamicComp={() => (
+                  <Grid container spacing={1} direction="column" >
+                    <Grid item xs={6}>
+                      <Field.Schema id="linea.buffer/codImpuesto" schema={schema} fullWidth />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Field.Schema id="linea.buffer/iva" schema={schema} fullWidth />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Field.Schema id="linea.buffer/recargo" schema={schema} fullWidth />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Field.Schema id="linea.buffer/irpf" schema={schema} fullWidth />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={6}>
-                    <Field.Schema id="linea.buffer/iva" schema={schema} fullWidth />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Field.Schema id="linea.buffer/recargo" schema={schema} fullWidth />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Field.Schema id="linea.buffer/irpf" schema={schema} fullWidth />
-                  </Grid>
-                </Grid>
-              )}
-              saveDisabled={() => !schema.isValid(buffer)}
-            >
-              {!!buffer.iva && (
-                <Typography variant="subtitle1">
-                  IVA {buffer.codImpuesto} {buffer.iva}%
-                </Typography>
-              )}
-              {!!buffer.recargo && (
-                <Typography variant="subtitle1">
-                  Recargo de Equivalencia {buffer.recargo}%
-                </Typography>
-              )}
-              {!!buffer.irpf && <Typography variant="subtitle1">IRPF {buffer.irpf}%</Typography>}
-            </QSection>
+                )}
+                saveDisabled={() => !schema.isValid(buffer)}
+              >
+                {!!buffer.iva && (
+                  <Typography variant="subtitle1">
+                    IVA {buffer.codImpuesto} {buffer.iva}%
+                  </Typography>
+                )}
+                {!!buffer.recargo && (
+                  <Typography variant="subtitle1">
+                    Recargo de Equivalencia {buffer.recargo}%
+                  </Typography>
+                )}
+                {!!buffer.irpf && <Typography variant="subtitle1">IRPF {buffer.irpf}%</Typography>}
+              </QSection>
+            </Grid>
           </Grid>
         </Grid>
       </Collapse>
