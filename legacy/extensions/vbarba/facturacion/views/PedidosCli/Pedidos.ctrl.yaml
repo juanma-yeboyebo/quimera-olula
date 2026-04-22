@@ -1,12 +1,17 @@
 ---
 shortcuts: []
-state: {}
+state: 
+  generandoPedidoProv: false
 bunch:
   onBotonGenerarPedidosProveedorClicked:
-    - _type: log 
-      desc: mimensaje_onBotonGenerarPedidosProveedorClicked
+    # - _type: log 
+    #   desc: mimensaje_onBotonGenerarPedidosProveedorClicked
+    #   value:
+    #     statePath: arrayMultiCheck
+    - _type: set     
+      path: generandoPedidoProv
       value:
-        statePath: arrayMultiCheck
+        const: true
     - _type: patch
       action: generar_enviar_pedidoprov
       schema: pedidos
@@ -15,12 +20,17 @@ bunch:
           value:
             statePath: arrayMultiCheck
       success: onGenerarPedidoProvSuccess
-      # error: onGenerarPedidoProvError  
+      error: onGenerarPedidoProvError  
   onGenerarPedidoProvSuccess:
+    - _type: set     
+      path: generandoPedidoProv
+      value:
+        const: false  
     - _type: alert
       text: Pedido Generado
       severity: success
-  # onGenerarPedidoProvError:
-  #   - _type: alert
-  #     text: Error al generar pedido
-  #     severity: error  
+  onGenerarPedidoProvError:
+    - _type: set     
+      path: generandoPedidoProv
+      value:
+        const: false
