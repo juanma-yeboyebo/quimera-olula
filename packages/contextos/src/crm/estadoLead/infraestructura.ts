@@ -37,3 +37,5 @@ export const patchEstadoLead = async (id: string, estado: Partial<EstadoLead>): 
 
 export const deleteEstadoLead = async (id: string): Promise<void> =>
     await RestAPI.delete(`${baseUrlEstadoLead}/${id}`, "Error al borrar el estado de lead");
+
+export const marcarPorDefectoEstadoLead = async (id: string): Promise<void> => await RestAPI.patch(`${baseUrlEstadoLead}/${id}/pordefecto`, "Error al marcar por defecto el estado de lead");

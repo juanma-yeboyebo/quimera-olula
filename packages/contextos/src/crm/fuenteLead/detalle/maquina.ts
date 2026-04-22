@@ -1,6 +1,6 @@
 import { Maquina } from "@olula/lib/diseño.js";
 import { publicar } from "@olula/lib/dominio.js";
-import { cambiarFuenteLead, cargarContexto, getContextoVacio } from "./detalle.ts";
+import { cambiarFuenteLead, cargarContexto, getContextoVacio, marcarPorDefecto } from "./detalle.ts";
 import { ContextoDetalleFuenteLead, EstadoDetalleFuenteLead } from "./diseño.ts";
 
 export const getMaquina: () => Maquina<EstadoDetalleFuenteLead, ContextoDetalleFuenteLead> = () => {
@@ -9,6 +9,8 @@ export const getMaquina: () => Maquina<EstadoDetalleFuenteLead, ContextoDetalleF
             fuente_lead_id_cambiado: cargarContexto,
 
             fuente_lead_cambiada: cambiarFuenteLead,
+
+            marcar_fuente_lead_por_defecto: marcarPorDefecto,
 
             edicion_fuente_lead_cancelada: [getContextoVacio, publicar("fuente_lead_deseleccionada", null)],
 

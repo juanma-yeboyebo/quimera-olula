@@ -56,6 +56,12 @@ export const DetalleFuenteLead = ({
       {!!fuenteLeadId && (
         <div className="DetalleFuenteLead">
           <div className="maestro-botones ">
+            <QBoton
+              onClick={() => emitir("marcar_fuente_lead_por_defecto")}
+              deshabilitado={modelo.valor_defecto}
+            >
+              Marcar por defecto
+            </QBoton>
             <QBoton onClick={() => emitir("borrado_fuente_lead_solicitado")}>
               Borrar
             </QBoton>

@@ -61,6 +61,12 @@ export const DetalleEstadoOportunidad = ({
         <div className="DetalleEstadoOportunidad">
           <div className="maestro-botones ">
             <QBoton
+              onClick={() => emitir("marcar_estado_oportunidad_por_defecto")}
+              deshabilitado={modelo.valor_defecto}
+            >
+              Marcar por defecto
+            </QBoton>
+            <QBoton
               onClick={() => emitir("borrado_estado_oportunidad_solicitado")}
             >
               Borrar

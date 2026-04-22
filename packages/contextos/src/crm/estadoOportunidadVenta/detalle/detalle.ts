@@ -2,7 +2,7 @@ import { ProcesarContexto } from "@olula/lib/diseño.js";
 import { ejecutarListaProcesos, MetaModelo, stringNoVacio } from "@olula/lib/dominio.js";
 import { pipe } from "@olula/lib/funcional.js";
 import { EstadoOportunidad } from "../diseño.ts";
-import { getEstadoOportunidad, patchEstadoOportunidad } from "../infraestructura.ts";
+import { getEstadoOportunidad, marcarPorDefectoEstadoOportunidad, patchEstadoOportunidad } from "../infraestructura.ts";
 import { ContextoDetalleEstadoOportunidad, EstadoDetalleEstadoOportunidad } from "./diseño.ts";
 
 export const estadoOportunidadVacio: EstadoOportunidad = {
@@ -61,6 +61,15 @@ export const cambiarEstadoOportunidad: ProcesarEstadoOportunidad = async (contex
         refrescarEstadoOportunidad,
         "INICIAL",
     ]);
+}
+
+export const marcarPorDefecto: ProcesarEstadoOportunidad = async (contexto, _) => {
+    await marcarPorDefectoEstadoOportunidad(contexto.estado_oportunidad.id);
+
+    return pipeEstadoOportunidad(contexto, [
+        refrescarEstadoOportunidad,
+        "INICIAL"
+    ])
 }
 
 export const getContextoVacio: ProcesarEstadoOportunidad = async (contexto) => {

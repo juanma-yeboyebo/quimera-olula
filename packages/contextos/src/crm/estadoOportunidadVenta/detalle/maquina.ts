@@ -1,6 +1,6 @@
 import { Maquina } from "@olula/lib/diseño.js";
 import { publicar } from "@olula/lib/dominio.js";
-import { cambiarEstadoOportunidad, cargarContexto, getContextoVacio } from "./detalle.ts";
+import { cambiarEstadoOportunidad, cargarContexto, getContextoVacio, marcarPorDefecto } from "./detalle.ts";
 import { ContextoDetalleEstadoOportunidad, EstadoDetalleEstadoOportunidad } from "./diseño.ts";
 
 export const getMaquina: () => Maquina<EstadoDetalleEstadoOportunidad, ContextoDetalleEstadoOportunidad> = () => {
@@ -9,6 +9,8 @@ export const getMaquina: () => Maquina<EstadoDetalleEstadoOportunidad, ContextoD
             estado_oportunidad_id_cambiado: cargarContexto,
 
             estado_oportunidad_cambiado: cambiarEstadoOportunidad,
+
+            marcar_estado_oportunidad_por_defecto: marcarPorDefecto,
 
             edicion_estado_oportunidad_cancelada: [getContextoVacio, publicar("estado_oportunidad_deseleccionado", null)],
 

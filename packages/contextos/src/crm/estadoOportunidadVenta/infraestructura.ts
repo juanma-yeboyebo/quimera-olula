@@ -38,3 +38,5 @@ export const patchEstadoOportunidad = async (id: string, estado: Partial<EstadoO
 
 export const deleteEstadoOportunidad = async (id: string): Promise<void> =>
     await RestAPI.delete(`${baseUrlEstadoOportunidadVenta}/${id}`, "Error al borrar el estado de oportunidad de venta");
+
+export const marcarPorDefectoEstadoOportunidad = async (id: string): Promise<void> => await RestAPI.patch(`${baseUrlEstadoOportunidadVenta}/${id}/pordefecto`, "Error al marcar por defecto el estado de oportunidad de venta");
