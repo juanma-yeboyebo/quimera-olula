@@ -45,7 +45,7 @@ export const MaestroFuentesLead = () => {
             <Listado<FuenteLead>
               metaTabla={metaTablaFuenteLead}
               criteria={ctx.fuentes_lead.criteria}
-              modo={"tabla"}
+              modo={"tarjetas"}
               entidades={ctx.fuentes_lead.lista}
               totalEntidades={ctx.fuentes_lead.total}
               seleccionada={ctx.fuentes_lead.activo}
@@ -61,6 +61,7 @@ export const MaestroFuentesLead = () => {
         Detalle={
           <DetalleFuenteLead id={ctx.fuentes_lead.activo} publicar={emitir} />
         }
+        layout={"TARJETA"}
         seleccionada={ctx.fuentes_lead.activo}
         modoDisposicion="maestro-50"
       />

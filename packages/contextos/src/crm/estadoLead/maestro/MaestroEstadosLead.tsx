@@ -45,7 +45,7 @@ export const MaestroEstadosLead = () => {
             <Listado<EstadoLead>
               metaTabla={metaTablaEstadoLead}
               criteria={ctx.estados_lead.criteria}
-              modo={"tabla"}
+              modo={"tarjetas"}
               entidades={ctx.estados_lead.lista}
               totalEntidades={ctx.estados_lead.total}
               seleccionada={ctx.estados_lead.activo}
@@ -61,6 +61,7 @@ export const MaestroEstadosLead = () => {
         Detalle={
           <DetalleEstadoLead id={ctx.estados_lead.activo} publicar={emitir} />
         }
+        layout={"TARJETA"}
         seleccionada={ctx.estados_lead.activo}
         modoDisposicion="maestro-50"
       />

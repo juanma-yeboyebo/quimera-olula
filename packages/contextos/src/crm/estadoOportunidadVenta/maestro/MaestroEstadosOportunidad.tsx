@@ -56,7 +56,7 @@ export const MaestroEstadosOportunidad = () => {
             <Listado<EstadoOportunidad>
               metaTabla={metaTablaEstadoOportunidad}
               criteria={ctx.estados_oportunidad.criteria}
-              modo={"tabla"}
+              modo={"tarjetas"}
               entidades={ctx.estados_oportunidad.lista}
               totalEntidades={ctx.estados_oportunidad.total}
               seleccionada={ctx.estados_oportunidad.activo}
@@ -75,6 +75,7 @@ export const MaestroEstadosOportunidad = () => {
             publicar={emitir}
           />
         }
+        layout={"TARJETA"}
         seleccionada={ctx.estados_oportunidad.activo}
         modoDisposicion="maestro-50"
       />
