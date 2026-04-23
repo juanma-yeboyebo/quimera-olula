@@ -54,7 +54,6 @@ export const CrearOportunidadVenta = ({
             {...uiProps("cliente_id", "nombre_cliente")}
             label="Seleccionar cliente"
           />
-          <QInput label="Probabilidad (%)" {...uiProps("probabilidad")} />
           <QInput label="Total" {...uiProps("importe")} />
         </quimera-formulario>
 

@@ -2,9 +2,10 @@ import { MetaModelo } from "@olula/lib/dominio.js";
 import { NuevoLead } from "./diseño.ts";
 
 export const nuevoLeadVacio: NuevoLead = {
-    cliente_id: "",
+    cliente_id: "100",
     nombre: "",
     tipo: "Cliente",
+    responsable_id: "",
 };
 
 export const metaNuevoLead: MetaModelo<NuevoLead> = {
