@@ -128,7 +128,7 @@ function Header({ useStyles }) {
                 <Badge
                   invisible={carrito.lineas.length === 0}
                   color="secondary"
-                  overlap="circle"
+                  overlap="circular"
                   badgeContent={carrito.lineas.length}
                 >
                   <Icon
@@ -176,7 +176,7 @@ function Header({ useStyles }) {
               <Badge
                 invisible={carrito.lineas.length === 0}
                 color="secondary"
-                overlap="circle"
+                overlap="circular"
                 badgeContent={carrito.lineas.length}
               >
                 <Icon

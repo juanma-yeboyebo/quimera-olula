@@ -2,7 +2,6 @@ import { Box, Field, QListItemModel } from "@quimera/comps";
 import { makeStyles } from "@quimera/styles";
 import { ListItemAvatar, ListItemText, Typography } from "@quimera/thirdparty";
 import { useStateValue, util } from "quimera";
-import React from "react";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -40,7 +39,7 @@ function ListItemPedido({ arrayMultiCheck = [], renderAvatar, model, modelName, 
         />
       )}
       <ListItemAvatar>
-        {/* <Badge color="primary" overlap="circle" badgeContent="R"> */}
+        {/* <Badge color="primary" overlap="circular" badgeContent="R"> */}
         {renderAvatar ? renderAvatar(model) : null}
         {/* </Badge> */}
       </ListItemAvatar>

@@ -21,7 +21,7 @@ function ListItemMisReparaciones({ renderAvatar, pedido, selected = false, funSe
   return (
     <ListItem className={selected ? classes.cardSelected : classes.card} {...props} disableGutters>
       <ListItemAvatar>
-        <Badge invisible={!pedido.reclamado} color="primary" overlap="circle" badgeContent="R">
+        <Badge invisible={!pedido.reclamado} color="primary" overlap="circular" badgeContent="R">
           {renderAvatar ? renderAvatar() : null}
         </Badge>
       </ListItemAvatar>
@@ -30,9 +30,8 @@ function ListItemMisReparaciones({ renderAvatar, pedido, selected = false, funSe
         primary={
           <React.Fragment>
             <Box width={1} display="flex" justifyContent="space-between">
-              <Box display="inline">{`${pedido.referencia || "SIN REFERENCIA"} / ${
-                pedido.estado
-              }`}</Box>
+              <Box display="inline">{`${pedido.referencia || "SIN REFERENCIA"} / ${pedido.estado
+                }`}</Box>
               <Box display="inline">{`${util.formatDate(pedido.fecha)}`}</Box>
             </Box>
           </React.Fragment>

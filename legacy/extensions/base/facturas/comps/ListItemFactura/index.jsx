@@ -2,7 +2,6 @@ import { Avatar, Box, QListItemModel } from "@quimera/comps";
 import { makeStyles } from "@quimera/styles";
 import { ListItemAvatar, ListItemText, Typography } from "@quimera/thirdparty";
 import { util } from "quimera";
-import React from "react";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -22,7 +21,7 @@ function ListItemFactura({ renderAvatar, model, modelName, selected = false, fun
   return (
     <QListItemModel modelName={modelName} model={model} selected={selected}>
       <ListItemAvatar>
-        {/* reclamado invisible={!factura.reclamado} color="primary" overlap="circle" badgeContent="R"> */}
+        {/* reclamado invisible={!factura.reclamado} color="primary" overlap="circular" badgeContent="R"> */}
         <Avatar>{factura?.nombreCliente?.charAt(0)}</Avatar>
         {/* </Badge> */}
       </ListItemAvatar>

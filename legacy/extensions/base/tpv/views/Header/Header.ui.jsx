@@ -1,5 +1,5 @@
 import { Avatar, Badge, Icon } from "@quimera/comps";
-import Quimera, { PropValidation, useOnlineStatus } from "quimera";
+import Quimera, { useOnlineStatus } from "quimera";
 import { useEffect, useState } from "react";
 
 import { TpvDb } from "../../lib";
@@ -24,7 +24,7 @@ function Header() {
           <Badge
             invisible={!ventasNoSincro}
             color="primary"
-            overlap="circle"
+            overlap="circular"
             badgeContent={ventasNoSincro}
             style={{
               marginRight: "10px",

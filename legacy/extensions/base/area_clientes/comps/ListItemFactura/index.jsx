@@ -37,7 +37,7 @@ function ListItemFactura({ avatar = "F", factura, selected = false, ...props }) 
   return (
     <ListItem className={selected ? classes.cardSelected : classes.card} {...props}>
       <ListItemAvatar>
-        <Badge invisible={!factura.reclamado} color="primary" overlap="circle" badgeContent="R">
+        <Badge invisible={!factura.reclamado} color="primary" overlap="circular" badgeContent="R">
           <Avatar
             className={
               factura.estado === "PTE"
