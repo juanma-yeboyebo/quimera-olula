@@ -1,4 +1,4 @@
-import { Avatar, Box, Tooltip } from "@quimera/comps";
+import { Box, Tooltip } from "@quimera/comps";
 import { makeStyles } from "@quimera/styles";
 import {
   Collapse,
@@ -9,8 +9,8 @@ import {
   ListItemText,
   Typography,
 } from "@quimera/thirdparty";
-import Quimera, { getSchemas, useWidth } from "quimera";
-import React, { useState, useEffect } from "react";
+import Quimera from "quimera";
+import { useEffect, useState } from "react";
 
 const useStyles = makeStyles(theme => ({
   card: { borderBottom: `1px solid ${theme.palette.grey[400]}` },
@@ -96,7 +96,7 @@ function ListItemLineaPreparacion({ disabled, dispatch, model, linea, modalLotes
                 })
               }
             >
-              <Avatar className={classes[claseLinea]}>{""}</Avatar>
+              <Avatar className={classes[claseLinea]}>{" "}</Avatar>
             </ListItemAvatar> */}
             <Tooltip
               title={linea.porLotes ? `Movimientos por lotes` : ""}

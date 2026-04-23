@@ -1,3 +1,4 @@
+import { DocAgente, DocClienteYDir, DocDirCliente } from "@quimera-extension/base-ventas";
 import {
   Box,
   Column,
@@ -14,7 +15,6 @@ import {
   Typography,
 } from "@quimera/comps";
 import { List } from "@quimera/thirdparty";
-import { DocAgente, DocClienteYDir, DocDirCliente } from "@quimera-extension/base-ventas";
 import Quimera, { getSchemas, useStateValue, useWidth, util } from "quimera";
 import React, { useEffect } from "react";
 
