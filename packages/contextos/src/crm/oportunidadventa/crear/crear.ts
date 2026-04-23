@@ -14,7 +14,6 @@ const onChangeNuevaOportunidad = (nueva_oportunidad: NuevaOportunidadVenta, camp
 export const nuevaOportunidadVentaVacia: NuevaOportunidadVenta = {
     descripcion: '',
     probabilidad: 0,
-    estado_id: undefined,
     importe: 0,
     cliente_id: '',
     contacto_id: '',
@@ -27,7 +26,6 @@ export const metaNuevaOportunidadVenta: MetaModelo<NuevaOportunidadVenta> = {
         nombre_cliente: { requerido: true, validacion: (oportunidad: NuevaOportunidadVenta) => stringNoVacio(oportunidad.descripcion) },
         importe: { requerido: false, tipo: "moneda" },
         probabilidad: { requerido: true, tipo: "numero" },
-        estado_id: { requerido: true, tipo: "selector" },
         cliente_id: { requerido: false, tipo: "autocompletar" },
     },
     onChange: onChangeNuevaOportunidad
