@@ -21,7 +21,6 @@ export const CrearCrmContactos = ({ emitir }: CrearCrmContactosProps) => {
 
   return (
     <div className="alta-crm-contactos">
-      <h2>Nuevo Contacto CRM</h2>
       <quimera-formulario>
         <QInput label="Nombre" {...uiProps("nombre")} ref={focus} />
         <QInput label="Email" {...uiProps("email")} />

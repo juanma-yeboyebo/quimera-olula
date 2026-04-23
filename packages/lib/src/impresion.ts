@@ -14,3 +14,7 @@ export const imprimir_blob = (blob: Blob) => {
         }, 1);
     };
 }
+
+export const imprimir_pagina_blanca = () => {
+    imprimir_blob(new Blob(['<!DOCTYPE html><html><body></body></html>'], { type: "text/html" }));
+};

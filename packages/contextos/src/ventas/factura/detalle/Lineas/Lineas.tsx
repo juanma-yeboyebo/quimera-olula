@@ -1,4 +1,3 @@
-import { QuimeraAcciones } from "@olula/componentes/index.js";
 import { BorrarLinea } from "../../borrar_linea/BorrarLinea.tsx";
 import { CrearLinea } from "../../crear_linea/CrearLinea.tsx";
 import { Factura, LineaFactura } from "../../diseño.ts";
@@ -44,17 +43,12 @@ export const Lineas = ({
 
   return (
     <>
-      {estadoFactura === "ABIERTO" && (
-        <div className="botones maestro-botones ">
-          <QuimeraAcciones acciones={acciones} />
-        </div>
-      )}
-
       <LineasLista
         lineas={factura.lineas || []}
         seleccionada={lineaActiva?.id}
         onCambioCantidad={handleCambioCantidad}
         facturaEditable={estadoFactura === "ABIERTO"}
+        acciones={estadoFactura === "ABIERTO" ? acciones : undefined}
         publicar={publicar}
       />
 

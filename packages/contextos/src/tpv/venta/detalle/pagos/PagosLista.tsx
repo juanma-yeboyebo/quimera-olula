@@ -29,6 +29,7 @@ export const PagosLista = ({
       onSeleccion={setSeleccionado}
       criteriaInicial={criteriaDefecto}
       onCriteriaChanged={() => null}
+      modo="tabla"
     />
   );
 };

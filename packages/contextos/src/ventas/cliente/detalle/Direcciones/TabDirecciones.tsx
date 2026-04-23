@@ -38,6 +38,7 @@ export const TabDirecciones = ({ clienteId }: { clienteId: string }) => {
         nombre="crearDireccion"
         abierto={estado === "alta"}
         onCerrar={() => emitir("alta_cancelada")}
+        titulo="Nueva Dirección"
       >
         <CrearDireccion clienteId={clienteId} publicar={emitir} />
       </QModal>
@@ -46,6 +47,7 @@ export const TabDirecciones = ({ clienteId }: { clienteId: string }) => {
         nombre="editarDireccion"
         abierto={estado === "edicion"}
         onCerrar={() => emitir("edicion_cancelada")}
+        titulo="Editar Dirección"
       >
         {ctx.direcciones.activo && (
           <EdicionDireccion

@@ -23,7 +23,6 @@ export const EdicionCrmContactos = ({
 
   return (
     <div className="edicion-crm-contactos">
-      <h2>Editar Contacto CRM</h2>
       <quimera-formulario>
         <QInput label="Nombre" {...uiProps("nombre")} ref={focus} />
         <QInput label="Email" {...uiProps("email")} />

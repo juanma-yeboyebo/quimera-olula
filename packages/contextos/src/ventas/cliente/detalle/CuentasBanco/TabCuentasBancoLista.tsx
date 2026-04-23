@@ -1,5 +1,6 @@
 import { MetaTabla, QIcono } from "@olula/componentes/index.js";
 import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiControlado.tsx";
+import { QuimeraAcciones } from "@olula/componentes/moleculas/qacciones.tsx";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { CuentaBanco } from "../../diseño.ts";
 import { metaTablaCuentasBanco as metaTablaBase } from "./dominio.ts";
@@ -11,6 +12,7 @@ export const TabCuentasBancoLista = ({
   emitir,
   cargando,
   cuentaDomiciliadaId,
+  acciones,
 }: {
   clienteId: string;
   cuentas: CuentaBanco[];
@@ -18,6 +20,7 @@ export const TabCuentasBancoLista = ({
   emitir: (evento: string, payload?: unknown) => void;
   cargando: boolean;
   cuentaDomiciliadaId: string;
+  acciones: Parameters<typeof QuimeraAcciones>[0]["acciones"];
 }) => {
   const metaTablaCuentasBanco = [
     {
@@ -48,6 +51,11 @@ export const TabCuentasBancoLista = ({
         onSeleccion={(cuenta) => emitir("cuenta_seleccionada", cuenta)}
         criteriaInicial={criteriaDefecto}
         onCriteriaChanged={() => null}
+        renderAcciones={() => (
+          <div className="detalle-cliente-tab-contenido maestro-botones">
+            <QuimeraAcciones acciones={acciones} vertical />
+          </div>
+        )}
       />
     </div>
   );

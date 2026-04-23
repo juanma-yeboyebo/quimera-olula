@@ -15,7 +15,7 @@ import {
 } from "../infraestructura.ts";
 import { ContextoPresupuesto, EstadoPresupuesto } from "./diseño.ts";
 
-export { metaVenta, metaNuevaVenta } from "#/ventas/venta/dominio.ts";
+export { metaNuevaVenta, metaVenta } from "#/ventas/venta/dominio.ts";
 
 export const metaLineaVenta: MetaModelo<LineaVenta> = {
     campos: {
@@ -227,8 +227,6 @@ export const cambiarDescuento: ProcesarPresupuesto = async (contexto, payload) =
 }
 
 export const crearLinea: ProcesarPresupuesto = async (contexto, payload) => {
-    // const nuevaLinea = payload as NuevaLinea;
-    // const idLinea = await postLinea(contexto.presupuesto.id, nuevaLinea);
     const idLinea = payload as string;
 
     return pipePresupuesto(contexto, [
@@ -240,8 +238,6 @@ export const crearLinea: ProcesarPresupuesto = async (contexto, payload) => {
 }
 
 export const cambiarLinea: ProcesarPresupuesto = async (contexto) => {
-    // const linea = payload as LineaPresupuesto;
-    // await patchLinea(contexto.presupuesto.id, linea);
 
     return pipePresupuesto(contexto, [
         refrescarPresupuesto,
@@ -268,7 +264,6 @@ export const cambiarCantidadLinea: ProcesarPresupuesto = async (contexto, payloa
 
 export const borrarLinea: ProcesarPresupuesto = async (contexto, payload) => {
     const idLinea = payload as string;
-    // await deleteLinea(contexto.presupuesto.id, idLinea);
 
     const indiceLineaActiva = (contexto.presupuesto.lineas as LineaPresupuesto[]).findIndex((l: LineaPresupuesto) => l.id === idLinea);
 

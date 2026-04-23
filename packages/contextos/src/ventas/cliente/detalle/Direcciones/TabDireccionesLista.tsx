@@ -62,21 +62,20 @@ export const TabDireccionesLista = ({
   ];
 
   return (
-    <>
-      <div className="TabDireccionesLista maestro-botones">
-        <QuimeraAcciones acciones={acciones} />
-      </div>
-
-      <ListadoSemiControlado
-        metaTabla={metaTablaDirecciones}
-        entidades={direcciones}
-        totalEntidades={direcciones.length}
-        cargando={cargando}
-        seleccionada={seleccionada}
-        onSeleccion={(direccion) => emitir("direccion_seleccionada", direccion)}
-        criteriaInicial={criteriaDefecto}
-        onCriteriaChanged={() => null}
-      />
-    </>
+    <ListadoSemiControlado
+      metaTabla={metaTablaDirecciones}
+      entidades={direcciones}
+      totalEntidades={direcciones.length}
+      cargando={cargando}
+      seleccionada={seleccionada}
+      onSeleccion={(direccion) => emitir("direccion_seleccionada", direccion)}
+      criteriaInicial={criteriaDefecto}
+      onCriteriaChanged={() => null}
+      renderAcciones={() => (
+        <div className="TabDireccionesLista maestro-botones">
+          <QuimeraAcciones acciones={acciones} />
+        </div>
+      )}
+    />
   );
 };

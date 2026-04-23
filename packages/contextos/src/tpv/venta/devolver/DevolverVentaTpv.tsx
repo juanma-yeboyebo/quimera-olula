@@ -103,6 +103,7 @@ export const DevolverVentaTpv = ({
             onSeleccion={() => null}
             criteriaInicial={criteriaDefecto}
             onCriteriaChanged={() => null}
+            modo="tabla"
           />
         )}
 

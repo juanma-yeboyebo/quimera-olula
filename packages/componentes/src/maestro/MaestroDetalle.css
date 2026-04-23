@@ -20,10 +20,10 @@ maestro-detalle {
 
 }
 
-.Maestro> :not(quimera-tabla):not(:has(quimera-tabla)),
-.Detalle> :not(quimera-tabla):not(:has(quimera-tabla)),
-.Maestro> :has(quimera-tabla)> :not(quimera-tabla),
-.Detalle> :has(quimera-tabla)> :not(quimera-tabla) {
+.Maestro> :not(quimera-tabla):not(:has(quimera-tabla)):not(.Listado),
+.Detalle> :not(quimera-tabla):not(:has(quimera-tabla)):not(.Listado),
+.Maestro> :has(quimera-tabla)> :not(quimera-tabla):not(.Listado),
+.Detalle> :has(quimera-tabla)> :not(quimera-tabla):not(.Listado) {
     padding-inline: var(--padding-horizontal);
 }
 
@@ -49,7 +49,7 @@ maestro-detalle[tipo="maestro-50"] {
         max-width: 50%;
         min-width: 0;
         border-left: 1px solid var(--color-borde-sutil);
-        padding-left: 1rem;
+        /* padding-left: 1rem; */
     }
 }
 

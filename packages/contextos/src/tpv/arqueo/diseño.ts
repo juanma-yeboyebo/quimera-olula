@@ -71,3 +71,5 @@ export type PatchBorrarMovimiento = (id: string, idMovimiento: string) => Promis
 export type PostArqueoTpv = () => Promise<string>;
 
 export type DeleteArqueoTpv = (id: string) => Promise<void>;
+
+export type GetReportArqueo = (id: string) => Promise<Blob>;

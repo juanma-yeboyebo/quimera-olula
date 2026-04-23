@@ -8,11 +8,6 @@ interface AgenteProps {
   nombre?: string;
   label?: string;
   onChange: (opcion: { valor: string; descripcion: string } | null) => void;
-  // textoValidacion?: string;
-  // deshabilitado?: boolean;
-  // erroneo?: boolean;
-  // advertido?: boolean;
-  // valido?: boolean;
 }
 
 export const Agente = ({

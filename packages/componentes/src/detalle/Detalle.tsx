@@ -2,7 +2,7 @@ import { Entidad } from "@olula/lib/diseño.ts";
 import { PropsWithChildren, useEffect } from "react";
 import { QBoton } from "../atomos/qboton.tsx";
 import { QIcono } from "../atomos/qicono.tsx";
-import estilos from "./detalle.module.css";
+import "./detalle.css";
 
 interface DetalleProps<T extends Entidad> {
   id: string | undefined;
@@ -24,10 +24,7 @@ export function Detalle<T extends Entidad>({
   className,
   cerrarDetalle,
 }: PropsWithChildren<DetalleProps<T>>) {
-  const { detalle } = estilos;
-
   useEffect(() => {
-
     if (cargar && id && (!entidad || id !== entidad.id)) {
       const load = async () => {
         const cliente = await cargar(id);
@@ -48,10 +45,10 @@ export function Detalle<T extends Entidad>({
   }
 
   return (
-    <div className={`${detalle} ${className || ""}`.trim()}>
+    <div className={`detalle ${className || ""}`.trim()}>
       {" "}
       {obtenerTitulo && (
-        <div className={estilos["detalle-cabecera"]}>
+        <div className="detalle-cabecera">
           <h2>{obtenerTitulo(entidad)}</h2>
           {cerrarDetalle && (
             <QBoton

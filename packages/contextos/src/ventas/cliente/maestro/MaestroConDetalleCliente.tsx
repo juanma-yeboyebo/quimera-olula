@@ -33,18 +33,25 @@ export const MaestroConDetalleCliente = () => {
         Maestro={
           <>
             <h2>Clientes</h2>
-            <div className="maestro-botones">
-              <QBoton onClick={() => emitir("creacion_solicitada")}>
-                Nuevo Cliente
-              </QBoton>
-            </div>
             <Listado<Cliente>
               metaTabla={metaTablaCliente}
+              // tarjeta={(cliente) => (
+              //   <QTarjetaGenerica
+              //     entidad={cliente}
+              //     metaTabla={metaTablaCliente}
+              //   />
+              // )}
               criteria={ctx.clientes.criteria}
-              modo={"tabla"}
               entidades={ctx.clientes.lista}
               totalEntidades={ctx.clientes.total}
               seleccionada={ctx.clientes.activo}
+              renderAcciones={() => (
+                <div className="maestro-botones">
+                  <QBoton onClick={() => emitir("creacion_solicitada")}>
+                    Nuevo Cliente
+                  </QBoton>
+                </div>
+              )}
               onSeleccion={(payload) => emitir("cliente_seleccionado", payload)}
               onCriteriaChanged={(payload) =>
                 emitir("criteria_cambiado", payload)

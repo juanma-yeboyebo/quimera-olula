@@ -129,7 +129,7 @@ menu-lateral.activo {
 #etiqueta-menu-abierto {
     user-select: none;
     display: inline-block;
-    margin-top: 11px;
+    margin-top: 6px;
     height: 24px;
     width: 24px;
     cursor: pointer;

@@ -1,5 +1,6 @@
 import { PropsWithChildren, useEffect, useId, useRef } from "react";
 import { QBoton } from "../atomos/qboton.tsx";
+import { QIcono } from "../atomos/qicono.tsx";
 import "./qmodal.css";
 
 type QModalProps = {
@@ -80,8 +81,13 @@ export const QModal = ({
         <header>
           {titulo && <h2 id={titleId}>{titulo}</h2>}
           <form method="dialog">
-            <QBoton tamaño="xl" variante="texto" tipo="submit">
-              &times;
+            <QBoton
+              tamaño="mediano"
+              variante="texto"
+              tipo="submit"
+              props={{ "aria-label": "Cerrar modal", title: "Cerrar" }}
+            >
+              <QIcono nombre="cerrar" tamaño="sm" />
             </QBoton>
           </form>
         </header>
