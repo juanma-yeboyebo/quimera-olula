@@ -1,4 +1,3 @@
-import { Usuario } from "#/comun/componentes/usuario.tsx";
 import { ClienteConNombre } from "#/crm/comun/componentes/cliente_con_nombre.tsx";
 import { EstadoOportunidad } from "#/crm/comun/componentes/estado_oportunidad_venta.tsx";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
@@ -58,9 +57,8 @@ export const CrearOportunidadVenta = ({
           />
           <EstadoOportunidad label="Estado" {...uiProps("estado_id")} />
           <QInput label="Probabilidad (%)" {...uiProps("probabilidad")} />
-          <QInput {...uiProps("fecha_cierre")} label="Fecha Cierre" />
+          {/* <QInput {...uiProps("fecha_cierre")} label="Fecha Cierre" /> */}
           <QInput label="Total" {...uiProps("importe")} />
-          <Usuario {...uiProps("responsable_id")} label="Responsable" />
         </quimera-formulario>
 
         <div className="botones">

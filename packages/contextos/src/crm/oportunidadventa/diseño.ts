@@ -9,7 +9,7 @@ export interface OportunidadVenta extends Entidad {
     estado_id: string;
     descripcion_estado: string | null;
     probabilidad: number;
-    fecha_cierre: Date | null;
+    fecha_cierre?: Date | null;
     contacto_id: string | null;
     nombre_contacto: string | null;
     tarjeta_id: string | null;

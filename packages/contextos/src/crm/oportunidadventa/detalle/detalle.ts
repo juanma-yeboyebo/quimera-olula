@@ -40,7 +40,7 @@ export const metaOportunidadVenta: MetaModelo<OportunidadVenta> = {
         descripcion: { requerido: true, validacion: (oportunidad: OportunidadVenta) => stringNoVacio(oportunidad.descripcion) },
         importe: { requerido: true, tipo: "moneda" },
         probabilidad: { requerido: true, tipo: "numero" },
-        fecha_cierre: { requerido: true, tipo: "fecha" },
+        fecha_cierre: { requerido: false, tipo: "fecha" },
         estado_id: { requerido: true, tipo: "selector" },
         cliente_id: { requerido: false, tipo: "autocompletar" },
         responsable_id: { requerido: true, tipo: "autocompletar" },
