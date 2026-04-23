@@ -1,5 +1,5 @@
 import { Box, Button, Icon } from "@quimera/comps";
-import Quimera, { PropValidation, useStateValue } from "quimera";
+import Quimera, { useStateValue } from "quimera";
 import React from "react";
 
 function ListaDocumentos({ useStyles }) {
@@ -18,6 +18,7 @@ function ListaDocumentos({ useStyles }) {
               onClick={() =>
                 dispatch({ type: "onMigaClicked", payload: { id: carpetaActual.pathId[index] } })
               }
+              style={{ maxHeight: '30px' }}
             />
             {index < array.length - 1 ? ">" : ""}
           </React.Fragment>
