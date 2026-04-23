@@ -93,19 +93,19 @@ function Stock({ idStock, initStock, referencia, callbackChanged, callbackVolver
     <Quimera.Template id="Stock">
       <Container>
         <Box mt={1}>
-          <Grid container direction="column" style={{ marginBottom: "10px" }}>
+          <Grid container direction="row" style={{ marginBottom: "10px" }}>
             <Grid container size={{ xs: 12, md: 2 }} pb={1} justifyContent="flex-start">
               <Typography variant="subtittle1">{`Finca: ${miFinca.descripcion}`}</Typography>
             </Grid>
             <Grid container size={{ xs: 12, md: 8 }} pb={1} justifyContent="center">
-              <Typography component="span" variant="h6">{`${stock?.buffer?.referencia ?? ""} / ${stock?.buffer?.descripcion ?? ""
+              <Typography component="span" variant="h5">{`${stock?.buffer?.referencia ?? ""} / ${stock?.buffer?.descripcion ?? ""
                 } / ${stock?.buffer?.precioRef ?? "0"} €`}</Typography>
             </Grid>
             <Grid size={{ xs: 0, md: 2 }} />
           </Grid>
           <Grid container align="center" justifyContent="space-between">
             <Grid container size={6} justifyContent="flex-start" style={{ gap: 8 }}>
-              <Grid size={3}>
+              <Grid size={4}>
                 <Button
                   id="cambiarDisponible"
                   text={`${stock.buffer.disponible ? "Disponible" : "No disponible"}`}
@@ -150,11 +150,11 @@ function Stock({ idStock, initStock, referencia, callbackChanged, callbackVolver
           </Grid>
         </Box>
         <Box>
-          <Grid container driection="row" className={classes.cajaStock}>
+          <Grid container driection="row" className={classes.cajaStock} >
             <Grid container size={12} pb={1} justifyContent="space-between">
               <Typography variant="subtittle1">{`Total Stock: ${totalStockFinca}`}</Typography>
             </Grid>
-            <Grid container driection="row" justifyContent="flex-end">
+            <Grid container size={12} driection="row" justifyContent="flex-end">
               <Box mt={1}>
                 <IconButton id="addAlmacen" size="medium" tooltip="Añadir almacén">
                   <Icon fontSize="medium">add_circle_outline_outlined</Icon>
@@ -255,7 +255,7 @@ function Stock({ idStock, initStock, referencia, callbackChanged, callbackVolver
               />
             </Table>
           </Box>
-          <Grid container driection="row" justifyContent="flex-end">
+          <Grid container direction="row" justifyContent="flex-end" style={{ marginTop: 8 }}>
             <Button
               id="volver"
               text="Volver"
