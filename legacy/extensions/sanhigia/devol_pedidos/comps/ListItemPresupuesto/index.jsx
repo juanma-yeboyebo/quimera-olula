@@ -2,7 +2,6 @@ import { Box, QListItemModel } from "@quimera/comps";
 import { makeStyles } from "@quimera/styles";
 import { Icon, ListItemAvatar, ListItemText, Typography } from "@quimera/thirdparty";
 import { util } from "quimera";
-import React from "react";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -50,7 +49,7 @@ function ListItemPresupuesto({ renderAvatar, model, modelName, selected = false,
   return (
     <QListItemModel modelName={modelName} model={model} selected={selected}>
       <ListItemAvatar>
-        <Icon color="primary" fontSize="large" className={classes[avatarColorClass]}>
+        <Icon fontSize="large" className={classes[avatarColorClass]}>
           radio_button_unchecked
         </Icon>
       </ListItemAvatar>

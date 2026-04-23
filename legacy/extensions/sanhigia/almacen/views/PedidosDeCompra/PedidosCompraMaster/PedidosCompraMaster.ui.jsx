@@ -1,5 +1,5 @@
 import { Avatar, Box, QBox, QBoxButton, QListModel } from "@quimera/comps";
-import Quimera, { PropValidation, useStateValue, useWidth } from "quimera";
+import Quimera, { useStateValue, useWidth } from "quimera";
 import { useCallback } from "react";
 
 import { ListItemPedidoCompra } from "../../../comps";
