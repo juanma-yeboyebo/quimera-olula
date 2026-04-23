@@ -83,11 +83,11 @@ function Articulo({
           <Grid container justifyContent="center" style={{ marginBottom: "10px" }}>
             <Typography
               component="span"
-              variant="h6"
+              variant="h5"
             >{`${articulo.buffer.referencia} / ${articulo.buffer.descripcion} / ${articulo.buffer.precioRef} €`}</Typography>
           </Grid>
-          <Grid container align="center" justifyContent="flex-end" style={{ gap: 8 }}>
-            <Grid size={6} justifyContent="flex-start" style={{ gap: 8 }}>
+          <Grid container align="center" justifyContent="space-between" style={{ gap: 8 }}>
+            <Grid container size={6} justifyContent="flex-start" style={{ gap: 8 }}>
               <Grid>
                 <Button
                   id="publicadoWeb"
@@ -119,13 +119,13 @@ function Articulo({
         </Box>
         <Box pt={2}>
           <Grid container justifyContent="flex-start">
-            <Grid size={12} pb={1} justifyContent="space-between">
+            <Grid container size={12} pb={1} justifyContent="space-between">
               <Typography variant="subtittle1">General</Typography>
               <Typography variant="subtittle1">{`Visible web: ${articulo.buffer.publicadoWeb ? "Si" : "No"
                 }`}</Typography>
             </Grid>
           </Grid>
-          <Grid container driection="column" justifyContent="space-between" style={{ display: "block" }}>
+          <Grid container direction="column" justifyContent="space-between" style={{ display: "block" }}>
             <Grid container size={12} direction="row" justifyContent="space-between" style={{ gap: 20 }}>
               <Box flexGrow={1}>
                 <Field.Text
@@ -143,6 +143,7 @@ function Articulo({
                   fullWidth
                   field="nombre3"
                   label="Nombre 3"
+                  disabled
                   value={articulo.buffer.nombre3}
                 />
               </Box>
@@ -152,6 +153,7 @@ function Articulo({
                   fullWidth
                   field="nombre4"
                   label="Nombre 4"
+                  disabled
                   value={articulo.buffer.nombre4}
                 />
               </Box>
@@ -163,6 +165,7 @@ function Articulo({
                   fullWidth
                   field="litraje"
                   label="Litraje"
+                  disabled
                   value={articulo.buffer.litraje}
                 />
               </Box>
@@ -172,6 +175,7 @@ function Articulo({
                   fullWidth
                   field="forma"
                   label="Forma"
+                  disabled
                   value={articulo.buffer.forma}
                 />
               </Box>
@@ -181,6 +185,7 @@ function Articulo({
                   fullWidth
                   field="altura"
                   label="Altura"
+                  disabled
                   value={articulo.buffer.altura}
                 />
               </Box>
@@ -192,6 +197,7 @@ function Articulo({
                   fullWidth
                   field="perimetro"
                   label="Perímetro"
+                  disabled
                   value={articulo.buffer.perimetro}
                 />
               </Box>
@@ -201,6 +207,7 @@ function Articulo({
                   fullWidth
                   field="familia"
                   label="Familia"
+                  disabled
                   value={articulo.buffer.familia}
                 />
               </Box>
@@ -230,6 +237,7 @@ function Articulo({
                   fullWidth
                   field="codBarras"
                   label="Código de barras"
+                  disabled
                   value={articulo.buffer.codBarras}
                 />
               </Box>
@@ -268,7 +276,7 @@ function Articulo({
             <Grid container size={12} pb={1} justifyContent="space-between">
               <Typography variant="subtittle1">Artículos proveedor</Typography>
             </Grid>
-            <Grid container driection="row" justifyContent="flex-end">
+            <Grid container size={12} direction="row" justifyContent="flex-end">
               <Box mt={1}>
                 <IconButton id="addProveedor" size="medium" tooltip="Añadir proveedor">
                   <Icon fontSize="medium">add_circle_outline_outlined</Icon>
