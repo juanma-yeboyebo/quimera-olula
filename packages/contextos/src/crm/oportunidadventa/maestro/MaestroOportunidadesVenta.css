@@ -1,0 +1,15 @@
+.q-avatar {
+    font-weight: bold;
+
+    &.muyprobable {
+        background-color: var(--color-exito-claro);
+    }
+
+    &.probable {
+        background-color: var(--color-advertencia-claro);
+    }
+
+    &.improbable {
+        background-color: var(--color-error-claro);
+    }
+}

@@ -1,17 +1,21 @@
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
+import { QAvatar, QTarjetaGenerica } from "@olula/componentes/index.js";
 import { Listado } from "@olula/componentes/maestro/Listado.js";
 import { MaestroDetalle } from "@olula/componentes/maestro/MaestroDetalle.tsx";
+import { useEsMovil } from "@olula/componentes/maestro/useEsMovil.js";
+import { formatearFechaDate } from "@olula/lib/dominio.js";
 import { listaActivaEntidadesInicial } from "@olula/lib/ListaActivaEntidades.js";
 import { getUrlParams, useUrlParams } from "@olula/lib/url-params.js";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CrearOportunidadVenta } from "../crear/CrearOportunidadVenta.tsx";
 import { DetalleOportunidadVenta } from "../detalle/DetalleOportunidadVenta.tsx";
 import { OportunidadVenta } from "../diseño.ts";
-import { TarjetaOportunidadVenta } from "../vistas/TarjetaOportunidadVenta.tsx";
 import { metaTablaOportunidadVenta } from "./maestro.ts";
 import "./MaestroOportunidadesVenta.css";
 import { getMaquina } from "./maquina.ts";
+
+type Layout = "TABLA" | "TARJETA";
 
 export const MaestroOportunidades = () => {
   const { id, criteria } = getUrlParams();
@@ -28,12 +32,32 @@ export const MaestroOportunidades = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const esMovil = useEsMovil();
+  const [layout, setLayout] = useState<Layout>("TARJETA");
+
+  const cambiarLayout = useCallback(
+    () => setLayout(layout === "TARJETA" ? "TABLA" : "TARJETA"),
+    [layout, setLayout]
+  );
+
   return (
     <div className="OportunidadesVenta">
       <MaestroDetalle<OportunidadVenta>
         Maestro={
           <>
             <h2>Oportunidades de Venta</h2>
+            {!esMovil && (
+              <div className="maestro-botones">
+                <QBoton
+                  texto={
+                    layout === "TARJETA"
+                      ? "Cambiar a TABLA"
+                      : "Cambiar a TARJETA"
+                  }
+                  onClick={cambiarLayout}
+                />
+              </div>
+            )}
 
             <div className="maestro-botones">
               <QBoton
@@ -46,10 +70,8 @@ export const MaestroOportunidades = () => {
             <Listado<OportunidadVenta>
               metaTabla={metaTablaOportunidadVenta}
               criteria={ctx.oportunidades.criteria}
-              modo={"tabla"}
-              tarjeta={(oportunidad) => (
-                <TarjetaOportunidadVenta oportunidad={oportunidad} />
-              )}
+              modo={esMovil || layout === "TARJETA" ? "tarjetas" : "tabla"}
+              tarjeta={TarjetaOportunidadVenta}
               entidades={ctx.oportunidades.lista}
               totalEntidades={ctx.oportunidades.total}
               seleccionada={ctx.oportunidades.activo}
@@ -74,5 +96,32 @@ export const MaestroOportunidades = () => {
 
       {ctx.estado === "CREANDO" && <CrearOportunidadVenta publicar={emitir} />}
     </div>
+  );
+};
+
+const TarjetaOportunidadVenta = (oportunidad: OportunidadVenta) => {
+  const probabilidad =
+    oportunidad.probabilidad >= 75
+      ? "muyprobable"
+      : oportunidad.probabilidad >= 50
+        ? "probable"
+        : "improbable";
+
+  return (
+    <QTarjetaGenerica
+      avatar={
+        <QAvatar className={probabilidad}>
+          {oportunidad.probabilidad + "%"}
+        </QAvatar>
+      }
+      arribaIzquierda={oportunidad.descripcion}
+      arribaDerecha={
+        oportunidad.fecha_cierre
+          ? formatearFechaDate(oportunidad.fecha_cierre)
+          : ""
+      }
+      abajoIzquierda={oportunidad.nombre_cliente}
+      abajoDerecha={oportunidad.importe + " €"}
+    />
   );
 };
