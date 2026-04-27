@@ -1,4 +1,3 @@
-import { Usuario } from "#/comun/componentes/usuario.tsx";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { QModal } from "@olula/componentes/index.js";
@@ -34,7 +33,6 @@ export const CrearLead = ({ publicar }: { publicar: EmitirEvento }) => {
 
         <quimera-formulario>
           <QInput label="Nombre" {...uiProps("nombre")} />
-          <Usuario {...uiProps("responsable_id")} label="Responsable" />
         </quimera-formulario>
 
         <div className="botones">

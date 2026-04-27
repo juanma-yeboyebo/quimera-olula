@@ -5,7 +5,6 @@ export const nuevoLeadVacio: NuevoLead = {
     cliente_id: "100",
     nombre: "",
     tipo: "Cliente",
-    responsable_id: "",
 };
 
 export const metaNuevoLead: MetaModelo<NuevoLead> = {
@@ -13,6 +12,5 @@ export const metaNuevoLead: MetaModelo<NuevoLead> = {
         cliente_id: { requerido: false, tipo: "autocompletar" },
         nombre: { requerido: true },
         tipo: { requerido: true, bloqueado: true },
-        responsable_id: { requerido: true, tipo: "autocompletar" },
     },
 };
