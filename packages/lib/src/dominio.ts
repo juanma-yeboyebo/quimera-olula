@@ -739,6 +739,21 @@ export const puede = (regla: string): boolean => {
     return true;
 };
 
+export const plugin = (nombre: string): string => {
+    if (!nombre) return "";
+
+    const raw = localStorage.getItem("whoami");
+    if (!raw) return "";
+
+    try {
+        const whoAmI = JSON.parse(raw) as { plugins?: Record<string, string> };
+        const estado = whoAmI.plugins?.[nombre];
+        return typeof estado === "string" ? estado.toLowerCase() : "";
+    } catch {
+        return "";
+    }
+};
+
 type RelacionDeCampos = Record<string, string>;
 export const transformarCriteria = (relacion: RelacionDeCampos): (criteria: Criteria) => Criteria => {
 

@@ -2,10 +2,18 @@ import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { RespuestaLista } from "@olula/lib/diseño.ts";
 import { Permiso } from "../grupos/diseño.ts";
 import { Login, Logout, RefrescarToken, UsuarioLogin, UsuarioRefresco } from "./diseño.ts";
+export { permisosGrupo } from "@olula/lib/api/permisos.ts";
 
 const MINUTOS_REFRESCO = 15;
 const MINUTOS = 60 * 1000;
 const baseUrl = '/auth';
+
+export interface RespuestaWhoAmI {
+    tipo: string;
+    permisos: Permiso[];
+    plugins: Record<string, string>;
+    usuario_id: string;
+}
 
 type PeticionLogin = { id: string; password: string; };
 type RespuestaLogin = { token_acceso: string; token_refresco: string; };
@@ -63,12 +71,16 @@ export const tokenRefresco = {
     eliminar: () => localStorage.removeItem("token-refresco"),
 }
 
-export const permisosGrupo = {
-    actualizar: (permisosGrupo: Permiso[]) => localStorage.setItem("permisos-grupo", JSON.stringify(permisosGrupo)),
-    obtener: () => localStorage.getItem("permisos-grupo"),
-    eliminar: () => localStorage.removeItem("permisos-grupo"),
+export const whoAmIStorage = {
+    actualizar: (whoAmI: RespuestaWhoAmI) => localStorage.setItem("whoami", JSON.stringify(whoAmI)),
+    obtener: () => localStorage.getItem("whoami"),
+    eliminar: () => localStorage.removeItem("whoami"),
 }
 
 export const misPermisos = async (): RespuestaLista<Permiso> => {
     return await RestAPI.get<{ datos: Permiso[]; total: number }>(baseUrl + '/permiso/mi_grupo');
+};
+
+export const whoAmI = async (): Promise<RespuestaWhoAmI> => {
+    return await RestAPI.get<RespuestaWhoAmI>(baseUrl + '/permiso/whoami');
 };

@@ -5,7 +5,7 @@ import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { login } from "../dominio.ts";
-import { misPermisos, permisosGrupo } from "../infraestructura.ts";
+import { permisosGrupo, whoAmI, whoAmIStorage } from "../infraestructura.ts";
 import estilos from "./Login.module.css";
 
 export const Login = () => {
@@ -17,11 +17,12 @@ export const Login = () => {
     const { id, contraseña } = datos;
 
     return login(id, contraseña)
-      .then(() => {
-        misPermisos().then((datosPermisos) => {
-          permisosGrupo.actualizar(datosPermisos.datos);
-        });
-      })
+      .then(() =>
+        whoAmI().then((datosWhoAmI) => {
+          whoAmIStorage.actualizar(datosWhoAmI);
+          permisosGrupo.actualizar(datosWhoAmI.permisos);
+        })
+      )
       .then(() => navigate("/"));
   };
 
