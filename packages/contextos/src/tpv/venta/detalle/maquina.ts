@@ -86,6 +86,8 @@ export const getMaquina: () => Maquina<EstadoVentaTpv, ContextoVentaTpv> = () =>
             pago_seleccionado: [Pagos.activar],
 
             linea_seleccionada: [Lineas.activar],
+
+            tique_regalo_solicitado: "GENERANDO_TIQUE_REGALO",
         },
 
         BORRANDO_VENTA: {
@@ -144,6 +146,13 @@ export const getMaquina: () => Maquina<EstadoVentaTpv, ContextoVentaTpv> = () =>
             devolucion_hecha: [refrescarCabecera, refrescarLineas, "ABIERTA"],
 
             devolucion_cancelada: "ABIERTA",
+        },
+
+        GENERANDO_TIQUE_REGALO: {
+
+            tique_regalo_generado: "EMITIDA",
+
+            tique_regalo_cancelado: "EMITIDA",
         },
 
         CREANDO_LINEA: {

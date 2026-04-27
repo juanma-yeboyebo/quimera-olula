@@ -37,8 +37,6 @@ export const recargarListaEntidades = <T extends Entidad>(prev: ListaActivaEntid
 export const ampliarListaEntidades = <T extends Entidad>(prev: ListaActivaEntidades<T>, payload?: unknown): ListaActivaEntidades<T> => {
     const { datos, total } = payload as { datos: T[]; total: number } ?? { datos: [], total: 0 };
 
-    console.log('datos', datos);
-
     return pipe(
         prev,
         conLista([...prev.lista, ...datos]),

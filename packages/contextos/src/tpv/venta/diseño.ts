@@ -33,6 +33,10 @@ export interface VentaTpvADevolver extends VentaTpv {
     lineas: LineaADevolver[];
 }
 
+export interface LineaParaTiqueRegalo extends LineaFactura {
+    aTiqueRegalo: number;
+}
+
 export interface PagoVentaTpv extends Entidad {
     id: string;
     importe: number;

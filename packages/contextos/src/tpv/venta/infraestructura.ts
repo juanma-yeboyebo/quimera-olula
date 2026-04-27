@@ -4,7 +4,7 @@ import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { ClausulaFiltro, Direccion, Filtro, Orden, Paginacion } from "@olula/lib/diseño.ts";
 import { criteriaQuery } from "@olula/lib/infraestructura.ts";
 import { agenteActivo, puntoVentaLocal } from "../comun/infraestructura.ts";
-import { DeleteLinea, DeletePago, DeleteVentaTpv, GetLineasFactura, GetPagosVentaTpv, GetReportVenta, GetVentasTpv, GetVentaTpv, GetVentaTpvADevolver, LineaFactura, PagoVentaTpv, PatchArticuloLinea, PatchCantidadLinea, PatchClienteFactura, PatchDevolverVenta, PatchFechaVenta, PatchLinea, PatchVenta, PostEmitirVale, PostLinea, PostLineaPorBarcode, PostPago, PostVentaTpv, VentaTpv, VentaTpvADevolver } from "./diseño.ts";
+import { DeleteLinea, DeletePago, DeleteVentaTpv, GetLineasFactura, GetPagosVentaTpv, GetReportVenta, GetVentasTpv, GetVentaTpv, GetVentaTpvADevolver, LineaFactura, LineaParaTiqueRegalo, PagoVentaTpv, PatchArticuloLinea, PatchCantidadLinea, PatchClienteFactura, PatchDevolverVenta, PatchFechaVenta, PatchLinea, PatchVenta, PostEmitirVale, PostLinea, PostLineaPorBarcode, PostPago, PostVentaTpv, VentaTpv, VentaTpvADevolver } from "./diseño.ts";
 
 const baseUrlFactura = new Ventas_Urls().FACTURA;
 const baseUrl = new ApiUrls().VENTA;
@@ -289,6 +289,17 @@ export const deleteLinea: DeleteLinea = async (id, lineaId): Promise<void> => {
 
 export const getReportVenta: GetReportVenta = async (id) =>
     RestAPI.blob(`${baseUrl}/${id}/report`, "Error al obtener el report de la venta");
+
+export const postReportTiqueRegalo = async (id: string, lineas: LineaParaTiqueRegalo[]): Promise<Blob> =>
+    RestAPI.postBlob(
+        `${baseUrl}/${id}/report_regalo`,
+        {
+            lineas: lineas
+                .filter(l => l.aTiqueRegalo > 0)
+                .map(l => ({ linea_id: l.id, cantidad: l.aTiqueRegalo }))
+        },
+        "Error al generar el tique regalo"
+    );
 
 export const deletePago: DeletePago = async (id, idPago): Promise<void> => {
     await RestAPI.delete(`${baseUrl}/${id}/pago/${idPago}`, "Error al borrar pago de factura");

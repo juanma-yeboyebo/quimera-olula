@@ -66,6 +66,15 @@ const obtenerBlob = async (
     .then(r => r.blob());
 };
 
+const enviarPostBlob = async <T>(
+  url: string,
+  body: T,
+  msgError?: string
+): Promise<Blob> => {
+  return llamada({ method: "POST", url, headers: { "Content-Type": "application/json" }, body, msgError })
+    .then(r => r.blob());
+};
+
 export const RestAPI: API = {
   get: <T>(url: string, msgError?: string) => consulta<T>(url, msgError),
   post: <T>(url: string, body: T, msgError?: string) => comando<T, { id: string }>("POST", url, msgError, body),
@@ -73,4 +82,5 @@ export const RestAPI: API = {
   patch: <T>(url: string, body: Partial<T>, msgError?: string) => comando<T, void>("PATCH", url, msgError, body),
   delete: (url: string, msgError?: string) => comando("DELETE", url, msgError),
   blob: (url: string, msgError?: string) => obtenerBlob(url, msgError),
+  postBlob: <T>(url: string, body: T, msgError?: string) => enviarPostBlob(url, body, msgError),
 }
