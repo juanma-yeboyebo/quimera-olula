@@ -19,7 +19,7 @@
 }
 
 .linea-pedido-tarjeta-referencia {
-    font-weight: var(--grosor-letra-7);
+    font-weight: var(--grosor-letra-5);
     font-size: var(--tamaño-letra-m);
     line-height: 1.1;
 }
@@ -62,7 +62,7 @@
     align-items: flex-end;
     gap: var(--espaciado-xxs);
     font-weight: var(--grosor-letra-7);
-    font-size: var(--tamaño-letra-l);
+    font-size: var(--tamaño-letra-m);
     white-space: nowrap;
 }
 

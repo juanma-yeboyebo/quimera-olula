@@ -55,10 +55,10 @@ export const TarjetaLinea = ({
       <div className="linea-pedido-tarjeta-cabecera">
         <div className="linea-pedido-tarjeta-identidad">
           <span className="linea-pedido-tarjeta-referencia">
-            {linea.referencia || "Sin referencia"}
+            {linea.descripcion || "Sin descripcion"}
           </span>
           <span className="linea-pedido-tarjeta-descripcion">
-            {linea.descripcion}
+            Referencia: {linea.referencia || "Sin referencia"}
           </span>
           <span className="linea-pedido-tarjeta-resumen">
             {formatearMoneda(linea.pvp_unitario, "EUR")} · IVA {iva} · Dto {dto}
