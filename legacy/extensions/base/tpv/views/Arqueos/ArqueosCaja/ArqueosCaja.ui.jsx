@@ -20,11 +20,11 @@ function ArqueosCaja({ useStyles }) {
   return (
     <Quimera.Template id="ArqueosCaja">
       <Grid container spacing={0} direction="column">
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Grid container spacing={0} direction="column">
             {billetesBuffer &&
               Object.keys(billetesBuffer).map(item => (
-                <Grid item xs={3} key={item}>
+                <Grid size={3} key={item}>
                   <Box
                     display="flex"
                     flexDirection="column"
@@ -47,13 +47,13 @@ function ArqueosCaja({ useStyles }) {
           </Grid>
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Grid container spacing={0} direction="column">
             {monedasBuffer &&
               Object.keys(monedasBuffer)
                 .sort(ordenar)
                 .map(item => (
-                  <Grid item xs={3} key={item}>
+                  <Grid size={3} key={item}>
                     <Box
                       display="flex"
                       flexDirection="column"

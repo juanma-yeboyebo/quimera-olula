@@ -234,7 +234,7 @@ function PedidoCompraAgrupado({ idsPedido, useStyles }) {
                   value={(linea, idx) => (
 
                     <Grid container direction="column" spacing={1}>
-                      <Grid item xs={12}>
+                      <Grid size={12}>
                         {/* {console.log('mimensaje_________ubicacion', linea.codUbicacionArticulo)} */}
                         <Ubicacion
                           id="linea/codUbicacionArticulo"

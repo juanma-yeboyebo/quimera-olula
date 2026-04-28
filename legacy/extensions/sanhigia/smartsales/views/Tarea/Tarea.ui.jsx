@@ -269,8 +269,14 @@ function Tarea({ desdeMasterTareas, idTarea, idCampania, tipoTarea, refreshCallb
       <Dialog open={modalFechaHoraFin} fullWidth maxWidth="xs">
         <DialogTitle id="form-dialog-title">Fecha y hora de finalización</DialogTitle>
         <DialogContent>
-          <Field.Schema id="tareaBuffer.fechaFin" schema={schemaTarea} fullWidth />
-          <Field.Schema id="tareaBuffer.horaFin" schema={schemaTarea} fullWidth />
+          <Grid container direction="column" spacing={2}>
+            <Grid size={12} style={{ marginTop: "1em" }}>
+              <Field.Schema id="tareaBuffer.fechaFin" schema={schemaTarea} fullWidth />
+            </Grid>
+            <Grid size={12}>
+              <Field.Schema id="tareaBuffer.horaFin" schema={schemaTarea} fullWidth />
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Grid container justifyContent="center">

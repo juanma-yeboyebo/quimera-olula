@@ -53,7 +53,7 @@ function s17LineaParte({ callbackGuardada, disabled, lineaInicial, useStyles }) 
       )}
       <Collapse in={linea.buffer._status !== "deleting"}>
         <Grid container spacing={0} direction="column">
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Box display="flex" justifyContent="right" mt={1}>
               {!disabled && (
                 <Button
@@ -77,14 +77,14 @@ function s17LineaParte({ callbackGuardada, disabled, lineaInicial, useStyles }) 
             fullWidth
             style={{ width: "100%" }}
           >
-            <Grid item xs={12}>
+            <Grid size={12}>
               <QSection
                 title="Horas"
                 actionPrefix="linea/horas"
                 alwaysInactive={false}
                 dynamicComp={() => (
-                  <Grid container item xs={12} spacing={2}>
-                    <Grid item xs={mobile ? 6 : 2}>
+                  <Grid container size={12} spacing={2}>
+                    <Grid size={mobile ? 6 : 2}>
                       <SelectorValores
                         id="lineaHoras"
                         label="Horas"
@@ -93,7 +93,7 @@ function s17LineaParte({ callbackGuardada, disabled, lineaInicial, useStyles }) 
                         fullWidth
                       ></SelectorValores>
                     </Grid>
-                    <Grid item xs={mobile ? 6 : 2}>
+                    <Grid size={mobile ? 6 : 2}>
                       <SelectorValores
                         id="lineaMinutos"
                         label="Minutos"
@@ -109,14 +109,14 @@ function s17LineaParte({ callbackGuardada, disabled, lineaInicial, useStyles }) 
                 <Typography variant="h5">{util.horasToHorasMins(linea.buffer.horas)}</Typography>
               </QSection>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <QSection
                 title={linea.buffer.referencia}
                 actionPrefix="linea/referencia"
                 alwaysInactive={false}
                 dynamicComp={() => (
                   <Grid container spacing={1} direction="column" >
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                       <S17Articulo
                         id="linea.buffer/referencia"
                         label="Trabajo"
@@ -138,14 +138,14 @@ function s17LineaParte({ callbackGuardada, disabled, lineaInicial, useStyles }) 
                 />
               </QSection>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <QSection
                 title={linea.buffer.proyecto}
                 actionPrefix="linea/proyecto"
                 alwaysInactive={false}
                 dynamicComp={() => (
                   <Grid container spacing={1} direction="column" >
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                       <Proyecto
                         id="linea.buffer/proyecto"
                         label="Proyecto"
@@ -167,7 +167,7 @@ function s17LineaParte({ callbackGuardada, disabled, lineaInicial, useStyles }) 
               </QSection>
             </Grid>
             {linea.buffer.proyecto === codCentroEspecial ?
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <QSection
                   title="Observaciones"
                   actionPrefix="linea/observaciones"

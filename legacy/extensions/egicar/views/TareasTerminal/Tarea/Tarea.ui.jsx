@@ -71,7 +71,7 @@ function Tarea({ useStyles }) {
           <Typography variant="h5">{`${tarea.descripcion} (${tarea.idTarea})`}</Typography>
         </QTitleBox>
         <Grid container display={"flex"} justifyContent={"space-between"}>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <QTitleBox titulo="Orden de producción">
               <Box
                 display={"flex"}
@@ -106,7 +106,7 @@ function Tarea({ useStyles }) {
               </Box>
             </QTitleBox>
           </Grid>
-          <Grid item xs={12} md={6} container justifyContent={mobile ? "flex-start" : "flex-end"}>
+          <Grid container size={{ xs: 12, md: 6 }} justifyContent={mobile ? "flex-start" : "flex-end"}>
             <QTitleBox titulo="Cantidad programada">
               <Typography variant="h5" align={mobile ? "left" : "right"}>
                 {tarea.canprogramada}
@@ -189,7 +189,7 @@ function Tarea({ useStyles }) {
       </Box>
 
       {tramosTarea && tramosTarea.length > 0 && (
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography variant="overline">Tramos:</Typography>
           <List>
             {tramosTarea?.map(tramo => (

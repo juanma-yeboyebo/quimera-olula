@@ -29,7 +29,7 @@ function PresupuestoCliNuevo({ callbackGuardado, useStyles, ...props }) {
         alwaysActive
         dynamicComp={() => (
           <Grid container>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Cliente
                 id="presupuesto.buffer/codCliente"
                 label={`Cliente ${presupuesto.buffer.codCliente ?? ""}`}
@@ -38,7 +38,7 @@ function PresupuestoCliNuevo({ callbackGuardado, useStyles, ...props }) {
                 autoFocus
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <DirCliente
                 id="presupuesto.buffer/codDir"
                 codCliente={presupuesto.buffer.codCliente}

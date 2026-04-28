@@ -110,7 +110,7 @@ function QBox({
             {cabeceraButtons}
           </Box>
           {botonesCabecera?.map(b => (
-            <Badge color="primary" badgeContent={b.badgeContent}>
+            <Badge color="primary" badgeContent={b.badgeContent} invisible={b.badgeInvisible} overlap="circular">
               <IconButton
                 id={b.id}
                 key={b.id}
@@ -150,7 +150,7 @@ function QBox({
               key={b.id}
               invisible={!b.badgeVisible}
               color="secondary"
-              overlap="circle"
+              overlap="circular"
               badgeContent={b.badgeContent}
             >
               <IconButton id={b.id} key={b.id} size="small" disabled={b.disabled} title={b.text}>

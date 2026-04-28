@@ -21,7 +21,7 @@ function GraficosGerencia({ useStyles }) {
   return (
     <Quimera.Template id="GraficosGerencia">
       <Grid container>
-        <Grid item xs={12} sm={12} md={6}>
+        <Grid size={{ xs: 12, sm: 12, md: 6 }}>
           <Box component="div" className={classes.infoBoxv1}>
             <div className={classes.lineChartv1}>
               <Chart.Bar chartProps={lineChartPedidosCliente} />
@@ -32,7 +32,7 @@ function GraficosGerencia({ useStyles }) {
             </Box>
           </Box>
         </Grid>
-        <Grid item xs={12} sm={12} md={6}>
+        <Grid size={{ xs: 12, sm: 12, md: 6 }}>
           <Box component="div" className={classes.infoBoxv1}>
             <div className={classes.lineChartv1}>
               <Chart.Bar chartProps={lineChartValorPedidosCliente} />
@@ -43,7 +43,7 @@ function GraficosGerencia({ useStyles }) {
             </Box>
           </Box>
         </Grid>
-        <Grid item xs={12} sm={12} md={6}>
+        <Grid size={{ xs: 12, sm: 12, md: 6 }}>
           <Box component="div" className={classes.infoBoxv1}>
             <div className={classes.lineChartv1}>
               <Chart.Bar chartProps={lineChartUnidadesModelo} />

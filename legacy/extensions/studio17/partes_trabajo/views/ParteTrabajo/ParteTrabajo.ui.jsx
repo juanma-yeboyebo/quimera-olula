@@ -103,19 +103,19 @@ function ParteTrabajo({ callbackChanged, callbackGuardado, codParte, initParte, 
               <QModelBox id="parte.buffer" disabled={!editable} schema={schema}>
                 <Box width={1} display="flex" justifyContent="flex-end">
                   <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                       <QSection title={`Trabajador (${parte.data.trabajador})`} alwaysInactive>
                         <Typography variant="h5" className={classes.textoUnaLinea}>
                           {parte.data.nombreTrabajador}
                         </Typography>
                       </QSection>
                     </Grid>
-                    <Grid item xs={6} sm={3}>
+                    <Grid size={{ xs: 6, sm: 3 }}>
                       <QSection title={`Fecha`} alwaysInactive>
                         <Typography variant="h5">{util.formatDate(parte.data.fecha)}</Typography>
                       </QSection>
                     </Grid>
-                    <Grid item xs={6} sm={3}>
+                    <Grid size={{ xs: 6, sm: 3 }}>
                       <QSection title={`Horas`} alwaysInactive>
                         <Box display="flex">
                           <Typography

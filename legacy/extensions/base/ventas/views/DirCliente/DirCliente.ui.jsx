@@ -40,7 +40,7 @@ function DirCliente({ callbackGuardada, codCliente, docDireccion, useStyles }) {
           :  */}
       <Box>
         <Grid container spacing={1} direction="column" >
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Box display="flex" justifyContent="space-between">
               <Box width={1}>
                 {bloqueada ? (
@@ -56,7 +56,7 @@ function DirCliente({ callbackGuardada, codCliente, docDireccion, useStyles }) {
           </Grid>
           {!bloqueada && (
             <>
-              <Grid item xs={2}>
+              <Grid size={2}>
                 <Field.Schema
                   id="direccion/dirTipoVia"
                   schema={schemas.dirClientes}
@@ -64,30 +64,30 @@ function DirCliente({ callbackGuardada, codCliente, docDireccion, useStyles }) {
                   autoFocus
                 />
               </Grid>
-              <Grid item xs={8}>
+              <Grid size={8}>
                 <Field.Schema id="direccion/direccion" schema={schemas.dirClientes} fullWidth />
               </Grid>
-              <Grid item xs={1}>
+              <Grid size={1}>
                 <Field.Schema id="direccion/dirNum" schema={schemas.dirClientes} fullWidth />
               </Grid>
-              <Grid item xs={1}>
+              <Grid size={1}>
                 <Field.Schema id="direccion/dirOtros" schema={schemas.dirClientes} fullWidth />
               </Grid>
-              <Grid item xs={10}>
+              <Grid size={10}>
                 <Field.Schema id="direccion/ciudad" schema={schemas.dirClientes} fullWidth />
               </Grid>
-              <Grid item xs={2}>
+              <Grid size={2}>
                 <Field.Schema id="direccion/codPostal" schema={schemas.dirClientes} fullWidth />
               </Grid>
-              <Grid item xs={10}>
+              <Grid size={10}>
                 <Field.Schema id="direccion/provincia" schema={schemas.dirClientes} fullWidth />
               </Grid>
-              <Grid item xs={2}>
+              <Grid size={2}>
                 <Field.Schema id="direccion/codPais" schema={schemas.dirClientes} fullWidth />
               </Grid>
             </>
           )}
-          {/* <Grid item xs={12}>
+          {/* <Grid size={12}>
                 <Box display='flex' justifyContent='space-around	' >
                   <Button id='cerrar' variant='text' color='secondary' text='Cancelar'
                     startIcon={<Icon>close</Icon>}

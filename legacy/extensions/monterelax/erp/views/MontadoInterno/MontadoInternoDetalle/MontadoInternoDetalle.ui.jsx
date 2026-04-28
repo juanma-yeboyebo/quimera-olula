@@ -26,7 +26,7 @@ function MontadoInternoDetalle({ useStyles }) {
           >
             <Box>
               <Grid container spacing={1} direction="column" >
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <Field.Text
                     id={`unidades.dict.${unidades.current}.modelo`}
                     fullWidth
@@ -34,7 +34,7 @@ function MontadoInternoDetalle({ useStyles }) {
                     disabled
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <Field.Text
                     id={`unidades.dict.${unidades.current}.configuracion`}
                     fullWidth
@@ -42,7 +42,7 @@ function MontadoInternoDetalle({ useStyles }) {
                     disabled
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <Field.Text
                     id={`unidades.dict.${unidades.current}.idtela`}
                     fullWidth
@@ -50,7 +50,7 @@ function MontadoInternoDetalle({ useStyles }) {
                     disabled
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Box
                     display="flex"
                     alignItems="flex-start"
@@ -80,7 +80,7 @@ function MontadoInternoDetalle({ useStyles }) {
                     )}
                   </Box>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Box display="flex" alignItems="flex-end" justifyContent="flex-end" height={1}>
                     {!pausada ? (
                       <Button

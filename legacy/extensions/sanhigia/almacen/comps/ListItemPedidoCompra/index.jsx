@@ -2,7 +2,6 @@ import { Box, Field, QListItemModel } from "@quimera/comps";
 import { makeStyles } from "@quimera/styles";
 import { Icon, ListItemAvatar, ListItemText, Typography } from "@quimera/thirdparty";
 import { useStateValue, util } from "quimera";
-import React from "react";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -60,7 +59,7 @@ function ListItemPedidoCompra({ arrayMultiCheck = [], renderAvatar, renderId, mo
         />
       )}
       <ListItemAvatar>
-        <Icon color="primary" fontSize="large" className={classes[calculaColorAvatar(model)]}>
+        <Icon fontSize="large" className={classes[calculaColorAvatar(model)]}>
           radio_button_unchecked
         </Icon>
       </ListItemAvatar>

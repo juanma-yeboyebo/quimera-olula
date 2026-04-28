@@ -49,7 +49,7 @@ function CajaEnvio({ tipoEnvio, useStyles }) {
                             {...provided.dragHandleProps}
                           >
                             <Grid container className={classes.tarjetaEmail}>
-                              <Grid item xs={1}>
+                              <Grid size={1}>
                                 <IconButton
                                   size="small"
                                   className={classes.iconoCerrar}
@@ -63,7 +63,7 @@ function CajaEnvio({ tipoEnvio, useStyles }) {
                                   <Icon>close</Icon>
                                 </IconButton>
                               </Grid>
-                              <Grid item xs={11}>
+                              <Grid size={11}>
                                 <Typography className={classes.chipTo}>{emailDir}</Typography>
                               </Grid>
                             </Grid>

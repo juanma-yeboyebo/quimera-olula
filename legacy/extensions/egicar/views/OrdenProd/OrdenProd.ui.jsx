@@ -85,8 +85,8 @@ function OrdenProd({ callbackChanged, idTareaProp, codOrden, initOrden, urlAtras
         >
           <Grid container>
             <QModelBox id="orden.buffer" disabled={!editable} schema={schema}>
-              <Grid item container justifyContent="space-between">
-                <Grid item xs={12} sm={9} md={9}>
+              <Grid container justifyContent="space-between">
+                <Grid size={{ xs: 12, sm: 9, md: 9 }}>
                   <QSection
                     title={`Artículo(${orden.data.referencia})`}
                     actionPrefix="orden.buffer/idOrdenProd"
@@ -99,7 +99,7 @@ function OrdenProd({ callbackChanged, idTareaProp, codOrden, initOrden, urlAtras
                     </Box>
                   </QSection>
                 </Grid>
-                <Grid item xs={12} sm={3} md={3}>
+                <Grid size={{ xs: 12, sm: 3, md: 3 }}>
                   <QSection
                     title="Cantidad fabricada"
                     actionPrefix="orden.buffer/cantotal"
@@ -113,7 +113,7 @@ function OrdenProd({ callbackChanged, idTareaProp, codOrden, initOrden, urlAtras
                   </QSection>
                 </Grid>
               </Grid>
-              <Grid item xs={12} sm={12} md={12}>
+              <Grid size={{ xs: 12, sm: 12, md: 12 }}>
                 <QSection
                   title={`Pedido${orden.data.codPedido ? `(${orden.data.codPedido})` : ""}`}
                   actionPrefix="orden.buffer/idOrdenProd"

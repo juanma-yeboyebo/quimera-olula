@@ -1,9 +1,9 @@
+import { Agente, Cliente, Serie } from "@quimera-extension/base-ventas";
 import { Box, Button, Field, Grid, Icon, QBox } from "@quimera/comps";
 import { Checkbox, FormControlLabel } from "@quimera/thirdparty";
-import { Agente, Cliente, Serie } from "@quimera-extension/base-ventas";
-import Quimera, { PropValidation, useStateValue } from "quimera";
+import Quimera, { useStateValue } from "quimera";
 import { ACL } from "quimera/lib";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 import initialData from "./initial-data";
 
@@ -39,8 +39,8 @@ function InformePedidosSan({ useStyles }) {
         titulo={`Pedidos y líneas`}
         botonesCabecera={[{ icon: "close", id: "atras", text: "Atrás" }]}
       >
-        <Grid container direction="column" item spacing={1}>
-          <Grid item xs={12}>
+        <Grid container direction="column" spacing={1}>
+          <Grid size={12}>
             <Box width={1} border={0}>
               <Agente
                 id="filtro.codAgente"
@@ -51,7 +51,7 @@ function InformePedidosSan({ useStyles }) {
             </Box>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Box width={1} border={0}>
               <Cliente
                 id="filtro.codCliente"
@@ -61,36 +61,39 @@ function InformePedidosSan({ useStyles }) {
               />
             </Box>
           </Grid>
-
-          <Grid item xs={4}>
-            <Field.Select
-              id="filtro.intervaloFecha"
-              label="Intervalo"
-              options={initialData.intervalos}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={4}>
-            <Field.Date id="filtro.fechaDesde" label="Fecha desde" className={classes.field} />
-          </Grid>
-          <Grid item xs={4}>
-            <Field.Date id="filtro.fechaHasta" label="Fecha hasta" className={classes.field} />
-          </Grid>
-
-          <Grid item xs={6}>
-            <Serie id="filtro.codSerie" label={`Serie ${filtro.codSerie || ""}`} fullWidth />
-          </Grid>
-          <Grid item xs={6} container alignItems="flex-end">
-            <Field.Select
-              id="filtro.servido"
-              options={opcionesServido}
-              label="Servidos"
-              fullWidth
-              noOptionsText="Servidos"
-            />
+          <Grid container spacing={1}>
+            <Grid size={4}>
+              <Field.Select
+                id="filtro.intervaloFecha"
+                label="Intervalo"
+                options={initialData.intervalos}
+                fullWidth
+              />
+            </Grid>
+            <Grid size={4}>
+              <Field.Date id="filtro.fechaDesde" label="Fecha desde" className={classes.field} />
+            </Grid>
+            <Grid size={4}>
+              <Field.Date id="filtro.fechaHasta" label="Fecha hasta" className={classes.field} />
+            </Grid>
           </Grid>
 
-          <Grid item container xs={12}>
+          <Grid container spacing={1}>
+            <Grid size={6}>
+              <Serie id="filtro.codSerie" label={`Serie ${filtro.codSerie || ""}`} fullWidth />
+            </Grid>
+            <Grid container size={6} alignItems="flex-end">
+              <Field.Select
+                id="filtro.servido"
+                options={opcionesServido}
+                label="Servidos"
+                fullWidth
+                noOptionsText="Servidos"
+              />
+            </Grid>
+          </Grid>
+
+          <Grid container size={12}>
             <Box display="flex" alignItems="flex-end" justifyContent="flex-start">
               <FormControlLabel
                 control={

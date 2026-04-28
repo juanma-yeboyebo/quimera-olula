@@ -14,8 +14,8 @@ import {
   Table,
   Typography,
 } from "@quimera/comps";
-import Quimera, { getSchemas, PropValidation, useStateValue, useWidth, util } from "quimera";
-import React, { useCallback, useEffect } from "react";
+import Quimera, { getSchemas, useStateValue, useWidth, util } from "quimera";
+import { useCallback, useEffect } from "react";
 
 // import { LineaInventario } from "@quimera-extension/base-almacen";
 
@@ -188,7 +188,7 @@ function Inventario({ callbackChanged, codInventario, initInventario, useStyles 
                   </Box>
                 </QTitleBox>
 
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <QSection
                     title="Observaciones"
                     actionPrefix="inventario.buffer"
@@ -312,7 +312,7 @@ function Inventario({ callbackChanged, codInventario, initInventario, useStyles 
                             order="cantidadIni"
                             pl={1}
                             value={linea => parseFloat(linea.cantidadIni)}
-                            width={70}
+                            width={90}
                           />
                           <Column.Action
                             id="cantidad"
@@ -320,7 +320,7 @@ function Inventario({ callbackChanged, codInventario, initInventario, useStyles 
                             header="Cant.Fin."
                             order="cantidad"
                             align="right"
-                            width={100}
+                            width={90}
                             value={(linea, idx) => (
                               <>
                                 <Field.Float
@@ -357,7 +357,7 @@ function Inventario({ callbackChanged, codInventario, initInventario, useStyles 
                             order="referencia"
                             pl={2}
                             value={linea => linea.referencia}
-                            width={100}
+                            width={110}
                           />
                           <Column.Text
                             id="referenciaProv"
@@ -365,7 +365,7 @@ function Inventario({ callbackChanged, codInventario, initInventario, useStyles 
                             order="referenciaProv"
                             pl={2}
                             value={linea => linea.referenciaProv}
-                            width={150}
+                            width={170}
                           />
                         </Table>
                       </Box>

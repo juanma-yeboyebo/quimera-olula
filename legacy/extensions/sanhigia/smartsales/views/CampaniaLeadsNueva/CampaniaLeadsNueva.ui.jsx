@@ -89,18 +89,11 @@ function CampaniaLeadsNueva({ callbackChanged, initCampaniaLeads }) {
                           </IconButton>
                         </Box>
                         <Grid container width={1} display={"flex"} alignItems={"center"}>
-                          <Grid item xs={7}>
+                          <Grid size={7}>
                             <span>{producto?.descripcion}</span>
                           </Grid>
-                          <Grid
-                            container
-                            item
-                            xs={5}
-                            display={"flex"}
-                            flexDirection="row"
-                            alignItems={"center"}
-                          >
-                            <Grid item xs={5} style={{ paddingLeft: "10px" }}>
+                          <Grid container size={5} display={"flex"} flexDirection="row" alignItems={"center"}>
+                            <Grid size={5} style={{ paddingLeft: "10px" }}>
                               <Field.Int
                                 id="productoOfertarList/cantidad"
                                 index={idx}
@@ -109,8 +102,8 @@ function CampaniaLeadsNueva({ callbackChanged, initCampaniaLeads }) {
                                 onClick={event => event.target.select()}
                               />
                             </Grid>
-                            <Grid item xs={2} />
-                            <Grid item xs={5}>
+                            <Grid size={2} />
+                            <Grid size={5}>
                               <Field.Currency
                                 id="productoOfertarList/pvp"
                                 index={idx}

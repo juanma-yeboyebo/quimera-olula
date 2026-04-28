@@ -30,11 +30,11 @@ function ModalInventarioAlVuelo({ disabled, dispatch, hideSecondary = false, sel
       </DialogTitle>
       <DialogContent dividers={true}>
         <Box mx={3} mb={1} display="flex" justifyContent="space-between" mt={1}>
-          <Grid item xs={6} sm={6} md={6}>
+          <Grid size={{ xs: 6, sm: 6, md: 6 }}>
             <Field.Int id="cantidadAnadir" label="Cantidad final" value={cantidadAnadir} onClick={event => event.target.select()} />
 
           </Grid>
-          <Grid item xs={6} sm={2} md={2}>
+          <Grid size={{ xs: 6, sm: 2, md: 2 }}>
             <Button
               id="verTodosLotes"
               text={"Ver Todos"}

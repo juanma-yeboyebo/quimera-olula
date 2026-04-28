@@ -40,14 +40,14 @@ function VentasMaster() {
               focusStyle="button"
               dynamicComp={() => (
                 <Grid container>
-                  <Grid item xs={9}>
+                  <Grid size={9}>
                     <Box display="flex" alignItems="center">
                       <Typography variant="h5">
                         Última carga: {util.relativeTime(ultimaFechaCatalogo ?? "")}
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid size={3}>
                     <Box display="flex" alignItems="center" justifyContent="flex-end">
                       {estadoBotonCarga ? (
                         <Box>

@@ -6,7 +6,7 @@ import { ACL } from "quimera/lib";
 
 const useStyles = makeStyles(theme => ({
   button: {
-    "fontSize": "1.7em",
+    "fontSize": "1.6em",
     "width": "50%",
     "backgroundColor": theme.palette.grey[600],
     "color": "white",
@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   noButton: {
-    "fontSize": "1.7em",
+    "fontSize": "1.6em",
     "width": "50%",
     "backgroundColor": theme.palette.grey[600],
     "color": "white",
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   crearPedido: {
-    "fontSize": "1.7em",
+    "fontSize": "1.6em",
     "width": "50%",
     "backgroundColor": theme.palette.grey[600],
     "color": "white",
@@ -41,7 +41,8 @@ const useStyles = makeStyles(theme => ({
     },
   },
   aprobarPresupuesto: {
-    "fontSize": "1.4em",
+    // "padding": "10px",
+    "fontSize": "1.3em",
     "width": "50%",
     "backgroundColor": theme.palette.grey[600],
     "color": "white",

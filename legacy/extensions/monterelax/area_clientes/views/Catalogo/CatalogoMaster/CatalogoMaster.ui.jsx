@@ -93,7 +93,7 @@ function CatalogoMaster() {
                 >
                   <Grid container>
                     {catalogo.idList.map(itemId => (
-                      <Grid item key={itemId}>
+                      <Grid key={itemId}>
                         <Box m={1}>
                           <Quimera.SubView id="ItemCatalogo" model={catalogo.dict[itemId]} />
                         </Box>

@@ -1,6 +1,6 @@
-import { Box, QBox, QBoxButton, QListModel } from "@quimera/comps";
-import Quimera, { PropValidation, useStateValue, useWidth } from "quimera";
-import { React, useCallback } from "react";
+import { Box, QBox, QListModel } from "@quimera/comps";
+import Quimera, { useStateValue, useWidth } from "quimera";
+import { useCallback } from "react";
 
 import { ListItemShPreparacionDePedidos } from "../../../comps";
 

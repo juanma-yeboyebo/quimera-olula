@@ -127,21 +127,14 @@ function ListItemLineaPedido({ model, modelName, selected = false, funSecondaryL
         secondary={
           <Box width={1} display="flex" justifyContent="space-between">
             <Grid container>
-              <Grid
-                item
-                xs={mobile ? 12 : 8}
-                container
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-              >
+              <Grid container size={mobile ? 12 : 8} display="flex" alignItems="center" justifyContent="space-between">
                 {cajaCantidad("Pedida", linea.canProgramada)}
                 {cajaCantidad("Servida", linea.canServida)}
                 {cajaCantidad("Pendiente", cantPendiente)}
                 {cajaCantidad("Fabricada", linea.canDisponible)}
                 {cajaCantidad("Lista para servir", cantLista)}
               </Grid>
-              <Grid item xs={mobile ? 12 : 4}>
+              <Grid size={mobile ? 12 : 4}>
                 <QSection
                   title="A enviar"
                   alwaysInactive={!editable}

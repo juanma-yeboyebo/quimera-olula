@@ -24,8 +24,7 @@ import {
   ListItemText,
   TextField,
 } from "@quimera/thirdparty";
-import Quimera, { PropValidation, useStateValue, useWidth, util } from "quimera";
-import React from "react";
+import Quimera, { useStateValue, useWidth, util } from "quimera";
 
 import { Facturacli } from "../../../comps";
 
@@ -57,7 +56,7 @@ function BuscarFactura({ useStyles, callbackCerrado }) {
                 </Box>
               ) : (
                 <Grid container direction="column" justify="center">
-                  <Grid item /* justify='center' */ xs={12}>
+                  <Grid size={12}>
                     <Box my={1} align="center">
                       <Typography variant="h4">{`Devolución Factura  (${cabeceraFactura.codigo})`}</Typography>
                     </Box>
@@ -99,17 +98,17 @@ function BuscarFactura({ useStyles, callbackCerrado }) {
               <Divider />
               <Box px={3} mt={1}>
                 <Grid container direction="column">
-                  <Grid item /* justify='center' */ xs={12} sm={6} md={6}>
+                  <Grid size={12} sm={6} md={6}>
                     <Box align="left">
                       <Typography variant="h5">{cabeceraFactura.nombre}</Typography>
                     </Box>
                   </Grid>
-                  <Grid item /* justify='center' */ xs={6} sm={3} md={3}>
+                  <Grid size={6} sm={3} md={3}>
                     <Box align="center">
                       <Typography variant="h5">{`${cabeceraFactura.fecha}`}</Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={6} sm={3} md={3} alignItems="right">
+                  <Grid size={{ xs: 6, sm: 3, md: 3 }} alignItems="right">
                     <Box align="right">
                       <Typography variant="h5">{`${util.euros(cabeceraFactura.total)}`}</Typography>
                     </Box>

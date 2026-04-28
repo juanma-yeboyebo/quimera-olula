@@ -1,8 +1,8 @@
-import { Box, Button, Field, Grid, Icon, QBox } from "@quimera/comps";
 import { Cliente } from "@quimera-extension/base-ventas";
-import Quimera, { PropValidation, useStateValue } from "quimera";
+import { Box, Button, Field, Grid, Icon, QBox } from "@quimera/comps";
+import Quimera, { useStateValue } from "quimera";
 import { ACL } from "quimera/lib";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 import initialData from "./initial-data";
 
@@ -31,8 +31,8 @@ function InformeConsumoCliente({ useStyles }) {
         titulo={`Consumo por cliente`}
         botonesCabecera={[{ icon: "close", id: "atras", text: "Atrás" }]}
       >
-        <Grid container direction="column" item spacing={1}>
-          <Grid item xs={12}>
+        <Grid container direction="column" spacing={1}>
+          <Grid size={12}>
             <Cliente
               id="filtro.codCliente"
               label="Cliente"
@@ -40,7 +40,7 @@ function InformeConsumoCliente({ useStyles }) {
               fullWidth
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Field.Select
               id="filtro.intervaloFecha"
               label="Intervalo"
@@ -48,11 +48,13 @@ function InformeConsumoCliente({ useStyles }) {
               fullWidth
             />
           </Grid>
-          <Grid item xs={6}>
-            <Field.Date id="filtro.fechaDesde" label="Fecha desde" className={classes.field} />
-          </Grid>
-          <Grid item xs={6}>
-            <Field.Date id="filtro.fechaHasta" label="Fecha hasta" className={classes.field} />
+          <Grid container spacing={1}>
+            <Grid size={6}>
+              <Field.Date id="filtro.fechaDesde" label="Fecha desde" className={classes.field} />
+            </Grid>
+            <Grid size={6}>
+              <Field.Date id="filtro.fechaHasta" label="Fecha hasta" className={classes.field} />
+            </Grid>
           </Grid>
         </Grid>
         <Box display="flex" justifyContent="space-around" mt={2}>

@@ -1,8 +1,8 @@
-import { Box, Button, Field, Grid, Icon, QBox } from "@quimera/comps";
-import { QArticulo, Familia, Subfamilia } from "@quimera-extension/base-almacen";
+import { Familia, QArticulo, Subfamilia } from "@quimera-extension/base-almacen";
 import { Agente } from "@quimera-extension/base-ventas";
-import Quimera, { PropValidation, useStateValue } from "quimera";
-import React, { useEffect } from "react";
+import { Box, Button, Field, Grid, Icon, QBox } from "@quimera/comps";
+import Quimera, { useStateValue } from "quimera";
+import { useEffect } from "react";
 
 import initialData from "./initial-data";
 
@@ -32,17 +32,17 @@ function InformeClientesVentaArt({ useStyles }) {
         titulo={`Clientes por venta de artículo`}
         botonesCabecera={[{ icon: "close", id: "atras", text: "Atrás" }]}
       >
-        <Grid container direction="column" item spacing={1}>
-          <Grid item xs={12}>
+        <Grid container direction="column" spacing={1}>
+          <Grid size={12}>
             <Agente id="filtro.idAgente" label="Agente" fullWidth />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <QArticulo id="filtro.referencia" label="Artículo" fullWidth />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Familia id="filtro.codFamilia" label="Familia" fullWidth />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Subfamilia
               id="filtro.codSubfamilia"
               codFamilia={filtro.codFamilia}
@@ -50,7 +50,7 @@ function InformeClientesVentaArt({ useStyles }) {
               fullWidth
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Field.Select
               id="filtro.intervaloFecha"
               label="Intervalo"
@@ -58,11 +58,13 @@ function InformeClientesVentaArt({ useStyles }) {
               fullWidth
             />
           </Grid>
-          <Grid item xs={6}>
-            <Field.Date id="filtro.fechaDesde" label="Fecha desde" className={classes.field} />
-          </Grid>
-          <Grid item xs={6}>
-            <Field.Date id="filtro.fechaHasta" label="Fecha hasta" className={classes.field} />
+          <Grid container spacing={1}>
+            <Grid size={6}>
+              <Field.Date id="filtro.fechaDesde" label="Fecha desde" className={classes.field} />
+            </Grid>
+            <Grid size={6}>
+              <Field.Date id="filtro.fechaHasta" label="Fecha hasta" className={classes.field} />
+            </Grid>
           </Grid>
         </Grid>
         <Box display="flex" justifyContent="space-around" mt={2}>

@@ -27,21 +27,17 @@ function ListadoMobile({ useStyles }) {
               <ListItemText
                 disableTypography
                 primary={
-                  <Grid xs={12} sm container item>
-                    <Grid item xs={8}>
+                  <Grid container size={{ xs: 12, sm: "grow" }}>
+                    <Grid size={8}>
                       <Typography component="div" variant="body1">
                         <strong>{`${albaran.codigo}`}</strong>
                         {` ${util.formatDate(albaran.fecha)}`}
                       </Typography>
                     </Grid>
-                    <Grid
-                      item
-                      xs={4}
-                      style={{
+                    <Grid size={4} style={{
                         display: "flex",
                         justifyContent: "flex-end",
-                      }}
-                    >
+                      }}>
                       {!albaran.firmado ? (
                         <Button
                           id="firmarAlbaran"
@@ -71,28 +67,28 @@ function ListadoMobile({ useStyles }) {
                   </Grid>
                 }
                 secondary={
-                  <Grid item xs={12} sm container >
-                    <Grid item xs={8} sm container >
-                      <Grid item xs={12}>
+                  <Grid container size={{ xs: 12, sm: "grow" }}>
+                    <Grid container size={{ xs: 8, sm: "grow" }}>
+                      <Grid size={12}>
                         <Typography
                           component="span"
                           variant="body2"
                         >{`${albaran.nombreCliente}`}</Typography>
                       </Grid>
-                      <Grid item xs={12}>
+                      <Grid size={12}>
                         <Typography
                           component="span"
                           variant="body2"
                         >{`${albaran.direccion}`}</Typography>
                       </Grid>
-                      <Grid item xs={12}>
+                      <Grid size={12}>
                         <Typography component="span" variant="body2">
                           {albaran.codpostal ? `${albaran.codpostal}` : " "} {` ${albaran.ciudad}`}{" "}
                           {` ${albaran.provincia}`}
                         </Typography>
                       </Grid>
                     </Grid>
-                    <Grid item xs={8} sm container justifyContent="flex-end" alignItems="flex-end" >
+                    <Grid container size={{ xs: 8, sm: "grow" }} justifyContent="flex-end" alignItems="flex-end">
                       <Box display="flex" justifyContent="center" style={{ height: "45px" }} >
                         <Button
                           id="descargarAlbaran"

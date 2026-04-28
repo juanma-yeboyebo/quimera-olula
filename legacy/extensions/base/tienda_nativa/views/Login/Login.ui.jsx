@@ -33,22 +33,22 @@ function Login({ onLogin, useStyles, ...props }) {
       {!!autenticando && <div>{"Autenticando..."}</div>}
       {!autenticando && !autenticado && (
         <Grid className={classes.root}>
-          <Grid item xs={11} sm={8} md={4} lg={3} xl={2}>
+          <Grid size={{ xs: 11, sm: 8, md: 4, lg: 3, xl: 2 }}>
             <Paper>
               <Grid container direction="column">
-                <Grid item xs className={clsx(classes.gridItems, classes.header)}>
+                <Grid size="grow" className={clsx(classes.gridItems, classes.header)}>
                   <Typography className={classes.typography} variant="h6">
                     Iniciar sesión
                   </Typography>
                 </Grid>
-                {/* <Grid item xs className={classes.gridItems}>
+                {/* <Grid size="grow" className={classes.gridItems}>
                   <Field.Text
                     id='user'
                     label='Usuario'
                     fullWidth
                     startAdornment={<Icon>personrounded</Icon>}/>
                 </Grid> */}
-                <Grid item xs className={classes.gridItems}>
+                <Grid size="grow" className={classes.gridItems}>
                   <Field.Text
                     id="email"
                     label={loginUser.label}
@@ -58,7 +58,7 @@ function Login({ onLogin, useStyles, ...props }) {
                     onKeyPress={onKeyPressed}
                   />
                 </Grid>
-                <Grid item xs className={classes.gridItems}>
+                <Grid size="grow" className={classes.gridItems}>
                   <Field.Password
                     id="pass"
                     label="Contraseña"
@@ -67,7 +67,7 @@ function Login({ onLogin, useStyles, ...props }) {
                     onKeyPress={onKeyPressed}
                   />
                 </Grid>
-                <Grid item xs={12} className={classes.gridItems}>
+                <Grid size={12} className={classes.gridItems}>
                   <Box
                     display="flex"
                     flexDirection="column"

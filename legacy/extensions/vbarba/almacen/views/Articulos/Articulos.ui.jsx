@@ -71,7 +71,7 @@ function Articulos({ useStyles, referenciaProp }) {
           <Container>
             <Box mx={1} my={1}>
               <Grid container driection="row" alignItems="center" justifyContent="space-between">
-                <Grid item sx={{
+                <Grid sx={{
                   flex: '0 0 33.333%',
                   maxWidth: '33.333%',
                   width: '33.333%',

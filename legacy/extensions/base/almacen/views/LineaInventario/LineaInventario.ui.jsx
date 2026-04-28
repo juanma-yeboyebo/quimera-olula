@@ -42,7 +42,7 @@ function LineaInventario({ callbackGuardada, disabled, lineaInicial, useStyles }
       )}
       <Collapse in={linea.buffer?._status !== "deleting"}>
         <Grid container spacing={0} direction="column">
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Box display="flex" justifyContent="right" mt={1}>
               {!disabled && (
                 <Button
@@ -59,19 +59,19 @@ function LineaInventario({ callbackGuardada, disabled, lineaInicial, useStyles }
             </Box>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={12}>
             <QTitleBox titulo={`Producto ${buffer.referencia}`}>
               <Typography variant="h6">{buffer.desArticulo}</Typography>
             </QTitleBox>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={12}>
             <QSection
               actionPrefix="linea/cantidad"
               alwaysInactive={disabled}
               dynamicComp={() => (
                 <Grid container spacing={1} direction="column" >
-                  <Grid item xs={6}>
+                  <Grid size={6}>
                     <Field.Schema id="linea.buffer/cantidad" schema={schema} fullWidth autoFocus />
                   </Grid>
                 </Grid>

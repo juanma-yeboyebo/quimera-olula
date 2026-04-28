@@ -112,20 +112,20 @@ function ForgotPassword({ hash }) {
         <Paper style={{ width: "330px" }}>
           <Box pt={1}>
             <Grid container direction="column" alignItems="center">
-              <Grid item xs></Grid>
+              <Grid size="grow"></Grid>
               {smState === "send_email" && (
                 <>
-                  <Grid item xs>
+                  <Grid size="grow">
                     <Typography className={classes.typography}>
                       ¿Has olvidado tu contraseña?
                     </Typography>
                   </Grid>
-                  <Grid item xs>
+                  <Grid size="grow">
                     <Typography className={classes.typography}>
                       Indícanos tu email y te enviaremos un mensaje para restablecerla.
                     </Typography>
                   </Grid>
-                  <Grid item xs className={classes.gridItems}>
+                  <Grid size="grow" className={classes.gridItems}>
                     <Field.Schema
                       schema={schema}
                       id="email"
@@ -135,7 +135,7 @@ function ForgotPassword({ hash }) {
                     // helperText={emailStatus?.helperText}
                     />
                   </Grid>
-                  <Grid item xs={12} className={classes.gridItems}>
+                  <Grid size={12} className={classes.gridItems}>
                     <Button
                       id="enviarCorreo"
                       text="ENVIAR"
@@ -149,10 +149,10 @@ function ForgotPassword({ hash }) {
               )}
               {smState === "email_sent" && (
                 <>
-                  <Grid item xs>
+                  <Grid size="grow">
                     <Typography className={classes.typography}>Comprueba tu email</Typography>
                   </Grid>
-                  <Grid item xs>
+                  <Grid size="grow">
                     <Typography className={classes.typography}>
                       Hemos enviado un correo a {email} con las instrucciones para recuperar tu
                       contraseña
@@ -176,10 +176,10 @@ function ForgotPassword({ hash }) {
               )}
               {smState === "send_email_failed" && (
                 <>
-                  <Grid item xs>
+                  <Grid size="grow">
                     <Typography className={classes.typography}>Error</Typography>
                   </Grid>
-                  <Grid item xs>
+                  <Grid size="grow">
                     <Typography className={classes.typography}>{error}</Typography>
                   </Grid>
                 </>

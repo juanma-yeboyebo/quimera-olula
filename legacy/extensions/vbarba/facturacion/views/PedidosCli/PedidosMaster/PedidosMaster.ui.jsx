@@ -1,6 +1,7 @@
 import { ListItemPedido } from "@quimera-extension/base-area_clientes";
 import { Avatar, Box, QBox, QBoxButton, QListModel } from "@quimera/comps";
 import { makeStyles } from "@quimera/styles";
+import { CircularProgress } from "@quimera/thirdparty";
 import Quimera, { useStateValue, useWidth } from "quimera";
 import { useCallback } from "react";
 
@@ -26,7 +27,7 @@ function calculaColorAvatar(model) {
 }
 
 function PedidosMaster({ idPedido }) {
-  const [{ arrayMultiCheck, habilitarMulticheck, pedidos }, dispatch] = useStateValue();
+  const [{ arrayMultiCheck, generandoPedidoProv, habilitarMulticheck, pedidos }, dispatch] = useStateValue();
   const classes = useStyles();
 
   const width = useWidth();
@@ -52,12 +53,12 @@ function PedidosMaster({ idPedido }) {
                 title="Habilitar multicheck"
                 icon="library_add_check"
               />
-              <QBoxButton
+              {!generandoPedidoProv ? <QBoxButton
                 id="botonGenerarPedidosProveedor"
                 title="Generar pedidos proveedor"
                 icon="content_copy"
                 disabled={arrayMultiCheck?.length < 1}
-              />
+              /> : <CircularProgress size={30} />}
             </>
           }
         >

@@ -106,7 +106,7 @@ function ModaLotesLinea({
         )}
         {modalLotesTipo === "info" && (
           <Box>
-            <Grid item xs={6} sm={2} md={2}>
+            <Grid size={{ xs: 6, sm: 2, md: 2 }}>
               <Field.Float
                 id="cantidadAnadir"
                 label="Cantidad"

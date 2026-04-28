@@ -18,7 +18,7 @@ function FiltroMaster({ useStyles }) {
             <Grid container spacing={1} direction="column" >
               {!filtroReferencia ? (
                 <>
-                  <Grid item xs={6}>
+                  <Grid size={6}>
                     <FormControlLabel
                       style={{ width: "100%" }}
                       classes={{ label: classes.labelCheckBox }}
@@ -37,7 +37,7 @@ function FiltroMaster({ useStyles }) {
                       }
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={6}>
                     <FormControlLabel
                       style={{ width: "100%" }}
                       classes={{ label: classes.labelCheckBox }}
@@ -58,7 +58,7 @@ function FiltroMaster({ useStyles }) {
                   </Grid>
                 </>
               ) : (
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <FormControlLabel
                     style={{ width: "100%" }}
                     classes={{ label: classes.labelCheckBox }}
@@ -80,7 +80,7 @@ function FiltroMaster({ useStyles }) {
               )}
               {!filtroReferencia ? (
                 <>
-                  <Grid item xs={6}>
+                  <Grid size={6}>
                     <Field.Select
                       id="filtro.estado"
                       label="Estado"
@@ -89,7 +89,7 @@ function FiltroMaster({ useStyles }) {
                       disabled={!!filtro.pedido}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={6}>
                     <Cliente
                       id="filtro.cliente"
                       label="Cliente"
@@ -100,11 +100,11 @@ function FiltroMaster({ useStyles }) {
                   </Grid>
                 </>
               ) : (
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Pedidos id="filtro.pedido" label="Referencia" fullWidth async />
                 </Grid>
               )}
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Box display="flex" alignItems="flex-end" justifyContent="flex-end" height={1}>
                   <Button
                     id="filtrar"

@@ -103,14 +103,14 @@ function Curso({ callbackChanged, initCurso, useStyles }) {
         sideButtons={<></>}
       >
         <Grid container spacing={0}>
-          {/* <Grid item xs={12} sm={4}>
+          {/* <Grid size={{ xs: 12, sm: 4 }}>
             <QSection title="Estado" actionPrefix="curso.estado" alwaysInactive>
               <Box display="flex">
                 <Typography variant="body2">{curso.buffer.estado}</Typography>
               </Box>
             </QSection>
           </Grid> */}
-          <Grid item xs={12} >
+          <Grid size={12}>
             <QSection
               title="Nombre"
               actionPrefix="curso.buffer"
@@ -134,7 +134,7 @@ function Curso({ callbackChanged, initCurso, useStyles }) {
             </QSection>
           </Grid>
 
-          <Grid item xs={12} sm={12}>
+          <Grid size={{ xs: 12, sm: 12 }}>
             <QSection
               title="Cliente"
               actionPrefix="curso.buffer"
@@ -151,8 +151,8 @@ function Curso({ callbackChanged, initCurso, useStyles }) {
             </QSection>
           </Grid>
 
-          <Grid container item xs={12} sm={12} spacing={2}>
-            <Grid item xs={12} sm={3}>
+          <Grid container size={{ xs: 12, sm: 12 }} spacing={2}>
+            <Grid size={{ xs: 12, sm: 3 }}>
               <QSection
                 title="Fecha Inicio"
                 actionPrefix="curso.buffer"
@@ -174,7 +174,7 @@ function Curso({ callbackChanged, initCurso, useStyles }) {
                 </Box>
               </QSection>
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid size={{ xs: 12, sm: 3 }}>
               <QSection
                 title="Hora Inicio"
                 actionPrefix="curso.buffer"
@@ -192,7 +192,7 @@ function Curso({ callbackChanged, initCurso, useStyles }) {
                 </Box>
               </QSection>
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid size={{ xs: 12, sm: 3 }}>
               <QSection
                 title="Fecha Fin"
                 actionPrefix="curso.buffer"
@@ -214,7 +214,7 @@ function Curso({ callbackChanged, initCurso, useStyles }) {
                 </Box>
               </QSection>
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid size={{ xs: 12, sm: 3 }}>
               <QSection
                 title="Hora Fin"
                 actionPrefix="curso.buffer"
@@ -233,8 +233,8 @@ function Curso({ callbackChanged, initCurso, useStyles }) {
               </QSection>
             </Grid>
           </Grid>
-          <Grid container item xs={12} sm={12} spacing={2} justifyContent="flex-end">
-            <Grid item xs={12} sm={3}>
+          <Grid container size={{ xs: 12, sm: 12 }} spacing={2} justifyContent="flex-end">
+            <Grid size={{ xs: 12, sm: 3 }}>
               <QSection
                 title="Gastos"
                 actionPrefix="curso.buffer"

@@ -22,10 +22,10 @@ function Checkout({ callbackChanged, useStyles }) {
     <Box mt={2}>
       <Container maxWidth="lg">
         <Grid container spacing={1} direction="column" >
-          <Grid item sm={12} md={6}>
+          <Grid size={{ sm: 12, md: 6 }}>
             <Quimera.SubView id="Checkout/DatosCliente" />
           </Grid>
-          <Grid item sm={12} md={6}>
+          <Grid size={{ sm: 12, md: 6 }}>
             <Quimera.SubView id="Checkout/Lineas" />
           </Grid>
         </Grid>

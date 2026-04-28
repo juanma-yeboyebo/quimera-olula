@@ -1,6 +1,6 @@
 // import { Chip } from "@quimera/comps";
 import { makeStyles } from "@quimera/styles";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import {
   Avatar,
@@ -56,7 +56,7 @@ function QListItem({ alignActions = "center", selected, badge, avatar, chip, tl,
               <ListItemAvatar>
                 <Badge
                   invisible={badge?.invisible ?? false}
-                  overlap="circle"
+                  overlap="circular"
                   badgeContent={<Icon>{badge?.icon ?? null}</Icon>}
                 >
                   <Avatar style={{ background: avatar.color }}>

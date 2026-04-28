@@ -55,7 +55,7 @@ function VentaNueva({ callbackGuardado, callbackCerrado, desdeMaster, useStyles,
           dynamicComp={() => (
             <Grid container spacing={1} direction="column" >
               {!nuevoConsumidor && (
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <Consumidores
                     id="venta.buffer/idConsumidor"
                     label="Cliente"
@@ -65,10 +65,10 @@ function VentaNueva({ callbackGuardado, callbackCerrado, desdeMaster, useStyles,
                   />
                 </Grid>
               )}
-              {/* <Grid item xs={mobile ? 6 : 4}>
+              {/* <Grid size={mobile ? 6 : 4}>
                 <Field.Date id="venta.buffer/fechaVenta" label="Fecha venta" fullWidth />
               </Grid> */}
-              <Grid item xs={mobile ? 6 : 4}>
+              <Grid size={mobile ? 6 : 4}>
                 <Field.Currency
                   id="venta.buffer/importe"
                   label="Importe"
@@ -78,12 +78,12 @@ function VentaNueva({ callbackGuardado, callbackCerrado, desdeMaster, useStyles,
                   onClick={event => event.target.select()}
                 />
               </Grid>
-              {/* <Grid item xs={6}>
+              {/* <Grid size={6}>
                 <Field.Schema id="venta.buffer/codTicket" label="Ticket(opcional)" fullWidth />
               </Grid> */}
               {nuevoConsumidor && (
                 <Grid container spacing={1} direction="column" >
-                  <Grid item xs={6}>
+                  <Grid size={6}>
                     <Field.Schema
                       id="venta.buffer/nombreConsumidor"
                       label="Nombre"
@@ -91,7 +91,7 @@ function VentaNueva({ callbackGuardado, callbackCerrado, desdeMaster, useStyles,
                       autoComplete="off"
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={6}>
                     <Field.Schema
                       id="venta.buffer/apellidosConsumidor"
                       label="Apellidos"
@@ -99,7 +99,7 @@ function VentaNueva({ callbackGuardado, callbackCerrado, desdeMaster, useStyles,
                       autoComplete="off"
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={6}>
                     <Field.Schema
                       id="venta.buffer/telefonoConsumidor"
                       label="Teléfono"
@@ -107,7 +107,7 @@ function VentaNueva({ callbackGuardado, callbackCerrado, desdeMaster, useStyles,
                       autoComplete="off"
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={6}>
                     <Field.Schema
                       id="venta.buffer/cifnifConsumidor"
                       label="CIF/NIF"
@@ -115,7 +115,7 @@ function VentaNueva({ callbackGuardado, callbackCerrado, desdeMaster, useStyles,
                       autoComplete="off"
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={6}>
                     <Field.Date
                       id="venta.buffer/fechaNacimientoConsumidor"
                       label="Fecha Nacimiento"
@@ -123,7 +123,7 @@ function VentaNueva({ callbackGuardado, callbackCerrado, desdeMaster, useStyles,
                       autoComplete="off"
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid size={6}>
                     <Field.Schema
                       id="venta.buffer/emailConsumidor"
                       label="Email"

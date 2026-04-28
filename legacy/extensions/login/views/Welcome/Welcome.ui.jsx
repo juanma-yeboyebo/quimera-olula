@@ -87,9 +87,9 @@ function Welcome({ onLogin, ...props }) {
   return (
     <Quimera.Template id="Welcome">
       <Grid container justify="center" className={classes.root}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Grid container direction="column">
-            <Grid item className={clsx(classes.gridItems, classes.header)}>
+            <Grid className={clsx(classes.gridItems, classes.header)}>
               <img
                 width="150px"
                 src="/img/logo.png"
@@ -105,10 +105,10 @@ function Welcome({ onLogin, ...props }) {
                 </Typography>
               </Box>
             </Grid>
-            <Grid item className={clsx(classes.gridItems, classes.body)}></Grid>
-            <Grid item className={classes.footer}>
+            <Grid className={clsx(classes.gridItems, classes.body)}></Grid>
+            <Grid className={classes.footer}>
               {linkPoliticaPrivacidad && (
-                <Grid item>
+                <Grid>
                   <Box
                     onClick={() =>
                       dispatch({ type: "onLinkClicked", payload: { link: linkPoliticaPrivacidad } })
@@ -121,7 +121,7 @@ function Welcome({ onLogin, ...props }) {
                 </Grid>
               )}
               {linkTerminosCondiciones && (
-                <Grid item>
+                <Grid>
                   <Box
                     onClick={() =>
                       dispatch({
