@@ -1,3 +1,4 @@
+import { QArticulo } from "@quimera-extension/base-almacen";
 import {
   Box,
   Button,
@@ -16,9 +17,8 @@ import {
   Typography,
 } from "@quimera/comps";
 import { Avatar, isWidthUp, ListItem, ListItemAvatar, ListItemText } from "@quimera/thirdparty";
-import { QArticulo } from "@quimera-extension/base-almacen";
-import Quimera, { PropValidation, useStateValue, useWidth, util } from "quimera";
-import React, { useEffect } from "react";
+import Quimera, { useStateValue, useWidth, util } from "quimera";
+import { useEffect } from "react";
 
 function InformeClientesNuevos({ useStyles }) {
   const [
@@ -67,7 +67,7 @@ function InformeClientesNuevos({ useStyles }) {
     <Quimera.Template id="InformeClientesNuevos">
       <Container className={classes.container} disableGutters={width === "xs" || width === "sm"}>
         <Box my={1} mx={desktop ? "default" : 1}>
-          <Grid container direction="column">
+          <Grid container >
             <Grid size={{ xs: 12, md: 4 }}>
               <QArticulo
                 id="refs/ref1"
@@ -93,7 +93,7 @@ function InformeClientesNuevos({ useStyles }) {
               />
             </Grid>
           </Grid>
-          <Grid container direction="column" align="center" justifyContent="space-between">
+          <Grid container align="center" justifyContent="space-between">
             <Grid container size={6} justifyContent="flex-start">
               <Field.Date
                 id="fechaDesde"

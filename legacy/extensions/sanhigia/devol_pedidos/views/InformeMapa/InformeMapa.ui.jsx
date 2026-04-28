@@ -78,21 +78,23 @@ function InformeMapa({ useStyles }) {
                     fullWidth
                   />
                 </Grid>
-                <Grid size={6}>
-                  <Field.Date
-                    id="filter.fechaDesde"
-                    label="Fecha desde"
-                    className={classes.field}
-                    fullWidth
-                  />
-                </Grid>
-                <Grid size={6}>
-                  <Field.Date
-                    id="filter.fechaHasta"
-                    label="Fecha hasta"
-                    className={classes.field}
-                    fullWidth
-                  />
+                <Grid container spacing={1}>
+                  <Grid size={6}>
+                    <Field.Date
+                      id="filter.fechaDesde"
+                      label="Fecha desde"
+                      className={classes.field}
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid size={6}>
+                    <Field.Date
+                      id="filter.fechaHasta"
+                      label="Fecha hasta"
+                      className={classes.field}
+                      fullWidth
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
               <Box display="flex" justifyContent="space-around" mt={1}>

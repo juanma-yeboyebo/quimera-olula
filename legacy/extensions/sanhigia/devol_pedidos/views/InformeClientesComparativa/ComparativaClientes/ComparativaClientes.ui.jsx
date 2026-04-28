@@ -23,8 +23,7 @@ import {
   ListItemAvatar,
   ListItemText,
 } from "@quimera/thirdparty";
-import Quimera, { PropValidation, useStateValue, useWidth, util } from "quimera";
-import React from "react";
+import Quimera, { useStateValue, useWidth, util } from "quimera";
 
 import initialData from "../initial-data";
 
@@ -69,7 +68,7 @@ function ComparativaClientes({ useStyles }) {
         flexDirection="column"
         style={{ gap: 8 }}
       >
-        <Grid container direction="column">
+        <Grid container >
           <Grid size={{ xs: 12, md: 4 }}>
             <Box mr={2}>
               <Field.Select

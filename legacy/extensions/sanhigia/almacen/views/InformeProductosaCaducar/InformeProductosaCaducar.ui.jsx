@@ -23,7 +23,7 @@ function InformeProductosaCaducar({ useStyles }) {
         titulo={`Productos a caducar`}
         botonesCabecera={[{ icon: "close", id: "atras", text: "Atrás" }]}
       >
-        <Grid container direction="column" spacing={1} alignItems="flex-end">
+        <Grid container spacing={1} alignItems="flex-end">
           <Grid size={6}>
             <Field.Int id="filtro.meses" label="Meses para caducar" className={classes.field} />
           </Grid>
@@ -35,7 +35,7 @@ function InformeProductosaCaducar({ useStyles }) {
             />
           </Grid>
         </Grid>
-        <Box display="flex" justifyContent="space-around" mt={1}>
+        <Box display="flex" justifyContent="space-around" mt={2}>
           <Button
             id="lanzarInforme"
             text="Descargar"

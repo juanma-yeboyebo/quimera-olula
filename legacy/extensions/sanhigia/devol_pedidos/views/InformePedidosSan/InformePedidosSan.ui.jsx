@@ -1,9 +1,9 @@
+import { Agente, Cliente, Serie } from "@quimera-extension/base-ventas";
 import { Box, Button, Field, Grid, Icon, QBox } from "@quimera/comps";
 import { Checkbox, FormControlLabel } from "@quimera/thirdparty";
-import { Agente, Cliente, Serie } from "@quimera-extension/base-ventas";
-import Quimera, { PropValidation, useStateValue } from "quimera";
+import Quimera, { useStateValue } from "quimera";
 import { ACL } from "quimera/lib";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 import initialData from "./initial-data";
 
@@ -61,33 +61,36 @@ function InformePedidosSan({ useStyles }) {
               />
             </Box>
           </Grid>
+          <Grid container spacing={1}>
+            <Grid size={4}>
+              <Field.Select
+                id="filtro.intervaloFecha"
+                label="Intervalo"
+                options={initialData.intervalos}
+                fullWidth
+              />
+            </Grid>
+            <Grid size={4}>
+              <Field.Date id="filtro.fechaDesde" label="Fecha desde" className={classes.field} />
+            </Grid>
+            <Grid size={4}>
+              <Field.Date id="filtro.fechaHasta" label="Fecha hasta" className={classes.field} />
+            </Grid>
+          </Grid>
 
-          <Grid size={4}>
-            <Field.Select
-              id="filtro.intervaloFecha"
-              label="Intervalo"
-              options={initialData.intervalos}
-              fullWidth
-            />
-          </Grid>
-          <Grid size={4}>
-            <Field.Date id="filtro.fechaDesde" label="Fecha desde" className={classes.field} />
-          </Grid>
-          <Grid size={4}>
-            <Field.Date id="filtro.fechaHasta" label="Fecha hasta" className={classes.field} />
-          </Grid>
-
-          <Grid size={6}>
-            <Serie id="filtro.codSerie" label={`Serie ${filtro.codSerie || ""}`} fullWidth />
-          </Grid>
-          <Grid container size={6} alignItems="flex-end">
-            <Field.Select
-              id="filtro.servido"
-              options={opcionesServido}
-              label="Servidos"
-              fullWidth
-              noOptionsText="Servidos"
-            />
+          <Grid container spacing={1}>
+            <Grid size={6}>
+              <Serie id="filtro.codSerie" label={`Serie ${filtro.codSerie || ""}`} fullWidth />
+            </Grid>
+            <Grid container size={6} alignItems="flex-end">
+              <Field.Select
+                id="filtro.servido"
+                options={opcionesServido}
+                label="Servidos"
+                fullWidth
+                noOptionsText="Servidos"
+              />
+            </Grid>
           </Grid>
 
           <Grid container size={12}>

@@ -1,8 +1,8 @@
-import { Box, Button, Field, Grid, Icon, QBox } from "@quimera/comps";
 import { Agente } from "@quimera-extension/base-ventas";
 import { TipoTrato } from "@quimera-extension/sanhigia-smartsales";
-import Quimera, { PropValidation, useStateValue } from "quimera";
-import React, { useEffect } from "react";
+import { Box, Button, Field, Grid, Icon, QBox } from "@quimera/comps";
+import Quimera, { useStateValue } from "quimera";
+import { useEffect } from "react";
 
 import initialData from "./initial-data";
 
@@ -39,19 +39,21 @@ function InformeTratosAgente({ useStyles }) {
               fullWidth
             />
           </Grid>
-          <Grid size={6}>
-            <Field.Date
-              id="filtro.fechaDesde"
-              label="Fecha trato desde"
-              className={classes.field}
-            />
-          </Grid>
-          <Grid size={6}>
-            <Field.Date
-              id="filtro.fechaHasta"
-              label="Fecha trato hasta"
-              className={classes.field}
-            />
+          <Grid container spacing={1}>
+            <Grid size={6}>
+              <Field.Date
+                id="filtro.fechaDesde"
+                label="Fecha trato desde"
+                className={classes.field}
+              />
+            </Grid>
+            <Grid size={6}>
+              <Field.Date
+                id="filtro.fechaHasta"
+                label="Fecha trato hasta"
+                className={classes.field}
+              />
+            </Grid>
           </Grid>
           <Grid size={12}>
             <Field.Select
