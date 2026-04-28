@@ -5,6 +5,7 @@ import { QIcono } from "../atomos/qicono.tsx";
 import { MetaTabla } from "../atomos/qtabla.tsx";
 import { QTablaControlada } from "../atomos/qtablacontrolada.tsx";
 import { QTarjetas } from "../atomos/qtarjetas.tsx";
+import { QTarjetaMetatabla } from "../moleculas/qtarjeta_metatabla.tsx";
 import { SinDatos } from "../SinDatos/SinDatos.tsx";
 import "./Listado.css";
 import {
@@ -112,7 +113,27 @@ export const Listado = <T extends Entidad>({
       );
     }
 
-    if (modoEfectivo === "tabla" && metaTabla) {
+    if (modo == "tarjetas" && metaTabla) {
+      return (
+        <QTarjetas
+          tarjeta={(entidad: T) => (
+            <QTarjetaMetatabla entidad={entidad} metaTabla={metaTabla} />
+          )}
+          datos={datos}
+          cargando={cargando}
+          seleccionadaId={seleccionada}
+          onSeleccion={(e: T) => onSeleccion(e.id)}
+          onPaginacion={(pagina, limite) => {
+            onCriteriaChanged({ ...criteria, paginacion: { pagina, limite } });
+          }}
+          totalEntidades={totalEntidades}
+          criteria={criteria}
+          onSiguientePagina={onSiguientePagina}
+        />
+      );
+    }
+
+    if (modo == "tabla" && metaTabla) {
       return (
         <QTablaControlada
           metaTabla={metaTabla}

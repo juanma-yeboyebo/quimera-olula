@@ -28,7 +28,7 @@
     --color-primario-hover: light-dark(var(--mg-6), var(--mg-6));
     --color-primario-selected: light-dark(var(--mg-7), var(--mg-7));
 
-    --color-error-claro: light-dark(var(--rojo-3), var(--rojo-3));
+    --color-error-claro: light-dark(var(--rojo-4), var(--rojo-4));
     --color-error-oscuro: light-dark(var(--rojo-9), var(--rojo-9));
 
     --color-advertencia-claro: light-dark(var(--naranja-3), var(--naranja-3));

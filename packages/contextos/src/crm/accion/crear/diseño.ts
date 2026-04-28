@@ -6,7 +6,6 @@ export type NuevaAccion = {
     observaciones: string;
     incidencia_id: string;
     tarjeta_id: string;
-    responsable_id: string;
     oportunidad_id: string;
     contacto_id: string;
     cliente_id: string;

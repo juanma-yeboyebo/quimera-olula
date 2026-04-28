@@ -2,7 +2,7 @@ import { ProcesarContexto } from "@olula/lib/diseño.js";
 import { ejecutarListaProcesos, MetaModelo, stringNoVacio } from "@olula/lib/dominio.js";
 import { pipe } from "@olula/lib/funcional.js";
 import { EstadoLead } from "../diseño.ts";
-import { getEstadoLead, patchEstadoLead } from "../infraestructura.ts";
+import { getEstadoLead, marcarPorDefectoEstadoLead, patchEstadoLead } from "../infraestructura.ts";
 import { ContextoDetalleEstadoLead, EstadoDetalleEstadoLead } from "./diseño.ts";
 
 export const estadoLeadVacio: EstadoLead = {
@@ -59,6 +59,15 @@ export const cambiarEstadoLead: ProcesarEstadoLead = async (contexto, payload) =
         refrescarEstadoLead,
         "INICIAL",
     ]);
+}
+
+export const marcarPorDefecto: ProcesarEstadoLead = async (contexto, _) => {
+    await marcarPorDefectoEstadoLead(contexto.estado_lead.id);
+
+    return pipeEstadoLead(contexto, [
+        refrescarEstadoLead,
+        "INICIAL"
+    ])
 }
 
 export const getContextoVacio: ProcesarEstadoLead = async (contexto) => {

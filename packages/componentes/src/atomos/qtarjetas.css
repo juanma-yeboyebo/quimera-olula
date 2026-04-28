@@ -5,12 +5,43 @@
 quimera-tarjetas {
     width: 100%;
     display: block;
+    height: 75vh;
+    overflow-y: scroll;
 
     .lista-contenedor-scroll {
-        overflow-y: scroll;
-        max-height: 64vh;
-        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: var(--espaciado-xs);
+        padding: 0 var(--espaciado-s);
     }
+}
+
+@media (max-width: 768px) {
+    quimera-tarjetas .lista-contenedor-scroll {
+        padding: var(--espaciado-m) 0;
+    }
+}
+
+quimera-tarjeta.seleccionada {
+    border-color: var(--color-primario);
+    box-shadow: var(--sombra-s);
+    background: var(--color-superficie-elevada);
+
+    &::before {
+        opacity: 1;
+        background: linear-gradient(135deg,
+                color-mix(in oklab, var(--color-primario) 22%, transparent) 0%,
+                transparent 50%);
+    }
+}
+
+quimera-tarjetas .cargando,
+quimera-tarjetas .no-datos {
+    width: 100%;
+    text-align: center;
+    color: var(--color-texto-secundario);
+    padding: var(--espaciado-m);
+    font-size: var(--tamaño-letra-m);
 }
 
 quimera-tarjeta {
@@ -22,11 +53,11 @@ quimera-tarjeta {
             var(--color-superficie) 0%,
             var(--color-superficie-elevada) 100%);
     border: var(--tamaño-borde-s) solid var(--color-borde-sutil);
-    border-radius: var(--radio-borde-m);
+    border-radius: var(--redondeo-borde-m);
     box-shadow: var(--sombra-xs);
     margin: 0;
-    padding: var(--espaciado-m);
-    transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    padding: var(--espaciado-xxs) var(--espaciado-m);
+    transition: all 0.2s ease;
     cursor: pointer;
     overflow: hidden;
 
@@ -51,33 +82,4 @@ quimera-tarjeta {
             opacity: 1;
         }
     }
-}
-
-quimera-tarjetas .lista-contenedor-scroll {
-    display: flex;
-    flex-direction: column;
-    gap: var(--espaciado-xs);
-    padding-block: var(--espaciado-xxs);
-}
-
-quimera-tarjeta.seleccionada {
-    border-color: var(--color-primario);
-    box-shadow: var(--sombra-s);
-    background: var(--color-superficie-elevada);
-
-    &::before {
-        opacity: 1;
-        background: linear-gradient(135deg,
-                color-mix(in oklab, var(--color-primario) 22%, transparent) 0%,
-                transparent 50%);
-    }
-}
-
-quimera-tarjetas .cargando,
-quimera-tarjetas .no-datos {
-    width: 100%;
-    text-align: center;
-    color: var(--color-texto-secundario);
-    padding: var(--espaciado-m);
-    font-size: var(--tamaño-letra-m);
 }

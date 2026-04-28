@@ -11,11 +11,11 @@ import { EstadoOportunidad, OportunidadVenta } from "./diseño.ts";
 const UrlsCrm = new UrlsCrmClass();
 const UrlsVentas = new UrlsVentasClass();
 
-type OportunidadVentaAPI = OportunidadVenta & { fecha_cierre: string };
+type OportunidadVentaAPI = OportunidadVenta & { fecha_cierre?: string };
 
 const oportunidadDesdeAPI = (oportunidadAPI: OportunidadVentaAPI): OportunidadVenta => ({
     ...oportunidadAPI,
-    fecha_cierre: new Date(Date.parse(oportunidadAPI.fecha_cierre))
+    fecha_cierre: oportunidadAPI.fecha_cierre ? new Date(Date.parse(oportunidadAPI.fecha_cierre)) : null,
 })
 
 export const getOportunidadVenta = async (id: string): Promise<OportunidadVenta> =>
@@ -35,7 +35,6 @@ export const getOportunidadesVenta = async (
 export const postOportunidadVenta = async (oportunidad: NuevaOportunidadVenta): Promise<string> => {
     const oportunidadAPI = {
         ...oportunidad,
-        fecha_cierre: oportunidad.fecha_cierre?.toISOString().slice(0, 10),
     }
     return await RestAPI.post(UrlsCrm.OPORTUNIDAD_VENTA, oportunidadAPI, "Error al guardar oportunidad de venta").then((respuesta) => respuesta.id);
 };

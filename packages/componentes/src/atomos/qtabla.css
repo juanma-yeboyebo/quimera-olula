@@ -162,7 +162,7 @@ quimera-tabla-paginacion {
     justify-content: center;
     align-items: center;
     margin-top: var(--espaciado-m);
-    border-radius: var(--radio-borde-m);
+    border-radius: var(--redondeo-borde-m);
     gap: var(--espaciado-xs);
     background: var(--color-fondo);
     padding: var(--espaciado-m) 0;

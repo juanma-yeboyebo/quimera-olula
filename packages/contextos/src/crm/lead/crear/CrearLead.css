@@ -1,8 +1,4 @@
 .CrearLead {
-    quimera-autocompletar[nombre="responsable_id"] {
-        grid-column: span 6;
-    }
-
     quimera-autocompletar[nombre="cliente_id"] {
         grid-column: 1 / span 6;
     }

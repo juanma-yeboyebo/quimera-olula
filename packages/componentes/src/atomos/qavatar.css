@@ -6,6 +6,7 @@
     background-color: var(--color-primario-claro);
     color: var(--color-texto-primario);
     font-weight: var(--grosor-letra-5);
+    flex-shrink: 0;
 }
 
 .q-avatar.sm {

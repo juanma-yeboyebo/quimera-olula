@@ -2,7 +2,7 @@ import { ProcesarContexto } from "@olula/lib/diseño.js";
 import { ejecutarListaProcesos, MetaModelo, stringNoVacio } from "@olula/lib/dominio.js";
 import { pipe } from "@olula/lib/funcional.js";
 import { FuenteLead } from "../diseño.ts";
-import { getFuenteLead, patchFuenteLead } from "../infraestructura.ts";
+import { getFuenteLead, marcarPorDefectoFuenteLead, patchFuenteLead } from "../infraestructura.ts";
 import { ContextoDetalleFuenteLead, EstadoDetalleFuenteLead } from "./diseño.ts";
 
 export const fuenteLeadVacia: FuenteLead = {
@@ -59,6 +59,15 @@ export const cambiarFuenteLead: ProcesarFuenteLead = async (contexto, payload) =
         refrescarFuenteLead,
         "INICIAL",
     ]);
+}
+
+export const marcarPorDefecto: ProcesarFuenteLead = async (contexto, _) => {
+    await marcarPorDefectoFuenteLead(contexto.fuente_lead.id);
+
+    return pipeFuenteLead(contexto, [
+        refrescarFuenteLead,
+        "INICIAL"
+    ])
 }
 
 export const getContextoVacio: ProcesarFuenteLead = async (contexto) => {

@@ -4,7 +4,6 @@ import { EstadoLead } from "../diseño.ts";
 export const metaNuevoEstadoLead: MetaModelo<EstadoLead> = {
     campos: {
         descripcion: { requerido: true, validacion: (estado: EstadoLead) => stringNoVacio(estado.descripcion) },
-        valor_defecto: { requerido: true, tipo: "checkbox" },
     },
 };
 
