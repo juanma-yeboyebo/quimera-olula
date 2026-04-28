@@ -10,6 +10,7 @@ export type CabeceraProps = {
   logoSrc?: string;
   logoAlt?: string;
   logoClassName?: string;
+  Titulo?: () => React.ReactNode;
   AccionesCabecera?: () => React.ReactNode;
   MenuUsuario?: () => React.ReactNode;
   ExtraLogo?: () => React.ReactNode;
@@ -18,6 +19,7 @@ export type CabeceraProps = {
 export const CabeceraBase = ({
   logoSrc = "/olula_header_blanco.png",
   logoAlt = "Olula | Inicio",
+  Titulo,
   AccionesCabecera,
   MenuUsuario,
   ExtraLogo,
@@ -39,6 +41,7 @@ export const CabeceraBase = ({
           <img src={logoSrc} alt={logoAlt} className="logo-app" />
         </Link>
         {ExtraLogo ? <ExtraLogo /> : null}
+        <div id="cabecera-titulo">{Titulo ? <Titulo /> : null}</div>
         <div id="cabecera-acciones-extra">
           {AccionesCabecera ? <AccionesCabecera /> : null}
         </div>
@@ -81,6 +84,7 @@ export const Cabecera = (props: CabeceraProps) => {
     AccionesCabecera: AccionesCabecera || props.AccionesCabecera,
     MenuUsuario: MenuUsuario || props.MenuUsuario,
     ExtraLogo: ExtraLogo || props.ExtraLogo,
+    Titulo: props.Titulo,
   };
 
   return CabeceraCustom ? (

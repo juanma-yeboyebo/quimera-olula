@@ -9,6 +9,7 @@ export default mergeConfig(config, {
         alias: {
             '#': '@olula/ctx',
             'hookrouter': import.meta.dirname + '/node_modules/hookrouter',
+            '@olula/lib': import.meta.dirname + '/../../packages/lib/src',
         }
     }
 });
