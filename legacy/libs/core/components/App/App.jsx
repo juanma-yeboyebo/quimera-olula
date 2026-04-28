@@ -1,4 +1,4 @@
-import { ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
+import { ThemeProvider as MuiThemeProvider, StyledEngineProvider } from "@mui/material/styles";
 import { adaptV4Theme, createTheme, ThemeProvider } from "@quimera/styles";
 import { initReactI18next } from "@quimera/thirdparty";
 import i18n from "i18next";
@@ -73,20 +73,22 @@ export default function App({ project, environment }) {
   return loading ? (
     <div style={{ visibility: visibleLoading }}>Loading app</div>
   ) : (
-    <MuiThemeProvider theme={MUITheme}>
-      <ThemeProvider theme={MUITheme}>
-        <title>{title}</title>
-        <AppProvider
-          reducer={appReducer}
-          apiClient={appApiClient}
-          initialState={{
-            ...appInitialState,
-            environment,
-          }}
-        >
-          {Container}
-        </AppProvider>
-      </ThemeProvider>
-    </MuiThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <MuiThemeProvider theme={MUITheme}>
+        <ThemeProvider theme={MUITheme}>
+          <title>{title}</title>
+          <AppProvider
+            reducer={appReducer}
+            apiClient={appApiClient}
+            initialState={{
+              ...appInitialState,
+              environment,
+            }}
+          >
+            {Container}
+          </AppProvider>
+        </ThemeProvider>
+      </MuiThemeProvider>
+    </StyledEngineProvider>
   );
 }
