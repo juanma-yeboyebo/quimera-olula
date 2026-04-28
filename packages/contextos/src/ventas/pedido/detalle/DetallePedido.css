@@ -1,0 +1,21 @@
+.edicion-botones {
+    min-height: 58px;
+}
+
+.edicion-botones .maestro-botones {
+    margin-top: 0;
+    margin-bottom: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.edicion-botones.edicion-botones-visible .maestro-botones {
+    visibility: visible;
+    pointer-events: auto;
+}
+
+@media (max-width: 768px) {
+    .edicion-botones {
+        min-height: 52px;
+    }
+}

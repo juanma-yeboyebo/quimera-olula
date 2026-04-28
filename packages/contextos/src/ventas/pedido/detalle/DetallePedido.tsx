@@ -56,10 +56,7 @@ export const DetallePedidoBase = ({
 
   const pedido = useModelo(metaPedido, ctx.pedido);
   const { valido } = pedido;
-
-  const modificadoFormulario = (
-    Object.keys(metaPedido.campos ?? {}) as Array<keyof Pedido>
-  ).some((campo) => pedido.modelo[campo] !== ctx.pedido[campo]);
+  const modificadoFormulario = pedido.modificado;
 
   useEffect(() => {
     emitir("pedido_id_cambiado", pedidoId, true);
@@ -137,13 +134,19 @@ export const DetallePedidoBase = ({
         </Tab>
       </Tabs>
 
-      {editable(ctx.pedido) && modificadoFormulario && (
-        <div className="botones maestro-botones">
-          {/* <QBoton onClick={handleGuardar}>Guardar Cambios</QBoton>
-          <QBoton tipo="reset" variante="texto" onClick={handleCancelar}>
-            Cancelar
-          </QBoton> */}
-          <QuimeraAcciones acciones={accionesEdicion} />
+      {editable(ctx.pedido) && (
+        <div
+          className={
+            modificadoFormulario
+              ? "edicion-botones edicion-botones-visible"
+              : "edicion-botones"
+          }
+        >
+          <div className="botones maestro-botones">
+            {modificadoFormulario && (
+              <QuimeraAcciones acciones={accionesEdicion} />
+            )}
+          </div>
         </div>
       )}
 

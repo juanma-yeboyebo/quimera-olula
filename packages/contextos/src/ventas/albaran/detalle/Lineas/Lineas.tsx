@@ -1,4 +1,3 @@
-import { QuimeraAcciones } from "@olula/componentes/index.js";
 import { BorrarLinea } from "../../borrar_linea/BorrarLinea.tsx";
 import { CrearLinea } from "../../crear_linea/CrearLinea.tsx";
 import { Albaran, LineaAlbaran } from "../../diseño.ts";
@@ -45,17 +44,12 @@ export const Lineas = ({
 
   return (
     <>
-      {esEditable && (
-        <div className="botones maestro-botones ">
-          <QuimeraAcciones acciones={acciones} />
-        </div>
-      )}
-
       <LineasLista
         lineas={albaran.lineas || []}
         seleccionada={lineaActiva?.id}
         onCambioCantidad={handleCambioCantidad}
         albaranEditable={esEditable}
+        acciones={esEditable ? acciones : undefined}
         publicar={publicar}
       />
 

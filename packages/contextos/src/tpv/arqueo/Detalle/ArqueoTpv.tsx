@@ -11,7 +11,8 @@ import { CerrarArqueoTpv } from "../cerrar/CerrarArqueoTpv.tsx";
 import { CrearMovimientoEfectivo } from "../crear_movimiento_efectivo/CrearMovimientoEfectivo.tsx";
 import { ArqueoTpv } from "../diseño.ts";
 import { moneda } from "../dominio.ts";
-import { patchArqueo } from "../infraestructura.ts";
+import { imprimir_blob, imprimir_pagina_blanca } from "@olula/lib/impresion.ts";
+import { getReportArqueo, patchArqueo } from "../infraestructura.ts";
 import { ReabrirArqueoTpv } from "../Reabrir/ReabrirArqueoTpv.tsx";
 import { RecuentoArqueoTpv } from "../Recuento/RecuentoArqueoTpv.tsx";
 import "./ArqueoTpv.css";
@@ -55,6 +56,11 @@ export const DetalleArqueoTpv = ({
 
   const { estado, arqueo } = ctx;
 
+  const imprimir = async () => {
+    const blob = await getReportArqueo(arqueo.id);
+    imprimir_blob(blob);
+  };
+
   const titulo = (arqueo: Entidad) => `Arqueo ${arqueo.id} estado: ${estado}`;
 
   return (
@@ -93,6 +99,10 @@ export const DetalleArqueoTpv = ({
           <div className="botones maestro-botones ">
             <QBoton onClick={() => emitir("reapertura_solicitada")}>
               Reabrir
+            </QBoton>
+            <QBoton onClick={imprimir}>Imprimir</QBoton>
+            <QBoton onClick={imprimir_pagina_blanca}>
+              Test Cajón
             </QBoton>
           </div>
         )}

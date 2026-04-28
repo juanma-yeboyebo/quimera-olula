@@ -1,7 +1,7 @@
 import { Box, Container, Icon, IconButton, QBox, Typography } from "@quimera/comps";
 import { TreeItem, TreeView } from "@quimera/thirdparty";
-import Quimera, { PropValidation, useStateValue, util } from "quimera";
-import React, { useEffect } from "react";
+import Quimera, { useStateValue, util } from "quimera";
+import { useEffect } from "react";
 
 function DocumentosClientes({ useStyles }) {
   const [{ data, carpetaActual, list, documentoSeleccionado }, dispatch] = useStateValue();
@@ -37,9 +37,26 @@ function DocumentosClientes({ useStyles }) {
   const renderTree = nodes => (
     <TreeItem
       key={nodes.id}
-      nodeId={String(nodes.id)}
+      itemId={String(nodes.id)}
       label={
-        <div style={{ display: "flex", alignItems: "center", paddingLeft: "4px" }}>
+        <div
+          style={{ display: "flex", alignItems: "center", paddingLeft: "4px" }}
+          onClick={
+            nodes.type === "doc"
+              ? () => {
+                dispatch({
+                  type: "onDocumentoSeleccionado",
+                  payload: {
+                    nombreDocumentoSeleccionado: nodes.name,
+                    idDocumentoSeleccion: nodes.id,
+                  },
+                });
+              }
+              : () => {
+                dispatch({ type: "onCarpetaClicked", payload: { carpeta: nodes } });
+              }
+          }
+        >
           {nodes.type === "dir" ? (
             <Icon className={classes.iconFolder}>folder</Icon>
           ) : (
@@ -52,22 +69,6 @@ function DocumentosClientes({ useStyles }) {
           }
         </div>
       }
-      onClick={
-        nodes.type === "doc"
-          ? () => {
-            // dispatch({ type: 'onDescargarDocumento', payload: { nombreDocumentoSeleccionado: nodes.name, idDocumentoSeleccion: nodes.id } })
-            dispatch({
-              type: "onDocumentoSeleccionado",
-              payload: {
-                nombreDocumentoSeleccionado: nodes.name,
-                idDocumentoSeleccion: nodes.id,
-              },
-            });
-          }
-          : () => {
-            dispatch({ type: "onCarpetaClicked", payload: { carpeta: nodes } });
-          }
-      }
     >
       {Array.isArray(nodes.children) ? nodes.children.map(node => renderTree(node)) : null}
     </TreeItem>
@@ -75,6 +76,8 @@ function DocumentosClientes({ useStyles }) {
 
   const icon = list ? "list" : "account_tree";
   const tree = !list;
+
+  console.log('mimensaje_util.isEmptyObject(documentoSeleccionado)', util.isEmptyObject(documentoSeleccionado));
 
   return (
     <Quimera.Template id="DocumentosClientes">
@@ -116,9 +119,11 @@ function DocumentosClientes({ useStyles }) {
 
           {tree && (
             <TreeView
-              defaultExpanded={["root"]}
-              defaultCollapseIcon={<Icon style={{ color: "#959698" }}>arrow_drop_down</Icon>}
-              defaultExpandIcon={<Icon style={{ color: "#959698" }}>arrow_right</Icon>}
+              defaultExpandedItems={["root"]}
+              slots={{
+                collapseIcon: () => <Icon style={{ color: "#959698" }}>arrow_drop_down</Icon>,
+                expandIcon: () => <Icon style={{ color: "#959698" }}>arrow_right</Icon>,
+              }}
               style={{ marginTop: "16px" }}
             // defaultCollapseIcon={<Icon>folder_open</Icon>}
             // defaultExpandIcon={<Icon>folder</Icon>}

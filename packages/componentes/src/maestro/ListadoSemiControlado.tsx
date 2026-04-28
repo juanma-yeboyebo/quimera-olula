@@ -1,6 +1,7 @@
 import { Criteria, Entidad } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { useCallback, useEffect, useState } from "react";
+import { QIcono } from "../atomos/qicono.tsx";
 import { MetaTabla } from "../atomos/qtabla.tsx";
 import { QTablaControlada } from "../atomos/qtablacontrolada.tsx";
 import { QTarjetaGenerica } from "../atomos/qtarjeta_generica.tsx";
@@ -10,7 +11,6 @@ import { SinDatos } from "../SinDatos/SinDatos.tsx";
 import "./Listado.css";
 import { filtrarEntidad } from "./maestroFiltros/filtro.ts";
 import { MaestroFiltrosControlado } from "./maestroFiltros/MaestroFiltrosControlado.tsx";
-import { useEsMovil } from "./useEsMovil.ts";
 
 const datosCargando = <T extends Entidad>() =>
   new Array(10).fill(null).map(
@@ -35,6 +35,7 @@ type MaestroProps<T extends Entidad> = {
   metaFiltro?: boolean;
   cargando?: boolean;
   tarjeta?: (entidad: T) => React.ReactNode;
+  renderAcciones?: () => React.ReactNode;
   idReiniciarCriteria?: string;
   criteriaInicial: Criteria;
   entidades: T[];
@@ -42,6 +43,7 @@ type MaestroProps<T extends Entidad> = {
   seleccionada: T | null;
   onSeleccion: (seleccionada: T) => void;
   modo?: Modo;
+  onModoChanged?: (modo: Modo) => void;
   onCriteriaChanged: (criteria: Criteria) => void;
 };
 
@@ -52,15 +54,18 @@ export const ListadoSemiControlado = <T extends Entidad>({
   idReiniciarCriteria,
   criteriaInicial = criteriaDefecto,
   tarjeta,
+  renderAcciones,
   entidades,
   totalEntidades,
   seleccionada,
   onSeleccion,
   modo,
+  onModoChanged,
   onCriteriaChanged,
 }: MaestroProps<T>) => {
   const [criteria, setCriteria] = useState<Criteria>(criteriaInicial);
-  const esMovil = useEsMovil();
+  const [modoEstado, setModoEstado] = useState<Modo>(modo ?? "tabla");
+  const modoInterno = modo ?? modoEstado;
 
   const cambiarCriteria = useCallback(
     (c: Criteria) => {
@@ -80,6 +85,29 @@ export const ListadoSemiControlado = <T extends Entidad>({
           <QTarjetaGenerica entidad={entidad} metaTabla={metaTabla} />
         )
       : undefined;
+  const puedeTabla = metaTabla !== undefined;
+  const puedeTarjetas = tarjeta !== undefined;
+
+  const modoEfectivo =
+    modoInterno === "tabla" && puedeTabla
+      ? "tabla"
+      : modoInterno === "tarjetas" && puedeTarjetas
+        ? "tarjetas"
+        : puedeTabla
+          ? "tabla"
+          : puedeTarjetas
+            ? "tarjetas"
+            : null;
+
+  const cambiarModo = (nuevoModo: Modo) => {
+    if (modo === undefined) setModoEstado(nuevoModo);
+    onModoChanged?.(nuevoModo);
+  };
+
+  const mostrarCambioModo = puedeTabla && puedeTarjetas && modoEfectivo;
+  // const mostrarCambioModo = false;
+  const acciones = renderAcciones?.();
+  const mostrarCabecera = metaFiltro || mostrarCambioModo || Boolean(acciones);
 
   const renderTabla = (datos: T[]) => {
     if (!metaTabla) return null;
@@ -125,7 +153,7 @@ export const ListadoSemiControlado = <T extends Entidad>({
         onPaginacion={(pagina, limite) => {
           cambiarCriteria({ ...criteria, paginacion: { pagina, limite } });
         }}
-        totalEntidades={entidades.length}
+        totalEntidades={totalEntidades}
         criteria={criteria}
       />
     );
@@ -138,16 +166,13 @@ export const ListadoSemiControlado = <T extends Entidad>({
       ? entidadesFiltradas
       : datosCargando<T>();
 
-    if (modo === "tabla" && metaTabla) {
+    if (modoEfectivo === "tarjetas") {
+      if (tarjeta) return renderTarjetas(datos, tarjeta);
+      if (tarjetaGenerica) return renderTarjetas(datos, tarjetaGenerica);
+    }
+
+    if (modoEfectivo === "tabla" && metaTabla) {
       return renderTabla(datos);
-    }
-
-    if (modo === "tarjetas" && tarjeta) {
-      return renderTarjetas(datos, tarjeta);
-    }
-
-    if (!modo && esMovil && tarjetaGenerica) {
-      return renderTarjetas(datos, tarjetaGenerica);
     }
 
     return null;
@@ -161,18 +186,43 @@ export const ListadoSemiControlado = <T extends Entidad>({
 
   return (
     <div className="Listado">
-      {metaFiltro && (
-        <MaestroFiltrosControlado
-          campos={obtenerCampos(entidades[0])}
-          filtro={criteria.filtro}
-          filtroInicial={criteriaInicial.filtro}
-          onFiltroChanged={(filtro) => {
-            cambiarCriteria({
-              ...criteria,
-              filtro,
-            });
-          }}
-        />
+      {mostrarCabecera && (
+        <div className="listado-cabecera">
+          <div className="listado-cabecera-izquierda">
+            {metaFiltro && (
+              <MaestroFiltrosControlado
+                campos={obtenerCampos(entidades[0])}
+                filtro={criteria.filtro}
+                filtroInicial={criteriaInicial.filtro}
+                onFiltroChanged={(filtro) => {
+                  cambiarCriteria({
+                    ...criteria,
+                    filtro,
+                  });
+                }}
+              />
+            )}
+          </div>
+
+          <div className="listado-cabecera-derecha">
+            {acciones}
+            {mostrarCambioModo && (
+              <div className="cambio-modo">
+                <span
+                  className="cambio-modo-icono"
+                  onClick={() =>
+                    cambiarModo(modoEfectivo === "tabla" ? "tarjetas" : "tabla")
+                  }
+                >
+                  <QIcono
+                    nombre={modoEfectivo === "tabla" ? "lista" : "tabla"}
+                    tamaño="md"
+                  />
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
       )}
       {renderEntidades()}
     </div>

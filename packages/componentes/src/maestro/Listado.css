@@ -1,14 +1,35 @@
 .Listado {
+    .listado-cabecera {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--espaciado-s);
+        margin-bottom: var(--espaciado-s);
+    }
+
+    .listado-cabecera-izquierda {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .listado-cabecera-derecha {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        gap: var(--espaciado-s);
+    }
+
     .cambio-modo {
-        float: right;
-        margin-left: var(--espaciado-s);
+        display: inline-flex;
+        align-self: center;
     }
 
     .cambio-modo-icono {
         cursor: pointer;
         display: inline-flex;
         align-items: center;
+        line-height: 0.1;
         fill: var(--color-primario);
     }
-
 }

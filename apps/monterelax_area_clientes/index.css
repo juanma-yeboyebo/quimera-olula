@@ -3,6 +3,7 @@
 :root {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     color-scheme: light;
+    --alto-header: 60px;
 }
 
 #root {
@@ -12,4 +13,9 @@
     scroll-behavior: smooth;
     scrollbar-width: auto;
     scrollbar-color: #bdbdbd #e0e0e0;
+}
+
+.cabecera-principal a>img {
+    filter: brightness(0) invert(1);
+    transform: scale(0.7);
 }

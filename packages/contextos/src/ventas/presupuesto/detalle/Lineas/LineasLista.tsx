@@ -1,4 +1,5 @@
 import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiControlado.tsx";
+import { QuimeraAcciones } from "@olula/componentes/moleculas/qacciones.tsx";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { LineaPresupuesto as Linea } from "../../diseño.ts";
 import { EditarCantidadLinea } from "./EditarCantidadLinea.tsx";
@@ -8,12 +9,14 @@ export const LineasLista = ({
   seleccionada,
   onCambioCantidad,
   presupuestoEditable,
+  acciones,
   publicar,
 }: {
   lineas: Linea[];
   seleccionada?: string;
   onCambioCantidad?: (linea: Linea, cantidad: number) => void;
   presupuestoEditable?: boolean;
+  acciones?: Parameters<typeof QuimeraAcciones>[0]["acciones"];
   publicar: (evento: string, payload?: unknown) => void;
 }) => {
   const setSeleccionada = (linea: Linea) => {
@@ -32,6 +35,13 @@ export const LineasLista = ({
       criteriaInicial={criteriaDefecto}
       onCriteriaChanged={() => null}
       modo="tabla"
+      renderAcciones={() =>
+        acciones && acciones.length > 0 ? (
+          <div className="botones maestro-botones ">
+            <QuimeraAcciones acciones={acciones} />
+          </div>
+        ) : null
+      }
     />
   );
 };

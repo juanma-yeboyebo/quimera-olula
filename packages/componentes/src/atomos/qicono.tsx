@@ -42,6 +42,8 @@ const iconos: Record<string, string | Icono> = {
   lista: "list-ul",
   carrito: "cart",
   tarjeta: "credit-card",
+  etiqueta_compra: "purchase-tag-alt",
+  llave_inglesa: "wrench",
   ver: "show",
   crear: "plus",
   tabla: "table",

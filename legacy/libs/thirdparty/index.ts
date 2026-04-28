@@ -1,5 +1,4 @@
 import { useMediaQuery } from "@mui/material";
-export { TreeItem, TreeView } from "@mui/lab";
 export {
   Alert,
   AppBar,
@@ -98,6 +97,7 @@ export {
 } from "@mui/x-date-pickers";
 export { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 export { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+export { TreeItem, SimpleTreeView as TreeView } from "@mui/x-tree-view";
 export { Chart } from "chart.js";
 export { default as ChartAnnotation } from "chartjs-plugin-annotation";
 export { default as clsx } from "clsx";

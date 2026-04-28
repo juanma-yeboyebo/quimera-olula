@@ -33,7 +33,6 @@ export const CrearAlbaran = ({
 
   return (
     <div className="CrearAlbaran">
-      <h2>Nuevo Albarán</h2>
       <quimera-formulario>
         <Cliente
           {...nuevoAlbaran.uiProps("cliente_id", "nombre")}

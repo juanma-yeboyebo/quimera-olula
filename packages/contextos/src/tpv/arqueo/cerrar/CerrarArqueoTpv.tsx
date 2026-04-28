@@ -24,7 +24,8 @@ export const CerrarArqueoTpv = ({
   const cierreInicial = useMemo(
     () => ({
       ...cierreArqueoTpvVacio,
-      movimientoCierre: arqueo.recuentoEfectivo,
+      movimientoCierre: arqueo.recuentoEfectivo - arqueo.efectivoInicial,
+      cambioDejadoEnCaja: arqueo.efectivoInicial,
       idAgenteCierre: agenteActivo.obtener()?.id ?? "",
       totalEfectivo: arqueo.recuentoEfectivo,
     }),

@@ -19,3 +19,7 @@
 .MuiIcon-colorPrimary:not(.Mui-disabled) {
   color: var(--main-color) !important;
 }
+
+.MuiBox-root {
+  padding: 0 !important;
+}

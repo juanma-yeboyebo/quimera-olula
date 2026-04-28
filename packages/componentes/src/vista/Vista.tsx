@@ -9,55 +9,50 @@ import { Plantilla } from "../plantilla/Plantilla.tsx";
 import { Slot } from "../slot/Slot.tsx";
 
 export const Vista = ({ children }: PropsWithChildren<object>) => {
+  const slots = { hijos: children };
 
-    const slots = { hijos: children };
+  const [error, setError] = useState<QError | null>(null);
 
-    const [error, setError] = useState<QError | null>(null);
+  const intentar: Intentar = useCallback(
+    async (f, onError) => {
+      try {
+        const result = await f();
+        return result;
+      } catch (error) {
+        const apiError = error as QError;
+        const errorJS = error as Error;
+        console.log("apiError", apiError);
+        setError({
+          nombre: apiError.nombre ?? "Error",
+          descripcion: apiError.descripcion ?? errorJS.message,
+        });
+        if (onError) {
+          onError(error);
+        }
+        throw error;
+      }
+    },
+    [setError]
+  );
 
-    const intentar: Intentar = useCallback(
-        async (f, onError) => {
-            try {
-                const result = await f();
-                return result;
-            } catch (error) {
-                const apiError = error as QError;
-                const errorJS = error as Error;
-                console.log("apiError", apiError);
-                setError({
-                    nombre: apiError.nombre ?? 'Error',
-                    descripcion: apiError.descripcion ?? errorJS.message,
-                });
-                if (onError) {
-                    onError(error);
-                }
-                throw error;
-            }
-        },
-        [setError]
-    );
+  const contenido = children ?? <Outlet />;
 
-    const contenido = children ?? <Outlet />;
+  return (
+    <ContextoError.Provider value={{ error, setError, intentar }}>
+      <Slot nombre="contenido" {...slots}>
+        <Plantilla>{contenido}</Plantilla>
+      </Slot>
 
-    return (
-        <ContextoError.Provider value={{ error, setError, intentar }}>
-
-            <Slot nombre="contenido" {...slots}>
-                <Plantilla>{contenido}</Plantilla>
-            </Slot>
-
-            <QModal
-                nombre="error"
-                abierto={error !== null}
-                onCerrar={() => setError(null)}
-            >
-                <div>
-                <h2>{error?.nombre}</h2>
-                <p>{error?.descripcion}</p>
-                </div>
-            </QModal>
-            
-        </ContextoError.Provider>
-    );
+      <QModal
+        nombre="error"
+        abierto={error !== null}
+        onCerrar={() => setError(null)}
+        titulo={error?.nombre}
+      >
+        <p>{error?.descripcion}</p>
+      </QModal>
+    </ContextoError.Provider>
+  );
 };
 
 // export const SubVista = <T extends Entidad>({

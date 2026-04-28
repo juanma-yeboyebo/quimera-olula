@@ -31,8 +31,8 @@ export const PendienteVenta = ({
           </QBoton>
         )}
 
-        {pendiente > 0 && (
-          <>
+        {/* {pendiente > 0 && (
+          <> */}
             <QBoton onClick={() => publicar("pago_efectivo_solicitado")}>
               P. Efectivo 
             </QBoton>
@@ -44,8 +44,8 @@ export const PendienteVenta = ({
             <QBoton onClick={() => publicar("pago_vale_solicitado")}>
               P. Vale 
             </QBoton>
-          </>
-        )}
+          {/* </> */}
+        {/* )} */}
 
       </div>
       <div className="pendientes-venta-item">

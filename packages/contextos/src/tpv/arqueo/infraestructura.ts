@@ -3,7 +3,7 @@ import { RestAPI } from "@olula/lib/api/rest_api.js";
 import { ClausulaFiltro, Filtro, Orden, Paginacion } from "@olula/lib/diseño.js";
 import { criteriaAQueryString, criteriaQuery } from "@olula/lib/infraestructura.js";
 import { agenteActivo, puntoVentaLocal } from "../comun/infraestructura.ts";
-import { ArqueoTpv, CabeceraArqueoTpv, DeleteArqueoTpv, GetArqueosTpv, GetArqueoTpv, GetPagosArqueoTpv, MovimientoArqueoTpv, PagoArqueoTpv, PatchArqueo, PatchBorrarMovimiento, PatchCerrarArqueo, PatchCrearMovimiento, PatchReabrirArqueo, PatchRecuentoArqueo, PostArqueoTpv } from "./diseño.ts";
+import { ArqueoTpv, CabeceraArqueoTpv, DeleteArqueoTpv, GetArqueosTpv, GetArqueoTpv, GetPagosArqueoTpv, GetReportArqueo, MovimientoArqueoTpv, PagoArqueoTpv, PatchArqueo, PatchBorrarMovimiento, PatchCerrarArqueo, PatchCrearMovimiento, PatchReabrirArqueo, PatchRecuentoArqueo, PostArqueoTpv } from "./diseño.ts";
 
 interface CabeceraArqueoTpvApi {
     id: string;
@@ -217,3 +217,6 @@ export const postArqueo: PostArqueoTpv = async () => {
 export const deleteArqueoTpv: DeleteArqueoTpv = async (id) => {
     return await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar el arqueo");
 };
+
+export const getReportArqueo: GetReportArqueo = async (id) =>
+    RestAPI.blob(`${baseUrl}/${id}/report`, "Error al obtener el report del arqueo");

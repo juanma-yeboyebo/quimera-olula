@@ -43,7 +43,6 @@ export const CrearPedido = ({
         <DirCliente
           clienteId={nuevoPedido.modelo.cliente_id}
           {...nuevoPedido.uiProps("direccion_id")}
-          // nombre="alta_pedido_direccion_id"
         />
         <QInput label="Empresa" {...nuevoPedido.uiProps("empresa_id")} />
       </quimera-formulario>

@@ -14,34 +14,63 @@ quimera-tarjetas {
 }
 
 quimera-tarjeta {
+    position: relative;
+    isolation: isolate;
     display: flex;
     flex-direction: column;
-    background: var(--color-fondo);
-    border: var(--tamaño-borde-s) solid transparent;
+    background: linear-gradient(180deg,
+            var(--color-superficie) 0%,
+            var(--color-superficie-elevada) 100%);
+    border: var(--tamaño-borde-s) solid var(--color-borde-sutil);
     border-radius: var(--radio-borde-m);
-    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.04);
+    box-shadow: var(--sombra-xs);
     margin: 0;
     padding: var(--espaciado-m);
-    transition: box-shadow 0.15s, border-color 0.15s;
+    transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     cursor: pointer;
+    overflow: hidden;
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(135deg,
+                color-mix(in oklab, var(--color-primario) 16%, transparent) 0%,
+                transparent 45%);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
 
     &:hover {
-        box-shadow: var(--sombra-m);
+        box-shadow: var(--sombra-s);
         border-color: var(--color-primario-claro);
-        transform: translateY(-1px);
+        /* transform: translateY(-1px); */
+
+        &::before {
+            opacity: 1;
+        }
     }
 }
 
 quimera-tarjetas .lista-contenedor-scroll {
     display: flex;
     flex-direction: column;
-    gap: var(--espaciado-xs);
+    gap: var(--espaciado-m);
+    padding-block: var(--espaciado-xxs);
 }
 
 quimera-tarjeta.seleccionada {
     border-color: var(--color-primario);
-    box-shadow: var(--sombra-m);
+    box-shadow: var(--sombra-s);
     background: var(--color-superficie-elevada);
+
+    &::before {
+        opacity: 1;
+        background: linear-gradient(135deg,
+                color-mix(in oklab, var(--color-primario) 22%, transparent) 0%,
+                transparent 50%);
+    }
 }
 
 quimera-tarjetas .cargando,

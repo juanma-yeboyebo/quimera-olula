@@ -36,11 +36,6 @@ export const MaestroConDetalleFactura = () => {
         Maestro={
           <>
             <h2>Facturas</h2>
-            <div className="maestro-botones">
-              <QBoton onClick={() => emitir("crear_factura_solicitado")}>
-                Nueva Factura
-              </QBoton>
-            </div>
             <Listado<Factura>
               metaTabla={metaTablaFactura}
               criteria={ctx.facturas.criteria}
@@ -48,6 +43,13 @@ export const MaestroConDetalleFactura = () => {
               entidades={ctx.facturas.lista}
               totalEntidades={ctx.facturas.total}
               seleccionada={ctx.facturas.activo}
+              renderAcciones={() => (
+                <div className="maestro-botones">
+                  <QBoton onClick={() => emitir("crear_factura_solicitado")}>
+                    Nueva Factura
+                  </QBoton>
+                </div>
+              )}
               onSeleccion={(payload) => emitir("factura_seleccionada", payload)}
               onCriteriaChanged={(payload) =>
                 emitir("criteria_cambiado", payload)

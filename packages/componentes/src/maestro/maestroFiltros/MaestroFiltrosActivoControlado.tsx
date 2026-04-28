@@ -9,6 +9,7 @@ import { ReactNode, useMemo, useState } from "react";
 import { QBoton } from "../../atomos/qboton.tsx";
 import { QCheckbox } from "../../atomos/qcheckbox.tsx";
 import { QDateInterval } from "../../atomos/qdateinterval.tsx";
+import { QIcono } from "../../atomos/qicono.tsx";
 import { QInput } from "../../atomos/qinput.tsx";
 import { Opcion, QMultiCheckbox } from "../../atomos/qmulticheckbox.tsx";
 import { QNumberInterval } from "../../atomos/qnumberinterval.tsx";
@@ -243,7 +244,7 @@ export const MaestroFiltrosActivoControlado = ({
         <div key={campo.id} className="campo-filtro">
           {renderInput()}
           <QBoton tamaño="pequeño" onClick={() => limpiarUno(campo.id)}>
-            &times;
+            <QIcono nombre="cerrar" tamaño="xs" color="currentColor" />
           </QBoton>
         </div>
       );

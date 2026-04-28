@@ -1,7 +1,6 @@
 import { ContactoSelector } from "#/ventas/comun/componentes/contacto.tsx";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
-import { QuimeraAcciones } from "@olula/componentes/index.js";
 import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { QModalConfirmacion } from "@olula/componentes/moleculas/qmodalconfirmacion.tsx";
 import { useEffect, useState } from "react";
@@ -61,14 +60,12 @@ export const TabCrmContactos = ({ clienteId }: { clienteId: string }) => {
   return (
     <div className="CrmContactos">
       <>
-        <div className="detalle-cliente-tab-contenido maestro-botones">
-          <QuimeraAcciones acciones={acciones} vertical />
-        </div>
         <TabCrmContactosLista
           contactos={ctx.contactos}
           seleccionado={ctx.contactoActivo}
           emitir={emitir}
           cargando={ctx.cargando}
+          acciones={acciones}
         />
       </>
 
@@ -94,6 +91,7 @@ export const TabCrmContactos = ({ clienteId }: { clienteId: string }) => {
         nombre="altaCrmContacto"
         abierto={estado === "alta"}
         onCerrar={() => emitir("alta_cancelada")}
+        titulo="Nuevo Contacto CRM"
       >
         <CrearCrmContactos emitir={emitir} />
       </QModal>
@@ -102,6 +100,7 @@ export const TabCrmContactos = ({ clienteId }: { clienteId: string }) => {
         nombre="edicionCrmContacto"
         abierto={estado === "edicion"}
         onCerrar={() => emitir("edicion_cancelada")}
+        titulo="Editar Contacto CRM"
       >
         {ctx.contactoActivo && (
           <EdicionCrmContactos contacto={ctx.contactoActivo} emitir={emitir} />
@@ -112,8 +111,8 @@ export const TabCrmContactos = ({ clienteId }: { clienteId: string }) => {
         nombre="asociarCrmContacto"
         abierto={estado === "asociar"}
         onCerrar={() => emitir("asociacion_cancelada")}
+        titulo="Asociar Contacto"
       >
-        <h2>Asociar contacto</h2>
         <ContactoSelector
           valor={contactoSeleccionado?.valor || ""}
           descripcion=""

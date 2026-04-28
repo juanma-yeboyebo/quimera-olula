@@ -1,5 +1,4 @@
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
-import { QuimeraAcciones } from "@olula/componentes/index.js";
 import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { listaEntidadesInicial } from "@olula/lib/ListaEntidades.js";
@@ -68,19 +67,15 @@ export const TabCuentasBanco = ({
 
   return (
     <div className="CuentasBanco">
-      <>
-        <div className="detalle-cliente-tab-contenido maestro-botones">
-          <QuimeraAcciones acciones={acciones} vertical />
-        </div>
-        <TabCuentasBancoLista
-          clienteId={clienteId}
-          cuentas={ctx.cuentas.lista}
-          seleccionada={ctx.cuentas.activo}
-          emitir={emitir}
-          cargando={ctx.cargando}
-          cuentaDomiciliadaId={cliente.cuenta_domiciliada ?? ""}
-        />
-      </>
+      <TabCuentasBancoLista
+        clienteId={clienteId}
+        cuentas={ctx.cuentas.lista}
+        seleccionada={ctx.cuentas.activo}
+        emitir={emitir}
+        cargando={ctx.cargando}
+        cuentaDomiciliadaId={cliente.cuenta_domiciliada ?? ""}
+        acciones={acciones}
+      />
       <QModal
         nombre="altaCuentaBanco"
         abierto={estado === "alta"}

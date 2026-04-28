@@ -1,4 +1,5 @@
 import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiControlado.tsx";
+import { QuimeraAcciones } from "@olula/componentes/moleculas/qacciones.tsx";
 import { Criteria } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { FactoryCtx } from "@olula/lib/factory_ctx.js";
@@ -11,6 +12,7 @@ export type LineasListaProps<L extends Linea = Linea> = {
   seleccionada?: string;
   onCambioCantidad?: (linea: L, cantidad: number) => void;
   pedidoEditable?: boolean;
+  acciones?: Parameters<typeof QuimeraAcciones>[0]["acciones"];
   publicar: (evento: string, payload?: unknown) => void;
 };
 
@@ -27,6 +29,7 @@ export const LineasListaBase = ({
   seleccionada,
   onCambioCantidad,
   pedidoEditable,
+  acciones,
   publicar,
 }: LineasListaProps) => {
   const setSeleccionada = (linea: Linea) => {
@@ -37,13 +40,26 @@ export const LineasListaBase = ({
   return (
     <ListadoSemiControlado
       metaTabla={getMetaTablaLineas(onCambioCantidad, pedidoEditable)}
+      // tarjeta={(linea) => (
+      //   <TarjetaLinea
+      //     linea={linea}
+      //     pedidoEditable={pedidoEditable}
+      //     onCambioCantidad={onCambioCantidad}
+      //   />
+      // )}
       entidades={lineas}
       totalEntidades={lineas.length}
       seleccionada={lineas.find((linea) => linea.id === seleccionada) ?? null}
       onSeleccion={setSeleccionada}
       criteriaInicial={criteriaLineasDefecto}
       onCriteriaChanged={(_: Criteria) => null}
-      modo="tabla"
+      renderAcciones={() =>
+        acciones && acciones.length > 0 ? (
+          <div className="botones maestro-botones ">
+            <QuimeraAcciones acciones={acciones} />
+          </div>
+        ) : null
+      }
     />
   );
 };

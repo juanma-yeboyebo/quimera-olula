@@ -1,4 +1,3 @@
-import { QuimeraAcciones } from "@olula/componentes/index.js";
 import { BorrarLinea } from "../../borrar_linea/BorrarLinea.tsx";
 import { CrearLinea } from "../../crear_linea/CrearLinea.tsx";
 import { LineaPedido, Pedido } from "../../diseño.ts";
@@ -44,22 +43,17 @@ export const Lineas = ({
 
   return (
     <>
-      {estadoPedido === "ABIERTO" && pedido.servido != "TOTAL" && (
-        <div className="botones maestro-botones ">
-          {/* <QBoton onClick={() => publicar("alta_linea_solicitada")}>
-            Nueva
-          </QBoton> */}
-
-          <QuimeraAcciones acciones={acciones} />
-        </div>
-      )}
-
       <LineasLista
         key={pedido.id}
         lineas={pedido.lineas || []}
         seleccionada={lineaActiva?.id}
         onCambioCantidad={handleCambioCantidad}
         pedidoEditable={estadoPedido === "ABIERTO" && pedido.servido != "TOTAL"}
+        acciones={
+          estadoPedido === "ABIERTO" && pedido.servido != "TOTAL"
+            ? acciones
+            : undefined
+        }
         publicar={publicar}
       />
 

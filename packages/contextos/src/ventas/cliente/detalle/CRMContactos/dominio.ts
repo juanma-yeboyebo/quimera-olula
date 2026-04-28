@@ -129,5 +129,8 @@ export const cancelarEdicion: ProcesarCrmContactos = async (contexto) => {
 }
 
 export const cancelarConfirmacion: ProcesarCrmContactos = async (contexto) => {
-    return contexto;
+    return {
+        ...contexto,
+        estado: "lista"
+    };
 }
