@@ -1,5 +1,5 @@
 import { Badge, Box, QBox, QBoxButton, QListModel } from "@quimera/comps";
-import Quimera, { PropValidation, useStateValue, useWidth } from "quimera";
+import Quimera, { useStateValue, useWidth } from "quimera";
 import { useCallback } from "react";
 
 import { ListItemParteCarro } from "../../../comps";
@@ -16,6 +16,9 @@ function PartesCarrosMaster({ idParte }) {
     [],
   );
 
+  console.log('mimensaje_contadorFiltros', contadorFiltros);
+
+
   return (
     <Quimera.Template id="PartesCarrosMaster">
       <Box width={anchoDetalle}>
@@ -29,7 +32,7 @@ function PartesCarrosMaster({ idParte }) {
             ) : (
               <>
                 <QBoxButton id="nuevoParteCarro" title="Nuevo parte" icon="add_circle" />
-                <Badge color="primary" overlap="circle" badgeContent={contadorFiltros}>
+                <Badge color="primary" overlap="circular" badgeContent={contadorFiltros} invisible={!contadorFiltros}>
                   <QBoxButton id="mostrarFiltro" title="Mostrar filtro" icon="search" />
                 </Badge>
               </>

@@ -1,3 +1,4 @@
+import { setNombrePagina } from "@olula/lib/nombrePagina.ts";
 import { Box } from "@quimera/thirdparty";
 import Quimera, { useAppValue, usePath, useRoutes, useStateValue, useWidth, util } from "quimera";
 import { buildView, getRoutes } from "quimera/hooks";
@@ -31,7 +32,7 @@ const loading = false;
 function Container({ useStyles }) {
   const classes = useStyles();
 
-  const [{ vistaMovil, modalVisible, tipoMensaje }, appDispatch] = useAppValue();
+  const [{ vistaMovil, modalVisible, tipoMensaje, nombrePaginaActual }, appDispatch] = useAppValue();
   const [{ authenticated }, dispatch] = useStateValue();
   const routeResult = useRoutes(hookRoutes(loading));
   const width = useWidth();
@@ -46,6 +47,10 @@ function Container({ useStyles }) {
   useEffect(() => {
     dispatch({ type: "onAuthenticatedChanged" });
   }, [authenticated]);
+
+  useEffect(() => {
+    setNombrePagina(nombrePaginaActual ?? "");
+  }, [nombrePaginaActual]);
 
   const excepciones = ["/login", "/forgot-password", "/signup", "/welcome"];
   const isExcepcion = excepciones.find(excepcion => path && path.startsWith(excepcion));

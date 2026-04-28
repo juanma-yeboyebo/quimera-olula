@@ -145,7 +145,7 @@ function Welcome({ onLogin, ...props }) {
           className={classes.imagenFondo}
         />
       </Box>
-      <Grid container item className={clsx(classes.gridItems, classes.header)}>
+      <Grid container className={clsx(classes.gridItems, classes.header)}>
         <img
           width="150px"
           src="/img/logo.png"
@@ -161,8 +161,8 @@ function Welcome({ onLogin, ...props }) {
           </Typography>
         </Box>
       </Grid>
-      <Grid container item className={classes.body}>
-        <Grid container item xs={11} className={classes.primaryBody}>
+      <Grid container className={classes.body}>
+        <Grid container size={11} className={classes.primaryBody}>
           <Typography variant="h1" className={classes.bodyTextTittle}>
             Gestión Comercial Sanhigia
           </Typography>
@@ -194,9 +194,9 @@ function Welcome({ onLogin, ...props }) {
           </Typography>
         </Grid>
       </Grid>
-      <Grid container item className={classes.footer}>
+      <Grid container className={classes.footer}>
         {linkPoliticaPrivacidad && (
-          <Grid item>
+          <Grid>
             <Box
               onClick={() =>
                 dispatch({ type: "onLinkClicked", payload: { link: linkPoliticaPrivacidad } })
@@ -209,7 +209,7 @@ function Welcome({ onLogin, ...props }) {
           </Grid>
         )}
         {linkTerminosCondiciones && (
-          <Grid item>
+          <Grid>
             <Box
               onClick={() =>
                 dispatch({

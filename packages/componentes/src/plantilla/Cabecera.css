@@ -11,6 +11,7 @@
     padding: 0 var(--padding-horizontal);
     /* padding: 0 1.5rem !important; */
     display: flex;
+    position: relative;
 
 
     & a:visited,
@@ -35,6 +36,13 @@
     quimera-icono {
         fill: var(--blanco);
     }
+}
+
+#cabecera-titulo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
 }
 
 #cabecera-acciones-extra {

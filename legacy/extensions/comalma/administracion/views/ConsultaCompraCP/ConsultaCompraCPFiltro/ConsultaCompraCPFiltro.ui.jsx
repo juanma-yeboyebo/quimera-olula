@@ -21,11 +21,11 @@ function ConsultaCompraCPFiltro() {
           }}
         >
           <Grid container spacing={1} direction="column" >
-            <Grid item xs={12}>
+            <Grid size={12}>
               <CampanasFieldSelect id="idCampana" label="Campaña" fullWidth async />
             </Grid>
-            <Grid item xs={12}>
-              <Grid item xs={12}>
+            <Grid size={12}>
+              <Grid size={12}>
                 <Filter.Schema
                   id="fechaCompra"
                   label="Periodo de compra"

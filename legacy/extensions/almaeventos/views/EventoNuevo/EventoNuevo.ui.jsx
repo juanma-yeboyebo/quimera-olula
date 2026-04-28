@@ -28,10 +28,10 @@ function EventoNuevo({ callbackGuardado, callbackCerrado, useStyles, ...props })
         alwaysActive
         dynamicComp={() => (
           <Grid container>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <EventosFieldSelect id="evento.buffer/referencia" label="Producto" fullWidth async />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Field.Schema
                 id="evento.buffer/descripcion"
                 label="Nombre"
@@ -39,7 +39,7 @@ function EventoNuevo({ callbackGuardado, callbackCerrado, useStyles, ...props })
                 autoComplete="off"
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Field.Date
                 id="evento.buffer/fechaInicio"
                 label="Fecha"

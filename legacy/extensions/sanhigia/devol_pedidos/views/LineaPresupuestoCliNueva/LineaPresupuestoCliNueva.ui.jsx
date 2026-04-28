@@ -65,7 +65,7 @@ function LineaPresupuestoCliNueva({ callbackGuardada, idPresupuesto, useStyles }
           alwaysActive
           dynamicComp={() => (
             <Grid container direction="column" spacing={1}>
-              <Grid item xs={9}>
+              <Grid size={9}>
                 <QArticulo
                   id="linea.buffer/referencia"
                   label="Artículo"
@@ -74,28 +74,28 @@ function LineaPresupuestoCliNueva({ callbackGuardada, idPresupuesto, useStyles }
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={3}>
+              <Grid size={3}>
                 <Field.Schema id="linea.buffer/cantidad" schema={schema} fullWidth />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Field.Schema id="linea.buffer/descripcion" schema={schema} fullWidth />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 {controlesSanhigia}
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Field.Schema id="linea.buffer/codImpuesto" schema={schema} fullWidth />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Field.Schema id="linea.buffer/iva" schema={schema} fullWidth />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Field.Schema id="linea.buffer/recargo" schema={schema} fullWidth />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Field.Schema id="linea.buffer/irpf" schema={schema} fullWidth />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Field.Schema
                   id="linea.buffer/pvpUnitario"
                   schema={schema}
@@ -103,7 +103,7 @@ function LineaPresupuestoCliNueva({ callbackGuardada, idPresupuesto, useStyles }
                   disabled={true}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Field.Schema
                   id="linea.buffer/pvpSinDto"
                   schema={schema}
@@ -111,13 +111,13 @@ function LineaPresupuestoCliNueva({ callbackGuardada, idPresupuesto, useStyles }
                   disabled={true}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Field.Schema id="linea.buffer/dtoLineal" schema={schema} fullWidth />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Field.Schema id="linea.buffer/dtoPor" schema={schema} fullWidth />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Box width={1} display="flex" flexDirection="column" alignItems="flex-end">
                   <Typography variant="overline">Total</Typography>
                   <Typography variant="h5">{util.euros(linea.buffer.pvpTotal)}</Typography>

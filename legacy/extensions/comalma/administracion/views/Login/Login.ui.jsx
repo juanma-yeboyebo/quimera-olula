@@ -38,25 +38,25 @@ function Login({ onLogin, useStyles, ...props }) {
       {!!autenticando && <div>{"Autenticando..."}</div>}
       {!autenticando && !autenticado && (
         <Grid container justify="center" className={classes.root}>
-          <Grid xs={12} className={classes.logo}>
+          <Grid size={12} className={classes.logo}>
             <img alt="Project logo" src="/img/logo_url_oscuro.png" width={mobile ? "90%" : "15%"} />
           </Grid>
-          <Grid item xs={11} sm={8} md={4} lg={3} xl={2}>
+          <Grid size={{ xs: 11, sm: 8, md: 4, lg: 3, xl: 2 }}>
             <Paper>
               <Grid container direction="column">
-                <Grid item xs className={clsx(classes.gridItems, classes.header)}>
+                <Grid size="grow" className={clsx(classes.gridItems, classes.header)}>
                   <Typography className={classes.typography} variant="h6">
                     Iniciar sesión
                   </Typography>
                 </Grid>
-                {/* <Grid item xs className={classes.gridItems}>
+                {/* <Grid size="grow" className={classes.gridItems}>
                   <Field.Text
                     id='user'
                     label='Usuario'
                     fullWidth
                     startAdornment={<Icon>personrounded</Icon>}/>
                 </Grid> */}
-                <Grid item xs className={classes.gridItems}>
+                <Grid size="grow" className={classes.gridItems}>
                   <Field.Text
                     id="email"
                     label={loginUser.label}
@@ -66,7 +66,7 @@ function Login({ onLogin, useStyles, ...props }) {
                     onKeyPress={onKeyPressed}
                   />
                 </Grid>
-                <Grid item xs className={classes.gridItems}>
+                <Grid size="grow" className={classes.gridItems}>
                   <Field.Password
                     id="pass"
                     label="Contraseña"
@@ -75,7 +75,7 @@ function Login({ onLogin, useStyles, ...props }) {
                     onKeyPress={onKeyPressed}
                   />
                 </Grid>
-                <Grid item xs={12} className={classes.gridItems}>
+                <Grid size={12} className={classes.gridItems}>
                   <Button
                     id="entrarLogin"
                     text="ENTRAR"
@@ -83,16 +83,16 @@ function Login({ onLogin, useStyles, ...props }) {
                     className={classes.loginButton}
                   />
                 </Grid>
-                <Grid item xs={12} className={classes.gridItems}>
+                <Grid size={12} className={classes.gridItems}>
                   <A href="/forgot-password">Olvidé mi contraseña</A>
                 </Grid>
                 {/* {linkPoliticaPrivacidad && (
-                  <Grid item xs={12} className={classes.gridItems}>
+                  <Grid size={12} className={classes.gridItems}>
                     <a href={linkPoliticaPrivacidad}>Política de privacidad</a>
                   </Grid>
                 )}
                 {linkTerminosCondiciones && (
-                  <Grid item xs={12} className={classes.gridItems}>
+                  <Grid size={12} className={classes.gridItems}>
                     <a href={linkTerminosCondiciones}>Condiciones del servicio</a>
                   </Grid>
                 )} */}

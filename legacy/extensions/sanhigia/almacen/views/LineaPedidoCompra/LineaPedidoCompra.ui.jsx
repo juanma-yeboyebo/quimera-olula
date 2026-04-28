@@ -57,15 +57,15 @@ function LineaPedidoCompra({
       )}
       <Collapse in={linea.buffer._status !== "deleting"}>
         <Grid container direction="column" spacing={0}>
-          <Grid container direction="column" item xs={12} spacing={1} justifyContent="flex-start" alignItems="center">
-            <Grid item xs={6}>
+          <Grid container size={12} direction="column" spacing={1} justifyContent="flex-start" alignItems="center">
+            <Grid size={6}>
               <QSection
                 title="Ubicación"
                 actionPrefix="linea/ubicacion"
                 alwaysInactive={disabled}
                 dynamicComp={() => (
                   <Grid container direction="column" spacing={1}>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                       <Ubicacion id="codUbicacionArticulo" fullWidth async />
                     </Grid>
                   </Grid>
@@ -76,7 +76,7 @@ function LineaPedidoCompra({
               </QSection>
             </Grid>
             {linea.buffer.porLotes ? (
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Box width={1} display="flex" alignItems="center" justifyContent="center">
                   <Button
                     id="irAMovilotes"
@@ -94,14 +94,14 @@ function LineaPedidoCompra({
                 </Box>
               </Grid>
             ) : (
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <QSection
                   title="Cantidad a enviar"
                   actionPrefix="linea/shCantAlbaran"
                   alwaysInactive={disabled}
                   dynamicComp={() => (
                     <Grid container direction="column" spacing={1}>
-                      <Grid item xs={12}>
+                      <Grid size={12}>
                         <Field.Schema
                           label=""
                           id="linea.buffer/shCantAlbaran"

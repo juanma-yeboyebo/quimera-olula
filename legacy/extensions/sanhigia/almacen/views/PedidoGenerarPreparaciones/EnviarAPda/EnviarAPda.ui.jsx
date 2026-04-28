@@ -45,7 +45,7 @@ function EnviarAPda({ callbackVolver, useStyles }) {
         <DialogContent>
           {status.vistaEnviarPda === "bultos" && (
             <Grid container direction="column" justifyContent="space-between">
-              <Grid item xs={12} sm={12}>
+              <Grid size={{ xs: 12, sm: 12 }}>
                 <Field.Int
                   id="pedido.buffer.canBultos"
                   label="Nº de bultos"
@@ -55,7 +55,7 @@ function EnviarAPda({ callbackVolver, useStyles }) {
                   autoFocus={true}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Field.Float
                   id="pedido.buffer.pesoBultos"
                   label="Peso de los bultos"
@@ -68,7 +68,7 @@ function EnviarAPda({ callbackVolver, useStyles }) {
           )}
           {status.vistaEnviarPda === "agencia" && (
             <Grid container direction="column" justifyContent="space-between" spacing={2}>
-              <Grid item xs={12} sm={12} md={12}>
+              <Grid size={{ xs: 12, sm: 12, md: 12 }}>
                 <AgenciasTransporte
                   id="pedido.buffer.codAgencia"
                   label="Agencia de transporte"
@@ -78,7 +78,7 @@ function EnviarAPda({ callbackVolver, useStyles }) {
                   disabled={status.enviandoPda}
                 />
               </Grid>
-              <Grid item xs={12} sm={12} md={12}>
+              <Grid size={{ xs: 12, sm: 12, md: 12 }}>
                 <TarifasAgencias
                   id="pedido.buffer.codProductoAgt"
                   label="Tarifa"
@@ -98,7 +98,7 @@ function EnviarAPda({ callbackVolver, useStyles }) {
               <CircularProgress color="white" size={40} />
             </Grid>
           ) : (
-            <Grid item container justifyContent="space-between">
+            <Grid container justifyContent="space-between">
               <Button
                 id="cancelar"
                 text="Cancelar"

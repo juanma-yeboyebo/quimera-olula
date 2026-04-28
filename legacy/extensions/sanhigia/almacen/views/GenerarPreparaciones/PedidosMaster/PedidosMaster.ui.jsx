@@ -1,6 +1,6 @@
 import { Avatar, Box, Grid, QBox, QBoxButton, QListModel } from "@quimera/comps";
-import Quimera, { PropValidation, useStateValue, useWidth } from "quimera";
-import { CircularProgress, Typography } from "@quimera/thirdparty";
+import { CircularProgress } from "@quimera/thirdparty";
+import Quimera, { useStateValue, useWidth } from "quimera";
 import { useCallback } from "react";
 
 import { ListItemPedido } from "../../../comps";

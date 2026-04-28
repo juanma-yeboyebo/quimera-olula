@@ -47,12 +47,12 @@ function StocksMaster({ useStyles }) {
               >
                 <ListItemAvatar>
                   <Grid container justify="center" spacing={1}>
-                    <Grid item xs>
+                    <Grid size="grow">
                       <Avatar className={classes.greenBox}>
                         {stocks.dict[idStock].canterminadas}
                       </Avatar>
                     </Grid>
-                    <Grid item xs>
+                    <Grid size="grow">
                       <Avatar className={classes.yellowBox}>
                         {stocks.dict[idStock].cancosidas}
                       </Avatar>

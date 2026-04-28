@@ -30,7 +30,7 @@ function FacturaDetalle({ useStyles }) {
             <Box width={1} border={0} borderColor="gray" height={"calc(100%)"}>
               <Box>
                 <Grid container spacing={1} direction="column" >
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <Field.Date
                       id={`facturas.dict.${facturas.current}.fecha`}
                       fullWidth
@@ -38,18 +38,18 @@ function FacturaDetalle({ useStyles }) {
                       disabled
                     />
                   </Grid>
-                  <Grid item xs={12} className={classes.cabecera}>
+                  <Grid size={12} className={classes.cabecera}>
                     <Typography variant="h5">Dirección de Facturación</Typography>
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <Direccion documento={facturas.dict[facturas.current]} />
                   </Grid>
 
-                  <Grid item xs={12} className={classes.cabecera}>
+                  <Grid size={12} className={classes.cabecera}>
                     <Typography variant="h5">Líneas</Typography>
                   </Grid>
 
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <List>
                       {lineas.idList?.map(idLinea => (
                         <ListItemLineaFactura key={idLinea} divider linea={lineas.dict[idLinea]} />
@@ -57,10 +57,10 @@ function FacturaDetalle({ useStyles }) {
                     </List>
                   </Grid>
 
-                  <Grid item xs={12} className={classes.cabecera}>
+                  <Grid size={12} className={classes.cabecera}>
                     <Typography variant="h5">Totales</Typography>
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <Totales
                       totales={[
                         { name: "Neto", value: facturas.dict[facturas.current].neto },

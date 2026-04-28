@@ -1,7 +1,7 @@
 import { makeStyles } from "@quimera/styles";
 import { t } from "i18next";
 import { useStateValue, util } from "quimera";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Box, Button, Collapse, Dialog, DialogTitle, Icon, Typography } from "../";
 import Popover from "./Popover";
@@ -84,7 +84,8 @@ function QSection({
   title,
   variant = "default",
   activation,
-  maxWidth = "sm",
+  // maxWidth = "sm",
+  maxWidth,
   minWidth,
   ...props
 }) {
@@ -173,16 +174,16 @@ function QSection({
         cancel?.callback
           ? () => cancel.callback()
           : () => {
-              dispatch({
-                type: `on${util.camelId(actionPrefix)}SectionCancelled`,
-                payload: { section: util.lastStateField(actionPrefix) },
-              });
-              dispatch({
-                type: `on${util.camelId(actionPrefix)}SeccionCancelada`,
-                payload: { section: util.lastStateField(actionPrefix) },
-              });
-              !alwaysActive && desactivar();
-            }
+            dispatch({
+              type: `on${util.camelId(actionPrefix)}SectionCancelled`,
+              payload: { section: util.lastStateField(actionPrefix) },
+            });
+            dispatch({
+              type: `on${util.camelId(actionPrefix)}SeccionCancelada`,
+              payload: { section: util.lastStateField(actionPrefix) },
+            });
+            !alwaysActive && desactivar();
+          }
       }
       startIcon={cancel?.icon ?? <Icon>close</Icon>}
       disabled={cancel?.disabled?.() || false}
@@ -200,21 +201,21 @@ function QSection({
         save?.callback
           ? () => save.callback()
           : () => {
-              dispatch({
-                type: `on${util.camelId(actionPrefix)}SectionAccepted`,
-                payload: {
-                  section: util.lastStateField(actionPrefix),
-                  onSuccess: () => !alwaysActive && desactivar(),
-                },
-              });
-              dispatch({
-                type: `on${util.camelId(actionPrefix)}SeccionConfirmada`,
-                payload: {
-                  section: util.lastStateField(actionPrefix),
-                  onSuccess: () => !alwaysActive && desactivar(),
-                },
-              });
-            }
+            dispatch({
+              type: `on${util.camelId(actionPrefix)}SectionAccepted`,
+              payload: {
+                section: util.lastStateField(actionPrefix),
+                onSuccess: () => !alwaysActive && desactivar(),
+              },
+            });
+            dispatch({
+              type: `on${util.camelId(actionPrefix)}SeccionConfirmada`,
+              payload: {
+                section: util.lastStateField(actionPrefix),
+                onSuccess: () => !alwaysActive && desactivar(),
+              },
+            });
+          }
       }
       startIcon={save?.icon ?? <Icon>save_alt</Icon>}
       disabled={save?.disabled?.() || (saveDisabled && saveDisabled())}
@@ -232,12 +233,12 @@ function QSection({
         close?.callback
           ? () => close.callback()
           : () => {
-              dispatch({
-                type: `on${util.camelId(actionPrefix)}SeccionCerrada`,
-                payload: { onSuccess: () => !alwaysActive && desactivar() },
-              });
-              !alwaysActive && desactivar();
-            }
+            dispatch({
+              type: `on${util.camelId(actionPrefix)}SeccionCerrada`,
+              payload: { onSuccess: () => !alwaysActive && desactivar() },
+            });
+            !alwaysActive && desactivar();
+          }
       }
       startIcon={(close?.icon || cancel?.icon) ?? <Icon>close</Icon>}
       disabled={close?.disabled?.() || false}
@@ -289,9 +290,8 @@ function QSection({
 
   return inactive && !children ? null : (
     <Box
-      className={`${clases[focusStyle][getModoActivacion()]} ${
-        estilos ? estilos[focusStyle][getModoActivacion()] : null
-      }`}
+      className={`${clases[focusStyle][getModoActivacion()]} ${estilos ? estilos[focusStyle][getModoActivacion()] : null
+        }`}
       tabIndex={0}
       mr={mr ?? 0}
       mt={mt ?? 1}

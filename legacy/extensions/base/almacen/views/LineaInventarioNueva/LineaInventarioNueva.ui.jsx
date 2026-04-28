@@ -53,7 +53,7 @@ function LineaInventarioNueva({ callbackGuardada, codInventario, useStyles }) {
           alwaysActive
           dynamicComp={() => (
             <Grid container spacing={1} direction="column" >
-              <Grid item xs={9}>
+              <Grid size={9}>
                 <QArticulo
                   id="linea.buffer/referencia"
                   label="Artículo"
@@ -61,7 +61,7 @@ function LineaInventarioNueva({ callbackGuardada, codInventario, useStyles }) {
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={3}>
+              <Grid size={3}>
                 <Field.Schema
                   id="linea.buffer/cantidad"
                   schema={schema}

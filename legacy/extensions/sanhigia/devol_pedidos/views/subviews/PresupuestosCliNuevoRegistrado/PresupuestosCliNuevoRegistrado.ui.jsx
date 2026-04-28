@@ -33,7 +33,7 @@ function PresupuestosCliNuevoRegistrado({ callback, presupuesto, tratosAgente })
         alwaysActive
         dynamicComp={() => (
           <Grid container direction="column">
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Cliente
                 id="presupuesto.buffer/codCliente"
                 label={`Cliente ${presupuesto.buffer.codCliente ?? ""}`}
@@ -43,7 +43,7 @@ function PresupuestosCliNuevoRegistrado({ callback, presupuesto, tratosAgente })
                 autoFocus
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <DirCliente
                 id="presupuesto.buffer/codDir"
                 codCliente={presupuesto.buffer.codCliente}
@@ -53,7 +53,7 @@ function PresupuestosCliNuevoRegistrado({ callback, presupuesto, tratosAgente })
               />
             </Grid>
             {dirCanaria && (
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <SelectorValores
                   id="presupuesto.buffer.regimenIva"
                   label="Origen de salida"
@@ -64,7 +64,7 @@ function PresupuestosCliNuevoRegistrado({ callback, presupuesto, tratosAgente })
                 ></SelectorValores>
               </Grid>
             )}
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Evento
                 id="presupuesto.buffer/codEvento"
                 codEvento={presupuesto.buffer.codEvento}
@@ -74,7 +74,7 @@ function PresupuestosCliNuevoRegistrado({ callback, presupuesto, tratosAgente })
               />
             </Grid>
             {!idTratoProp && (
-              <Grid item xs={12} container justifyContent="flex-end">
+              <Grid container size={12} justifyContent="flex-end">
                 <TratosPresupuesto
                   id="presupuesto.buffer/idTrato"
                   idTrato={presupuesto.buffer.idTrato}

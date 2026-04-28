@@ -36,7 +36,7 @@ function ComercioNuevo({ callbackGuardado, useStyles, ...props }) {
         alwaysActive
         dynamicComp={() => (
           <Grid container>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Field.Schema
                 id="comercio.buffer/nombre"
                 label={"Nombre"}
@@ -44,7 +44,7 @@ function ComercioNuevo({ callbackGuardado, useStyles, ...props }) {
                 autoComplete="off"
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Field.Schema
                 id="comercio.buffer/email"
                 label={"Email"}
@@ -52,7 +52,7 @@ function ComercioNuevo({ callbackGuardado, useStyles, ...props }) {
                 autoComplete="off"
               />
             </Grid>
-            <Grid item xs={mobile ? 12 : 3}>
+            <Grid size={mobile ? 12 : 3}>
               <Field.Schema
                 id="comercio.buffer/cifnif"
                 label={"CIF/NIF"}
@@ -60,16 +60,12 @@ function ComercioNuevo({ callbackGuardado, useStyles, ...props }) {
                 autoComplete="off"
               />
             </Grid>
-            <Grid item xs={mobile ? 0 : 1} />
-            <Grid
-              item
-              xs={mobile ? 12 : 3}
-              style={{
+            <Grid size={mobile ? 0 : 1} />
+            <Grid size={mobile ? 12 : 3} style={{
                 display: "flex",
                 alignItems: "flex-end",
                 paddingBottom: "4px",
-              }}
-            >
+              }}>
               <SelectorValores
                 id="comercio.buffer/tipo"
                 stateField="tipo"

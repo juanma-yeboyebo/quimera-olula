@@ -21,7 +21,7 @@ function CalendarioEventosFiltro() {
         // }}
         >
           <Grid container spacing={1} direction="column" >
-            <Grid item xs={12}>
+            <Grid size={12}>
               <EventosFieldSelect id="articuloProyectoFiltro" label="Producto" fullWidth async />
             </Grid>
           </Grid>

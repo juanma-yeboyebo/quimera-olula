@@ -218,7 +218,7 @@ function PedidoCompra({ callbackChanged, idPedido, initPedido, useStyles }) {
                 )}
 
                 <Grid container direction="column" spacing={1}>
-                  {/* <Grid item xs={12} sm={6}>
+                  {/* <Grid size={{ xs: 12, sm: 6 }}>
                     <QSection
                       title={`Trabajador asignado: ${pedido.buffer.codTrabajador || ""}`}
                       actionPrefix="pedido.buffer/codTrabajador"
@@ -233,7 +233,7 @@ function PedidoCompra({ callbackChanged, idPedido, initPedido, useStyles }) {
                   </Grid> */}
 
                   {pedido.buffer.nombre && (
-                    <Grid item xs={12} sm={12}>
+                    <Grid size={{ xs: 12, sm: 12 }}>
                       <QSection title="" actionPrefix="pedido.nombre" alwaysInactive>
                         <Box display="flex">
                           <Typography variant="h6">{pedido.buffer.nombre}</Typography>
@@ -357,7 +357,7 @@ function PedidoCompra({ callbackChanged, idPedido, initPedido, useStyles }) {
                     order="sh_codubicacionarticulo"
                     value={(linea, idx) => (
                       <Grid container direction="column" spacing={1}>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                           {/* {console.log('mimensaje_________ubicacion', linea.codUbicacionArticulo)} */}
                           <Ubicacion
                             id="linea/codUbicacionArticulo"

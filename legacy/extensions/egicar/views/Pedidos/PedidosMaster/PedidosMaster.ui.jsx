@@ -1,5 +1,5 @@
 import { Box, QBox, QListModel } from "@quimera/comps";
-import Quimera, { PropValidation, useStateValue, useWidth } from "quimera";
+import Quimera, { useStateValue, useWidth } from "quimera";
 import { useCallback } from "react";
 
 import { ListItemPedido } from "../../../comps";
@@ -29,7 +29,7 @@ function PedidosMaster({ idPedido }) {
         //   ) : (
         //     <>
         //       <QBoxButton id="nuevoParteCarro" title="Nuevo parte" icon="add_circle" />
-        //       <Badge color="primary" overlap="circle" badgeContent={contadorFiltros}>
+        //       <Badge color="primary" overlap="circular" badgeContent={contadorFiltros}>
         //         <QBoxButton id="mostrarFiltro" title="Mostrar filtro" icon="filter_alt" />
         //       </Badge>
         //     </>

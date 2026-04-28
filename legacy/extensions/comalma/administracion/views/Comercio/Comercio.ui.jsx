@@ -149,7 +149,7 @@ function Comercio({ callbackChanged, idComercio, initComercio, useStyles }) {
         >
           <Grid container>
             <QModelBox id="comercio.buffer" disabled={!editable} schema={schema}>
-              <Grid item /* justify='center' */ xs={12} sm={12} md={12}>
+              <Grid size={{ xs: 12, sm: 12, md: 12 }} * justify="center">
                 <QSection
                   title="Nombre"
                   actionPrefix="comercio.buffer/idComercio"
@@ -171,7 +171,7 @@ function Comercio({ callbackChanged, idComercio, initComercio, useStyles }) {
                   </Box>
                 </QSection>
               </Grid>
-              <Grid item /* justify='center' */ xs={12} sm={12} md={12}>
+              <Grid size={{ xs: 12, sm: 12, md: 12 }} * justify="center">
                 <QSection
                   title="Email"
                   actionPrefix="comercio.buffer/idComercio"
@@ -193,7 +193,7 @@ function Comercio({ callbackChanged, idComercio, initComercio, useStyles }) {
                   </Box>
                 </QSection>
               </Grid>
-              <Grid item container xs={12} sm={12} md={12} justifyContent="space-between">
+              <Grid container size={{ xs: 12, sm: 12, md: 12 }} justifyContent="space-between">
                 <Box width={0.45}>
                   <QSection
                     title="Tipo"
@@ -241,7 +241,7 @@ function Comercio({ callbackChanged, idComercio, initComercio, useStyles }) {
                   </QSection>
                 </Box>
               </Grid>
-              <Grid item xs={12} sm={12} md={12} container justifyContent="flex-end">
+              <Grid container size={{ xs: 12, sm: 12, md: 12 }} justifyContent="flex-end">
                 <Box mt={6}>
                   <Button
                     id="verVentasComercio"
@@ -262,7 +262,7 @@ function Comercio({ callbackChanged, idComercio, initComercio, useStyles }) {
           </Grid>
           {/* <Box>
             <Grid container spacing={1} direction="column" >
-              <Grid item xs={6} sm={6} md={3} lg={2}>
+              <Grid size={{ xs: 6, sm: 6, md: 3, lg: 2 }}>
                 <Box component="div" className={classes.mediaContainer}>
                   <div className={classes.mediaContainerTitle}>Tipo</div>
                   <div className={classes.mediaContainerValue}> {comercio.data.tipo}</div>
@@ -302,7 +302,7 @@ function Comercio({ callbackChanged, idComercio, initComercio, useStyles }) {
             <DialogContent>
               {/* <DialogContentText id="form-dialog-description">AAAAAAAA</DialogContentText> */}
               <Grid container>
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <Field.Password
                     id={"nuevoPassword"}
                     label={t(`${TR_PREFIX}campoPass1`)}
@@ -312,8 +312,8 @@ function Comercio({ callbackChanged, idComercio, initComercio, useStyles }) {
                     helperText={passwordStatus.pass1Msg}
                   />
                 </Grid>
-                {/* <Grid item xs={mobile ? 0 : 2} /> */}
-                <Grid item xs={12}>
+                {/* <Grid size={mobile ? 0 : 2} /> */}
+                <Grid size={12}>
                   <Field.Password
                     id="repeatedPassword"
                     label={t(`${TR_PREFIX}campoPass2`)}

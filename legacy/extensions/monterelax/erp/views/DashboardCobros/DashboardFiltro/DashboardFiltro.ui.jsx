@@ -10,8 +10,8 @@ function DashboardFiltro({ useStyles }) {
 
   return (
     <Quimera.Template id="DashboardFiltro">
-      <Grid container item spacing={1}>
-        <Grid item xs={12} sm={4} md={4}>
+      <Grid container spacing={1}>
+        <Grid size={{ xs: 12, sm: 4, md: 4 }}>
           <Box width={1} visibility={visibleGerencia}>
             {/* <Field.Autocomplete variant='standard' id='bufferFiltro.codagente' label='Agente' async fullWidth /> */}
             <Agente id="bufferFiltro.codagente" label="Agente" fullWidth />

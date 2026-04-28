@@ -33,6 +33,7 @@ export * from "./maestro/MaestroDetalle.tsx";
 export * from "./maestro/maestroFiltros/MaestroFiltros.tsx";
 
 export * from "./historias/historias.tsx";
+export * from "./plantilla/Cabecera.tsx";
 export * from "./plantilla/Plantilla.tsx";
 export * from "./SinDatos/SinDatos.tsx";
 export * from "./slot/Slot.tsx";

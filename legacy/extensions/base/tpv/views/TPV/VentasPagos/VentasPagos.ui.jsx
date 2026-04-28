@@ -14,7 +14,7 @@ function VentasPagos({ useStyles }) {
           <Typography variant="overline">NUEVO PAGO</Typography>
           <Grid container spacing={2}>
             {pagosBuffer.formaPago === null ? (
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Box display="flex" alignItems="center" justifyContent="space-evenly">
                   <IconButton id="pagoContado">
                     <EuroSymbolIcon className={classes.botonesPago} />
@@ -25,10 +25,10 @@ function VentasPagos({ useStyles }) {
                 </Box>
               </Grid>
             ) : (
-              <Grid item xs={12}>
-                <Grid item container spacing={2}>
-                  <Grid item xs={6}></Grid>
-                  <Grid item xs={6}>
+              <Grid size={12}>
+                <Grid container spacing={2}>
+                  <Grid size={6}></Grid>
+                  <Grid size={6}>
                     <Box display="flex" alignItems="center" justifyContent="space-between">
                       <Field.Currency
                         id="entregado"
@@ -45,8 +45,8 @@ function VentasPagos({ useStyles }) {
                   </Grid>
                 </Grid>
                 {pagosBuffer.formaPago === "CONT" && (
-                  <Grid item container spacing={2}>
-                    <Grid item xs={12}>
+                  <Grid container spacing={2}>
+                    <Grid size={12}>
                       <Box display="flex" alignItems="center" justifyContent="space-between">
                         <Typography variant="h6">
                           IMPORTE: &nbsp; {util.euros(ventasBuffer.pendiente)}
@@ -63,9 +63,9 @@ function VentasPagos({ useStyles }) {
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                       <Grid container spacing={2}>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                           <Box display="flex" alignItems="center" justifyContent="space-evenly">
                             <IconButton
                               id="001"
@@ -141,7 +141,7 @@ function VentasPagos({ useStyles }) {
                             </IconButton>
                           </Box>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                           <Box display="flex" alignItems="center" justifyContent="space-evenly">
                             <IconButton
                               id="500"
@@ -172,7 +172,7 @@ function VentasPagos({ useStyles }) {
                             </IconButton>
                           </Box>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                           <Box display="flex" alignItems="center" justifyContent="space-evenly">
                             <IconButton
                               id="5000"
@@ -218,7 +218,7 @@ function VentasPagos({ useStyles }) {
                 )}
               </Grid>
             )}
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Box display="flex" alignItems="flex-end" justifyContent="flex-end" height={1}>
                 <Button id="cancelarPago" color="secondary" text={<Icon>close</Icon>}>
                   Cancelar

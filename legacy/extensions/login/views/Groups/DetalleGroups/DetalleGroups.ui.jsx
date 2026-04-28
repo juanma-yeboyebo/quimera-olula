@@ -85,8 +85,8 @@ function DetalleGroups({ useStyles }) {
               </details>
             ))}
 
-          <Grid item container xs={12} justify="center">
-            <Grid item xs={4}>
+          <Grid container size={12} justify="center">
+            <Grid size={4}>
               <QSection
                 actionPrefix="eliminarGrupo"
                 title="Eliminar grupo"

@@ -19,7 +19,7 @@ function ConsultaUsuariosFiltro() {
           }}
         >
           <Grid container spacing={1} direction="column" >
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Field.CheckBox
                 id="soloAceptaComunicacion"
                 label="Solo usuarios que admiten marketing"

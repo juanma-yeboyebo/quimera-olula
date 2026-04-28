@@ -2,7 +2,6 @@ import { Box, Field, QListItemModel } from "@quimera/comps";
 import { makeStyles } from "@quimera/styles";
 import { Icon, ListItemAvatar, ListItemText, Typography } from "@quimera/thirdparty";
 import { useStateValue, util } from "quimera";
-import React from "react";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -38,6 +37,8 @@ function calculaColorAvatar(model) {
   else if (estado === "Pendiente" || codTrabajador) {
     colorAvatar = "cWarning";
   }
+  console.log('mimensaje_color', colorAvatar);
+
   return colorAvatar;
 }
 
@@ -66,21 +67,7 @@ function ListItemPedido({ arrayMultiCheck = [], renderAvatar, renderId, model, m
         />
       )}
       <ListItemAvatar>
-        <Icon color="primary" fontSize="large" sx={{
-          color: theme => {
-            const colorClass = calculaColorAvatar(model);
-            const colorMap = {
-              cLink: "#4478DE",
-              cPrimary: "#2D95C1",
-              cSuccess: "#449D44",
-              cWarning: "#EC971F",
-              cInfo: "yellow",
-              cDanger: "#D32F2F",
-              cNone: "lightgrey"
-            };
-            return colorMap[colorClass] || "lightgrey";
-          }
-        }}>
+        <Icon fontSize="large" className={classes[calculaColorAvatar(model)]}>
           radio_button_unchecked
         </Icon>
       </ListItemAvatar>

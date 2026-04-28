@@ -78,7 +78,7 @@ function CalendarioEventos({ useStyles }) {
         ]}
       >
         <Grid container alignItems="center" style={{ marginBottom: "10px" }}>
-          <Grid container item xs={2} justify="flex-start">
+          <Grid container size={2} justify="flex-start">
             <Button
               id="cambiarModo"
               text={`Modo ${modo === "mes" ? "año" : "mes"}`}
@@ -86,7 +86,7 @@ function CalendarioEventos({ useStyles }) {
               color="primary"
             />
           </Grid>
-          <Grid item xs={8} container alignItems="center" justify="center">
+          <Grid container size={8} alignItems="center" justify="center">
             <IconButton
               id="cambiarIntervaloSiguiente"
               onClick={() =>
@@ -115,7 +115,7 @@ function CalendarioEventos({ useStyles }) {
               <Icon fontSize="large">navigate_next</Icon>
             </IconButton>
           </Grid>
-          <Grid container item xs={2} justify="flex-end">
+          <Grid container size={2} justify="flex-end">
             <Button id="hoy" text={"Hoy"} variant="outlined" color="primary" />
           </Grid>
         </Grid>
@@ -136,12 +136,7 @@ function CalendarioEventos({ useStyles }) {
                   <Box width="100%" style={{ borderRight: "1px solid lightgrey" }}>
                     <Grid container>
                       {diasSemana.map((nombreDia, index) => (
-                        <Grid
-                          style={{ width: "14.2857%" }}
-                          key={`${nombreDia}-${index}`}
-                          justify="center"
-                          item
-                        >
+                        <Grid style={{ width: "14.2857%" }} key={`${nombreDia}-${index}`} justify="center">
                           {
                             <Box
                               width={1}
@@ -160,13 +155,9 @@ function CalendarioEventos({ useStyles }) {
                       <Grid key={`${indexSemana}semana`} container>
                         {semana.map((dia, indexDia) =>
                           dia.ocultar ? null : (
-                            <Grid
-                              className={
+                            <Grid className={
                                 dia?.objetosDia?.length > 0 ? "cajaDiaConDatos" : "cajaDia"
-                              }
-                              item
-                              key={`${indexDia}-${dia.fecha}diasDeSemana`}
-                            >
+                              } key={`${indexDia}-${dia.fecha}diasDeSemana`}>
                               <Box
                                 minWidth={1}
                                 display="flex"

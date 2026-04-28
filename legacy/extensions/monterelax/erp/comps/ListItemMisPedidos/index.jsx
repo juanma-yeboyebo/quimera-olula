@@ -21,7 +21,7 @@ function ListItemMisPedidos({ renderAvatar, pedido, selected = false, funSeconda
   return (
     <ListItem className={selected ? classes.cardSelected : classes.card} {...props} disableGutters>
       <ListItemAvatar>
-        <Badge invisible={!pedido.reclamado} color="primary" overlap="circle" badgeContent="R">
+        <Badge invisible={!pedido.reclamado} color="primary" overlap="circular" badgeContent="R">
           {renderAvatar ? renderAvatar() : null}
         </Badge>
       </ListItemAvatar>

@@ -76,7 +76,7 @@ function EnviarAlbaranFirmaExterna({
       </Box>
       <Box m={2}>
         <Grid container direction="row" spacing={1}>
-          <Grid item xs={12} sm={12}>
+          <Grid size={{ xs: 12, sm: 12 }}>
             <Contacto
               id="mandarPuestoFirmaData.codContacto"
               codcliente={albaran.codCliente}
@@ -85,7 +85,7 @@ function EnviarAlbaranFirmaExterna({
               pl={4}
             />
           </Grid>
-          <Grid item xs={8} sm={8}>
+          <Grid size={{ xs: 8, sm: 8 }}>
             <Field.Text
               id="mandarPuestoFirmaData.firmadopor"
               label="Firmado por"
@@ -93,16 +93,16 @@ function EnviarAlbaranFirmaExterna({
               disabled={bloqueado()}
             />
           </Grid>
-          <Grid item xs={4} sm={4}>
+          <Grid size={{ xs: 4, sm: 4 }}>
             <Field.Text id="mandarPuestoFirmaData.cifnif" label="DNI" disabled={bloqueado()} />
           </Grid>
-          <Grid item xs={6} sm={6}>
+          <Grid size={{ xs: 6, sm: 6 }}>
             <Field.Date id="mandarPuestoFirmaData.fecha" label="Fecha" disabled={bloqueado()} />
           </Grid>
-          <Grid item xs={6} sm={6}>
+          <Grid size={{ xs: 6, sm: 6 }}>
             <Field.Time id="mandarPuestoFirmaData.hora" label="Hora" disabled={bloqueado()} />
           </Grid>
-          <Grid item xs={12} sm={12}>
+          <Grid size={{ xs: 12, sm: 12 }}>
             <Field.TextArea
               id="mandarPuestoFirmaData.observacionesfirma"
               label="Observaciones"

@@ -28,7 +28,7 @@ function ListItemShPreparacionDePedidos({ renderAvatar, model, modelName, select
   return (
     <QListItemModel modelName={modelName} model={model} selected={selected}>
       <ListItemAvatar color="primary">
-        <Avatar className={estadoActivo}>{""}</Avatar>
+        <Avatar className={estadoActivo}>{" "}</Avatar>
       </ListItemAvatar>
       <ListItemText
         disableTypography

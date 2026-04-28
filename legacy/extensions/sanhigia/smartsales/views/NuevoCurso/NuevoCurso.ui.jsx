@@ -31,7 +31,7 @@ function NuevoCurso({ callbackCerrado, codCliente = false }) {
         alwaysActive
         dynamicComp={() => (
           <Grid container>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Field.Schema
                 id="curso.buffer/nombre"
                 label="Nombre"
@@ -39,10 +39,10 @@ function NuevoCurso({ callbackCerrado, codCliente = false }) {
                 autoComplete="off"
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Cliente id="curso.buffer.codCliente" label="Cliente" fullWidth async />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <DirCliente
                 id="curso.buffer/codDir"
                 codCliente={curso.buffer.codCliente}
@@ -50,11 +50,11 @@ function NuevoCurso({ callbackCerrado, codCliente = false }) {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Agente id="curso.buffer/codAgente" label="Responsable" fullWidth async />
             </Grid>
-            <Grid container item xs={12} >
-              <Grid item xs={6}>
+            <Grid container size={12}>
+              <Grid size={6}>
                 <Field.Date
                   id="curso.buffer/fechaIni"
                   label="Fecha Inicio"
@@ -62,14 +62,14 @@ function NuevoCurso({ callbackCerrado, codCliente = false }) {
                   autoComplete="off"
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Box pl={12}>
                   <Field.Time id="curso.buffer/horaIni" label="Hora Inicio" />
                 </Box>
               </Grid>
             </Grid>
-            <Grid container item xs={12} >
-              <Grid item xs={6}>
+            <Grid container size={12}>
+              <Grid size={6}>
                 <Field.Date
                   id="curso.buffer/fechaFin"
                   label="Fecha Fin"
@@ -77,7 +77,7 @@ function NuevoCurso({ callbackCerrado, codCliente = false }) {
                   autoComplete="off"
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Box pl={12}>
                   <Field.Time id="curso.buffer/horaFin" label="Hora Fin" />
                 </Box>

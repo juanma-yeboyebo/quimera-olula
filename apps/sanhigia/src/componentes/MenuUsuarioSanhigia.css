@@ -1,0 +1,12 @@
+.menu-usuario-sanhigia {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-fondo);
+}
+
+.usuario-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+}

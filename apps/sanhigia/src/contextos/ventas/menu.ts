@@ -1,12 +1,7 @@
-
 export const menuVentas = {
-    "Albaranes": { icono: "fichero" },
-    "Albaranes/Firmar albaranes": { url: "/albaranesVenta", regla: "ventas.albaran.firmaalbaranes" },
-    "Albaranes/Cambiar Puesto de Firma": { url: "/puestoFirma", regla: "ventas.albaran.firmapuesto" },
-    "Albaranes/Firmar Puesto": { url: "/albaranesPuesto", regla: "ventas.albaran.firmapuesto" },
-    "Ventas": { icono: "fichero" },
-    "Ventas/Pedidos": { url: "/ventas/pedidos", regla: "ventas.pedido.leer" },
-    "Ventas/Presupuestos": { url: "/ventas/presupuestos", regla: "ventas.presupuesto.leer" },
-    "Ventas/Albaranes": { url: "/ventas/albaranes", regla: "ventas.albaran.leer" },
-    "Ventas/Facturas": { url: "/ventas/facturas", regla: "ventas.factura.leer" },
+    "Pedidos": { icono: "fichero" },
+    "Pedidos/Presupuestos": { url: "/ventas/presupuestos", regla: "presupuestoscli" },
+    "Pedidos/Pedidos": { url: "/ventas/pedidos", regla: "pedidoscli" },
+    "Pedidos/Devoluciones": { url: "/DevolucionesPedidos", regla: "pedidoscli" },
+    "Pedidos/Previsión de compras": { url: "/prevision-compras", regla: "OnlyAdmin:visit" },
 };

@@ -137,7 +137,7 @@ function Incidencia({ callbackChanged, initIncidencia, codIncidencia, useStyles 
             alwaysInactive={!editable}
             dynamicComp={() => (
               <Grid container spacing={1} direction="column" >
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <Cliente
                     id="incidencia.buffer.codCliente"
                     label={`Cliente ${incidencia.buffer.codCliente ?? ""}`}
@@ -158,7 +158,7 @@ function Incidencia({ callbackChanged, initIncidencia, codIncidencia, useStyles 
             alwaysInactive={!editable}
             dynamicComp={() => (
               <Grid container spacing={1} direction="column" >
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <QArticulo
                     id="incidencia.buffer.referencia"
                     label="Artículo"
@@ -167,7 +167,7 @@ function Incidencia({ callbackChanged, initIncidencia, codIncidencia, useStyles 
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <Quimera.Block id="afterDescripcion" />
                 </Grid>
               </Grid>
@@ -237,7 +237,7 @@ function Incidencia({ callbackChanged, initIncidencia, codIncidencia, useStyles 
                       saveDisabled={() => !incidencia?.buffer.codDirCli}
                       dynamicComp={() => (
                         <Grid container>
-                          <Grid item xs={12}>
+                          <Grid size={12}>
                             <DirCliente
                               id="codDirCli"
                               codCliente={incidencia?.buffer.codCliente}
@@ -248,7 +248,7 @@ function Incidencia({ callbackChanged, initIncidencia, codIncidencia, useStyles 
                             />
                           </Grid>
                           {dirCanaria && (
-                            <Grid item xs={12}>
+                            <Grid size={12}>
                               <SelectorValores
                                 id="regimenIva"
                                 label="Origen de salida"

@@ -54,7 +54,7 @@ function NuevoContactoMD({ callbackCerrado, codCliente = false }) {
         alwaysActive
         dynamicComp={() => (
           <Grid container>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Field.Schema
                 id="contacto.buffer/nombre"
                 label="Nombre"
@@ -62,7 +62,7 @@ function NuevoContactoMD({ callbackCerrado, codCliente = false }) {
                 autoComplete="off"
               />
             </Grid>
-            <Grid item xs={8}>
+            <Grid size={8}>
               <Field.Schema
                 id="contacto.buffer/email"
                 label="Email"
@@ -96,8 +96,8 @@ function NuevoContactoMD({ callbackCerrado, codCliente = false }) {
                 </Box>
               )}
             </Grid>
-            <Grid item xs={1} />
-            <Grid item xs={3}>
+            <Grid size={1} />
+            <Grid size={3}>
               <Field.Schema
                 id="contacto.buffer/telefono"
                 label="Teléfono"
@@ -105,8 +105,8 @@ function NuevoContactoMD({ callbackCerrado, codCliente = false }) {
                 autoComplete="off"
               />
             </Grid>
-            <Grid item xs={8} />
-            <Grid item xs={9}>
+            <Grid size={8} />
+            <Grid size={9}>
               <Field.Schema
                 id="contacto.buffer/direccion"
                 label="Dirección"
@@ -114,8 +114,8 @@ function NuevoContactoMD({ callbackCerrado, codCliente = false }) {
                 autoComplete="off"
               />
             </Grid>
-            <Grid item xs={1} />
-            <Grid item xs={2}>
+            <Grid size={1} />
+            <Grid size={2}>
               <Field.Schema
                 id="contacto.buffer/codPostal"
                 label="Código postal"
@@ -123,7 +123,7 @@ function NuevoContactoMD({ callbackCerrado, codCliente = false }) {
                 autoComplete="off"
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Cliente id="contacto.buffer.cliente" label="Cliente" fullWidth async />
             </Grid>
           </Grid>

@@ -10,7 +10,7 @@ import {
   Table,
   Typography,
 } from "@quimera/comps";
-import Quimera, { getSchemas, PropValidation, useStateValue } from "quimera";
+import Quimera, { getSchemas, useStateValue } from "quimera";
 
 import { Almacen, Proveedor } from "../../comps";
 
@@ -20,7 +20,7 @@ const TableRow = ({ index: idx, rowData = [], style, schema, isHeader = false })
     <DataRow key={rowData["idArticuloProv"]} style={style} index={idx}>
       <Column.Selection
         id="selection"
-        flexBasis={30}
+        flexBasis={32}
         data={rowData}
         isHeader={isHeader}
         index={idx}
@@ -29,28 +29,28 @@ const TableRow = ({ index: idx, rowData = [], style, schema, isHeader = false })
           header="Proveedor"
           schema={schema}
           id="nombreProveedor"
-          flexBasis={150}
+          flexBasis={162}
           data={rowData}
           isHeader={isHeader}
         /> */}
       <Column.Schema
         schema={schema}
         id="referencia"
-        flexBasis={80}
+        flexBasis={86}
         data={rowData}
         isHeader={isHeader}
       />
       <Column.Schema
         schema={schema}
         id="descripcion"
-        flexBasis={225}
+        flexBasis={243}
         data={rowData}
         isHeader={isHeader}
       />
       <Column.Action
         id="aPedir"
         header="A Pedir"
-        flexBasis={65}
+        flexBasis={70}
         index={idx}
         value={_ => <Field.Int id="aPedir" index={idx} value={rowData.aPedir ?? 0} />}
         data={rowData}
@@ -59,125 +59,125 @@ const TableRow = ({ index: idx, rowData = [], style, schema, isHeader = false })
       <Column.Schema
         schema={schema}
         id="consumoMensualIA"
-        flexBasis={50}
+        flexBasis={54}
         data={rowData}
         isHeader={isHeader}
       />
       <Column.Schema
         schema={schema}
         id="diasServicioIA"
-        flexBasis={50}
+        flexBasis={54}
         data={rowData}
         isHeader={isHeader}
       />
       <Column.Schema
         schema={schema}
         id="factorSeguridadIA"
-        flexBasis={50}
+        flexBasis={54}
         data={rowData}
         isHeader={isHeader}
       />
       <Column.Schema
         schema={schema}
         id="aPedirIA"
-        flexBasis={50}
+        flexBasis={54}
         data={rowData}
         isHeader={isHeader}
       />
       <Column.Schema
         schema={schema}
         id="requiereEmbalajes"
-        flexBasis={45}
+        flexBasis={49}
         data={rowData}
         isHeader={isHeader}
       />
       <Column.Schema
         schema={schema}
         id="uniEmbalaje"
-        flexBasis={40}
+        flexBasis={43}
         data={rowData}
         isHeader={isHeader}
       />
-      <Column.Schema schema={schema} id="tT1" flexBasis={60} data={rowData} isHeader={isHeader} />
-      <Column.Schema schema={schema} id="tT2" flexBasis={60} data={rowData} isHeader={isHeader} />
-      <Column.Schema schema={schema} id="tT3" flexBasis={60} data={rowData} isHeader={isHeader} />
-      <Column.Schema schema={schema} id="tT4" flexBasis={60} data={rowData} isHeader={isHeader} />
+      <Column.Schema schema={schema} id="tT1" flexBasis={65} data={rowData} isHeader={isHeader} />
+      <Column.Schema schema={schema} id="tT2" flexBasis={65} data={rowData} isHeader={isHeader} />
+      <Column.Schema schema={schema} id="tT3" flexBasis={65} data={rowData} isHeader={isHeader} />
+      <Column.Schema schema={schema} id="tT4" flexBasis={65} data={rowData} isHeader={isHeader} />
       <Column.Schema
         schema={schema}
         id="tTotal"
-        flexBasis={75}
+        flexBasis={81}
         data={rowData}
         isHeader={isHeader}
       />
       <Column.Schema
         schema={schema}
         id="enStock"
-        flexBasis={60}
+        flexBasis={65}
         data={rowData}
         isHeader={isHeader}
       />
       <Column.Schema
         schema={schema}
         id="reservada"
-        flexBasis={60}
+        flexBasis={65}
         data={rowData}
         isHeader={isHeader}
       />
       <Column.Schema
         schema={schema}
         id="pteRecibir"
-        flexBasis={60}
+        flexBasis={65}
         data={rowData}
         isHeader={isHeader}
       />
       <Column.Schema
         schema={schema}
         id="diasServicio"
-        flexBasis={50}
+        flexBasis={54}
         data={rowData}
         isHeader={isHeader}
       />
       <Column.Schema
         schema={schema}
         id="stockMin"
-        flexBasis={50}
+        flexBasis={54}
         data={rowData}
         isHeader={isHeader}
       />
       <Column.Schema
         schema={schema}
         id="stockMax"
-        flexBasis={50}
+        flexBasis={54}
         data={rowData}
         isHeader={isHeader}
       />
       <Column.Schema
         schema={schema}
         id="stockSeg"
-        flexBasis={50}
+        flexBasis={54}
         data={rowData}
         isHeader={isHeader}
       />
-      <Column.Schema schema={schema} id="coste" flexBasis={60} data={rowData} isHeader={isHeader} />
-      <Column.Schema schema={schema} id="dto" flexBasis={50} data={rowData} isHeader={isHeader} />
+      <Column.Schema schema={schema} id="coste" flexBasis={65} data={rowData} isHeader={isHeader} />
+      <Column.Schema schema={schema} id="dto" flexBasis={54} data={rowData} isHeader={isHeader} />
       <Column.Schema
         schema={schema}
         id="personalizado"
-        flexBasis={45}
+        flexBasis={49}
         data={rowData}
         isHeader={isHeader}
       />
       <Column.Schema
         schema={schema}
         id="consumoMensual"
-        flexBasis={60}
+        flexBasis={65}
         data={rowData}
         isHeader={isHeader}
       />
       <Column.Schema
         schema={schema}
         id="ultCantEnt"
-        flexBasis={60}
+        flexBasis={65}
         data={rowData}
         isHeader={isHeader}
       />
@@ -307,8 +307,8 @@ function PrevisionCompras() {
         RowRenderer={TableRow}
         page={currentPage}
         rows={pageRows}
-        // onChange={onAPedirChanged}
-        // orderColumn={pedidos.order}
+      // onChange={onAPedirChanged}
+      // orderColumn={pedidos.order}
       ></Table>
       {paginationBox}
     </Box>

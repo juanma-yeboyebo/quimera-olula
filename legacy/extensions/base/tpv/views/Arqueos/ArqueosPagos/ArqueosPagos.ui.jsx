@@ -17,7 +17,7 @@ function ArqueosPagos({ useStyles }) {
   return (
     <Quimera.Template id="ArqueosPagos">
       <Grid container spacing={0} direction="column">
-        <Grid item xs={12}>
+        <Grid size={12}>
           {pagos.idList.length > 0 ? (
             <List>
               {pagos.idList.map(pago => (

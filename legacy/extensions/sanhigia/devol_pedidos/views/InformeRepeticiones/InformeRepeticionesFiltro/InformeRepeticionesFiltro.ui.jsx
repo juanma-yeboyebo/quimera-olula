@@ -1,8 +1,7 @@
+import { QArticulo } from "@quimera-extension/base-almacen";
 import { Field, Grid } from "@quimera/comps";
 import { Box } from "@quimera/thirdparty";
-import { QArticulo } from "@quimera-extension/base-almacen";
-import Quimera, { PropValidation } from "quimera";
-import React from "react";
+import Quimera from "quimera";
 
 import initialData from "../initial-data";
 
@@ -12,13 +11,13 @@ function InformeRepeticionesFiltro({ useStyles }) {
 
   return (
     <Quimera.Template id="InformeRepeticionesFiltro">
-      <Grid container direction="column" item spacing={1}>
-        <Grid item xs={12} sm={3} md={3}>
+      <Grid container spacing={1}>
+        <Grid size={{ xs: 12, sm: 3, md: 3 }} >
           <Box width={1} border={0}>
             <QArticulo id="referencia" label="Referencia" fullWidth />
           </Box>
         </Grid>
-        <Grid item xs={12} sm={2} md={2}>
+        <Grid size={{ xs: 12, sm: 2, md: 2 }}>
           <Box width={1} border={0}>
             <Field.Select
               id="intervaloFecha"
@@ -28,7 +27,7 @@ function InformeRepeticionesFiltro({ useStyles }) {
             />
           </Box>
         </Grid>
-        <Grid item xs={6} sm={5} md={5}>
+        <Grid size={{ xs: 6, sm: 5, md: 5 }}>
           <Field.Date
             id="fechaDesde"
             field="fechaDesde"
@@ -36,7 +35,7 @@ function InformeRepeticionesFiltro({ useStyles }) {
             className={classes.field}
           />
         </Grid>
-        <Grid item xs={6} sm={5} md={5}>
+        <Grid size={{ xs: 6, sm: 5, md: 5 }}>
           <Field.Date
             id="fechaHasta"
             field="fechaHasta"
@@ -44,7 +43,7 @@ function InformeRepeticionesFiltro({ useStyles }) {
             className={classes.field}
           />
         </Grid>
-        <Grid item xs={6} sm={2} md={2}>
+        <Grid size={{ xs: 6, sm: 2, md: 2 }}>
           <Field.Int id="intervaloDias" label="Intervalo días" />
         </Grid>
       </Grid>

@@ -50,7 +50,7 @@ function PedidosCliNuevo({
         alwaysActive
         dynamicComp={() => (
           <Grid container direction="column">
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Cliente
                 id="pedido.buffer/codCliente"
                 label={`Cliente ${pedido.buffer.codCliente ?? ""}`}
@@ -60,7 +60,7 @@ function PedidosCliNuevo({
                 autoFocus
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <DirCliente
                 id="pedido.buffer/codDir"
                 codCliente={pedido.buffer.codCliente}
@@ -70,7 +70,7 @@ function PedidosCliNuevo({
               />
             </Grid>
             {dirCanaria && (
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <SelectorValores
                   id="pedido.buffer.regimenIva"
                   label="Origen de salida"
@@ -81,7 +81,7 @@ function PedidosCliNuevo({
                 ></SelectorValores>
               </Grid>
             )}
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Evento
                 id="pedido.buffer/codEvento"
                 codEvento={pedido.buffer.codEvento}

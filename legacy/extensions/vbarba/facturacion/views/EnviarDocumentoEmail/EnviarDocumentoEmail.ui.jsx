@@ -49,12 +49,12 @@ function EnviarDocumentoEmail({
           onDragStart={result => dispatch({ type: "handleDragStart", payload: { result } })}
         >
           <Grid container direction="column" spacing={2}>
-            <Grid item xs={6}>
+            <Grid size={6}>
               <Box>
                 <Quimera.SubView id="EnviarDocumentoEmail/EmailsDisponibles" />
               </Box>
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={6}>
               <Box mb={1}>
                 <Typography variant="h6" align="center">
                   Listas de remitentes:

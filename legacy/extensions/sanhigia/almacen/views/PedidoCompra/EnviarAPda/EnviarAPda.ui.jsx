@@ -42,7 +42,7 @@ function EnviarAPda({ callbackVolver, useStyles }) {
         </DialogTitle>
         <DialogContent>
           <Grid container direction="column" justifyContent="space-between">
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Field.Int
                 id="pedido.buffer.canBultos"
                 label="Nº de bultos"
@@ -51,7 +51,7 @@ function EnviarAPda({ callbackVolver, useStyles }) {
                 autoFocus={true}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Field.Float
                 id="pedido.buffer.pesoBultos"
                 label="Peso de los bultos"
@@ -59,7 +59,7 @@ function EnviarAPda({ callbackVolver, useStyles }) {
               // startAdornment={<Icon>{loginUser.icon}</Icon>}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <AgenciasTransporte
                 id="pedido.buffer.codAgencia"
                 label="Agencia de transporte"
@@ -67,7 +67,7 @@ function EnviarAPda({ callbackVolver, useStyles }) {
                 async
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <TarifasAgencias
                 id="pedido.buffer.codProductoAgt"
                 label="Tarifa"
@@ -79,7 +79,7 @@ function EnviarAPda({ callbackVolver, useStyles }) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Grid item container justifyContent="space-between">
+          <Grid container justifyContent="space-between">
             <Button
               id="cancelar"
               text="Cancelar"

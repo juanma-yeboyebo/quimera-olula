@@ -1,7 +1,7 @@
-import { Box, Button, Field, Grid, Icon, QBox } from "@quimera/comps";
 import { Agente } from "@quimera-extension/base-ventas";
-import Quimera, { PropValidation, useStateValue } from "quimera";
-import React, { useEffect } from "react";
+import { Box, Button, Field, Grid, Icon, QBox } from "@quimera/comps";
+import Quimera, { useStateValue } from "quimera";
+import { useEffect } from "react";
 
 import initialData from "./initial-data";
 
@@ -30,13 +30,13 @@ function InformePedidosXAgente({ useStyles }) {
         titulo={`Pedidos por agente`}
         botonesCabecera={[{ icon: "close", id: "atras", text: "Atrás" }]}
       >
-        <Grid container direction="column" item spacing={1}>
-          <Grid item xs={12}>
+        <Grid container direction="column" spacing={1}>
+          <Grid size={12}>
             <Box width={1} border={0}>
               <Agente id="filtro.idAgente" label="Agente" fullWidth />
             </Box>
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Box width={1} border={0}>
               <Field.Select
                 id="filtro.intervaloFecha"
@@ -46,14 +46,17 @@ function InformePedidosXAgente({ useStyles }) {
               />
             </Box>
           </Grid>
-          <Grid item xs={6}>
-            <Field.Date id="filtro.fechaDesde" label="Fecha desde" className={classes.field} />
+          <Grid container spacing={1}>
+            <Grid size={6}>
+              <Field.Date id="filtro.fechaDesde" label="Fecha desde" className={classes.field} />
+            </Grid>
+            <Grid size={6}>
+              <Field.Date id="filtro.fechaHasta" label="Fecha hasta" className={classes.field} />
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            <Field.Date id="filtro.fechaHasta" label="Fecha hasta" className={classes.field} />
-          </Grid>
+
         </Grid>
-        <Box display="flex" justifyContent="space-around" mt={1}>
+        <Box display="flex" justifyContent="space-around" mt={2}>
           <Button
             id="cargarDatos"
             text="Descargar"

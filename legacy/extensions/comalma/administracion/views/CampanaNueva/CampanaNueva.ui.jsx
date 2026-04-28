@@ -30,7 +30,7 @@ function CampanaNueva({ callbackGuardado, useStyles, ...props }) {
         alwaysActive
         dynamicComp={() => (
           <Grid container>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Field.Schema
                 id="campana.buffer/nombre"
                 label="Nombre"
@@ -38,7 +38,7 @@ function CampanaNueva({ callbackGuardado, useStyles, ...props }) {
                 autoComplete="off"
               />
             </Grid>
-            <Grid item xs={mobile ? 12 : 4}>
+            <Grid size={mobile ? 12 : 4}>
               <Field.Date
                 id="campana.buffer/fechaInicio"
                 label="Fecha inicio"
@@ -46,7 +46,7 @@ function CampanaNueva({ callbackGuardado, useStyles, ...props }) {
                 autoComplete="off"
               />
             </Grid>
-            {/* <Grid item xs={12}>
+            {/* <Grid size={12}>
               <Field.Currency
                 id="campana.buffer/topeConsumidorComercio"
                 label="Tope consumidor comercio"

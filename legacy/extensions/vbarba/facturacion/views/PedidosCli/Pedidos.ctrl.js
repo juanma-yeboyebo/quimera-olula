@@ -16,6 +16,15 @@ export const bunch = parent => {
   const parentConShortCuts = {
     ...parent,
     ...shortcutsBunch(data.shortcuts),
+    onGenerarPedidoProvError: [
+      {
+        type: "showMessage",
+        plug: ({ response }) => ({
+          mensaje: response,
+          tipoMensaje: "error",
+        }),
+      },
+    ],
   };
 
   return {

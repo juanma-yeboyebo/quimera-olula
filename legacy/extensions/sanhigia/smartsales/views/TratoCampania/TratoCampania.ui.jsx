@@ -462,70 +462,70 @@ function TratoCampania({ idTrato, idCampania, refreshCallback, deletedCallback }
                 Eliga entre los datos importados y los datos almacenados en la base de datos.
               </DialogContentText>
               <DialogContent dividers={true}>
-                <Grid item xs={12} container>
-                  <Grid item xs={12} container alignItems="center">
-                    <Grid item xs={4} container justifyContent="space-between">
+                <Grid container size={12}>
+                  <Grid container size={12} alignItems="center">
+                    <Grid container size={4} justifyContent="space-between">
                       <Typography variant="subtitle1">Nombre</Typography>
                     </Grid>
-                    <Grid item xs={4} container justifyContent="center">
+                    <Grid container size={4} justifyContent="center">
                       <Typography variant="subtitle2">
                         <strong>{contactosPorCampania.nombre}</strong>
                       </Typography>
                     </Grid>
-                    <Grid item xs={4} container justifyContent="center">
+                    <Grid container size={4} justifyContent="center">
                       <Typography variant="subtitle2">
                         <strong>{contactoTrato.nombre}</strong>
                       </Typography>
                     </Grid>
                   </Grid>
-                  <Grid item xs={12} container alignItems="center">
-                    <Grid item xs={4} container justifyContent="space-between">
+                  <Grid container size={12} alignItems="center">
+                    <Grid container size={4} justifyContent="space-between">
                       <Typography variant="subtitle1">Teléfono</Typography>
                     </Grid>
-                    <Grid item xs={4} container justifyContent="center">
+                    <Grid container size={4} justifyContent="center">
                       <Typography variant="subtitle2">
                         <strong>{contactosPorCampania.telefono}</strong>
                       </Typography>
                     </Grid>
-                    <Grid item xs={4} container justifyContent="center">
+                    <Grid container size={4} justifyContent="center">
                       <Typography variant="subtitle2">
                         <strong>{contactoTrato.telefono}</strong>
                       </Typography>
                     </Grid>
                   </Grid>
-                  <Grid item xs={12} container alignItems="center">
-                    <Grid item xs={4} container justifyContent="space-between">
+                  <Grid container size={12} alignItems="center">
+                    <Grid container size={4} justifyContent="space-between">
                       <Typography variant="subtitle1">Ciudad</Typography>
                     </Grid>
-                    <Grid item xs={4} container justifyContent="center">
+                    <Grid container size={4} justifyContent="center">
                       <Typography variant="subtitle2">
                         <strong>{contactosPorCampania.ciudad}</strong>
                       </Typography>
                     </Grid>
-                    <Grid item xs={4} container justifyContent="center">
+                    <Grid container size={4} justifyContent="center">
                       <Typography variant="subtitle2">
                         <strong>{contactoTrato.ciudad}</strong>
                       </Typography>
                     </Grid>
                   </Grid>
-                  <Grid item xs={12} container alignItems="center">
-                    <Grid item xs={4} container justifyContent="space-between">
+                  <Grid container size={12} alignItems="center">
+                    <Grid container size={4} justifyContent="space-between">
                       <Typography variant="subtitle1">Cod. postal</Typography>
                     </Grid>
-                    <Grid item xs={4} container justifyContent="center">
+                    <Grid container size={4} justifyContent="center">
                       <Typography variant="subtitle2">
                         <strong>{contactosPorCampania.codPostal}</strong>
                       </Typography>
                     </Grid>
-                    <Grid item xs={4} container justifyContent="center">
+                    <Grid container size={4} justifyContent="center">
                       <Typography variant="subtitle2">
                         <strong>{contactoTrato.codPostal}</strong>
                       </Typography>
                     </Grid>
                   </Grid>
-                  <Grid item xs={12} container alignItems="center">
-                    <Grid item xs={4} />
-                    <Grid item xs={4} container justifyContent="center">
+                  <Grid container size={12} alignItems="center">
+                    <Grid size={4} />
+                    <Grid container size={4} justifyContent="center">
                       <Button
                         id="confirmarDatosImportados"
                         text="Datos importados"
@@ -533,7 +533,7 @@ function TratoCampania({ idTrato, idCampania, refreshCallback, deletedCallback }
                         color="primary"
                       />
                     </Grid>
-                    <Grid item xs={4} container justifyContent="center">
+                    <Grid container size={4} justifyContent="center">
                       <Button
                         id="confirmarDatosBBDD"
                         text="Datos almacenados"

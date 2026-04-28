@@ -1,8 +1,8 @@
-import { Box, Button, Field, Grid, Icon, QBox } from "@quimera/comps";
 import { Agente } from "@quimera-extension/base-ventas";
 import { TipoTrato } from "@quimera-extension/sanhigia-smartsales";
-import Quimera, { PropValidation, useStateValue } from "quimera";
-import React, { useEffect } from "react";
+import { Box, Button, Field, Grid, Icon, QBox } from "@quimera/comps";
+import Quimera, { useStateValue } from "quimera";
+import { useEffect } from "react";
 
 import initialData from "./initial-data";
 
@@ -27,11 +27,11 @@ function InformeTratosAgente({ useStyles }) {
         titulo={`Tratos por agente`}
         botonesCabecera={[{ icon: "close", id: "atras", text: "Atrás" }]}
       >
-        <Grid container direction="column" item spacing={1}>
-          <Grid item xs={12}>
+        <Grid container direction="column" spacing={1}>
+          <Grid size={12}>
             <Agente id="filtro.codAgente" label="Agente" fullWidth />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Field.Select
               id="filtro.intervaloFecha"
               label="Intervalo"
@@ -39,21 +39,23 @@ function InformeTratosAgente({ useStyles }) {
               fullWidth
             />
           </Grid>
-          <Grid item xs={6}>
-            <Field.Date
-              id="filtro.fechaDesde"
-              label="Fecha trato desde"
-              className={classes.field}
-            />
+          <Grid container spacing={1}>
+            <Grid size={6}>
+              <Field.Date
+                id="filtro.fechaDesde"
+                label="Fecha trato desde"
+                className={classes.field}
+              />
+            </Grid>
+            <Grid size={6}>
+              <Field.Date
+                id="filtro.fechaHasta"
+                label="Fecha trato hasta"
+                className={classes.field}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            <Field.Date
-              id="filtro.fechaHasta"
-              label="Fecha trato hasta"
-              className={classes.field}
-            />
-          </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Field.Select
               id="filtro.estado"
               label="Estado"
@@ -61,7 +63,7 @@ function InformeTratosAgente({ useStyles }) {
               fullWidth
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <TipoTrato
               id="filtro.idTipotrato"
               label="TipoTrato"

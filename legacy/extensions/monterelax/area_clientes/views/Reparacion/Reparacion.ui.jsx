@@ -68,7 +68,7 @@ function Reparacion({ callbackChanged, initReparacion, useStyles }) {
         sideButtons={<></>}
       >
         <Grid container spacing={0} direction="column">
-          {/* <Grid item xs={12} sm={12}>
+          {/* <Grid size={{ xs: 12, sm: 12 }}>
             <QSection
               title={`Nombre Reparacion`}
               actionPrefix="reparacion.buffer/nombre"
@@ -81,7 +81,7 @@ function Reparacion({ callbackChanged, initReparacion, useStyles }) {
               </Box>
             </QSection>
           </Grid> */}
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <QSection title="Estado" actionPrefix="reparacion.estado" alwaysInactive>
               <Box display="flex">
                 <Typography variant="body2">
@@ -90,7 +90,7 @@ function Reparacion({ callbackChanged, initReparacion, useStyles }) {
               </Box>
             </QSection>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <QSection title="Fecha" actionPrefix="reparacion.fechaIni" alwaysInactive>
               <Box display="flex">
                 <Typography variant="body2">{reparacion?.buffer?.fecha}</Typography>
@@ -98,7 +98,7 @@ function Reparacion({ callbackChanged, initReparacion, useStyles }) {
             </QSection>
           </Grid>
 
-          <Grid item xs={12} sm={12}>
+          <Grid size={{ xs: 12, sm: 12 }}>
             <QSection title="Causa" actionPrefix="reparacion.descripcionCausa" alwaysInactive>
               <Box display="flex">
                 <Typography variant="body2">{reparacion?.buffer?.descripcionCausa}</Typography>
@@ -107,7 +107,7 @@ function Reparacion({ callbackChanged, initReparacion, useStyles }) {
           </Grid>
 
           {reparacion?.data?.referencia && (
-            <Grid item xs={12} sm={12}>
+            <Grid size={{ xs: 12, sm: 12 }}>
               <QSection
                 title={`Pedido:${reparacion?.data?.referencia ? ` (${reparacion?.data?.referencia})` : ""
                   }`}

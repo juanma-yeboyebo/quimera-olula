@@ -41,7 +41,7 @@ function ParteNuevo({ callbackGuardado, callbackChanged, useStyles, ...props }) 
         alwaysActive
         dynamicComp={() => (
           <Box display="flex" justifyContent="space-between" flexWrap="wrap">
-            <Grid item xs={4}>
+            <Grid size={4}>
               <Field.Date id="parte.buffer/fecha" label="Fecha" fullWidth />
               {/* <Field.Date id="parteNuevoFecha" label="Fecha" fullWidth /> */}
             </Grid>

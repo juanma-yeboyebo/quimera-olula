@@ -10,8 +10,8 @@ import {
   QSection,
   Typography,
 } from "@quimera/comps";
-import Quimera, { getSchemas, PropValidation, useStateValue, useWidth, util } from "quimera";
-import React, { useEffect } from "react";
+import Quimera, { getSchemas, useStateValue, useWidth, util } from "quimera";
+import { useEffect } from "react";
 
 import { ListItemComercio } from "../../comps";
 
@@ -77,7 +77,7 @@ function Campana({ callbackChanged, idCampana, initCampana, useStyles }) {
         >
           <Grid container>
             <QModelBox id="campana.buffer" disabled={!editable} schema={schema}>
-              <Grid item /* justify='center' */ xs={12} sm={12} md={12}>
+              <Grid size={{ xs: 12, sm: 12, md: 12 }}>
                 <QSection
                   title="Nombre"
                   actionPrefix="campana.buffer/idCampana"
@@ -100,7 +100,7 @@ function Campana({ callbackChanged, idCampana, initCampana, useStyles }) {
                 </QSection>
               </Grid>
 
-              <Grid item container xs={12} sm={12} md={12} justifyContent="space-between">
+              <Grid container size={{ xs: 12, sm: 12, md: 12 }} justifyContent="space-between">
                 <Box width={0.3}>
                   <QSection
                     title="Fecha Inicio"
@@ -149,7 +149,7 @@ function Campana({ callbackChanged, idCampana, initCampana, useStyles }) {
                 </Box>
               </Grid>
 
-              {/* <Grid item container xs={12} sm={12} md={12} justifyContent="space-between">
+              {/* <Grid container size={{ xs: 12, sm: 12, md: 12 }} justifyContent="space-between">
                 <Box width={0.45}>
                   <QSection
                     title="Tope compras consumidor"

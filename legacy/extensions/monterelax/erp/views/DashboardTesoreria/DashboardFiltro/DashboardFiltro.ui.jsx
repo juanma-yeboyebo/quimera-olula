@@ -16,7 +16,7 @@ function DashboardFiltro({ useStyles }) {
         <Box px={1}>
           <Box>
             <Grid container spacing={1} direction="column" >
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Field.Select
                   id="bufferFiltro.intervaloFecha"
                   label="Fechas"
@@ -25,19 +25,19 @@ function DashboardFiltro({ useStyles }) {
                   boxStyle={classes.select}
                 />
               </Grid>
-              <Grid item xs={3}>
+              <Grid size={3}>
                 <Field.Date id="bufferFiltro.fechaDesde" label="Desde" boxStyle={classes.fecha} />
               </Grid>
-              <Grid item xs={3}>
+              <Grid size={3}>
                 <Field.Date id="bufferFiltro.fechaHasta" label="Hasta" boxStyle={classes.fecha} />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <CuentaBanco id="bufferFiltro.cuenta" label="Cuenta" fullWidth async />
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <FormasPago id="bufferFiltro.formaPago" label="FORMA DE PAGO" fullWidth />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Box display="flex" alignItems="flex-end" justifyContent="flex-end" height={1}>
                   <Button
                     id="filtrar"
@@ -50,7 +50,7 @@ function DashboardFiltro({ useStyles }) {
                 </Box>
               </Grid>
               {recibosOrdenados.length !== 0 && (
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <Box display="flex" alignItems="flex-end" justifyContent="flex-end" pt={1}>
                     <Typography>
                       <strong className={classes.negro}>

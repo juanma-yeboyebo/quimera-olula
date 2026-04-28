@@ -32,7 +32,7 @@ function AlbaranesCliNuevo({ callbackGuardado, useStyles, ...props }) {
         alwaysActive
         dynamicComp={() => (
           <Grid container direction="column" spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Cliente
                 id="albaran.buffer/codCliente"
                 label={`Cliente ${albaran.buffer.codCliente ?? ""}`}
@@ -41,7 +41,7 @@ function AlbaranesCliNuevo({ callbackGuardado, useStyles, ...props }) {
                 autoFocus
               />
             </Grid>
-            <Grid item xs={12} style={{ visibility: "hidden", height: "0px" }}>
+            <Grid size={12} style={{ visibility: "hidden", height: "0px" }}>
               <DirCliente
                 id="albaran.buffer/codDir"
                 codCliente={albaran.buffer.codCliente}

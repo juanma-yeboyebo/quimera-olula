@@ -1,0 +1,30 @@
+import { MenuUsuarioElementos } from "@olula/componentes/menu/menu-usuario.tsx";
+
+/**
+ * Elementos del menú de usuario personalizados para Cabrera
+ * Nota: El nombre del usuario se actualiza dinámicamente en el componente
+ */
+export const MenuUsuarioElementosCabrera: MenuUsuarioElementos = [
+    {
+        nombre: "Usuario",
+        subelementos: [
+            {
+                nombre: "Mi usuario",
+                icono: "user",
+                url: "/user",
+                color: "success",
+                variant: "main",
+            },
+        ],
+    },
+    {
+        nombre: "Sesión",
+        subelementos: [
+            {
+                nombre: "Desconectar",
+                icono: "exit",
+                url: "/logout",
+            },
+        ],
+    },
+];

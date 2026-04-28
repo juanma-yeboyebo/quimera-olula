@@ -203,13 +203,13 @@ function NewInventario() {
           <div className="form-content">
             <Grid container spacing={2}>
               <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Field.Date id="inventario.fecha" label="Fecha" fullWidth disabled />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Field.Time id="inventario.hora" label="Hora" fullWidth disabled />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <Field.Text
                     id="inventario.descripcion"
                     label="Descripcion"
@@ -229,7 +229,7 @@ function NewInventario() {
                 </Grid>
               </Grid>
               <Grid container spacing={2}>
-                <Grid item xs={12} className="container-inventario-total">
+                <Grid size={12} className="container-inventario-total">
                   <Field.CheckBox
                     id="inventario.inventarioTotal"
                     label="Inventario Total"
@@ -241,7 +241,7 @@ function NewInventario() {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Field.Select
                     id="inventario.superfamilia"
                     getOptions={getOptionsSuperfamilias}
@@ -260,7 +260,7 @@ function NewInventario() {
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Field.Select
                     id="inventario.familia"
                     getOptions={getOptionsFamilias}
@@ -279,7 +279,7 @@ function NewInventario() {
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Field.Select
                     id="inventario.grupomoda"
                     getOptions={getOptionsGruposmoda}
@@ -298,7 +298,7 @@ function NewInventario() {
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Field.Select
                     id="inventario.anno"
                     getOptions={getOptionsAnnos}
@@ -317,7 +317,7 @@ function NewInventario() {
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Field.Select
                     id="inventario.temporada"
                     getOptions={getOptionsTemporada}
@@ -336,7 +336,7 @@ function NewInventario() {
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Autocomplete
                     disablePortal
                     id="combo-box-standard"

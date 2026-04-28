@@ -128,28 +128,20 @@ function Signup({ hash }) {
   return (
     <Quimera.Template id="Signup">
       <Grid container justify="center" className={classes.root}>
-        <Grid xs={12} className={classes.logo}>
+        <Grid size={12} className={classes.logo}>
           <img alt="Project logo" src="/img/logo_url_oscuro.png" width={mobile ? "90%" : "15%"} />
         </Grid>
         {(smState === "establecer_nuevo_consumidor" || smState === "creando_consumidor") && (
-          <Grid
-            item
-            xs={11}
-            sm={8}
-            md={8}
-            lg={6}
-            xl={4}
-            style={{ marginTop: mobile ? "50px" : "inherit" }}
-          >
+          <Grid size={{ xs: 11, sm: 8, md: 8, lg: 6, xl: 4 }} style={{ marginTop: mobile ? "50px" : "inherit" }}>
             <Paper>
               <Grid container direction="column">
-                <Grid item xs className={clsx(classes.gridItems, classes.header)}>
+                <Grid size="grow" className={clsx(classes.gridItems, classes.header)}>
                   <Typography className={classes.typography} variant="h5">
                     Introduzca sus datos
                   </Typography>
                 </Grid>
-                <Grid container item xs className={classes.gridLines}>
-                  <Grid item xs={mobile ? 12 : 5}>
+                <Grid container size="grow" className={classes.gridLines}>
+                  <Grid size={mobile ? 12 : 5}>
                     <Field.Schema
                       id="consumidor.buffer/nombre"
                       label={"Nombre"}
@@ -157,8 +149,8 @@ function Signup({ hash }) {
                       startAdornment={<Icon>person</Icon>}
                     />
                   </Grid>
-                  <Grid item xs={mobile ? 0 : 1} />
-                  <Grid item xs={mobile ? 12 : 6}>
+                  <Grid size={mobile ? 0 : 1} />
+                  <Grid size={mobile ? 12 : 6}>
                     <Field.Schema
                       id="consumidor.buffer/apellidos"
                       label={"Apellidos"}
@@ -167,7 +159,7 @@ function Signup({ hash }) {
                     />
                   </Grid>
 
-                  <Grid item xs={mobile ? 12 : 3}>
+                  <Grid size={mobile ? 12 : 3}>
                     <Field.Schema
                       id="consumidor.buffer/telefono"
                       label={"Teléfono"}
@@ -175,8 +167,8 @@ function Signup({ hash }) {
                       startAdornment={<Icon>phone</Icon>}
                     />
                   </Grid>
-                  <Grid item xs={mobile ? 0 : 1} />
-                  <Grid item xs={mobile ? 12 : 4}>
+                  <Grid size={mobile ? 0 : 1} />
+                  <Grid size={mobile ? 12 : 4}>
                     <Field.Schema
                       id="consumidor.buffer/cifnif"
                       label={"D.N.I./Pasaporte/T. Resi."}
@@ -184,16 +176,16 @@ function Signup({ hash }) {
                       startAdornment={<Icon>subtitles</Icon>}
                     />
                   </Grid>
-                  <Grid item xs={mobile ? 0 : 1} />
+                  <Grid size={mobile ? 0 : 1} />
 
-                  <Grid item xs={mobile ? 12 : 3}>
+                  <Grid size={mobile ? 12 : 3}>
                     <Field.Date
                       id="consumidor.buffer/fechanacimiento"
                       label="F. nacimiento"
                       fullWidth
                     />
                   </Grid>
-                  <Grid item xs={mobile ? 12 : 6}>
+                  <Grid size={mobile ? 12 : 6}>
                     <Field.Text
                       id="consumidor.buffer/ciudad"
                       label="Ciudad"
@@ -202,20 +194,16 @@ function Signup({ hash }) {
                     />
                   </Grid>
 
-                  <Grid item xs={mobile ? 0 : 1} />
-                  <Grid item xs={mobile ? 12 : 3}>
+                  <Grid size={mobile ? 0 : 1} />
+                  <Grid size={mobile ? 12 : 3}>
                     <Field.Text id="consumidor.buffer/cp" label="Código postal" fullWidth />
                   </Grid>
 
-                  <Grid
-                    item
-                    xs={mobile ? 12 : 6}
-                    style={{
+                  <Grid size={mobile ? 12 : 6} style={{
                       display: "flex",
                       alignItems: "flex-end",
                       paddingBottom: "4px",
-                    }}
-                  >
+                    }}>
                     <SelectorValores
                       id="consumidor.buffer/idprovincia"
                       stateField="idprovincia"
@@ -226,16 +214,12 @@ function Signup({ hash }) {
                       fullWidth
                     ></SelectorValores>
                   </Grid>
-                  <Grid item xs={mobile ? 0 : 1} />
-                  <Grid
-                    item
-                    xs={mobile ? 12 : 3}
-                    style={{
+                  <Grid size={mobile ? 0 : 1} />
+                  <Grid size={mobile ? 12 : 3} style={{
                       display: "flex",
                       alignItems: "flex-end",
                       paddingBottom: "4px",
-                    }}
-                  >
+                    }}>
                     <SelectorValores
                       id="consumidor.buffer/genero"
                       stateField="genero"
@@ -254,7 +238,7 @@ function Signup({ hash }) {
                     flexDirection={"column"}
                     style={{ gap: mobile ? "15px" : "none" }}
                   >
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                       <Field.CheckBox
                         id="consumidor.buffer/aceptacondiciones"
                         label={
@@ -271,7 +255,7 @@ function Signup({ hash }) {
                         checked={consumidor.buffer.aceptacondiciones}
                       />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                       <Field.CheckBox
                         id="consumidor.buffer/aceptacomunicacion"
                         label="Quiero recibir novedades y comunicaciones promocionales de almansaentucorazon"
@@ -280,7 +264,7 @@ function Signup({ hash }) {
                     </Grid>
                   </Box>
 
-                  <Grid item xs={mobile ? 12 : 5}>
+                  <Grid size={mobile ? 12 : 5}>
                     <Field.Password
                       id={"consumidor.buffer/password"}
                       label={t(`${TR_PREFIX}campoPass1`)}
@@ -290,8 +274,8 @@ function Signup({ hash }) {
                       helperText={passwordStatus.pass1Msg}
                     />
                   </Grid>
-                  <Grid item xs={mobile ? 0 : 2} />
-                  <Grid item xs={mobile ? 12 : 5}>
+                  <Grid size={mobile ? 0 : 2} />
+                  <Grid size={mobile ? 12 : 5}>
                     <Field.Password
                       id="repeatedPassword"
                       label={t(`${TR_PREFIX}campoPass2`)}
@@ -303,7 +287,7 @@ function Signup({ hash }) {
                   </Grid>
                 </Grid>
 
-                <Grid item xs={12} className={classes.gridItems}>
+                <Grid size={12} className={classes.gridItems}>
                   <Button
                     id="confirmarRegistro"
                     text="Confirmar"
@@ -323,22 +307,22 @@ function Signup({ hash }) {
           </Grid>
         )}
         {!(smState === "establecer_nuevo_consumidor" || smState === "creando_consumidor") && (
-          <Grid item xs={11} sm={8} md={4} lg={3} xl={2}>
+          <Grid size={{ xs: 11, sm: 8, md: 4, lg: 3, xl: 2 }}>
             <Paper>
               {smState === "send_email" && (
                 <Grid container direction="column">
-                  <Grid item xs className={clsx(classes.gridItems, classes.header)}>
+                  <Grid size="grow" className={clsx(classes.gridItems, classes.header)}>
                     <Typography className={classes.typography} variant="h5">
                       Regístrate
                     </Typography>
                   </Grid>
-                  <Grid item xs className={classes.gridItems}>
+                  <Grid size="grow" className={classes.gridItems}>
                     <Typography className={classes.typography}>
                       Indícanos tu correo electrónico, haz clic en ENVIAR y accede al correo que
                       recibirás para finalizar el registro.
                     </Typography>
                   </Grid>
-                  <Grid item xs className={classes.gridItems}>
+                  <Grid size="grow" className={classes.gridItems}>
                     <Field.Text
                       id="email"
                       label="E-mail"
@@ -346,7 +330,7 @@ function Signup({ hash }) {
                       startAdornment={<Icon>emailrounded</Icon>}
                     />
                   </Grid>
-                  <Grid item xs={12} className={classes.gridItems}>
+                  <Grid size={12} className={classes.gridItems}>
                     <Button
                       id="enviarCorreo"
                       text="ENVIAR"
@@ -359,12 +343,12 @@ function Signup({ hash }) {
               )}
               {smState === "email_sent" && (
                 <Grid container direction="column">
-                  <Grid item xs className={clsx(classes.gridItems, classes.header)}>
+                  <Grid size="grow" className={clsx(classes.gridItems, classes.header)}>
                     <Typography className={classes.typography} variant="h5">
                       ¡Hecho!
                     </Typography>
                   </Grid>
-                  <Grid item xs className={classes.gridItems}>
+                  <Grid size="grow" className={classes.gridItems}>
                     <Typography className={classes.typography}>
                       Hemos enviado un correo a {email} con las instrucciones para crear tu usuario
                     </Typography>
@@ -377,29 +361,29 @@ function Signup({ hash }) {
               )}
               {smState === "send_email_failed" && (
                 <Grid container direction="column">
-                  <Grid item xs className={clsx(classes.gridItems, classes.header)}>
+                  <Grid size="grow" className={clsx(classes.gridItems, classes.header)}>
                     <Typography className={classes.typography} variant="h5">
                       Error
                     </Typography>
                   </Grid>
-                  <Grid item xs className={classes.gridItems}>
+                  <Grid size="grow" className={classes.gridItems}>
                     <Typography className={classes.typography}>{error}</Typography>
                   </Grid>
                 </Grid>
               )}
               {smState === "hash_incorrecto" && (
                 <Grid container direction="column">
-                  <Grid item xs className={clsx(classes.gridItems, classes.header)}>
+                  <Grid size="grow" className={clsx(classes.gridItems, classes.header)}>
                     <Typography className={classes.typography} variant="h5">
                       Error
                     </Typography>
                   </Grid>
-                  <Grid item xs className={classes.gridItems}>
+                  <Grid size="grow" className={classes.gridItems}>
                     <Typography className={classes.typography}>
                       {t(`${TR_PREFIX}enlaceIncorrecto`)}
                     </Typography>
                   </Grid>
-                  <Grid item xs className={classes.gridItems}>
+                  <Grid size="grow" className={classes.gridItems}>
                     <Button
                       id="aceptarIncorrecto"
                       text={t(`${TR_PREFIX}aceptar`)}
@@ -413,17 +397,17 @@ function Signup({ hash }) {
               )}
               {smState === "usuario_creado" && (
                 <Grid container direction="column">
-                  <Grid item xs className={clsx(classes.gridItems, classes.header)}>
+                  <Grid size="grow" className={clsx(classes.gridItems, classes.header)}>
                     <Typography className={classes.typography} variant="h5">
                       ¡Hecho!
                     </Typography>
                   </Grid>
-                  <Grid item xs className={classes.gridItems}>
+                  <Grid size="grow" className={classes.gridItems}>
                     <Typography className={classes.typography}>
                       {t(`${TR_PREFIX}confirmacionCreacionUsuario`)}
                     </Typography>
                   </Grid>
-                  <Grid item xs className={classes.gridItems}>
+                  <Grid size="grow" className={classes.gridItems}>
                     <Button
                       id="irALogin"
                       text={t(`${TR_PREFIX}irALogin`)}

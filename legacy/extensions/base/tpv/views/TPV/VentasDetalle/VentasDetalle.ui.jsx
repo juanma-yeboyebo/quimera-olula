@@ -46,17 +46,10 @@ function VentasDetalle({ useStyles }) {
           <Box px={0} my={1}>
             <Box width={1} border={0} borderColor="gray" height={"calc(100%)"}>
               <Grid container spacing={0} direction="column">
-                <Grid item xs={12}>
-                  <Grid
-                    container
-                    item
-                    xs={12}
-                    justify={venta.cerrada ? "flex-end" : "flex-start"}
-                    alignItems="center"
-                    style={{
+                <Grid size={12}>
+                  <Grid container size={12} justify={venta.cerrada ? "flex-end" : "flex-start"} alignItems="center" style={{
                       height: "60px",
-                    }}
-                  >
+                    }}>
                     {!venta.cerrada && (
                       <Button
                         id="pagarVenta"
@@ -79,10 +72,10 @@ function VentasDetalle({ useStyles }) {
                     alwaysInactive={venta.cerrada}
                     dynamicComp={() => (
                       <Grid container>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                           <Cliente id="ventasBuffer.codCliente" label="Cliente" fullWidth async />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                           <DirCliente
                             id="ventasBuffer.codDir"
                             codCliente={ventasBuffer.codCliente}
@@ -98,7 +91,7 @@ function VentasDetalle({ useStyles }) {
                   </QSection>
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid size={12}>
                   <Box display="flex" justifyContent="space-between">
                     <QSection
                       title="Fecha"
@@ -135,7 +128,7 @@ function VentasDetalle({ useStyles }) {
                 </Grid>
 
                 {!pagando ? (
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <Box>
                       <TabWidget appBarProps={{ style: { marginTop: "15px" } }}>
                         <Tab title="Líneas" style={{ width: "100%" }}>
@@ -221,7 +214,7 @@ function VentasDetalle({ useStyles }) {
                     </Box>
                   </Grid>
                 ) : (
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <Quimera.SubView id="TPV/VentasPagos" />
                   </Grid>
                 )}

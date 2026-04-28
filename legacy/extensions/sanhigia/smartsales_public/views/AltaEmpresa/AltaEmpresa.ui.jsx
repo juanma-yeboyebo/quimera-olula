@@ -9,15 +9,15 @@ function AltaEmpresa({ useStyles }) {
   return (
     <Quimera.Template id="AltaEmpresa">
       <Grid className={classes.root}>
-        <Grid item xs={11} sm={8} md={4} lg={3} xl={2}>
+        <Grid size={{ xs: 11, sm: 8, md: 4, lg: 3, xl: 2 }}>
           <Paper>
             <Grid container direction="column">
-              <Grid item xs className={clsx(classes.gridItems, classes.header)}>
+              <Grid size="grow" className={clsx(classes.gridItems, classes.header)}>
                 <Typography className={classes.typography} variant="h6">
                   Alta de Empresa
                 </Typography>
               </Grid>
-              <Grid item xs className={classes.gridItems}>
+              <Grid size="grow" className={classes.gridItems}>
                 <Field.Schema
                   id="empresa.nombre"
                   schema={schema}
@@ -26,7 +26,7 @@ function AltaEmpresa({ useStyles }) {
                   fullWidth
                 />
               </Grid>
-              <Grid item xs className={classes.gridItems}>
+              <Grid size="grow" className={classes.gridItems}>
                 <Field.Schema
                   id="empresa.email"
                   schema={schema}
@@ -34,7 +34,7 @@ function AltaEmpresa({ useStyles }) {
                   fullWidth
                 />
               </Grid>
-              <Grid item xs className={classes.gridItems}>
+              <Grid size="grow" className={classes.gridItems}>
                 <Field.Schema
                   id="empresa.pass"
                   schema={schema}
@@ -42,7 +42,7 @@ function AltaEmpresa({ useStyles }) {
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={12} className={classes.gridItems}>
+              <Grid size={12} className={classes.gridItems}>
                 <Button
                   id="nuevaEmpresa"
                   text="CREAR CUENTA"
