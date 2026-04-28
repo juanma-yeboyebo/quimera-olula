@@ -40,19 +40,6 @@ export const Presupuestos = ({
 
   return (
     <div className="TabPresupuestos">
-      <div className="maestro-botones">
-        <QBoton onClick={() => emitir("creacion_de_presupuesto_solicitada")}>
-          Nueva
-        </QBoton>
-
-        <QBoton
-          onClick={() => emitir("borrado_presupuesto_solicitado")}
-          deshabilitado={!ctx.presupuestos.activo}
-        >
-          Borrar
-        </QBoton>
-      </div>
-
       {/* {ctx.estado === "CREANDO" && (
         <CrearPresupuesto
           publicar={emitir}
@@ -75,6 +62,22 @@ export const Presupuestos = ({
         entidades={ctx.presupuestos.lista}
         totalEntidades={ctx.presupuestos.lista.length}
         cargando={cargando}
+        renderAcciones={() => (
+          <div className="maestro-botones">
+            <QBoton
+              onClick={() => emitir("creacion_de_presupuesto_solicitada")}
+            >
+              Nueva
+            </QBoton>
+
+            <QBoton
+              onClick={() => emitir("borrado_presupuesto_solicitado")}
+              deshabilitado={!ctx.presupuestos.activo}
+            >
+              Borrar
+            </QBoton>
+          </div>
+        )}
         seleccionada={ctx.presupuestos.activo ?? null}
         onSeleccion={(presupuesto) =>
           emitir("presupuesto_seleccionado", presupuesto)

@@ -7,7 +7,6 @@ import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { HookModelo } from "@olula/lib/useModelo.ts";
 import { Presupuesto } from "../../diseño.ts";
 import { EstadoPresupuesto } from "../diseño.ts";
-import { editable } from "../dominio.ts";
 import "./TabCliente.css";
 
 interface TabClienteProps {
@@ -22,6 +21,8 @@ export const TabCliente = ({
   publicar = async () => {},
 }: TabClienteProps) => {
   const { modelo } = presupuesto;
+  const puedeEditarCliente = !modelo.aprobado;
+  const mostrarBotonCambiarCliente = estado === "ABIERTO" && puedeEditarCliente;
 
   const onGuardarCambioCliente = async (cambios: CambioCliente) => {
     publicar("cambio_cliente_listo", cambios);
@@ -43,20 +44,20 @@ export const TabCliente = ({
           deshabilitado={true}
         />
 
-        <div className="TabCliente-accion">
-          <QBoton
-            deshabilitado={!editable(modelo)}
-            onClick={() => publicar("cambio_cliente_solicitado")}
-          >
-            Cambiar Cliente
-          </QBoton>
-        </div>
+        {mostrarBotonCambiarCliente && (
+          <div className="TabCliente-accion">
+            <QBoton onClick={() => publicar("cambio_cliente_solicitado")}>
+              Cambiar Cliente
+            </QBoton>
+          </div>
+        )}
 
         {modelo.cliente.cliente_id !== null ? (
           <DirCliente
             clienteId={modelo.cliente.cliente_id ?? undefined}
             nombre="direccion_id"
             valor={modelo.cliente.direccion_id ?? ""}
+            deshabilitado={!puedeEditarCliente}
             onChange={() => {}}
           />
         ) : (
@@ -69,9 +70,10 @@ export const TabCliente = ({
         )}
       </quimera-formulario>
 
-      {estado === "CAMBIANDO_CLIENTE" && (
+      {puedeEditarCliente && estado === "CAMBIANDO_CLIENTE" && (
         <CambioClienteVenta
           venta={presupuesto}
+          inicializarDesdeVenta={true}
           onGuardar={onGuardarCambioCliente}
           onCancelar={() => publicar("cambio_cliente_cancelado")}
         />

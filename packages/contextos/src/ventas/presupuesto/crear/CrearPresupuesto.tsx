@@ -1,6 +1,6 @@
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
-import { Mostrar } from "@olula/componentes/moleculas/Mostrar.tsx";
+import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { ContextoError } from "@olula/lib/contexto.ts";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useFocus } from "@olula/lib/useFocus.js";
@@ -56,7 +56,12 @@ export const CrearPresupuesto = ({
   };
 
   return (
-    <Mostrar modo="modal" activo={activo} onCerrar={cancelar}>
+    <QModal
+      abierto={activo}
+      nombre="crear_presupuesto"
+      titulo="Nuevo Presupuesto"
+      onCerrar={cancelar}
+    >
       <FormAltaPresupuesto
         publicar={publicar}
         presupuestoRegistrado={presupuestoRegistrado}
@@ -64,7 +69,7 @@ export const CrearPresupuesto = ({
         modoNoRegistrado={modoNoRegistrado}
         onToggleModoCliente={toggleModoCliente}
       />
-    </Mostrar>
+    </QModal>
   );
 };
 
@@ -108,8 +113,7 @@ const FormAltaPresupuesto = ({
   };
 
   return (
-    <div className="CrearPresupuesto">
-      <h2>Nuevo Presupuesto</h2>
+    <>
       <div className="modo-cliente">
         <QBoton onClick={onToggleModoCliente} variante="texto" tipo="button">
           {modoNoRegistrado ? "Cliente no registrado" : "Cliente registrado"}
@@ -171,6 +175,6 @@ const FormAltaPresupuesto = ({
           Cancelar
         </QBoton>
       </div>
-    </div>
+    </>
   );
 };

@@ -30,9 +30,13 @@ export const CrearLinea = ({
   }, [creando, publicar]);
 
   return (
-    <QModal abierto={true} nombre="mostrar" onCerrar={cancelar}>
+    <QModal
+      abierto={true}
+      nombre="crear_linea_factura"
+      titulo="Crear línea"
+      onCerrar={cancelar}
+    >
       <div className="CrearLinea">
-        <h2>Crear línea</h2>
         <quimera-formulario>
           <Articulo
             {...uiProps("referencia", "descripcion")}

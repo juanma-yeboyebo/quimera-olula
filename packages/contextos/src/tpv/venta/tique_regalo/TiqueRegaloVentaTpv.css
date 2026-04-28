@@ -1,0 +1,9 @@
+.Factura .TiqueRegaloVentaTpv {
+    div[id="titulo"] {
+        grid-column: span 12;
+    }
+
+    quimera-tabla {
+        grid-column: span 12;
+    }
+}

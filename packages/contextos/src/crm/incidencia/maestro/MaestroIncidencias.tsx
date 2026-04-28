@@ -59,14 +59,6 @@ export const MaestroIncidencias = () => {
               </div>
             )}
 
-            <div className="maestro-botones">
-              <QBoton
-                onClick={() => emitir("creacion_de_incidencia_solicitada")}
-              >
-                Nueva
-              </QBoton>
-            </div>
-
             <Listado<Incidencia>
               metaTabla={metaTablaIncidencia}
               criteria={ctx.incidencias.criteria}
@@ -75,6 +67,15 @@ export const MaestroIncidencias = () => {
               entidades={ctx.incidencias.lista}
               totalEntidades={ctx.incidencias.total}
               seleccionada={ctx.incidencias.activo}
+              renderAcciones={() => (
+                <div className="maestro-botones">
+                  <QBoton
+                    onClick={() => emitir("creacion_de_incidencia_solicitada")}
+                  >
+                    Nueva
+                  </QBoton>
+                </div>
+              )}
               onSeleccion={(payload) =>
                 emitir("incidencia_seleccionada", payload)
               }

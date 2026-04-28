@@ -10,7 +10,10 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useMemo } from "react";
 import { postPago } from "../infraestructura.ts";
 import "./PagarTarjetaVentaTpv.css";
-import { metaNuevoPagoTarjeta, nuevoPagoTarjetaInicial } from "./pagar_con_tarjeta.ts";
+import {
+  metaNuevoPagoTarjeta,
+  nuevoPagoTarjetaInicial,
+} from "./pagar_con_tarjeta.ts";
 
 export const PagarTarjetaVentaTpv = ({
   publicar,
@@ -19,83 +22,69 @@ export const PagarTarjetaVentaTpv = ({
   publicar: EmitirEvento;
   venta: VentaTpv;
 }) => {
+  const pendiente = redondeaMoneda(venta.total - venta.pagado, venta.divisa_id);
 
-    const pendiente = redondeaMoneda(venta.total - venta.pagado, venta.divisa_id)
+  const pagoInicial = useMemo(
+    () => ({
+      ...nuevoPagoTarjetaInicial,
+      importe: pendiente,
+      pendiente,
+    }),
+    [pendiente]
+  );
 
-    const pagoInicial = useMemo(
-        () => ({
-            ...nuevoPagoTarjetaInicial,
-            importe: pendiente,
-            pendiente
-        }),
-        [pendiente]
-    )
-    
-    const { modelo, uiProps, valido, set } = useModelo(
-        metaNuevoPagoTarjeta, pagoInicial
-    );
+  const { modelo, uiProps, valido, set } = useModelo(
+    metaNuevoPagoTarjeta,
+    pagoInicial
+  );
 
-    const pagar_ = useCallback(
-        async () => {
-            const idPago = await postPago(
-                venta.id,
-                {
-                    importe: modelo.importe,
-                    formaPago: "TARJETA",
-                }
-            );
-            publicar("pago_con_tarjeta_hecho", idPago);
-        },
-        [modelo, publicar, venta.id]
-    );
+  const pagar_ = useCallback(async () => {
+    const idPago = await postPago(venta.id, {
+      importe: modelo.importe,
+      formaPago: "TARJETA",
+    });
+    publicar("pago_con_tarjeta_hecho", idPago);
+  }, [modelo, publicar, venta.id]);
 
-    const cancelar_ = useCallback(
-        () => publicar("pago_cancelado"),
-        [publicar]
-    );
+  const cancelar_ = useCallback(() => publicar("pago_cancelado"), [publicar]);
 
-    const [pagar, cancelar] = useForm(pagar_, cancelar_);
+  const [pagar, cancelar] = useForm(pagar_, cancelar_);
 
-    const setImporte = (v: number) => {
-        set({
-            ...modelo,
-            importe: v,
-        });
-    }
+  const setImporte = (v: number) => {
+    set({
+      ...modelo,
+      importe: v,
+    });
+  };
 
-    const limpiar = () => {
-        setImporte(0);  
-    }
+  const limpiar = () => {
+    setImporte(0);
+  };
 
-    const focus = useFocus(true);
+  const focus = useFocus(true);
 
-    return (
-        <QModal abierto={true} nombre="mostrar" onCerrar={cancelar}>
+  return (
+    <QModal
+      abierto={true}
+      nombre="mostrar"
+      titulo="Pago con tarjeta"
+      onCerrar={cancelar}
+    >
+      <div className="PagarTarjetaVentaTpv">
+        <quimera-formulario>
+          <div id="pendiente">
+            {`A pagar: ${formatearMoneda(pendiente, venta.divisa_id)}`}
+          </div>
 
-            <div className="PagarTarjetaVentaTpv">
+          <QInput label="Importe" {...uiProps("importe")} ref={focus} />
+        </quimera-formulario>
 
-                <h2>Pago con tarjeta</h2>
+        <div className="botones maestro-botones ">
+          <QBoton onClick={limpiar}>Limpiar</QBoton>
 
-                <quimera-formulario>
-                    <div id='pendiente'>
-                        {`A pagar: ${formatearMoneda(pendiente, venta.divisa_id)}`}
-                    </div>
-
-                    <QInput label="Importe" {...uiProps("importe")} ref={focus}/>
-
-                </quimera-formulario>
-
-                <div className="botones maestro-botones ">
-
-                    <QBoton onClick={limpiar}>Limpiar</QBoton>
-
-                    <QBoton texto="Pagar"
-                        onClick={pagar} deshabilitado={!valido}
-                    />
-                </div>
-
-            </div>
-
-        </QModal>
-    );
+          <QBoton texto="Pagar" onClick={pagar} deshabilitado={!valido} />
+        </div>
+      </div>
+    </QModal>
+  );
 };

@@ -43,16 +43,6 @@ export const MaestroEstadosOportunidad = () => {
           <>
             <h2>Estados de Oportunidad de Venta</h2>
 
-            <div className="maestro-botones">
-              <QBoton
-                onClick={() =>
-                  emitir("creacion_de_estado_oportunidad_solicitada")
-                }
-              >
-                Nuevo
-              </QBoton>
-            </div>
-
             <Listado<EstadoOportunidad>
               metaTabla={metaTablaEstadoOportunidad}
               criteria={ctx.estados_oportunidad.criteria}
@@ -60,6 +50,17 @@ export const MaestroEstadosOportunidad = () => {
               entidades={ctx.estados_oportunidad.lista}
               totalEntidades={ctx.estados_oportunidad.total}
               seleccionada={ctx.estados_oportunidad.activo}
+              renderAcciones={() => (
+                <div className="maestro-botones">
+                  <QBoton
+                    onClick={() =>
+                      emitir("creacion_de_estado_oportunidad_solicitada")
+                    }
+                  >
+                    Nuevo
+                  </QBoton>
+                </div>
+              )}
               onSeleccion={(payload) =>
                 emitir("estado_oportunidad_seleccionado", payload)
               }

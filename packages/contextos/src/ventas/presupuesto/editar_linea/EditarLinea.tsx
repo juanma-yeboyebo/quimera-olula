@@ -25,6 +25,7 @@ export const EditarLinea = ({
   const { intentar } = useContext(ContextoError);
   const { modelo, uiProps, valido, set } = useModelo(metaLinea, linea);
   const [cambiando, setCambiando] = useState(false);
+  const [mostrarMas, setMostrarMas] = useState(false);
 
   const cambiar = useCallback(async () => {
     await intentar(() => patchLinea(presupuestoId, modelo));
@@ -57,14 +58,17 @@ export const EditarLinea = ({
   );
 
   return (
-    <QModal abierto={true} nombre="mostrar" onCerrar={cancelar}>
+    <QModal
+      abierto={true}
+      nombre="editar_linea_presupuesto"
+      titulo="Editar línea"
+      onCerrar={cancelar}
+    >
       <div className="EditarLinea">
-        <h2>Editar línea</h2>
-
         <quimera-formulario>
-          <div id="titulo">
-            <h3>{`${linea.descripcion}`}</h3>
-            {`Ref: ${linea.referencia}`}
+          <div className="articulo-info">
+            <span className="articulo-ref">Ref. {linea.referencia}</span>
+            {/* <span className="articulo-desc">{linea.descripcion}</span> */}
           </div>
 
           <Articulo
@@ -74,11 +78,24 @@ export const EditarLinea = ({
 
           <QInput label="Cantidad" {...uiProps("cantidad")} />
 
-          <GrupoIvaProducto {...uiProps("grupo_iva_producto_id")} />
-
           <QInput label="Precio" {...uiProps("pvp_unitario")} />
 
-          <QInput label="% Descuento" {...uiProps("dto_porcentual")} />
+          <div className="mostrar-mas-fila">
+            <button
+              type="button"
+              className="mostrar-mas-btn"
+              onClick={() => setMostrarMas((v) => !v)}
+            >
+              {mostrarMas ? "▲ Menos opciones" : "▼ Más opciones"}
+            </button>
+          </div>
+
+          {mostrarMas && (
+            <>
+              <GrupoIvaProducto {...uiProps("grupo_iva_producto_id")} />
+              <QInput label="% Descuento" {...uiProps("dto_porcentual")} />
+            </>
+          )}
         </quimera-formulario>
 
         <div className="botones maestro-botones ">

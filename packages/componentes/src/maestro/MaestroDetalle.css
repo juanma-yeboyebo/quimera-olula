@@ -20,10 +20,12 @@ maestro-detalle {
 
 }
 
-.Maestro> :not(quimera-tabla):not(:has(quimera-tabla)):not(.Listado),
-.Detalle> :not(quimera-tabla):not(:has(quimera-tabla)):not(.Listado),
-.Maestro> :has(quimera-tabla)> :not(quimera-tabla):not(.Listado),
-.Detalle> :has(quimera-tabla)> :not(quimera-tabla):not(.Listado) {
+.Maestro> :not(quimera-tabla):not(quimera-tarjetas):not(:has(quimera-tabla)):not(:has(quimera-tarjetas)):not(.Listado),
+.Detalle> :not(quimera-tabla):not(quimera-tarjetas):not(:has(quimera-tabla)):not(:has(quimera-tarjetas)):not(.Listado),
+.Maestro> :has(quimera-tabla)> :not(quimera-tabla):not(quimera-tarjetas):not(.Listado),
+.Detalle> :has(quimera-tabla)> :not(quimera-tabla):not(quimera-tarjetas):not(.Listado),
+.Maestro> :has(quimera-tarjetas)> :not(quimera-tabla):not(quimera-tarjetas):not(.Listado),
+.Detalle> :has(quimera-tarjetas)> :not(quimera-tabla):not(quimera-tarjetas):not(.Listado) {
     padding-inline: var(--padding-horizontal);
 }
 

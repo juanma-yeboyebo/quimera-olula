@@ -7,10 +7,11 @@ import { EmitirEvento, Entidad } from "@olula/lib/diseño.js";
 import { imprimir_blob } from "@olula/lib/impresion.ts";
 import { listaEntidadesInicial } from "@olula/lib/ListaEntidades.js";
 import { useModelo } from "@olula/lib/useModelo.js";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { BorrarVentaTpv } from "../borrar/BorrarVentaTpv.tsx";
 import { BorrarPagoVentaTpv } from "../borrar_pago/BorrarPagoVentaTpv.tsx";
 import { DevolverVentaTpv } from "../devolver/DevolverVentaTpv.tsx";
+import { TiqueRegaloVentaTpv } from "../tique_regalo/TiqueRegaloVentaTpv.tsx";
 import { LineaFactura, PagoVentaTpv, VentaTpv } from "../diseño.ts";
 import { ventaTpvVacia } from "../dominio.ts";
 import { getReportVenta } from "../infraestructura.ts";
@@ -63,8 +64,17 @@ export const DetalleVentaTpv = ({
 
     useEffect(() => {
         emitir("venta_id_cambiada", id, true);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
+
+    const estadoAnterior = useRef(ctx.estado); // Referencia para saber cuándo imprimir el tique
+    useEffect(() => {
+        const estadosPago = ["PAGANDO_EN_EFECTIVO", "PAGANDO_CON_TARJETA", "PAGANDO_CON_VALE"];
+        console.log("cambio estado", ctx.estado, "estado anterior", estadoAnterior.current);
+        if (ctx.estado === 'EMITIDA' && estadosPago.includes(estadoAnterior.current)) {
+            imprimirTicketOFactura(ctx.venta);
+        }
+        estadoAnterior.current = ctx.estado;
+    }, [ctx.estado, ctx.venta]);
 
     if (!ctx.venta.id) return;
 
@@ -96,6 +106,11 @@ export const DetalleVentaTpv = ({
                 />
             )}
             <QBoton texto="Imprimir" onClick={imprimir} />
+            <QBoton
+              texto="Tique regalo"
+              onClick={() => emitir("tique_regalo_solicitado")}
+              deshabilitado={estado !== "EMITIDA"}
+            />
             </div>
             <Tabs
             children={[
@@ -162,6 +177,9 @@ export const DetalleVentaTpv = ({
             )}
             {estado === "DEVOLVIENDO_VENTA" && (
                 <DevolverVentaTpv venta={venta} publicar={emitir} />
+            )}
+            {estado === "GENERANDO_TIQUE_REGALO" && (
+                <TiqueRegaloVentaTpv venta={venta} lineas={lineas.lista} publicar={emitir} />
             )}
         </div>
         </Detalle>

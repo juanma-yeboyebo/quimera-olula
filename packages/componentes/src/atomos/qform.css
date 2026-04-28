@@ -5,7 +5,7 @@ quimera-formulario {
     /* grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); */
     gap: var(--gap-formulario);
     place-items: stretch;
-    padding: 1rem 0px;
+    padding-bottom: var(--espaciado-l);
     align-items: stretch;
 
     quimera-input,

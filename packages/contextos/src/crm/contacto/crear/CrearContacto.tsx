@@ -30,10 +30,13 @@ export const CrearContacto = ({ publicar }: { publicar: EmitirEvento }) => {
   }, [creando, publicar]);
 
   return (
-    <QModal abierto={true} nombre="mostrar" onCerrar={cancelar}>
+    <QModal
+      abierto={true}
+      nombre="mostrar"
+      titulo="Nuevo Contacto"
+      onCerrar={cancelar}
+    >
       <div className="CrearContacto">
-        <h2>Nuevo Contacto</h2>
-
         <quimera-formulario>
           <QInput label="Nombre" {...uiProps("nombre")} />
           <QInput label="Email" {...uiProps("email")} />

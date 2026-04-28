@@ -47,10 +47,13 @@ export const CrearMovimientoEfectivo = ({
   const focus = useFocus(true);
 
   return (
-    <QModal abierto={true} nombre="mostrar" onCerrar={cancelar}>
+    <QModal
+      abierto={true}
+      nombre="mostrar"
+      titulo="Crear movimiento de efectivo"
+      onCerrar={cancelar}
+    >
       <div className="CrearMovimiento">
-        <h2>Crear movimiento de efectivo</h2>
-
         <quimera-formulario>
           <div id="agente">
             {`Agente: ${miAgenteActivo?.id ?? ""} ${miAgenteActivo?.nombre ?? ""}`}

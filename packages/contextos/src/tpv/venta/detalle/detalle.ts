@@ -21,6 +21,7 @@ export type EstadoVentaTpv = (
     | "BORRANDO_PAGO" | "CAMBIANDO_CLIENTE" | "CAMBIANDO_DESCUENTO"
     | "CREANDO_LINEA" | "BORRANDO_LINEA" | "CAMBIANDO_LINEA"
     | "DEVOLVIENDO_VENTA"
+    | "GENERANDO_TIQUE_REGALO"
 );
 
 export type ContextoVentaTpv = {

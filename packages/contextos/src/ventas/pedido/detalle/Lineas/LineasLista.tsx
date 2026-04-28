@@ -6,12 +6,14 @@ import { FactoryCtx } from "@olula/lib/factory_ctx.js";
 import { useContext } from "react";
 import { LineaPedido as Linea } from "../../diseño.ts";
 import { EditarCantidadLinea } from "./EditarCantidadLinea.tsx";
+import { TarjetaLinea } from "./TarjetaLinea.tsx";
 
 export type LineasListaProps<L extends Linea = Linea> = {
   lineas: L[];
   seleccionada?: string;
   onCambioCantidad?: (linea: L, cantidad: number) => void;
   pedidoEditable?: boolean;
+  cantidadEditable?: boolean;
   acciones?: Parameters<typeof QuimeraAcciones>[0]["acciones"];
   publicar: (evento: string, payload?: unknown) => void;
 };
@@ -29,6 +31,7 @@ export const LineasListaBase = ({
   seleccionada,
   onCambioCantidad,
   pedidoEditable,
+  cantidadEditable = false,
   acciones,
   publicar,
 }: LineasListaProps) => {
@@ -39,14 +42,14 @@ export const LineasListaBase = ({
 
   return (
     <ListadoSemiControlado
-      metaTabla={getMetaTablaLineas(onCambioCantidad, pedidoEditable)}
-      // tarjeta={(linea) => (
-      //   <TarjetaLinea
-      //     linea={linea}
-      //     pedidoEditable={pedidoEditable}
-      //     onCambioCantidad={onCambioCantidad}
-      //   />
-      // )}
+      metaTabla={getMetaTablaLineas(onCambioCantidad, cantidadEditable)}
+      tarjeta={(linea) => (
+        <TarjetaLinea
+          linea={linea}
+          cantidadEditable={cantidadEditable}
+          onCambioCantidad={onCambioCantidad}
+        />
+      )}
       entidades={lineas}
       totalEntidades={lineas.length}
       seleccionada={lineas.find((linea) => linea.id === seleccionada) ?? null}
@@ -66,7 +69,7 @@ export const LineasListaBase = ({
 
 const getMetaTablaLineas = (
   onCambioCantidad?: (linea: Linea, cantidad: number) => void,
-  pedidoEditable?: boolean
+  cantidadEditable = false
 ) => {
   return [
     {
@@ -81,7 +84,7 @@ const getMetaTablaLineas = (
       prioridad: "alta" as const,
       tipo: "numero" as const,
       render: (linea: Linea) =>
-        pedidoEditable && onCambioCantidad ? (
+        cantidadEditable && onCambioCantidad ? (
           <EditarCantidadLinea
             linea={linea}
             onCantidadEditada={onCambioCantidad}
@@ -101,7 +104,7 @@ const getMetaTablaLineas = (
       cabecera: "IVA",
       prioridad: "media" as const,
       render: (linea: Linea) =>
-        linea.grupo_iva_producto_id ? `${linea.grupo_iva_producto_id}%` : "",
+        linea.grupo_iva_producto_id ? `${linea.grupo_iva_producto_id}` : "",
     },
     {
       id: "dto_porcentual",

@@ -16,126 +16,106 @@ import "./PagoValeVentaTpv.css";
 import { metaNuevoPagoVale, nuevoPagoValeInicial } from "./pagar_con_vale.ts";
 
 export const PagoValeVentaTpv = ({
-    publicar,
-    venta,
+  publicar,
+  venta,
 }: {
-    publicar: EmitirEvento;
-    venta: VentaTpv;
+  publicar: EmitirEvento;
+  venta: VentaTpv;
 }) => {
-    
-    const pendiente = redondeaMoneda(venta.total - venta.pagado, venta.divisa_id)
-    console.log('pendiente', pendiente)
+  const pendiente = redondeaMoneda(venta.total - venta.pagado, venta.divisa_id);
+  console.log("pendiente", pendiente);
 
-    const { modelo, uiProps, valido, set, init } = useModelo(
-        metaNuevoPagoVale, {
-            ...nuevoPagoValeInicial,
-            pendiente,
-        }
-    );
+  const { modelo, uiProps, valido, set, init } = useModelo(metaNuevoPagoVale, {
+    ...nuevoPagoValeInicial,
+    pendiente,
+  });
 
-    const { intentar } = useContext(ContextoError);
+  const { intentar } = useContext(ContextoError);
 
-    const pagar_ = useCallback(
-        async () => {
-            const idPago = await postPago(
-                venta.id,
-                {
-                    importe: modelo.importe,
-                    formaPago: "VALE",
-                    idVale: modelo.vale_id
-                }
-            );
-            publicar("pago_con_vale_hecho", idPago);
-        },
-        [modelo, publicar, venta.id]
-    );
+  const pagar_ = useCallback(async () => {
+    const idPago = await postPago(venta.id, {
+      importe: modelo.importe,
+      formaPago: "VALE",
+      idVale: modelo.vale_id,
+    });
+    publicar("pago_con_vale_hecho", idPago);
+  }, [modelo, publicar, venta.id]);
 
-    const cancelar_ = useCallback(
-        () => publicar("pago_cancelado"),
-        [publicar]
-    );
-    const [pagar, cancelar] = useForm(pagar_, cancelar_);
+  const cancelar_ = useCallback(() => publicar("pago_cancelado"), [publicar]);
+  const [pagar, cancelar] = useForm(pagar_, cancelar_);
 
-    const [vale, setVale] = useState<ValeTpv | null>(null);
+  const [vale, setVale] = useState<ValeTpv | null>(null);
 
-    const buscarVale = async (barcode: string) => {
-
-        if (!barcode) {
-            return;
-        }
-
-        const vale = await intentar(() => getVale(barcode))
-        setVale(vale);
-
-        const saldoPendiente = vale.saldo_pendiente;
-        const importe = Math.min(saldoPendiente, pendiente);
-        
-        set({
-            ...modelo,
-            importe: importe,
-            vale_id: vale.id,
-            saldoVale: vale.saldo_pendiente
-        })
-    };
-
-    const focus = useFocus();
-
-    const limpiar = () => {
-        init({
-            ...nuevoPagoValeInicial,
-            pendiente,
-        });
-        setVale(null);
+  const buscarVale = async (barcode: string) => {
+    if (!barcode) {
+      return;
     }
 
+    const vale = await intentar(() => getVale(barcode));
+    setVale(vale);
 
-    return (
-        <QModal abierto={true} nombre="mostrar" onCerrar={cancelar}>
+    const saldoPendiente = vale.saldo_pendiente;
+    const importe = Math.min(saldoPendiente, pendiente);
 
-        <div className="PagoValeVentaTpv">
+    set({
+      ...modelo,
+      importe: importe,
+      vale_id: vale.id,
+      saldoVale: vale.saldo_pendiente,
+    });
+  };
 
-            <h2>Pago con vale</h2>
+  const focus = useFocus();
 
-            { vale && (
-                <h3>
-                    {`Vale: ${vale.id}. Saldo inicial ${formatearMoneda(vale.saldo_inicial, venta.divisa_id)}. Saldo disponible ${formatearMoneda(vale.saldo_pendiente, venta.divisa_id)}`}
-                </h3>
-            )}
+  const limpiar = () => {
+    init({
+      ...nuevoPagoValeInicial,
+      pendiente,
+    });
+    setVale(null);
+  };
 
-            <quimera-formulario>
+  return (
+    <QModal
+      abierto={true}
+      nombre="mostrar"
+      titulo="Pago con vale"
+      onCerrar={cancelar}
+    >
+      <div className="PagoValeVentaTpv">
+        {vale && (
+          <h3>
+            {`Vale: ${vale.id}. Saldo inicial ${formatearMoneda(vale.saldo_inicial, venta.divisa_id)}. Saldo disponible ${formatearMoneda(vale.saldo_pendiente, venta.divisa_id)}`}
+          </h3>
+        )}
 
-                <div id='pendiente'>
-                    {`A pagar: ${formatearMoneda(pendiente, venta.divisa_id)}`}
-                </div>
+        <quimera-formulario>
+          <div id="pendiente">
+            {`A pagar: ${formatearMoneda(pendiente, venta.divisa_id)}`}
+          </div>
 
-                {vale && (
-                    <QInput label="Importe" {...uiProps("importe")} />
-                )}
+          {vale && <QInput label="Importe" {...uiProps("importe")} />}
 
-                {!vale && (
-                    <QInput label='Vale' nombre='vale_id'
-                        ref ={focus}
-                        autoFocus
-                        onEnterKeyUp={(barcode)=>buscarVale(barcode)}
-                    />
-                )}
-                
-            </quimera-formulario>
+          {!vale && (
+            <QInput
+              label="Vale"
+              nombre="vale_id"
+              ref={focus}
+              autoFocus
+              onEnterKeyUp={(barcode) => buscarVale(barcode)}
+            />
+          )}
+        </quimera-formulario>
 
-            <div className="botones maestro-botones ">
-            
-            
-            { vale && (
-            <QBoton onClick={limpiar}>Limpiar</QBoton>
-            )}
-            </div>
-            <div className="botones maestro-botones ">
-            <QBoton onClick={pagar}
-                deshabilitado={!valido}>
-                Pagar
-            </QBoton>
-            </div>
+        <div className="botones maestro-botones ">
+          {vale && <QBoton onClick={limpiar}>Limpiar</QBoton>}
         </div>
-        </QModal>
-    );
+        <div className="botones maestro-botones ">
+          <QBoton onClick={pagar} deshabilitado={!valido}>
+            Pagar
+          </QBoton>
+        </div>
+      </div>
+    </QModal>
+  );
 };

@@ -68,10 +68,13 @@ export const CerrarArqueoTpv = ({
   };
 
   return (
-    <QModal abierto={true} nombre="mostrar" onCerrar={cancelar}>
+    <QModal
+      abierto={true}
+      nombre="mostrar"
+      titulo="Cierre de arqueo"
+      onCerrar={cancelar}
+    >
       <div className="CierreArqueo">
-        <h2>Cierre de arqueo</h2>
-
         <quimera-formulario>
           <div id="cierre">
             {`Total efectivo: ${moneda(arqueo.recuentoEfectivo)}`}

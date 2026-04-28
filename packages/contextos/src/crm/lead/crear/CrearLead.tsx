@@ -27,10 +27,13 @@ export const CrearLead = ({ publicar }: { publicar: EmitirEvento }) => {
   }, [creando, publicar]);
 
   return (
-    <QModal abierto={true} nombre="mostrar" onCerrar={cancelar}>
+    <QModal
+      abierto={true}
+      nombre="mostrar"
+      titulo="Nuevo Lead"
+      onCerrar={cancelar}
+    >
       <div className="CrearLead">
-        <h2>Nuevo Lead</h2>
-
         <quimera-formulario>
           <QInput label="Nombre" {...uiProps("nombre")} />
         </quimera-formulario>

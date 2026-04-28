@@ -47,10 +47,13 @@ export const CrearLineaVentaTpv = ({
   const focus = useFocus();
 
   return (
-    <QModal abierto={true} nombre="mostrar" onCerrar={cancelar}>
+    <QModal
+      abierto={true}
+      nombre="mostrar"
+      titulo="Crear línea"
+      onCerrar={cancelar}
+    >
       <div className="CrearLineaVentaTpv">
-        <h2>Crear línea</h2>
-
         <quimera-formulario>
           <Articulo
             {...uiProps("referencia", "descripcion")}
