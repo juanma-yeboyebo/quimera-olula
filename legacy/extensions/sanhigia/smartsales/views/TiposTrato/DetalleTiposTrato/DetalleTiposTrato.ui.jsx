@@ -1,3 +1,4 @@
+import { SelectorValores } from "@quimera-extension/base-almacen";
 import {
   Box,
   Button,
@@ -9,8 +10,7 @@ import {
   QSection,
   Typography,
 } from "@quimera/comps";
-import { SelectorValores } from "@quimera-extension/base-almacen";
-import Quimera, { getSchemas, PropValidation, useStateValue, useWidth } from "quimera";
+import Quimera, { getSchemas, useStateValue, useWidth } from "quimera";
 
 import { LineasCausasPerdidaTrato } from "../../../comps";
 
@@ -108,7 +108,7 @@ function DetalleTiposTrato({ useStyles }) {
             />
           </Box>
 
-          <Grid container size={12} justify="center">
+          <Grid container size={12} justifyContent="center">
             <Grid size={4}>
               <QSection
                 actionPrefix="eliminarTipoTrato"
