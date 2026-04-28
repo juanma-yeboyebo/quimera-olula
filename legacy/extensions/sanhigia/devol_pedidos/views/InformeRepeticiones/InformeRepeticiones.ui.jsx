@@ -9,8 +9,8 @@ import {
   ListItemText,
   Typography,
 } from "@quimera/thirdparty";
-import Quimera, { PropValidation, useStateValue } from "quimera";
-import React, { useEffect } from "react";
+import Quimera, { useStateValue } from "quimera";
+import { useEffect } from "react";
 // import Articulo from '../../comps/Articulo/index.js'
 // import ReactHTMLTableToExcel from 'react-html-table-to-excel'
 function InformeRepeticiones({ useStyles }) {
@@ -50,7 +50,7 @@ function InformeRepeticiones({ useStyles }) {
       <Box my={1} p={1}>
         <Quimera.SubView id="InformeRepeticiones/InformeRepeticionesFiltro" />
       </Box>
-      <Grid container size={12} direction="column" justify="center" alignItems="center">
+      <Grid container size={12} justifyContent="center" alignItems="center">
         <Grid>
           <Box px={3} align="right">
             <Button
