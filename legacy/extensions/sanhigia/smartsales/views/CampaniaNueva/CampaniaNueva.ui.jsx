@@ -1,7 +1,7 @@
+import { QArticulo, SelectorValores, Subfamilia } from "@quimera-extension/base-almacen";
 import { Box, Field, Grid, Icon, IconButton, QBox, Typography, Wizard } from "@quimera/comps";
 import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@quimera/thirdparty";
-import { QArticulo, SelectorValores, Subfamilia } from "@quimera-extension/base-almacen";
-import Quimera, { getSchemas, PropValidation, useStateValue, util } from "quimera";
+import Quimera, { getSchemas, useStateValue, util } from "quimera";
 import { useEffect } from "react";
 
 import { QProductoOfertar } from "../../comps";
@@ -167,7 +167,7 @@ function CampaniaNueva({ callbackChanged, initCampania }) {
                 completed:
                   campania.buffer.fechaInicioUltimaCompra && campania.buffer.fechaFinUltimaCompra,
                 dynamicComp: (
-                  <>
+                  <Grid container justifyContent="space-around">
                     <Field.Schema
                       id={`campania.buffer.fechaInicioUltimaCompra`}
                       schema={schema}
@@ -184,7 +184,7 @@ function CampaniaNueva({ callbackChanged, initCampania }) {
                       autoFocus
                       startAdornment={<Icon>calendar_month</Icon>}
                     />
-                  </>
+                  </Grid>
                 ),
                 staticComp: (
                   <Box display="flex" style={{ gap: "0.5rem" }} alignItems="center">
@@ -207,7 +207,7 @@ function CampaniaNueva({ callbackChanged, initCampania }) {
                 completed: true,
                 //   campania.buffer.fechaInicioUltimaCompra && campania.buffer.fechaFinUltimaCompra,
                 dynamicComp: (
-                  <Grid container>
+                  <Grid container justifyContent="space-around" >
                     <Grid container size={5}>
                       <Box width={1}>
                         <Field.Schema
@@ -219,7 +219,7 @@ function CampaniaNueva({ callbackChanged, initCampania }) {
                         />
                       </Box>
                     </Grid>
-                    <Grid container size={2} />
+                    {/* <Grid container size={2} /> */}
                     <Grid container size={5}>
                       <Box width={1}>
                         <Field.Schema
@@ -431,8 +431,8 @@ function CampaniaNueva({ callbackChanged, initCampania }) {
                           <Grid size={12}>
                             <Box>
                               <Typography variant="overline">{`${lista?.name}${campania?.buffer?.productos[lista?.key]?.refs?.length > 0
-                                  ? `(${campania.buffer.productos[lista?.key].tipo})`
-                                  : ""
+                                ? `(${campania.buffer.productos[lista?.key].tipo})`
+                                : ""
                                 }`}</Typography>
                               {(campania?.buffer?.productos?.[lista?.key]?.refs ?? []).map(
                                 (producto, idx) => (
@@ -608,7 +608,7 @@ function CampaniaNueva({ callbackChanged, initCampania }) {
                 skip: campania.buffer.tipo && ["marketingDigital"].includes(campania.buffer.tipo),
                 completed: campania.buffer.fechaInicioImpacto && campania.buffer.fechaFinImpacto,
                 dynamicComp: (
-                  <>
+                  <Grid container justifyContent="space-around">
                     <Field.Schema
                       id={`campania.buffer.fechaInicioImpacto`}
                       schema={schema}
@@ -625,7 +625,7 @@ function CampaniaNueva({ callbackChanged, initCampania }) {
                       autoFocus
                       startAdornment={<Icon>calendar_month</Icon>}
                     />
-                  </>
+                  </Grid>
                 ),
                 staticComp: (
                   <Box display="flex" style={{ gap: "0.5rem" }} alignItems="center">

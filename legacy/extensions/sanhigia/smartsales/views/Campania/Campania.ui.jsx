@@ -131,7 +131,7 @@ function Campania({ callbackChanged, initCampania, origen, useStyles }) {
           </>
         }
       >
-        <Box display={"flex"} justifyContent={"center"}>
+        <Box mt={1} display={"flex"} justifyContent={"center"}>
           <Button
             id="irATratosCampania"
             onClick={() => navigate(`/ss/${origen}/${campania.buffer.idCampania}/tratos`)}
@@ -453,7 +453,7 @@ function Campania({ callbackChanged, initCampania, origen, useStyles }) {
               actionPrefix={"campania"}
               alwaysInactive={campania.data.estado !== "pendiente"}
               dynamicComp={() => (
-                <>
+                <Grid container justifyContent="space-around">
                   <Field.Schema
                     id={`campania.buffer.fechaInicioUltimaCompra`}
                     schema={schema}
@@ -468,7 +468,7 @@ function Campania({ callbackChanged, initCampania, origen, useStyles }) {
                     fullWidth
                     autoFocus
                   />
-                </>
+                </Grid>
               )}
             >
               <Box display="flex" style={{ gap: "0.5rem" }} alignItems="center">
@@ -489,7 +489,7 @@ function Campania({ callbackChanged, initCampania, origen, useStyles }) {
               actionPrefix={"campania"}
               alwaysInactive={campania.data.estado !== "pendiente"}
               dynamicComp={() => (
-                <>
+                <Grid container justifyContent="space-around" >
                   <Field.Schema
                     id={`campania.buffer.importeFacturadoMayorQue`}
                     schema={schema}
@@ -504,7 +504,7 @@ function Campania({ callbackChanged, initCampania, origen, useStyles }) {
                     fullWidth
                     autoFocus
                   />
-                </>
+                </Grid>
               )}
             >
               <Box display="flex" style={{ gap: "0.5rem" }} alignItems="center">
@@ -905,7 +905,7 @@ function Campania({ callbackChanged, initCampania, origen, useStyles }) {
             actionPrefix={"campania"}
             alwaysInactive={campania.data.estado !== "pendiente"}
             dynamicComp={() => (
-              <>
+              <Grid container justifyContent="space-around" >
                 <Field.Schema
                   id={`campania.buffer.fechaInicioImpacto`}
                   schema={schema}
@@ -920,7 +920,7 @@ function Campania({ callbackChanged, initCampania, origen, useStyles }) {
                   fullWidth
                   autoFocus
                 />
-              </>
+              </Grid>
             )}
           >
             <Box display="flex" style={{ gap: "0.5rem" }} alignItems="center">
