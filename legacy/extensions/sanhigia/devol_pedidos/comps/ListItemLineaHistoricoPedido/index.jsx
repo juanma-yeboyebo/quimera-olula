@@ -180,8 +180,8 @@ function ListItemLineaHistoricoPedido({
               </Box>
             </Box>
             {linea.disponible < cantidad && (
-              <Grid display="flex" justifyContent="space-between" alignItems="center">
-                <Box display="flex" justifyContent="space-between" alignItems="center" width={1}>
+              <Grid container display="flex" justifyContent="space-between" alignItems="center" style={{ border: '1px solid red' }}>
+                <Box display="flex" justifyContent="space-between" alignItems="center" width={1} >
                   <Typography
                     variant="body1"
                     color="secondary"
