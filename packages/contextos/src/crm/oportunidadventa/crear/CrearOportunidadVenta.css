@@ -22,8 +22,4 @@
     quimera-input[nombre="probabilidad"] {
         grid-column: span 6;
     }
-
-    quimera-autocompletar[nombre="responsable_id"] {
-        grid-column: 1 / span 6;
-    }
 }

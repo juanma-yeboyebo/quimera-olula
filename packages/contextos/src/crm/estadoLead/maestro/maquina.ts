@@ -11,6 +11,8 @@ export const getMaquina: () => Maquina<EstadoMaestroEstadosLead, ContextoMaestro
 
             estado_lead_deseleccionado: EstadosLead.desactivar,
 
+            estado_lead_marcado_defecto: (ctx) => recargarEstadosLead(ctx, ctx.estados_lead.criteria),
+
             estado_lead_borrado: EstadosLead.quitar,
 
             recarga_de_estados_lead_solicitada: recargarEstadosLead,

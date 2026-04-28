@@ -1,6 +1,6 @@
 import { Maquina } from "@olula/lib/diseño.js";
 import { publicar } from "@olula/lib/dominio.js";
-import { cambiarEstadoLead, cargarContexto, getContextoVacio } from "./detalle.ts";
+import { cambiarEstadoLead, cargarContexto, getContextoVacio, marcarPorDefecto } from "./detalle.ts";
 import { ContextoDetalleEstadoLead, EstadoDetalleEstadoLead } from "./diseño.ts";
 
 export const getMaquina: () => Maquina<EstadoDetalleEstadoLead, ContextoDetalleEstadoLead> = () => {
@@ -9,6 +9,8 @@ export const getMaquina: () => Maquina<EstadoDetalleEstadoLead, ContextoDetalleE
             estado_lead_id_cambiado: cargarContexto,
 
             estado_lead_cambiado: cambiarEstadoLead,
+
+            marcar_estado_lead_por_defecto: [marcarPorDefecto, publicar("estado_lead_marcado_defecto")],
 
             edicion_estado_lead_cancelada: [getContextoVacio, publicar("estado_lead_deseleccionado", null)],
 

@@ -37,3 +37,5 @@ export const patchFuenteLead = async (id: string, fuente: Partial<FuenteLead>): 
 
 export const deleteFuenteLead = async (id: string): Promise<void> =>
     await RestAPI.delete(`${baseUrlFuenteLead}/${id}`, "Error al borrar la fuente de lead");
+
+export const marcarPorDefectoFuenteLead = async (id: string): Promise<void> => await RestAPI.patch(`${baseUrlFuenteLead}/${id}/pordefecto`, "Error al marcar por defecto la fuente de lead");

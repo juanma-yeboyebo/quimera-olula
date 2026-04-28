@@ -22,5 +22,6 @@ dev-dist/
 *.sln
 *.sw?
 
+_tmp/
 *.tmp
 *.env*

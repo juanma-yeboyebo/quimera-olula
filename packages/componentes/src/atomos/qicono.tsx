@@ -13,6 +13,7 @@ type Icono = {
   tipo?: "solid" | "regular" | "logo";
 };
 
+// https://v2.boxicons.com/
 const iconos: Record<string, string | Icono> = {
   añadir: "plus-circle",
   buscar: "search-alt-2",
@@ -37,6 +38,7 @@ const iconos: Record<string, string | Icono> = {
   menu: "menu",
   calendario_vacio: "calendar-alt",
   check: "check",
+  checkdoble: "check-double",
   x_circle: "x-circle",
   minus: "minus",
   lista: "list-ul",
@@ -53,6 +55,13 @@ const iconos: Record<string, string | Icono> = {
   derecha: "chevron-right",
   circulo: { nombre: "circle", tipo: "regular" },
   circulo_relleno: { nombre: "circle", tipo: "solid" },
+  telefono: "phone",
+  correo: "envelope",
+  casa: "home",
+  tarea: "task",
+  llaveinglesa: "wrench",
+  estrella: "star",
+  relojarena: "hourglass",
 };
 
 export const QIcono = ({

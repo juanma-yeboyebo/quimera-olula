@@ -21,10 +21,6 @@
         grid-column: span 4;
     }
 
-    quimera-autocompletar[nombre="responsable_id"] {
-        grid-column: span 8;
-    }
-
     quimera-textarea[nombre="descripcion_larga"] {
         grid-column: span 12;
     }

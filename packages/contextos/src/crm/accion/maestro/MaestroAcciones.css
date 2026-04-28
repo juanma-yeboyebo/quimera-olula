@@ -1,0 +1,13 @@
+.q-avatar {
+    &.Hecha {
+        background-color: var(--color-exito-claro);
+    }
+
+    &.Pendiente {
+        background-color: var(--color-advertencia-claro);
+    }
+
+    &.Borrador {
+        background-color: var(--color-deshabilitado-oscuro);
+    }
+}

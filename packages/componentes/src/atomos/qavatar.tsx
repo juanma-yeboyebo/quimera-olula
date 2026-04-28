@@ -1,11 +1,17 @@
 import "./qavatar.css";
 
 interface QAvatarProps {
-  nombre: string;
+  nombre?: string;
   tamaño?: "sm" | "md" | "lg";
+  className?: string;
 }
 
-export const QAvatar = ({ nombre, tamaño = "md" }: QAvatarProps) => {
+export const QAvatar = ({
+  nombre,
+  tamaño = "md",
+  className = "",
+  children,
+}: React.PropsWithChildren<QAvatarProps>) => {
   const obtenerIniciales = (nombre: string) => {
     const palabras = nombre.trim().split(" ");
 
@@ -18,5 +24,9 @@ export const QAvatar = ({ nombre, tamaño = "md" }: QAvatarProps) => {
     }
   };
 
-  return <div className={`q-avatar ${tamaño}`}>{obtenerIniciales(nombre)}</div>;
+  return (
+    <div className={`q-avatar ${tamaño} ${className}`}>
+      {children ?? obtenerIniciales(nombre ?? "")}
+    </div>
+  );
 };
