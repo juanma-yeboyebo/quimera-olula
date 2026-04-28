@@ -10,7 +10,8 @@ export const metaTablaLineaPedido: MetaTabla<Linea> = [
     },
     {
         id: "cantidad",
-        cabecera: "Cantidad"
+        cabecera: "Cantidad",
+        tipo: "numero"
     },
 ];
 
@@ -25,11 +26,13 @@ export const metaTablaTramoLineaPedido: MetaTabla<Tramo> = [
     },
     {
         id: "cantidad",
-        cabecera: "Cantidad"
+        cabecera: "Cantidad",
+        tipo: "numero"
     },
     {
         id: "cantidad_ko",
-        cabecera: "Cantidad KO"
+        cabecera: "Cantidad KO",
+        tipo: "numero"
     },
 ];
 

@@ -46,10 +46,13 @@ export const CrearOportunidadVenta = ({
   }, [creando, publicar]);
 
   return (
-    <QModal abierto={true} nombre="mostrar" onCerrar={cancelar}>
+    <QModal
+      abierto={true}
+      nombre="mostrar"
+      titulo="Nueva Oportunidad de Venta"
+      onCerrar={cancelar}
+    >
       <div className="CrearOportunidadVenta">
-        <h2>Nueva Oportunidad de Venta</h2>
-
         <quimera-formulario>
           <QInput label="Descripción" {...uiProps("descripcion")} />
           <ClienteConNombre

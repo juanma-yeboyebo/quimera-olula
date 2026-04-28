@@ -177,9 +177,9 @@ export const DetalleCliente = ({
             <QModal
               nombre="modal-baja"
               abierto={estado === "BAJANDO_CLIENTE"}
+              titulo="Dar de baja"
               onCerrar={() => emitir("baja_cancelada")}
             >
-              <h2>Dar de baja</h2>
               <BajaCliente clienteId={ctx.cliente.id} publicar={emitir} />
             </QModal>
           </div>

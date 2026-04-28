@@ -35,10 +35,13 @@ export const CrearAccion = ({
   }, [creando, publicar]);
 
   return (
-    <QModal abierto={true} nombre="mostrar" onCerrar={cancelar}>
+    <QModal
+      abierto={true}
+      nombre="mostrar"
+      titulo="Nueva Acción"
+      onCerrar={cancelar}
+    >
       <div className="CrearAccion">
-        <h2>Nueva Acción</h2>
-
         <quimera-formulario>
           <QInput label="Descripción" {...uiProps("descripcion")} />
           <QInput label="Fecha" {...uiProps("fecha")} />

@@ -67,9 +67,9 @@ export const TabClientesAcciones = ({
       <QModal
         nombre="asociarCliente"
         abierto={estado === "vincular_cliente"}
+        titulo="Asociar cliente"
         onCerrar={() => emitir("CANCELAR_VINCULACION")}
       >
-        <h2>Asociar cliente</h2>
         <ClienteSelector
           valor={clienteSeleccionado?.valor || ""}
           descripcion={clienteSeleccionado?.descripcion || ""}

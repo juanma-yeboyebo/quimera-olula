@@ -34,12 +34,6 @@ export const MaestroContactos = () => {
           <>
             <h2>Contactos</h2>
 
-            <div className="maestro-botones">
-              <QBoton onClick={() => emitir("creacion_de_contacto_solicitada")}>
-                Nuevo
-              </QBoton>
-            </div>
-
             <Listado<Contacto>
               metaTabla={metaTablaContacto}
               criteria={ctx.contactos.criteria}
@@ -47,6 +41,15 @@ export const MaestroContactos = () => {
               entidades={ctx.contactos.lista}
               totalEntidades={ctx.contactos.total}
               seleccionada={ctx.contactos.activo}
+              renderAcciones={() => (
+                <div className="maestro-botones">
+                  <QBoton
+                    onClick={() => emitir("creacion_de_contacto_solicitada")}
+                  >
+                    Nuevo
+                  </QBoton>
+                </div>
+              )}
               onSeleccion={(payload) =>
                 emitir("contacto_seleccionado", payload)
               }

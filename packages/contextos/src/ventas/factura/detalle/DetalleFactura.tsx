@@ -74,11 +74,13 @@ export const DetalleFactura = ({
       entidad={ctx.factura}
       cerrarDetalle={() => emitir("factura_deseleccionada", null)}
     >
-      <div className="acciones-rapidas">
-        <QBoton tipo="reset" variante="texto" onClick={handleBorrar}>
-          Borrar
-        </QBoton>
-      </div>
+      {editable(ctx.factura) && (
+        <div className="acciones-rapidas">
+          <QBoton tipo="reset" variante="texto" onClick={handleBorrar}>
+            Borrar
+          </QBoton>
+        </div>
+      )}
 
       <Tabs>
         <Tab label="Cliente">

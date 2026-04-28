@@ -48,21 +48,20 @@ export const DetalleAlbaran = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [albaranId]);
 
-  
   const { estado, lineaActiva } = ctx;
-  
+
   const titulo = (albaran: Albaran) => albaran.codigo || "Nuevo Albarán";
-  
+
   const handleGuardar = useCallback(() => {
     emitir("edicion_de_albaran_lista", albaran.modelo);
   }, [emitir, albaran]);
-  
+
   const handleCancelar = useCallback(() => {
     emitir("edicion_de_albaran_cancelada");
   }, [emitir]);
-  
+
   if (!ctx.albaran.id) return;
-  
+
   const acciones = [
     {
       icono: "eliminar",
@@ -80,7 +79,9 @@ export const DetalleAlbaran = ({
       entidad={ctx.albaran}
       cerrarDetalle={() => emitir("albaran_deseleccionado", null)}
     >
-      <QuimeraAcciones acciones={acciones} vertical />
+      {editable(ctx.albaran) && (
+        <QuimeraAcciones acciones={acciones} vertical />
+      )}
 
       <Tabs>
         <Tab label="Cliente">

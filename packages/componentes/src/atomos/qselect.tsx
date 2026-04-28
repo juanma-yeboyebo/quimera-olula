@@ -4,7 +4,7 @@ import { Etiqueta, FormFieldProps, Validacion } from "./_forminput.tsx";
 type Opcion = { valor: string; descripcion: string };
 
 export type QSelectProps = Omit<FormFieldProps, "onChange" | "onBlur"> & {
-  opciones: Opcion[];
+  opciones: Opcion[] | Opcion[][];
   onChange?: (
     opcion: Opcion | null,
     evento: React.ChangeEvent<HTMLElement>
@@ -44,14 +44,23 @@ export const QSelect = ({
     deshabilitado,
   };
 
-  const renderOpciones = opciones.map((opcion) => (
-    <option key={opcion.valor} value={opcion.valor}>
-      {opcion.descripcion}
-    </option>
-  ));
+  const renderOpciones = (opciones: Opcion[] | Opcion[][]) =>
+    opciones.map((opcion) =>
+      Array.isArray(opcion) ? (
+        <optgroup label={opcion[0].descripcion} key={opcion[0].descripcion}>
+          {renderOpciones(opcion.slice(1))}
+        </optgroup>
+      ) : (
+        <option key={opcion.valor} value={opcion.valor}>
+          {opcion.descripcion}
+        </option>
+      )
+    );
 
   const manejarChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const opcion = opciones.find((opcion) => opcion.valor === e.target.value);
+    const opcion = opciones
+      .flat()
+      .find((opcion) => opcion.valor === e.target.value);
     if (!opcion) {
       onChange?.(null, e);
       return;
@@ -61,7 +70,9 @@ export const QSelect = ({
   };
 
   const manejarBlur = (e: React.FocusEvent<HTMLSelectElement>) => {
-    const opcion = opciones.find((opcion) => opcion.valor === e.target.value);
+    const opcion = opciones
+      .flat()
+      .find((opcion) => opcion.valor === e.target.value);
     if (!opcion) {
       onBlur?.(null, e);
       return;
@@ -87,7 +98,7 @@ export const QSelect = ({
           <option hidden value="">
             -{placeholder}-
           </option>
-          {renderOpciones}
+          {renderOpciones(opciones)}
         </select>
         <Validacion textoValidacion={textoValidacion} />
       </label>

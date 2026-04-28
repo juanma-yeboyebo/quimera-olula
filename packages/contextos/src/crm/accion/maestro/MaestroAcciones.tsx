@@ -34,12 +34,6 @@ export const MaestroAcciones = () => {
           <>
             <h2>Acciones</h2>
 
-            <div className="maestro-botones">
-              <QBoton onClick={() => emitir("creacion_de_accion_solicitada")}>
-                Nueva
-              </QBoton>
-            </div>
-
             <Listado<Accion>
               metaTabla={metaTablaAccion}
               criteria={ctx.acciones.criteria}
@@ -47,6 +41,15 @@ export const MaestroAcciones = () => {
               entidades={ctx.acciones.lista}
               totalEntidades={ctx.acciones.total}
               seleccionada={ctx.acciones.activo}
+              renderAcciones={() => (
+                <div className="maestro-botones">
+                  <QBoton
+                    onClick={() => emitir("creacion_de_accion_solicitada")}
+                  >
+                    Nueva
+                  </QBoton>
+                </div>
+              )}
               onSeleccion={(payload) => emitir("accion_seleccionada", payload)}
               onCriteriaChanged={(payload) =>
                 emitir("criteria_cambiado", payload)

@@ -34,14 +34,6 @@ export const MaestroFuentesLead = () => {
           <>
             <h2>Fuentes de Lead</h2>
 
-            <div className="maestro-botones">
-              <QBoton
-                onClick={() => emitir("creacion_de_fuente_lead_solicitada")}
-              >
-                Nuevo
-              </QBoton>
-            </div>
-
             <Listado<FuenteLead>
               metaTabla={metaTablaFuenteLead}
               criteria={ctx.fuentes_lead.criteria}
@@ -49,6 +41,15 @@ export const MaestroFuentesLead = () => {
               entidades={ctx.fuentes_lead.lista}
               totalEntidades={ctx.fuentes_lead.total}
               seleccionada={ctx.fuentes_lead.activo}
+              renderAcciones={() => (
+                <div className="maestro-botones">
+                  <QBoton
+                    onClick={() => emitir("creacion_de_fuente_lead_solicitada")}
+                  >
+                    Nuevo
+                  </QBoton>
+                </div>
+              )}
               onSeleccion={(payload) =>
                 emitir("fuente_lead_seleccionada", payload)
               }

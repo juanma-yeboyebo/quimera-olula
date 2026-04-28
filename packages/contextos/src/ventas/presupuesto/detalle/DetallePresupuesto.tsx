@@ -86,7 +86,7 @@ export const DetallePresupuesto = ({
       entidad={ctx.presupuesto}
       cerrarDetalle={() => emitir("presupuesto_deseleccionado", null)}
     >
-      {!ctx.presupuesto.aprobado && (
+      {estado === "ABIERTO" && !ctx.presupuesto.aprobado && (
         <QuimeraAcciones acciones={acciones} vertical />
       )}
 

@@ -40,19 +40,6 @@ export const Acciones = ({
 
   return (
     <div className="TabAcciones">
-      <div className="maestro-botones">
-        <QBoton onClick={() => emitir("creacion_de_accion_solicitada")}>
-          Nueva
-        </QBoton>
-
-        <QBoton
-          onClick={() => emitir("borrado_accion_solicitado")}
-          deshabilitado={!ctx.acciones.activo}
-        >
-          Borrar
-        </QBoton>
-      </div>
-
       {ctx.estado === "CREANDO" && (
         <CrearAccion
           publicar={emitir}
@@ -72,6 +59,20 @@ export const Acciones = ({
         entidades={ctx.acciones.lista}
         totalEntidades={ctx.acciones.lista.length}
         cargando={cargando}
+        renderAcciones={() => (
+          <div className="maestro-botones">
+            <QBoton onClick={() => emitir("creacion_de_accion_solicitada")}>
+              Nueva
+            </QBoton>
+
+            <QBoton
+              onClick={() => emitir("borrado_accion_solicitado")}
+              deshabilitado={!ctx.acciones.activo}
+            >
+              Borrar
+            </QBoton>
+          </div>
+        )}
         seleccionada={ctx.acciones.activo ?? null}
         onSeleccion={(accion) => emitir("accion_seleccionada", accion)}
         criteriaInicial={criteriaDefecto}

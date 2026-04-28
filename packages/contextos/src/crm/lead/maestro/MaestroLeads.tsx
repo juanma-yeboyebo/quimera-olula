@@ -34,12 +34,6 @@ export const MaestroLeads = () => {
           <>
             <h2>Leads</h2>
 
-            <div className="maestro-botones">
-              <QBoton onClick={() => emitir("creacion_de_lead_solicitada")}>
-                Nuevo
-              </QBoton>
-            </div>
-
             <Listado<Lead>
               metaTabla={metaTablaLead}
               criteria={ctx.leads.criteria}
@@ -47,6 +41,13 @@ export const MaestroLeads = () => {
               entidades={ctx.leads.lista}
               totalEntidades={ctx.leads.total}
               seleccionada={ctx.leads.activo}
+              renderAcciones={() => (
+                <div className="maestro-botones">
+                  <QBoton onClick={() => emitir("creacion_de_lead_solicitada")}>
+                    Nuevo
+                  </QBoton>
+                </div>
+              )}
               onSeleccion={(payload) => emitir("lead_seleccionado", payload)}
               onCriteriaChanged={(payload) =>
                 emitir("criteria_cambiado", payload)

@@ -20,6 +20,7 @@ export const TabCliente = ({
   publicar = async () => {},
 }: TabClienteProps) => {
   const { modelo } = factura;
+  const clienteEditable = editable(modelo);
   const [cambiandoCliente, setCambiandoCliente] = useState(false);
 
   const onGuardarCambioCliente = async (cambios: CambioCliente) => {
@@ -43,20 +44,20 @@ export const TabCliente = ({
           deshabilitado={true}
         />
 
-        <div className="TabCliente-accion">
-          <QBoton
-            deshabilitado={!editable(modelo)}
-            onClick={() => setCambiandoCliente(true)}
-          >
-            Cambiar Cliente
-          </QBoton>
-        </div>
+        {clienteEditable && (
+          <div className="TabCliente-accion">
+            <QBoton onClick={() => setCambiandoCliente(true)}>
+              Cambiar Cliente
+            </QBoton>
+          </div>
+        )}
 
         {modelo.cliente.cliente_id !== null ? (
           <DirCliente
             clienteId={modelo.cliente.cliente_id ?? undefined}
             nombre="direccion_id"
             valor={modelo.cliente.direccion_id ?? ""}
+            deshabilitado={!clienteEditable}
             onChange={() => {}}
           />
         ) : (
@@ -69,9 +70,10 @@ export const TabCliente = ({
         )}
       </quimera-formulario>
 
-      {cambiandoCliente && (
+      {clienteEditable && cambiandoCliente && (
         <CambioClienteVenta
           venta={factura}
+          inicializarDesdeVenta={true}
           onGuardar={onGuardarCambioCliente}
           onCancelar={() => setCambiandoCliente(false)}
         />

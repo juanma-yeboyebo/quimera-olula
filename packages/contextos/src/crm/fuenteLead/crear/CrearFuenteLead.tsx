@@ -30,10 +30,13 @@ export const CrearFuenteLead = ({ publicar }: { publicar: EmitirEvento }) => {
   }, [creando, publicar]);
 
   return (
-    <QModal abierto={true} nombre="mostrar" onCerrar={cancelar}>
+    <QModal
+      abierto={true}
+      nombre="mostrar"
+      titulo="Nueva Fuente de Lead"
+      onCerrar={cancelar}
+    >
       <div className="CrearFuenteLead">
-        <h2>Nueva Fuente de Lead</h2>
-
         <quimera-formulario>
           <QInput label="Descripción" {...uiProps("descripcion")} />
           <QCheckbox label="Valor por Defecto" {...uiProps("valor_defecto")} />

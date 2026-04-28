@@ -1,7 +1,7 @@
 import { TipoIdFiscal } from "#/ventas/comun/componentes/tipoIdFiscal.tsx";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
-import { Mostrar } from "@olula/componentes/index.js";
+import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { ContextoError } from "@olula/lib/contexto.ts";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useModelo } from "@olula/lib/useModelo.ts";
@@ -35,9 +35,13 @@ export const CrearCliente = ({
   if (!activo) return null;
 
   return (
-    <Mostrar modo="modal" activo={activo} onCerrar={onCancelar}>
-      <div className="CrearCliente">
-        <h2>Nuevo Cliente</h2>
+    <QModal
+      abierto={activo}
+      nombre="crear_cliente"
+      titulo="Nuevo Cliente"
+      onCerrar={onCancelar}
+    >
+      <>
         <quimera-formulario>
           <QInput
             label="Nombre"
@@ -60,7 +64,7 @@ export const CrearCliente = ({
             Cancelar
           </QBoton>
         </div>
-      </div>
-    </Mostrar>
+      </>
+    </QModal>
   );
 };

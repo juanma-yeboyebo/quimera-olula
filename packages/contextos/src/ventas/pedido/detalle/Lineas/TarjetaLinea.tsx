@@ -7,11 +7,11 @@ import "./TarjetaLinea.css";
 
 export const TarjetaLinea = ({
   linea,
-  pedidoEditable,
+  cantidadEditable = false,
   onCambioCantidad,
 }: {
   linea: Linea;
-  pedidoEditable?: boolean;
+  cantidadEditable?: boolean;
   onCambioCantidad?: (linea: Linea, cantidad: number) => void;
 }) => {
   const [cantidadInput, setCantidadInput] = useState(
@@ -23,13 +23,14 @@ export const TarjetaLinea = ({
     ? `${linea.grupo_iva_producto_id}%`
     : "N/A";
   const dto = linea.dto_porcentual ? `${linea.dto_porcentual}%` : "0%";
+  const permitirEditarCantidad = cantidadEditable && onCambioCantidad;
 
   useEffect(() => {
     setCantidadInput(String(cantidad));
   }, [cantidad]);
 
   const actualizarCantidad = (nuevaCantidad: number) => {
-    if (!pedidoEditable || !onCambioCantidad) return;
+    if (!permitirEditarCantidad) return;
 
     const cantidadValida = Math.max(1, Math.floor(nuevaCantidad));
     setCantidadInput(String(cantidadValida));
@@ -64,12 +65,15 @@ export const TarjetaLinea = ({
           </span>
         </div>
         <div className="linea-pedido-tarjeta-total">
-          {formatearMoneda(linea.pvp_total, "EUR")}
+          <span>{formatearMoneda(linea.pvp_total, "EUR")}</span>
+          <span className="linea-pedido-tarjeta-cantidad">
+            Cantidad: {cantidad}
+          </span>
         </div>
       </div>
 
-      <div className="linea-pedido-tarjeta-cuerpo">
-        {pedidoEditable && onCambioCantidad ? (
+      {permitirEditarCantidad ? (
+        <div className="linea-pedido-tarjeta-cuerpo">
           <div className="linea-pedido-stepper">
             <div className="linea-pedido-stepper-control">
               <QBoton
@@ -115,12 +119,8 @@ export const TarjetaLinea = ({
               </QBoton>
             </div>
           </div>
-        ) : (
-          <div className="linea-pedido-cantidad-lectura">
-            Cantidad: {cantidad}
-          </div>
-        )}
-      </div>
+        </div>
+      ) : null}
     </div>
   );
 };

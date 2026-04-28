@@ -40,10 +40,13 @@ export const CambiarLineaTpv = ({
   }, [cambiando, publicar]);
 
   return (
-    <QModal abierto={true} nombre="mostrar" onCerrar={cancelar}>
+    <QModal
+      abierto={true}
+      nombre="mostrar"
+      titulo="Cambiar línea"
+      onCerrar={cancelar}
+    >
       <div className="CambiarLineaTpv">
-        <h2>Cambiar línea</h2>
-
         <quimera-formulario>
           <div id="titulo">
             <h3>{`${linea.descripcion}`}</h3>

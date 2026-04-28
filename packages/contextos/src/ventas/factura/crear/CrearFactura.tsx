@@ -1,6 +1,6 @@
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
-import { Mostrar } from "@olula/componentes/moleculas/Mostrar.tsx";
+import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { ClienteVentaNoRegistrado } from "@olula/ctx/ventas/comun/componentes/moleculas/ClienteVenta/ClienteVentaNoRegistrado.tsx";
 import { ClienteVentaRegistrado } from "@olula/ctx/ventas/comun/componentes/moleculas/ClienteVenta/ClienteVentaRegistrado.tsx";
 import { ContextoError } from "@olula/lib/contexto.ts";
@@ -55,7 +55,12 @@ export const CrearFactura = ({
   };
 
   return (
-    <Mostrar modo="modal" activo={activo} onCerrar={cancelar}>
+    <QModal
+      abierto={activo}
+      nombre="crear_factura"
+      titulo="Nueva Factura"
+      onCerrar={cancelar}
+    >
       <FormAltaFactura
         publicar={publicar}
         facturaRegistrada={facturaRegistrada}
@@ -63,7 +68,7 @@ export const CrearFactura = ({
         modoNoRegistrado={modoNoRegistrado}
         onToggleModoCliente={toggleModoCliente}
       />
-    </Mostrar>
+    </QModal>
   );
 };
 
@@ -117,8 +122,7 @@ const FormAltaFactura = ({
   const actual = modoNoRegistrado ? facturaNoRegistrada : facturaRegistrada;
 
   return (
-    <div className="CrearFactura">
-      <h2>Nueva Factura</h2>
+    <>
       <div className="modo-cliente">
         <QBoton onClick={onToggleModoCliente} variante="texto" tipo="button">
           {modoNoRegistrado ? "Cliente no registrado" : "Cliente registrado"}
@@ -140,6 +144,6 @@ const FormAltaFactura = ({
           Cancelar
         </QBoton>
       </div>
-    </div>
+    </>
   );
 };

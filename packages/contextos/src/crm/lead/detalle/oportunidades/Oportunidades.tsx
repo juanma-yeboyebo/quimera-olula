@@ -36,19 +36,6 @@ export const Oportunidades = ({ lead }: { lead: HookModelo<Lead> }) => {
 
   return (
     <div className="TabOportunidades">
-      <div className="maestro-botones">
-        <QBoton onClick={() => emitir("creacion_de_oportunidad_solicitada")}>
-          Nueva
-        </QBoton>
-
-        <QBoton
-          onClick={() => emitir("borrado_oportunidad_solicitado")}
-          deshabilitado={!ctx.oportunidades.activo}
-        >
-          Borrar
-        </QBoton>
-      </div>
-
       {ctx.estado === "CREANDO" && (
         <CrearOportunidadVenta
           publicar={emitir}
@@ -71,6 +58,22 @@ export const Oportunidades = ({ lead }: { lead: HookModelo<Lead> }) => {
         entidades={ctx.oportunidades.lista}
         totalEntidades={ctx.oportunidades.lista.length}
         cargando={cargando}
+        renderAcciones={() => (
+          <div className="maestro-botones">
+            <QBoton
+              onClick={() => emitir("creacion_de_oportunidad_solicitada")}
+            >
+              Nueva
+            </QBoton>
+
+            <QBoton
+              onClick={() => emitir("borrado_oportunidad_solicitado")}
+              deshabilitado={!ctx.oportunidades.activo}
+            >
+              Borrar
+            </QBoton>
+          </div>
+        )}
         seleccionada={ctx.oportunidades.activo ?? null}
         onSeleccion={(oportunidad) =>
           emitir("oportunidad_seleccionada", oportunidad)

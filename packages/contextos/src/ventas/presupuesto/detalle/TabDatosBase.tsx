@@ -22,7 +22,6 @@ export const TabDatosBase = ({ presupuesto }: TabDatosProps) => {
         <QDate label="Fecha salida" {...uiProps("fecha_salida")} />
         <Divisa {...uiProps("divisa_id")} />
         <QInput label="T. Conversión" {...uiProps("tasa_conversion")} />
-        <QInput {...uiProps("total_divisa_empresa")} label="Total €" />
         <Agente {...uiProps("agente_id", "nombre_agente")} />
         <FormaPago {...uiProps("forma_pago_id", "nombre_forma_pago")} />
         <GrupoIvaNegocio {...uiProps("grupo_iva_negocio_id")} />

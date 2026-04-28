@@ -35,6 +35,7 @@ export const EditarLineaBase = ({
   const { intentar } = useContext(ContextoError);
   const { modelo, uiProps, valido, set } = useModelo(metaLinea, linea);
   const [cambiando, setCambiando] = useState(false);
+  const [mostrarMas, setMostrarMas] = useState(false);
 
   const cambiar = useCallback(async () => {
     await intentar(() => patchLinea(pedidoId, modelo));
@@ -67,14 +68,16 @@ export const EditarLineaBase = ({
   );
 
   return (
-    <QModal abierto={true} nombre="mostrar" onCerrar={cancelar}>
+    <QModal
+      abierto={true}
+      nombre="editar_linea_pedido"
+      titulo="Editar línea"
+      onCerrar={cancelar}
+    >
       <div className="EditarLinea">
-        <h2>Editar línea</h2>
-
         <quimera-formulario>
-          <div id="titulo">
-            <h3>{`${linea.descripcion}`}</h3>
-            {`Ref: ${linea.referencia}`}
+          <div className="articulo-info">
+            <span className="articulo-ref">Ref. {linea.referencia}</span>
           </div>
 
           <Articulo
@@ -84,11 +87,24 @@ export const EditarLineaBase = ({
 
           <QInput label="Cantidad" {...uiProps("cantidad")} />
 
-          <GrupoIvaProducto {...uiProps("grupo_iva_producto_id")} />
-
           <QInput label="Precio" {...uiProps("pvp_unitario")} />
 
-          <QInput label="% Descuento" {...uiProps("dto_porcentual")} />
+          <div className="mostrar-mas-fila">
+            <button
+              type="button"
+              className="mostrar-mas-btn"
+              onClick={() => setMostrarMas((v) => !v)}
+            >
+              {mostrarMas ? "▲ Menos opciones" : "▼ Más opciones"}
+            </button>
+          </div>
+
+          {mostrarMas && (
+            <>
+              <GrupoIvaProducto {...uiProps("grupo_iva_producto_id")} />
+              <QInput label="% Descuento" {...uiProps("dto_porcentual")} />
+            </>
+          )}
         </quimera-formulario>
 
         <div className="botones maestro-botones ">

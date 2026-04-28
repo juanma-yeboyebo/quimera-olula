@@ -22,9 +22,7 @@ import { getMaquina } from "./maquina.ts";
 
 type Layout = "TABLA" | "TARJETA";
 
-
 export const MaestroConDetalleVentaTpv = () => {
-  
   const criteriaBaseVentas = useMemo(() => {
     return {
       ...criteriaDefecto,
@@ -77,11 +75,6 @@ export const MaestroConDetalleVentaTpv = () => {
             </div>
             <PuntoVentaTpvActual onChange={handle_punto_venta_cambiado} />
             <AgenteTpvActual />
-            <div className="maestro-botones">
-              <QBoton onClick={() => emitir("creacion_de_venta_solicitada")}>
-                Nueva Venta
-              </QBoton>
-            </div>
             <Listado<VentaTpv>
               metaTabla={metaTablaFactura}
               criteria={ctx.ventas.criteria}
@@ -90,6 +83,15 @@ export const MaestroConDetalleVentaTpv = () => {
               entidades={ctx.ventas.lista}
               totalEntidades={ctx.ventas.total}
               seleccionada={ctx.ventas.activo}
+              renderAcciones={() => (
+                <div className="maestro-botones">
+                  <QBoton
+                    onClick={() => emitir("creacion_de_venta_solicitada")}
+                  >
+                    Nueva Venta
+                  </QBoton>
+                </div>
+              )}
               onSeleccion={(payload) => emitir("venta_seleccionada", payload)}
               onCriteriaChanged={(payload) =>
                 emitir("criteria_cambiado", payload)
