@@ -118,3 +118,14 @@ export type PatchLineaFactura = (
     cambios: CambiosLineaFactura
 ) => Promise<void>;
 export type BorrarLineasFactura = (id: string, lineas: string[]) => Promise<void>;
+
+export interface ReciboFactura extends Entidad {
+    id: string;
+    codigo: string;
+    fecha_emision: string;
+    fecha_vencimiento: string;
+    estado: string;
+    importe: number;
+}
+
+export type GetRecibosFactura = (facturaId: string) => Promise<ReciboFactura[]>;

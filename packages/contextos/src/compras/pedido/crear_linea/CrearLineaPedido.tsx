@@ -1,4 +1,4 @@
-import { ArticuloLinea } from "#/compras/comun/componentes/articulo_linea/ArticuloLinea.tsx";
+import { ArticuloLinea, CamposArticuloLinea } from "#/compras/comun/componentes/articulo_linea/ArticuloLinea.tsx";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { QModal } from "@olula/componentes/index.js";
@@ -6,9 +6,13 @@ import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useForm } from "@olula/lib/useForm.ts";
 import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useMemo } from "react";
-import { Pedido } from "../diseño.ts";
-import { metaNuevaLineaPedido, nuevaLineaPedidoVacia } from "../dominio.ts";
-import { postLineaPedido } from "../infraestructura.ts";
+import { NuevaLineaPedido, Pedido } from "../diseño.ts";
+import {
+    camposConCambiosServidor,
+    metaNuevaLineaPedido,
+    nuevaLineaPedidoVacia,
+} from "../dominio.ts";
+import { postLineaPedido, queryNuevaLineaPedido } from "../infraestructura.ts";
 
 export const CrearLineaPedido = ({
     pedido,
@@ -18,7 +22,33 @@ export const CrearLineaPedido = ({
     publicar: EmitirEvento;
 }) => {
     const inicial = useMemo(nuevaLineaPedidoVacia, []);
-    const { modelo, uiProps, valido, set } = useModelo(metaNuevaLineaPedido, inicial);
+
+    const onModeloListo = useCallback(
+        async (linea: NuevaLineaPedido, campo?: string) => {
+            if (campo && !(camposConCambiosServidor as readonly string[]).includes(campo)) {
+                return;
+            }
+            return await queryNuevaLineaPedido(pedido.id, linea);
+        },
+        [pedido.id]
+    );
+
+    const { modelo, uiProps, valido, set } = useModelo(
+        metaNuevaLineaPedido,
+        inicial,
+        onModeloListo
+    );
+
+    const onArticuloCambiado = useCallback(
+        (cambios: Partial<CamposArticuloLinea>) => {
+            set({
+                ...modelo,
+                ...cambios,
+                ...(cambios.referencia !== undefined ? { pvpUnitario: null } : {}),
+            });
+        },
+        [modelo, set]
+    );
 
     const crear_ = useCallback(async () => {
         const idLinea = await postLineaPedido(pedido.id, modelo);
@@ -47,11 +77,14 @@ export const CrearLineaPedido = ({
                         descripcionArticulo={modelo.descripcionArticulo}
                         descripcion={modelo.descripcion}
                         nombre="referenciaNuevaLineaPedidoCompra"
-                        onChange={(cambios) => set({ ...modelo, ...cambios })}
+                        onChange={onArticuloCambiado}
                         autoFocus
                     />
                     <QInput label="Cantidad" {...uiProps("cantidad")} />
                     <QInput label="Coste unitario" {...uiProps("pvpUnitario")} />
+                    <QInput label="Total" {...uiProps("pvpTotal")} soloLectura />
+                    <QInput label="% IVA" {...uiProps("tipoIva")} soloLectura />
+                    <QInput label="% R.Equivalencia" {...uiProps("tipoRecargo")} soloLectura />
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>

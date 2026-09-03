@@ -26,6 +26,7 @@ import {
     PatchPedido,
     Pedido,
     PostLineasPedido,
+    QueryNuevaLineaPedido,
     PostPedido,
     Recibido,
 } from "./diseño.ts";
@@ -86,6 +87,33 @@ interface NuevaLineaPedidoApi {
     articulo: ArticuloLineaCompraApi;
     cantidad: number;
     pvp_unitario?: number;
+}
+
+interface QueryNuevaLineaPedidoApiReq {
+    articulo: ArticuloLineaCompraApi;
+    cantidad: number;
+    pvp_unitario?: number;
+    dto_porcentual?: number;
+    dto_lineal?: number;
+    grupo_iva_producto_id?: string;
+    iva_incluido?: boolean;
+    tipo_irpf?: number;
+}
+
+interface QueryNuevaLineaPedidoApiRes {
+    id?: string;
+    articulo_id: string | null;
+    descripcion: string;
+    cantidad: number;
+    pvp_unitario: number;
+    dto_porcentual: number;
+    dto_lineal: number;
+    pvp_total: number;
+    grupo_iva_producto_id: string;
+    tipo_iva: number;
+    tipo_recargo: number;
+    tipo_irpf: number;
+    iva_incluido: boolean;
 }
 
 interface NuevoPedidoApi {
@@ -223,6 +251,37 @@ const nuevaLineaAApi = (linea: NuevaLineaPedido): NuevaLineaPedidoApi => ({
     ...(linea.pvpUnitario === null ? {} : { pvp_unitario: linea.pvpUnitario }),
 });
 
+const queryNuevaLineaAApi = (linea: NuevaLineaPedido): QueryNuevaLineaPedidoApiReq => ({
+    articulo: articuloLineaApi(linea),
+    cantidad: linea.cantidad,
+    ...(linea.pvpUnitario === null ? {} : { pvp_unitario: linea.pvpUnitario }),
+    dto_porcentual: linea.dtoPorcentual,
+    dto_lineal: linea.dtoLineal,
+    ...(linea.grupoIvaProductoId === null
+        ? {}
+        : { grupo_iva_producto_id: linea.grupoIvaProductoId }),
+    iva_incluido: linea.ivaIncluido,
+    tipo_irpf: linea.tipoIrpf,
+});
+
+const queryNuevaLineaDesdeApi = (
+    anterior: NuevaLineaPedido,
+    api: QueryNuevaLineaPedidoApiRes
+): NuevaLineaPedido => ({
+    ...anterior,
+    ...(anterior.tipoArticulo === "generico" ? {} : { descripcion: api.descripcion }),
+    cantidad: api.cantidad,
+    pvpUnitario: api.pvp_unitario,
+    dtoPorcentual: api.dto_porcentual,
+    dtoLineal: api.dto_lineal,
+    pvpTotal: api.pvp_total,
+    grupoIvaProductoId: api.grupo_iva_producto_id,
+    ivaIncluido: api.iva_incluido,
+    tipoIva: api.tipo_iva,
+    tipoRecargo: api.tipo_recargo,
+    tipoIrpf: api.tipo_irpf,
+});
+
 const cambiosLineaAApi = (linea: CambiosLineaPedido): CambiosLineaPedidoApi => {
     const cambios: CambiosLineaPedidoApi = {};
     if (linea.tipoArticulo !== undefined) {
@@ -313,6 +372,18 @@ export const postLineaPedido = async (
 ): Promise<string> => {
     const [lineaId] = await postLineasPedido(id, [linea]);
     return lineaId;
+};
+
+export const queryNuevaLineaPedido: QueryNuevaLineaPedido = async (id, linea) => {
+    const respuesta = await RestAPI.query<
+        QueryNuevaLineaPedidoApiReq,
+        QueryNuevaLineaPedidoApiRes
+    >(
+        `${baseUrl}/${id}/nueva_linea`,
+        queryNuevaLineaAApi(linea),
+        "Error al calcular la nueva línea del pedido"
+    );
+    return queryNuevaLineaDesdeApi(linea, respuesta);
 };
 
 export const patchLineaPedido: PatchLineaPedido = async (id, lineaId, cambios) => {

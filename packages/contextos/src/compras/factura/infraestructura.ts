@@ -18,6 +18,7 @@ import {
     GetFacturas,
     GetLineaFactura,
     GetLineasFactura,
+    GetRecibosFactura,
     GetReportFactura,
     LineaFactura,
     NuevaFactura,
@@ -28,6 +29,7 @@ import {
     PatchRectificativa,
     PostFactura,
     PostLineasFactura,
+    ReciboFactura,
 } from "./diseño.ts";
 
 const baseUrl = new ApiUrls().FACTURA;
@@ -377,4 +379,30 @@ export const borrarLineasFactura: BorrarLineasFactura = async (id, lineas) => {
         { lineas },
         "Error al borrar las líneas de la factura"
     );
+};
+
+interface ReciboFacturaApi {
+    id: string;
+    factura_id: string | null;
+    codigo: string;
+    fecha_emision: string;
+    fecha_vencimiento: string;
+    estado: string;
+    importe: number;
+    proveedor_id: string | null;
+    nombre_proveedor: string;
+    id_fiscal: string;
+}
+
+export const getRecibosFactura: GetRecibosFactura = async (facturaId) => {
+    return RestAPI.get<{ datos: ReciboFacturaApi[] }>(
+        `/tesoreria/recibo_compra/por_factura/${facturaId}`
+    ).then((respuesta) => respuesta.datos.map((r): ReciboFactura => ({
+        id: r.id,
+        codigo: r.codigo,
+        fecha_emision: r.fecha_emision,
+        fecha_vencimiento: r.fecha_vencimiento,
+        estado: r.estado,
+        importe: r.importe,
+    })));
 };

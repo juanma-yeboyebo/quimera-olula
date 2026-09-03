@@ -1,7 +1,14 @@
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { fechaDesdeApi } from "../comun/infraestructura.js";
 import ApiUrls from "../comun/urls.js";
-import { GetReciboVenta, GetRecibosVenta, PatchPagarReciboVenta, ReciboVenta } from "./diseño.js";
+import { GetReciboVenta, GetRecibosVenta, MovimientoRecibo, PatchPagarReciboVenta, ReciboVenta } from "./diseño.js";
+
+export interface MovimientoReciboApi {
+    id: string;
+    fecha: string | null;
+    tipo: string;
+    estado: boolean;
+}
 
 export interface ReciboVentaApi {
     id: string;
@@ -13,9 +20,17 @@ export interface ReciboVentaApi {
     importe: number;
     cliente_id: string;
     id_fiscal: string;
+    pagos?: MovimientoReciboApi[];
 }
 
 const baseUrl = new ApiUrls().RECIBO_VENTA;
+
+const movimientoReciboDesdeApi = (api: MovimientoReciboApi): MovimientoRecibo => ({
+    id: api.id,
+    fecha: fechaDesdeApi(api.fecha),
+    tipo: api.tipo,
+    estado: api.estado,
+});
 
 export const reciboVentaDesdeApi = (api: ReciboVentaApi): ReciboVenta => ({
     id: api.id,
@@ -27,6 +42,7 @@ export const reciboVentaDesdeApi = (api: ReciboVentaApi): ReciboVenta => ({
     importe: api.importe,
     clienteId: api.cliente_id,
     idFiscal: api.id_fiscal,
+    pagos: (api.pagos ?? []).map(movimientoReciboDesdeApi),
 });
 
 export const getReciboVenta: GetReciboVenta = async (id) => {

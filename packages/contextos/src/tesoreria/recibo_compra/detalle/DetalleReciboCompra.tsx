@@ -1,22 +1,18 @@
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
-import { QuimeraAcciones } from "@olula/componentes/index.js";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useModelo } from "@olula/lib/useModelo.js";
 import { useEffect } from "react";
-import { ReciboVenta } from "../diseño.js";
-import { reciboPagable } from "../dominio.js";
+import { ReciboCompra } from "../diseño.js";
 import {
-  contextoDetalleReciboVentaInicial,
-  metaReciboVenta,
+  contextoDetalleReciboCompraInicial,
+  metaReciboCompra,
 } from "./detalle.js";
-import "./DetalleReciboVenta.css";
+import "./DetalleReciboCompra.css";
 import { getMaquina } from "./maquina.js";
-import { PagosReciboVenta } from "./pagos/PagosReciboVenta.tsx";
-import { PagarReciboVenta } from "./pagar/PagarReciboVenta.tsx";
 
-export const DetalleReciboVenta = ({
+export const DetalleReciboCompra = ({
   id,
   publicar = async () => {},
 }: {
@@ -25,11 +21,11 @@ export const DetalleReciboVenta = ({
 }) => {
   const { ctx, emitir } = useMaquina(
     getMaquina,
-    contextoDetalleReciboVentaInicial,
+    contextoDetalleReciboCompraInicial,
     publicar
   );
 
-  const { uiProps } = useModelo(metaReciboVenta, ctx.recibo);
+  const { uiProps } = useModelo(metaReciboCompra, ctx.recibo);
 
   useEffect(() => {
     emitir("recibo_id_cambiado", id, true);
@@ -38,15 +34,7 @@ export const DetalleReciboVenta = ({
 
   if (!ctx.recibo.id) return null;
 
-  const titulo = (r: ReciboVenta) => r.codigo || `Recibo ${r.id}`;
-
-  const acciones = [
-    {
-      texto: "Pagar",
-      onClick: () => emitir("pagar_solicitado"),
-      deshabilitado: !reciboPagable(ctx.recibo),
-    },
-  ];
+  const titulo = (r: ReciboCompra) => r.codigo || `Recibo ${r.id}`;
 
   return (
     <Detalle
@@ -56,23 +44,17 @@ export const DetalleReciboVenta = ({
       entidad={ctx.recibo}
       cerrarDetalle={() => emitir("recibo_deseleccionado", null, true)}
     >
-      <div className="DetalleReciboVenta">
-        <QuimeraAcciones acciones={acciones} vertical />
-
+      <div className="DetalleReciboCompra">
         <quimera-formulario>
           <QInput label="Código" {...uiProps("codigo")} />
           <QInput label="Estado" {...uiProps("estado")} />
           <QInput label="Importe" {...uiProps("importe")} />
           <QInput label="Fecha de emisión" {...uiProps("fechaEmision")} />
           <QInput label="Fecha de vencimiento" {...uiProps("fechaVencimiento")} />
-          <QInput label="Cliente" {...uiProps("clienteId")} />
+          <QInput label="Proveedor" {...uiProps("nombreProveedor")} />
           <QInput label="ID Fiscal" {...uiProps("idFiscal")} />
           <QInput label="Factura" {...uiProps("facturaId")} />
         </quimera-formulario>
-
-        <PagosReciboVenta pagos={ctx.recibo.pagos} />
-
-        {ctx.estado === "PAGANDO" && <PagarReciboVenta publicar={emitir} />}
       </div>
     </Detalle>
   );

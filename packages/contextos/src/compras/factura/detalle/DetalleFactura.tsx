@@ -23,6 +23,7 @@ import { getMaquina } from "./maquina.ts";
 import { TabDatos } from "./TabDatos.tsx";
 import { TabObservaciones } from "./TabObservaciones.tsx";
 import { TabProveedor } from "./TabProveedor.tsx";
+import { TabRecibos } from "./TabRecibos.tsx";
 import { TotalesFactura } from "./TotalesFactura.tsx";
 
 export const DetalleFactura = ({
@@ -110,6 +111,11 @@ export const DetalleFactura = ({
                             key="tab-observaciones"
                             label="Observaciones"
                             children={<TabObservaciones form={formModelo} />}
+                        />,
+                        <Tab
+                            key="tab-recibos"
+                            label="Recibos"
+                            children={<TabRecibos facturaId={factura.id} />}
                         />,
                     ]}
                 />

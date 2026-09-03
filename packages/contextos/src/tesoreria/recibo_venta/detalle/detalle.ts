@@ -33,6 +33,7 @@ export const reciboVentaInicial = (): ReciboVenta => ({
     importe: 0,
     clienteId: '',
     idFiscal: '',
+    pagos: [],
 });
 
 export const contextoDetalleReciboVentaInicial: ContextoDetalleReciboVenta = {

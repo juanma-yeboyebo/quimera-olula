@@ -1,6 +1,5 @@
-.DetalleReciboVenta {
+.DetalleReciboCompra {
 
-    /* Sin tabs, el formulario queda pegado a la fila de acciones. */
     quimera-formulario {
         margin-block-start: var(--espaciado-m);
     }
@@ -27,16 +26,12 @@
         grid-column: span 6;
     }
 
-    /* Fila 3: Cliente (8) + ID Fiscal (4) = 12 */
-    quimera-input[nombre="clienteId"] {
+    /* Fila 3: Proveedor (8) + ID Fiscal (4) = 12 */
+    quimera-input[nombre="nombreProveedor"] {
         grid-column: span 8;
     }
 
     quimera-input[nombre="idFiscal"] {
         grid-column: span 4;
-    }
-
-    .PagosReciboVenta {
-        margin-block-start: var(--espaciado-l);
     }
 }
