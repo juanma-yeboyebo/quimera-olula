@@ -87,6 +87,10 @@ interface NuevaLineaPedidoApi {
     articulo: ArticuloLineaCompraApi;
     cantidad: number;
     pvp_unitario?: number;
+    dto_porcentual?: number;
+    dto_lineal?: number;
+    grupo_iva_producto_id?: string;
+    tipo_irpf?: number;
 }
 
 interface QueryNuevaLineaPedidoApiReq {
@@ -249,6 +253,12 @@ const nuevaLineaAApi = (linea: NuevaLineaPedido): NuevaLineaPedidoApi => ({
     articulo: articuloLineaApi(linea),
     cantidad: linea.cantidad,
     ...(linea.pvpUnitario === null ? {} : { pvp_unitario: linea.pvpUnitario }),
+    dto_porcentual: linea.dtoPorcentual,
+    dto_lineal: linea.dtoLineal,
+    ...(linea.grupoIvaProductoId === null
+        ? {}
+        : { grupo_iva_producto_id: linea.grupoIvaProductoId }),
+    tipo_irpf: linea.tipoIrpf,
 });
 
 const queryNuevaLineaAApi = (linea: NuevaLineaPedido): QueryNuevaLineaPedidoApiReq => ({

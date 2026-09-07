@@ -1,11 +1,12 @@
 import { ArticuloLinea, CamposArticuloLinea } from "#/compras/comun/componentes/articulo_linea/ArticuloLinea.tsx";
+import { GrupoIvaProducto } from "#/ventas/comun/componentes/grupo_iva_producto.tsx";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { QModal } from "@olula/componentes/index.js";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useForm } from "@olula/lib/useForm.ts";
 import { useModelo } from "@olula/lib/useModelo.ts";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { NuevaLineaPedido, Pedido } from "../diseño.ts";
 import {
     camposConCambiosServidor,
@@ -13,6 +14,7 @@ import {
     nuevaLineaPedidoVacia,
 } from "../dominio.ts";
 import { postLineaPedido, queryNuevaLineaPedido } from "../infraestructura.ts";
+import "./CrearLineaPedido.css";
 
 export const CrearLineaPedido = ({
     pedido,
@@ -62,6 +64,8 @@ export const CrearLineaPedido = ({
 
     const [crear, cancelar] = useForm(crear_, cancelar_);
 
+    const [mostrarMas, setMostrarMas] = useState(false);
+
     return (
         <QModal
             abierto={true}
@@ -83,8 +87,30 @@ export const CrearLineaPedido = ({
                     <QInput label="Cantidad" {...uiProps("cantidad")} />
                     <QInput label="Coste unitario" {...uiProps("pvpUnitario")} />
                     <QInput label="Total" {...uiProps("pvpTotal")} soloLectura />
-                    <QInput label="% IVA" {...uiProps("tipoIva")} soloLectura />
-                    <QInput label="% R.Equivalencia" {...uiProps("tipoRecargo")} soloLectura />
+
+                    <div className="mostrar-mas-fila">
+                        <button
+                            type="button"
+                            className="mostrar-mas-btn"
+                            onClick={() => setMostrarMas((v) => !v)}
+                        >
+                            {mostrarMas ? "▲ Menos opciones" : "▼ Más opciones"}
+                        </button>
+                    </div>
+
+                    {mostrarMas && (
+                        <>
+                            <div className="seccion-separador">Descuento</div>
+                            <QInput label="% Descuento" {...uiProps("dtoPorcentual")} />
+                            <QInput label="Descuento lineal" {...uiProps("dtoLineal")} />
+
+                            <div className="seccion-separador">Impuestos</div>
+                            <GrupoIvaProducto {...uiProps("grupoIvaProductoId")} />
+                            <QInput label="% IVA" {...uiProps("tipoIva")} soloLectura />
+                            <QInput label="% R.Equivalencia" {...uiProps("tipoRecargo")} soloLectura />
+                            <QInput label="% I.R.P.F." {...uiProps("tipoIrpf")} />
+                        </>
+                    )}
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>

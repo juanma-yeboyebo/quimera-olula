@@ -8,6 +8,8 @@ export interface Stock extends Entidad {
     almacenId: string;
     cantidadFisica: number;
     cantidadDisponible: number;
+    cantidadReservada: number;
+    cantidadPendiente: number;
 }
 
 export interface StockAPI extends Entidad {
@@ -18,6 +20,8 @@ export interface StockAPI extends Entidad {
     almacen_id: string;
     cantidad_fisica: number;
     cantidad_disponible: number;
+    cantidad_reservada: number;
+    cantidad_pendiente: number;
 }
 
 export type GetStock = (id: string) => Promise<Stock>;

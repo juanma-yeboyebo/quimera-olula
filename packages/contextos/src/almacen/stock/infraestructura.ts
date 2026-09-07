@@ -12,6 +12,8 @@ export const stockFromApi = (stockApi: StockAPI): Stock => ({
     almacenId: stockApi.almacen_id,
     cantidadFisica: stockApi.cantidad_fisica,
     cantidadDisponible: stockApi.cantidad_disponible,
+    cantidadReservada: stockApi.cantidad_reservada,
+    cantidadPendiente: stockApi.cantidad_pendiente,
 });
 
 export const getStock: GetStock = async (id) =>
