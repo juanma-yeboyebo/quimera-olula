@@ -17,6 +17,7 @@ export const metaReciboVenta: MetaModelo<ReciboVenta> = {
         fechaEmision: { tipo: "fecha" },
         fechaVencimiento: { tipo: "fecha" },
         clienteId: { tipo: "texto" },
+        nombreCliente: { tipo: "texto" },
         idFiscal: { tipo: "texto" },
         facturaId: { tipo: "texto" },
     },
@@ -32,6 +33,7 @@ export const reciboVentaInicial = (): ReciboVenta => ({
     estado: '',
     importe: 0,
     clienteId: '',
+    nombreCliente: '',
     idFiscal: '',
 });
 

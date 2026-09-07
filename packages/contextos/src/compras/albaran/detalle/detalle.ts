@@ -1,3 +1,5 @@
+import { facturarAlbaranes } from "#/compras/factura/infraestructura.ts";
+import { CambioDivisa } from "#/ventas/comun/componentes/moleculas/CambiarDivisa/diseño.ts";
 import { CambioProveedor } from "#/compras/comun/componentes/moleculas/CambioProveedor/diseño.ts";
 import { ProcesarContexto } from "@olula/lib/diseño.ts";
 import { ejecutarListaProcesos, MetaModelo } from "@olula/lib/dominio.ts";
@@ -40,7 +42,8 @@ export const metaAlbaran: MetaModelo<Albaran> = {
         fecha: { requerido: true, tipo: "fecha" },
         hora: { tipo: "hora" },
         numeroProveedor: {},
-        tasaConversion: { tipo: "decimal", decimales: 6 },
+        divisaId: { bloqueado: true },
+        tasaConversion: { tipo: "decimal", decimales: 6, bloqueado: true },
         observaciones: { tipo: "texto" },
         neto: { tipo: "moneda", bloqueado: true },
         totalIva: { tipo: "moneda", bloqueado: true },
@@ -89,6 +92,7 @@ export const albaranVacio = (): Albaran => ({
 export const contextoDetalleAlbaranInicial: ContextoDetalleAlbaran = {
     estado: 'INICIAL',
     albaran: albaranVacio(),
+    facturaCreada: null,
     lineas: listaEntidadesInicial<LineaAlbaran>(),
 };
 
@@ -113,8 +117,6 @@ export const guardarAlbaran = async (
         "fecha",
         "hora",
         "numeroProveedor",
-        "divisaId",
-        "tasaConversion",
         "grupoIvaNegocioId",
         "formaPagoId",
         "almacenId",
@@ -130,6 +132,21 @@ export const guardarAlbaran = async (
     if (Object.keys(cambios).length === 0) return;
 
     await patchAlbaran(albaran.id, cambios);
+};
+
+export const facturarAlbaranProceso: ProcesarDetalle = async (contexto) => {
+    const facturaCreada = await facturarAlbaranes([contexto.albaran.id]);
+    const [refrescado, eventos] = await pipeAlbaran(contexto, [refrescarAlbaran]);
+    return [{ ...refrescado, estado: 'FACTURA_CREADA', facturaCreada }, eventos];
+};
+
+export const cambiarDivisa: ProcesarDetalle = async (contexto, payload) => {
+    const cambio = payload as CambioDivisa;
+    await patchAlbaran(contexto.albaran.id, {
+        divisaId: cambio.divisa_id,
+        tasaConversion: cambio.tasa_conversion,
+    });
+    return pipeAlbaran(contexto, [refrescarAlbaran, 'ABIERTO']);
 };
 
 export const cambiarProveedor: ProcesarDetalle = async (contexto, payload) => {
@@ -206,6 +223,7 @@ export const limpiarContexto: ProcesarDetalle = async (contexto) => ({
     ...contexto,
     estado: 'INICIAL',
     albaran: albaranVacio(),
+    facturaCreada: null,
     lineas: listaEntidadesInicial<LineaAlbaran>(),
 });
 

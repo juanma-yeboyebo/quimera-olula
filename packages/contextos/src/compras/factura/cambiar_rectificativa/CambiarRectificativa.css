@@ -1,0 +1,9 @@
+.CambiarRectificativa {
+    quimera-formulario {
+        max-width: 420px;
+    }
+
+    quimera-autocompletar[nombre="rectificativaId"] {
+        grid-column: 1 / span 12;
+    }
+}

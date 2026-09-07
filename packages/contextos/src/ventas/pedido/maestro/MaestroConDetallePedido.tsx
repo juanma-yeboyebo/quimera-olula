@@ -160,7 +160,7 @@ export const MaestroConDetallePedido = () => {
         <AlbaranarPedidos
           publicar={emitir}
           pedidos={ctx.seleccionados.length}
-          grupos={agruparPorCliente(ctx.seleccionados, ctx.pedidos.lista).length}
+          grupos={agruparPorCliente(ctx.seleccionados, ctx.pedidos.lista)}
         />
       )}
 

@@ -1,4 +1,4 @@
-.CambiarLineaAlbaran {
+.CambiarLineaPedido {
     quimera-formulario {
         max-width: 560px;
     }
@@ -67,13 +67,4 @@
             grid-column: 2 / span 1 !important;
         }
     }
-}
-
-.CambiarLineaAlbaran .aviso-linea-pedido {
-    margin: 0 0 0.75rem;
-    padding: 0.5rem 0.75rem;
-    border-radius: var(--redondeo-borde-xs, 4px);
-    background-color: var(--color-superficie-elevada);
-    color: var(--color-texto-secundario);
-    font-size: 0.9em;
 }

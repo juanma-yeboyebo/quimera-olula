@@ -9,6 +9,7 @@ export interface ReciboVenta extends Entidad {
     estado: string;
     importe: number;
     clienteId: string;
+    nombreCliente: string;
     idFiscal: string;
 }
 

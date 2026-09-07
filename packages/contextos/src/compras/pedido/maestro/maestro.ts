@@ -45,36 +45,63 @@ export const seleccionadosCambiados: ProcesarMaestro = async (contexto, payload)
     seleccionados: payload as string[],
 });
 
+export type GrupoAlbaranar = {
+    etiqueta: string;
+    ids: string[];
+};
+
 const pedidosDe = (ids: string[], pedidos: Pedido[]): Pedido[] =>
     ids.map((id) => pedidos.find((p) => p.id === id)).filter((p): p is Pedido => !!p);
 
-export const pedidosHomogeneos = (ids: string[], pedidos: Pedido[]): boolean => {
-    const elegidos = pedidosDe(ids, pedidos);
-    if (elegidos.length === 0) return false;
+export const agruparPorProveedor = (ids: string[], pedidos: Pedido[]): GrupoAlbaranar[] => {
+    const grupos = new Map<string, GrupoAlbaranar>();
 
-    const clave = (pedido: Pedido) =>
-        [pedido.proveedorId, pedido.serieId, pedido.almacenId, pedido.formaPagoId].join("|");
+    pedidosDe(ids, pedidos).forEach((pedido) => {
+        const clave = pedido.proveedorId || pedido.nombreProveedor || "";
+        const etiqueta = pedido.nombreProveedor || pedido.proveedorId || "Sin proveedor";
+        const grupo = grupos.get(clave) ?? { etiqueta, ids: [] };
+        grupos.set(clave, { ...grupo, ids: [...grupo.ids, pedido.id] });
+    });
 
-    return elegidos.every((pedido) => clave(pedido) === clave(elegidos[0]));
+    return [...grupos.values()];
 };
 
 export const puedenAlbaranarse = (ids: string[], pedidos: Pedido[]): boolean => {
     const elegidos = pedidosDe(ids, pedidos);
     if (elegidos.length === 0 || elegidos.length !== ids.length) return false;
 
-    return elegidos.every(pedidoAlbaranable) && pedidosHomogeneos(ids, pedidos);
+    return elegidos.every(pedidoAlbaranable);
 };
 
+const mensajeDeError = (error: unknown): string =>
+    error instanceof Error ? error.message : String(error);
+
 export const albaranarSeleccionados: ProcesarMaestro = async (contexto) => {
-    const albaranCreado = await albaranarPedidos(contexto.seleccionados);
+    const grupos = agruparPorProveedor(contexto.seleccionados, contexto.pedidos.lista);
+
+    const resultados = await Promise.allSettled(
+        grupos.map((grupo) => albaranarPedidos(grupo.ids))
+    );
 
     const resultado = await getPedidos(contexto.pedidos.criteria);
     const recargado = (await Pedidos.recargar(contexto, resultado)) as ContextoMaestroPedido;
+
+    const creados = resultados.flatMap((res, indice) =>
+        res.status === "fulfilled"
+            ? [{ ...res.value, etiqueta: grupos[indice].etiqueta }]
+            : []
+    );
+
+    const fallidos = resultados.flatMap((res, indice) =>
+        res.status === "rejected"
+            ? [`${grupos[indice].etiqueta}: ${mensajeDeError(res.reason)}`]
+            : []
+    );
 
     return {
         ...recargado,
         estado: "ALBARAN_CREADO",
         seleccionados: [],
-        albaranCreado,
+        resultado: { creados, fallidos },
     };
 };

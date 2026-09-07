@@ -8,6 +8,7 @@ import { useCallback } from "react";
 import { CuentaBancoProveedor, Proveedor } from "../diseño.ts";
 import { metaCuentaBancoProveedor } from "../dominio.ts";
 import { patchCuentaBancoProveedor } from "../infraestructura.ts";
+import "./CambiarCuentaBancoProveedor.css";
 
 export const CambiarCuentaBancoProveedor = ({
     proveedor,

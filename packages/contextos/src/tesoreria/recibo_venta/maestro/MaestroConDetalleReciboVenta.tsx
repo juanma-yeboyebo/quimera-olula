@@ -13,7 +13,7 @@ import { getMaquina } from "./maquina.js";
 
 const metaTablaReciboVenta: MetaTabla<ReciboVenta> = [
     { id: 'codigo', cabecera: 'Código' },
-    { id: 'clienteId', cabecera: 'Cliente' },
+    { id: 'nombreCliente', cabecera: 'Cliente' },
     { id: 'idFiscal', cabecera: 'ID Fiscal' },
     { id: 'fechaEmision', cabecera: 'F. Emisión', tipo: 'fecha' },
     { id: 'fechaVencimiento', cabecera: 'F. Vencimiento', tipo: 'fecha' },

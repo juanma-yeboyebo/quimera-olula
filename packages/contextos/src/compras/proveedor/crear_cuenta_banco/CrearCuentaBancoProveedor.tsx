@@ -12,6 +12,7 @@ import {
   nuevaCuentaBancoProveedorVacia,
 } from "../dominio.ts";
 import { postCuentaBancoProveedor } from "../infraestructura.ts";
+import "./CrearCuentaBancoProveedor.css";
 
 export const CrearCuentaBancoProveedor = ({
   proveedor,
@@ -47,10 +48,12 @@ export const CrearCuentaBancoProveedor = ({
       titulo="Crear cuenta bancaria"
       onCerrar={cancelar}
     >
-      <quimera-formulario>
-        <QInput label="Descripción" {...uiProps("descripcion")} ref={focus} />
-        <QInput label="IBAN" {...uiProps("iban")} />
-      </quimera-formulario>
+      <div className="CrearCuentaBancoProveedor">
+        <quimera-formulario>
+          <QInput label="Descripción" {...uiProps("descripcion")} ref={focus} />
+          <QInput label="IBAN" {...uiProps("iban")} />
+        </quimera-formulario>
+      </div>
       <div className="botones maestro-botones">
         <QBoton onClick={crear} deshabilitado={!valido}>
           Crear

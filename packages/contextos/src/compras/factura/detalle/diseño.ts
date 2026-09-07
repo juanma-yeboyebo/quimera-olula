@@ -6,6 +6,7 @@ export type EstadoDetalleFactura =
     | 'ABIERTO'
     | 'BORRANDO'
     | 'CAMBIANDO_PROVEEDOR'
+    | 'CAMBIANDO_DIVISA'
     | 'CAMBIANDO_RECTIFICATIVA'
     | 'CREANDO_LINEA'
     | 'CAMBIANDO_LINEA'

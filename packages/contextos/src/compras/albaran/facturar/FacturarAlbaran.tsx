@@ -2,12 +2,13 @@ import { QModalConfirmacion } from "@olula/componentes/moleculas/qmodalconfirmac
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useForm } from "@olula/lib/useForm.ts";
 import { useCallback } from "react";
+import { Albaran } from "../diseño.ts";
 
-export const FacturarAlbaranes = ({
-    albaranes,
+export const FacturarAlbaran = ({
+    albaran,
     publicar,
 }: {
-    albaranes: number;
+    albaran: Albaran;
     publicar: EmitirEvento;
 }) => {
     const facturar_ = useCallback(
@@ -24,10 +25,10 @@ export const FacturarAlbaranes = ({
 
     return (
         <QModalConfirmacion
-            nombre="facturarAlbaranesCompra"
+            nombre="facturarAlbaranCompra"
             abierto={true}
-            titulo="Facturar albaranes"
-            mensaje={`¿Facturar ${albaranes === 1 ? "el albarán seleccionado" : `los ${albaranes} albaranes seleccionados`}? Se generará una única factura y los albaranes quedarán facturados, sin posibilidad de desfacturarlos.`}
+            titulo="Facturar albarán"
+            mensaje={`¿Facturar el albarán ${albaran.codigo}?`}
             onCerrar={cancelar}
             onAceptar={facturar}
         />

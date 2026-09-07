@@ -287,8 +287,8 @@ export const albaranarPedidos: AlbaranarPedidos = async (pedidoIds, lineas) => {
                 : {}),
         },
         "Error al albaranar los pedidos"
-    )) as unknown as { id: string; codigo?: string };
-    return { id: respuesta.id, codigo: respuesta.codigo ?? respuesta.id };
+    )) as unknown as { albaran_id: string; codigo: string };
+    return { id: respuesta.albaran_id, codigo: respuesta.codigo };
 };
 
 export const patchAlbaran: PatchAlbaran = async (id, cambios) => {

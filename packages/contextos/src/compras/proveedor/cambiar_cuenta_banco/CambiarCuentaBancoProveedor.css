@@ -1,0 +1,53 @@
+.CambiarCuentaBancoProveedor {
+    quimera-formulario {
+        max-width: 560px;
+    }
+
+    quimera-input[nombre="descripcion"] {
+        grid-column: 1 / span 12;
+    }
+
+    quimera-input[nombre="iban"] {
+        grid-column: 1 / span 8;
+    }
+
+    quimera-input[nombre="bic"] {
+        grid-column: span 4;
+    }
+
+    quimera-input[nombre="codigoCuenta"] {
+        grid-column: 1 / span 8;
+    }
+
+    quimera-input[nombre="paisId"] {
+        grid-column: span 4;
+    }
+
+    quimera-input[nombre="entidad"],
+    quimera-input[nombre="agencia"],
+    quimera-input[nombre="digitoControl"],
+    quimera-input[nombre="cuenta"] {
+        grid-column: span 3;
+    }
+
+    quimera-input[nombre="entidad"] {
+        grid-column: 1 / span 3;
+    }
+
+    @media (max-width: 768px) {
+        quimera-input[nombre="descripcion"],
+        quimera-input[nombre="iban"],
+        quimera-input[nombre="codigoCuenta"] {
+            grid-column: 1 / -1 !important;
+        }
+
+        quimera-input[nombre="bic"],
+        quimera-input[nombre="paisId"],
+        quimera-input[nombre="entidad"],
+        quimera-input[nombre="agencia"],
+        quimera-input[nombre="digitoControl"],
+        quimera-input[nombre="cuenta"] {
+            grid-column: span 1 !important;
+        }
+    }
+}

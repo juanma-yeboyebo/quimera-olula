@@ -1,3 +1,4 @@
+import { CambiarDivisa } from "#/ventas/comun/componentes/moleculas/CambiarDivisa/CambiarDivisa.tsx";
 import { CambioProveedor } from "#/compras/comun/componentes/moleculas/CambioProveedor/CambioProveedor.tsx";
 import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
 import { Tab, Tabs } from "@olula/componentes/detalle/tabs/Tabs.tsx";
@@ -104,7 +105,7 @@ export const DetalleFactura = ({
                         <Tab
                             key="tab-datos"
                             label="Datos"
-                            children={<TabDatos form={formModelo} />}
+                            children={<TabDatos form={formModelo} publicar={emitir} />}
                         />,
                         <Tab
                             key="tab-observaciones"
@@ -121,6 +122,14 @@ export const DetalleFactura = ({
                     publicar={emitir}
                 />
             </div>
+
+            {estado === "CAMBIANDO_DIVISA" && (
+                <CambiarDivisa
+                    publicar={emitir}
+                    divisaId={factura.divisaId}
+                    tasaConversion={factura.tasaConversion}
+                />
+            )}
 
             {estado === "CAMBIANDO_PROVEEDOR" && (
                 <CambioProveedor

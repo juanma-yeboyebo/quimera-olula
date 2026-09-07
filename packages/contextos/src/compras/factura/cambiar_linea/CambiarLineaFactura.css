@@ -1,3 +1,74 @@
+.CambiarLineaFactura {
+    quimera-formulario {
+        max-width: 560px;
+    }
+
+    .ArticuloLinea-campo,
+    quimera-input[nombre="descripcion"] {
+        grid-column: 1 / span 12;
+    }
+
+    quimera-input[nombre="cantidad"],
+    quimera-input[nombre="dtoPorcentual"],
+    quimera-select[nombre="grupo_iva_producto_id"] {
+        grid-column: 1 / span 6;
+    }
+
+    quimera-input[nombre="pvpUnitario"],
+    quimera-input[nombre="dtoLineal"],
+    quimera-input[nombre="tipoIrpf"] {
+        grid-column: span 6;
+    }
+
+    .mostrar-mas-fila {
+        grid-column: 1 / span 12;
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .mostrar-mas-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--color-primario);
+        font-size: var(--tamaño-letra-s);
+        padding: 0;
+        font-family: inherit;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    quimera-input[nombre="tipoIva"] {
+        grid-column: 1 / span 6;
+    }
+
+    @media (max-width: 768px) {
+        .ArticuloLinea-campo,
+        quimera-input[nombre="descripcion"] {
+            grid-column: 1 / -1 !important;
+        }
+
+        .mostrar-mas-fila {
+            grid-column: 1 / -1 !important;
+        }
+
+        quimera-input[nombre="cantidad"],
+        quimera-input[nombre="dtoPorcentual"],
+        quimera-select[nombre="grupo_iva_producto_id"],
+        quimera-input[nombre="tipoIva"] {
+            grid-column: 1 / span 1 !important;
+        }
+
+        quimera-input[nombre="pvpUnitario"],
+        quimera-input[nombre="dtoLineal"],
+        quimera-input[nombre="tipoIrpf"] {
+            grid-column: 2 / span 1 !important;
+        }
+    }
+}
+
 .CambiarLineaFactura .aviso-linea-albaran {
     margin: 0 0 0.75rem;
     padding: 0.5rem 0.75rem;

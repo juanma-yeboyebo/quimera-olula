@@ -9,6 +9,7 @@ import { useCallback, useMemo } from "react";
 import { Pedido } from "../diseño.ts";
 import { metaNuevaLineaPedido, nuevaLineaPedidoVacia } from "../dominio.ts";
 import { postLineaPedido } from "../infraestructura.ts";
+import "./CrearLineaPedido.css";
 
 export const CrearLineaPedido = ({
     pedido,
@@ -30,6 +31,11 @@ export const CrearLineaPedido = ({
         [publicar]
     );
 
+    const cambiarArticulo = (cambios: Partial<typeof modelo>) => {
+        const libre = (cambios.tipoArticulo ?? modelo.tipoArticulo) === "libre";
+        set({ ...modelo, ...cambios, ...(libre ? {} : { pvpUnitario: null }) });
+    };
+
     const [crear, cancelar] = useForm(crear_, cancelar_);
 
     return (
@@ -47,11 +53,13 @@ export const CrearLineaPedido = ({
                         descripcionArticulo={modelo.descripcionArticulo}
                         descripcion={modelo.descripcion}
                         nombre="referenciaNuevaLineaPedidoCompra"
-                        onChange={(cambios) => set({ ...modelo, ...cambios })}
+                        onChange={cambiarArticulo}
                         autoFocus
                     />
                     <QInput label="Cantidad" {...uiProps("cantidad")} />
-                    <QInput label="Coste unitario" {...uiProps("pvpUnitario")} />
+                    {modelo.tipoArticulo === "libre" && (
+                        <QInput label="Coste unitario" {...uiProps("pvpUnitario")} />
+                    )}
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>

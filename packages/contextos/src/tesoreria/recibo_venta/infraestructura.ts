@@ -12,6 +12,7 @@ export interface ReciboVentaApi {
     estado: string;
     importe: number;
     cliente_id: string;
+    nombre_cliente: string;
     id_fiscal: string;
 }
 
@@ -26,6 +27,7 @@ export const reciboVentaDesdeApi = (api: ReciboVentaApi): ReciboVenta => ({
     estado: api.estado,
     importe: api.importe,
     clienteId: api.cliente_id,
+    nombreCliente: api.nombre_cliente,
     idFiscal: api.id_fiscal,
 });
 

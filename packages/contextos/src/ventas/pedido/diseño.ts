@@ -100,10 +100,14 @@ export type ContextoPedido<T extends Pedido = Pedido> = {
     lineaActiva: LineaPedido | null;
 };
 
+export type AlbaranGenerado = AlbaranCreado & {
+    etiqueta: string;
+};
+
 export type ContextoMaestroPedido = {
     estado: EstadoMaestroPedido;
     pedidos: ListaActivaEntidades<Pedido>;
     seleccionados: string[];
-    albaranesCreados: AlbaranCreado[];
+    albaranesCreados: AlbaranGenerado[];
     fallidos: string[];
 };

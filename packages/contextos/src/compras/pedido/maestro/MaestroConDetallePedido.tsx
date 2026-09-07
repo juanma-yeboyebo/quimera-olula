@@ -10,7 +10,7 @@ import { CrearPedido } from "../crear/CrearPedido.tsx";
 import { DetallePedido } from "../detalle/DetallePedido.tsx";
 import { Pedido } from "../diseño.ts";
 import { AlbaranarPedidos } from "./AlbaranarPedidos.tsx";
-import { puedenAlbaranarse } from "./maestro.ts";
+import { agruparPorProveedor, puedenAlbaranarse } from "./maestro.ts";
 import { ResultadoAlbaranado } from "./ResultadoAlbaranado.tsx";
 import "./MaestroConDetallePedido.css";
 import { getMaquina } from "./maquina.ts";
@@ -32,10 +32,10 @@ export const MaestroConDetallePedido = () => {
     estado: "INICIAL",
     pedidos: listaActivaEntidadesInicial<Pedido>(id, criteriaInicial),
     seleccionados: [],
-    albaranCreado: null,
+    resultado: null,
   });
 
-  const { estado, pedidos, seleccionados, albaranCreado } = ctx;
+  const { estado, pedidos, seleccionados, resultado } = ctx;
 
   useUrlParams(pedidos.activo, pedidos.criteria);
 
@@ -89,11 +89,15 @@ export const MaestroConDetallePedido = () => {
       {estado === "CREANDO" && <CrearPedido publicar={emitir} />}
 
       {estado === "ALBARANANDO" && (
-        <AlbaranarPedidos pedidos={seleccionados.length} publicar={emitir} />
+        <AlbaranarPedidos
+          pedidos={seleccionados.length}
+          grupos={agruparPorProveedor(seleccionados, pedidos.lista)}
+          publicar={emitir}
+        />
       )}
 
-      {estado === "ALBARAN_CREADO" && albaranCreado && (
-        <ResultadoAlbaranado albaran={albaranCreado} publicar={emitir} />
+      {estado === "ALBARAN_CREADO" && resultado && (
+        <ResultadoAlbaranado resultado={resultado} publicar={emitir} />
       )}
     </div>
   );
