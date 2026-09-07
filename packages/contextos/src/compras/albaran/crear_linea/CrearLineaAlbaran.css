@@ -1,0 +1,33 @@
+.CrearLineaAlbaran {
+    quimera-formulario {
+        max-width: 500px;
+    }
+
+    .ArticuloLinea-campo,
+    quimera-input[nombre="descripcion"] {
+        grid-column: 1 / span 12;
+    }
+
+    quimera-input[nombre="cantidad"] {
+        grid-column: 1 / span 6;
+    }
+
+    quimera-input[nombre="pvpUnitario"] {
+        grid-column: span 6;
+    }
+
+    @media (max-width: 768px) {
+        .ArticuloLinea-campo,
+        quimera-input[nombre="descripcion"] {
+            grid-column: 1 / -1 !important;
+        }
+
+        quimera-input[nombre="cantidad"] {
+            grid-column: 1 / span 1 !important;
+        }
+
+        quimera-input[nombre="pvpUnitario"] {
+            grid-column: 2 / span 1 !important;
+        }
+    }
+}

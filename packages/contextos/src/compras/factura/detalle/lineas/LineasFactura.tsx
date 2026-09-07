@@ -1,4 +1,3 @@
-import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { ListaEntidades } from "@olula/lib/ListaEntidades.ts";
 import { BorrarLineaFactura } from "../../borrar_linea/BorrarLineaFactura.tsx";
@@ -23,33 +22,32 @@ export const LineasFactura = ({
     const activa = lineas.activo;
     const editable = facturaEditable(factura);
 
+    const acciones = [
+        {
+            texto: "Nueva",
+            onClick: () => publicar("alta_linea_solicitada"),
+        },
+        {
+            texto: "Editar",
+            onClick: () => publicar("cambio_linea_solicitado"),
+            deshabilitado: !activa,
+        },
+        {
+            icono: "eliminar",
+            texto: "Borrar",
+            advertencia: true,
+            onClick: () => publicar("baja_linea_solicitada"),
+            deshabilitado: !activa,
+        },
+    ];
+
     return (
         <>
-            <div className="botones maestro-botones">
-                <QBoton
-                    onClick={() => publicar("alta_linea_solicitada")}
-                    deshabilitado={!editable}
-                >
-                    Nueva línea
-                </QBoton>
-                <QBoton
-                    onClick={() => publicar("cambio_linea_solicitado")}
-                    deshabilitado={!activa || !editable}
-                >
-                    Editar
-                </QBoton>
-                <QBoton
-                    onClick={() => publicar("baja_linea_solicitada")}
-                    deshabilitado={!activa || !editable}
-                    advertencia
-                >
-                    Borrar
-                </QBoton>
-            </div>
             <LineasLista
                 lineas={lineas.lista}
                 divisa={factura.divisaId}
                 seleccionada={activa?.id}
+                acciones={editable ? acciones : undefined}
                 publicar={publicar}
             />
             {estado === "CREANDO_LINEA" && (

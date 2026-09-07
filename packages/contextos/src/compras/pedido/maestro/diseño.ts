@@ -8,9 +8,18 @@ export type EstadoMaestroPedido =
     | 'ALBARANANDO'
     | 'ALBARAN_CREADO';
 
+export type AlbaranGenerado = AlbaranCreado & {
+    etiqueta: string;
+};
+
+export type ResultadoAlbaranar = {
+    creados: AlbaranGenerado[];
+    fallidos: string[];
+};
+
 export type ContextoMaestroPedido = {
     estado: EstadoMaestroPedido;
     pedidos: ListaActivaEntidades<Pedido>;
     seleccionados: string[];
-    albaranCreado: AlbaranCreado | null;
+    resultado: ResultadoAlbaranar | null;
 };

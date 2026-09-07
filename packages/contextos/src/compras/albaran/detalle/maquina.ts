@@ -1,8 +1,10 @@
 import { Maquina } from "@olula/lib/diseño.ts";
 import { publicar } from "@olula/lib/dominio.ts";
 import {
+    cambiarDivisa,
     cambiarProveedor,
     cargarContexto,
+    facturarAlbaranProceso,
     limpiarContexto,
     Lineas,
     onLineaBorrada,
@@ -34,8 +36,10 @@ export const getMaquina: () => Maquina<EstadoDetalleAlbaran, ContextoDetalleAlba
             ],
 
             borrado_solicitado: "BORRANDO",
+            facturado_solicitado: "FACTURANDO",
 
             cambio_proveedor_solicitado: "CAMBIANDO_PROVEEDOR",
+            cambio_divisa_solicitado: "CAMBIANDO_DIVISA",
 
             linea_seleccionada: [Lineas.activar],
             alta_linea_solicitada: "CREANDO_LINEA",
@@ -43,9 +47,23 @@ export const getMaquina: () => Maquina<EstadoDetalleAlbaran, ContextoDetalleAlba
             baja_linea_solicitada: "BORRANDO_LINEA",
         },
 
+        CAMBIANDO_DIVISA: {
+            cambio_divisa_listo: [cambiarDivisa],
+            cambio_divisa_cancelado: "ABIERTO",
+        },
+
         CAMBIANDO_PROVEEDOR: {
             cambio_proveedor_listo: [cambiarProveedor],
             cambio_proveedor_cancelado: "ABIERTO",
+        },
+
+        FACTURANDO: {
+            facturado_confirmado: [facturarAlbaranProceso],
+            facturado_cancelado: "ABIERTO",
+        },
+
+        FACTURA_CREADA: {
+            resultado_facturado_cerrado: "ABIERTO",
         },
 
         BORRANDO: {

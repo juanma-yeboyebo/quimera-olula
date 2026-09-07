@@ -1,4 +1,7 @@
-import { ArticuloLinea, CamposArticuloLinea } from "#/compras/comun/componentes/articulo_linea/ArticuloLinea.tsx";
+import {
+  ArticuloLinea,
+  CamposArticuloLinea,
+} from "#/compras/comun/componentes/articulo_linea/ArticuloLinea.tsx";
 import { GrupoIvaProducto } from "#/ventas/comun/componentes/grupo_iva_producto.tsx";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
@@ -9,115 +12,127 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useMemo, useState } from "react";
 import { NuevaLineaPedido, Pedido } from "../diseño.ts";
 import {
-    camposConCambiosServidor,
-    metaNuevaLineaPedido,
-    nuevaLineaPedidoVacia,
+  camposConCambiosServidor,
+  metaNuevaLineaPedido,
+  nuevaLineaPedidoVacia,
 } from "../dominio.ts";
 import { postLineaPedido, queryNuevaLineaPedido } from "../infraestructura.ts";
 import "./CrearLineaPedido.css";
 
 export const CrearLineaPedido = ({
-    pedido,
-    publicar,
+  pedido,
+  publicar,
 }: {
-    pedido: Pedido;
-    publicar: EmitirEvento;
+  pedido: Pedido;
+  publicar: EmitirEvento;
 }) => {
-    const inicial = useMemo(nuevaLineaPedidoVacia, []);
+  const inicial = useMemo(nuevaLineaPedidoVacia, []);
 
-    const onModeloListo = useCallback(
-        async (linea: NuevaLineaPedido, campo?: string) => {
-            if (campo && !(camposConCambiosServidor as readonly string[]).includes(campo)) {
-                return;
-            }
-            return await queryNuevaLineaPedido(pedido.id, linea);
-        },
-        [pedido.id]
-    );
+  const onModeloListo = useCallback(
+    async (linea: NuevaLineaPedido, campo?: string) => {
+      if (
+        campo &&
+        !(camposConCambiosServidor as readonly string[]).includes(campo)
+      ) {
+        return;
+      }
+      return await queryNuevaLineaPedido(pedido.id, linea);
+    },
+    [pedido.id]
+  );
 
-    const { modelo, uiProps, valido, set } = useModelo(
-        metaNuevaLineaPedido,
-        inicial,
-        onModeloListo
-    );
+  const { modelo, uiProps, valido, set } = useModelo(
+    metaNuevaLineaPedido,
+    inicial,
+    onModeloListo
+  );
 
-    const onArticuloCambiado = useCallback(
-        (cambios: Partial<CamposArticuloLinea>) => {
-            set({
-                ...modelo,
-                ...cambios,
-                ...(cambios.referencia !== undefined ? { pvpUnitario: null } : {}),
-            });
-        },
-        [modelo, set]
-    );
+  const onArticuloCambiado = useCallback(
+    (cambios: Partial<CamposArticuloLinea>) => {
+      set({
+        ...modelo,
+        ...cambios,
+        ...(cambios.referencia !== undefined ? { pvpUnitario: null } : {}),
+      });
+    },
+    [modelo, set]
+  );
 
-    const crear_ = useCallback(async () => {
-        const idLinea = await postLineaPedido(pedido.id, modelo);
-        publicar("linea_creada", idLinea);
-    }, [modelo, pedido.id, publicar]);
+  const crear_ = useCallback(async () => {
+    const idLinea = await postLineaPedido(pedido.id, modelo);
+    publicar("linea_creada", idLinea);
+  }, [modelo, pedido.id, publicar]);
 
-    const cancelar_ = useCallback(
-        () => publicar("alta_de_linea_cancelada"),
-        [publicar]
-    );
+  const cancelar_ = useCallback(
+    () => publicar("alta_de_linea_cancelada"),
+    [publicar]
+  );
 
-    const [crear, cancelar] = useForm(crear_, cancelar_);
+  //   const cambiarArticulo = (cambios: Partial<typeof modelo>) => {
+  //     const libre = (cambios.tipoArticulo ?? modelo.tipoArticulo) === "libre";
+  //     set({ ...modelo, ...cambios, ...(libre ? {} : { pvpUnitario: null }) });
+  //   };
 
-    const [mostrarMas, setMostrarMas] = useState(false);
+  const [crear, cancelar] = useForm(crear_, cancelar_);
 
-    return (
-        <QModal
-            abierto={true}
-            nombre="crearLineaPedidoCompra"
-            titulo="Crear línea"
-            onCerrar={cancelar}
-        >
-            <div className="CrearLineaPedido">
-                <quimera-formulario>
-                    <ArticuloLinea
-                        tipoArticulo={modelo.tipoArticulo}
-                        referencia={modelo.referencia}
-                        descripcionArticulo={modelo.descripcionArticulo}
-                        descripcion={modelo.descripcion}
-                        nombre="referenciaNuevaLineaPedidoCompra"
-                        onChange={onArticuloCambiado}
-                        autoFocus
-                    />
-                    <QInput label="Cantidad" {...uiProps("cantidad")} />
-                    <QInput label="Coste unitario" {...uiProps("pvpUnitario")} />
-                    <QInput label="Total" {...uiProps("pvpTotal")} soloLectura />
+  const [mostrarMas, setMostrarMas] = useState(false);
 
-                    <div className="mostrar-mas-fila">
-                        <button
-                            type="button"
-                            className="mostrar-mas-btn"
-                            onClick={() => setMostrarMas((v) => !v)}
-                        >
-                            {mostrarMas ? "▲ Menos opciones" : "▼ Más opciones"}
-                        </button>
-                    </div>
+  return (
+    <QModal
+      abierto={true}
+      nombre="crearLineaPedidoCompra"
+      titulo="Crear línea"
+      onCerrar={cancelar}
+    >
+      <div className="CrearLineaPedido">
+        <quimera-formulario>
+          <ArticuloLinea
+            tipoArticulo={modelo.tipoArticulo}
+            referencia={modelo.referencia}
+            descripcionArticulo={modelo.descripcionArticulo}
+            descripcion={modelo.descripcion}
+            nombre="referenciaNuevaLineaPedidoCompra"
+            onChange={onArticuloCambiado}
+            autoFocus
+          />
+          <QInput label="Cantidad" {...uiProps("cantidad")} />
+          <QInput label="Coste unitario" {...uiProps("pvpUnitario")} />
+          <QInput label="Total" {...uiProps("pvpTotal")} soloLectura />
 
-                    {mostrarMas && (
-                        <>
-                            <div className="seccion-separador">Descuento</div>
-                            <QInput label="% Descuento" {...uiProps("dtoPorcentual")} />
-                            <QInput label="Descuento lineal" {...uiProps("dtoLineal")} />
+          <div className="mostrar-mas-fila">
+            <button
+              type="button"
+              className="mostrar-mas-btn"
+              onClick={() => setMostrarMas((v) => !v)}
+            >
+              {mostrarMas ? "▲ Menos opciones" : "▼ Más opciones"}
+            </button>
+          </div>
 
-                            <div className="seccion-separador">Impuestos</div>
-                            <GrupoIvaProducto {...uiProps("grupoIvaProductoId")} />
-                            <QInput label="% IVA" {...uiProps("tipoIva")} soloLectura />
-                            <QInput label="% R.Equivalencia" {...uiProps("tipoRecargo")} soloLectura />
-                            <QInput label="% I.R.P.F." {...uiProps("tipoIrpf")} />
-                        </>
-                    )}
-                </quimera-formulario>
-                <div className="botones maestro-botones">
-                    <QBoton onClick={crear} deshabilitado={!valido}>
-                        Crear
-                    </QBoton>
-                </div>
-            </div>
-        </QModal>
-    );
+          {mostrarMas && (
+            <>
+              <div className="seccion-separador">Descuento</div>
+              <QInput label="% Descuento" {...uiProps("dtoPorcentual")} />
+              <QInput label="Descuento lineal" {...uiProps("dtoLineal")} />
+
+              <div className="seccion-separador">Impuestos</div>
+              <GrupoIvaProducto {...uiProps("grupoIvaProductoId")} />
+              <QInput label="% IVA" {...uiProps("tipoIva")} soloLectura />
+              <QInput
+                label="% R.Equivalencia"
+                {...uiProps("tipoRecargo")}
+                soloLectura
+              />
+              <QInput label="% I.R.P.F." {...uiProps("tipoIrpf")} />
+            </>
+          )}
+        </quimera-formulario>
+        <div className="botones maestro-botones">
+          <QBoton onClick={crear} deshabilitado={!valido}>
+            Crear
+          </QBoton>
+        </div>
+      </div>
+    </QModal>
+  );
 };

@@ -91,6 +91,11 @@ export interface ModeloLineaFactura extends LineaFactura {
     tipoArticulo: TipoArticuloLinea;
 }
 
+export type FacturaCreada = {
+    id: string;
+    codigo: string;
+};
+
 export type CambiosFactura = Partial<Factura>;
 
 export type CambiosLineaFactura = Partial<ModeloLineaFactura>;
@@ -100,7 +105,7 @@ export type GetFacturas = (criteria: Criteria) => RespuestaLista<Factura>;
 export type PostFactura = (
     nuevaFactura: NuevaFactura | NuevaFacturaProveedorNoRegistrado
 ) => Promise<string>;
-export type FacturarAlbaranes = (albaranIds: string[]) => Promise<{ id: string; codigo: string }>;
+export type FacturarAlbaranes = (albaranIds: string[]) => Promise<FacturaCreada>;
 export type PatchFactura = (id: string, cambios: CambiosFactura) => Promise<void>;
 export type PatchRectificativa = (id: string, rectificativaId: string | null) => Promise<void>;
 export type DeleteFactura = (id: string) => Promise<void>;

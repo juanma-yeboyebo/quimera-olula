@@ -1,3 +1,4 @@
+import { CambioDivisa } from "#/ventas/comun/componentes/moleculas/CambiarDivisa/diseño.ts";
 import { CambioProveedor } from "#/compras/comun/componentes/moleculas/CambioProveedor/diseño.ts";
 import { ProcesarContexto } from "@olula/lib/diseño.ts";
 import { ejecutarListaProcesos, MetaModelo } from "@olula/lib/dominio.ts";
@@ -37,7 +38,8 @@ export const metaPedido: MetaModelo<Pedido> = {
         fecha: { requerido: true, tipo: "fecha" },
         fechaEntrada: { tipo: "fecha" },
         numeroProveedor: {},
-        tasaConversion: { tipo: "decimal", decimales: 6 },
+        divisaId: { bloqueado: true },
+        tasaConversion: { tipo: "decimal", decimales: 6, bloqueado: true },
         observaciones: { tipo: "texto" },
         neto: { tipo: "moneda", bloqueado: true },
         totalIva: { tipo: "moneda", bloqueado: true },
@@ -110,8 +112,6 @@ export const guardarPedido = async (
         "fecha",
         "fechaEntrada",
         "numeroProveedor",
-        "divisaId",
-        "tasaConversion",
         "grupoIvaNegocioId",
         "formaPagoId",
         "almacenId",
@@ -127,6 +127,15 @@ export const guardarPedido = async (
     if (Object.keys(cambios).length === 0) return;
 
     await patchPedido(pedido.id, cambios);
+};
+
+export const cambiarDivisa: ProcesarDetalle = async (contexto, payload) => {
+    const cambio = payload as CambioDivisa;
+    await patchPedido(contexto.pedido.id, {
+        divisaId: cambio.divisa_id,
+        tasaConversion: cambio.tasa_conversion,
+    });
+    return pipePedido(contexto, [refrescarPedido, 'ABIERTO']);
 };
 
 export const cambiarProveedor: ProcesarDetalle = async (contexto, payload) => {

@@ -5,13 +5,31 @@
     }
 
     quimera-select[nombre="almacenId"],
-    quimera-select[nombre="divisaId"],
-    quimera-input[nombre="tasaConversion"],
+    quimera-select[nombre="divisaId"] {
+        grid-column: span 4;
+    }
+
+    quimera-input[nombre="tasaConversion"] {
+        grid-column: span 3;
+    }
+
+    .TabDatos-accion {
+        grid-column: span 1;
+        display: flex;
+        justify-content: flex-start;
+        align-items: end;
+        margin: 0;
+        min-width: 0;
+    }
+
     quimera-select[nombre="formaPagoId"],
-    quimera-select[nombre="grupoIvaNegocioId"],
+    quimera-select[nombre="grupoIvaNegocioId"] {
+        grid-column: span 6;
+    }
+
     quimera-input[nombre="codigoRectificativa"],
     quimera-input[nombre="asientoId"] {
-        grid-column: span 4;
+        grid-column: span 6;
     }
 
     quimera-checkbox[nombre="deAbono"],
@@ -25,6 +43,11 @@
         quimera-select,
         quimera-checkbox {
             grid-column: span 1 !important;
+        }
+
+        .TabDatos-accion {
+            grid-column: span 1 !important;
+            justify-content: flex-end;
         }
     }
 }

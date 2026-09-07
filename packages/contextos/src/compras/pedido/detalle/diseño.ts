@@ -6,6 +6,7 @@ export type EstadoDetallePedido =
     | 'ABIERTO'
     | 'BORRANDO'
     | 'CAMBIANDO_PROVEEDOR'
+    | 'CAMBIANDO_DIVISA'
     | 'CREANDO_LINEA'
     | 'CAMBIANDO_LINEA'
     | 'BORRANDO_LINEA';

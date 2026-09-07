@@ -5,6 +5,7 @@ import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useForm } from "@olula/lib/useForm.ts";
 import { useCallback, useState } from "react";
 import { Factura } from "../diseño.ts";
+import "./CambiarRectificativa.css";
 
 export const CambiarRectificativa = ({
     factura,

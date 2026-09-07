@@ -1,10 +1,10 @@
-import { AlbaranCreado } from "#/ventas/albaranarPedido/diseño.ts";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { EmitirEvento } from "@olula/lib/diseño.js";
 import { FactoryCtx } from "@olula/lib/factory_ctx.tsx";
 import { useContext } from "react";
 import { useNavigate } from "react-router";
+import { AlbaranGenerado } from "../diseño.ts";
 
 type UrlPorId = (id: string) => string;
 
@@ -14,7 +14,7 @@ export const ResultadoAlbaranado = ({
     fallidos,
 }: {
     publicar: EmitirEvento;
-    creados: AlbaranCreado[];
+    creados: AlbaranGenerado[];
     fallidos: string[];
 }) => {
     const navigate = useNavigate();
@@ -32,7 +32,7 @@ export const ResultadoAlbaranado = ({
             titulo="Resultado del albaranado"
             onCerrar={cerrar}
         >
-            <div className="mensaje" style={{ whiteSpace: "pre-line" }}>
+            <div className="mensaje">
                 {creados.length === 0
                     ? "No se ha generado ningún albarán."
                     : creados.length === 1
@@ -43,8 +43,11 @@ export const ResultadoAlbaranado = ({
                 <ul>
                     {creados.map((albaran) => (
                         <li key={albaran.id}>
-                            <QBoton variante="texto" onClick={() => navigate(urlAlbaran(albaran.id))}>
-                                Ir al albarán {albaran.codigo}
+                            <QBoton
+                                variante="texto"
+                                onClick={() => navigate(urlAlbaran(albaran.id))}
+                            >
+                                {`${albaran.etiqueta} — Ir al albarán ${albaran.codigo}`}
                             </QBoton>
                         </li>
                     ))}
@@ -61,7 +64,7 @@ export const ResultadoAlbaranado = ({
                 </>
             )}
             <div className="botones">
-                <QBoton onClick={cerrar}>Cerrar</QBoton>
+                <QBoton onClick={cerrar}>Aceptar</QBoton>
             </div>
         </QModal>
     );

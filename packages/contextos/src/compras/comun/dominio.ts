@@ -17,10 +17,3 @@ export const articuloDeLineaValido = (linea: ArticuloDeLineaConTipo): boolean =>
             return !!linea.descripcion;
     }
 };
-
-export const costeDeLineaValido = (linea: {
-    tipoArticulo: TipoArticuloLinea;
-    pvpUnitario: number | null;
-}): boolean =>
-    linea.tipoArticulo !== "libre" ||
-    (linea.pvpUnitario !== null && linea.pvpUnitario !== undefined);

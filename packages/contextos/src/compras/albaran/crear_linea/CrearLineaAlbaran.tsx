@@ -9,6 +9,7 @@ import { useCallback, useMemo } from "react";
 import { Albaran } from "../diseño.ts";
 import { metaNuevaLineaAlbaran, nuevaLineaAlbaranVacia } from "../dominio.ts";
 import { postLineaAlbaran } from "../infraestructura.ts";
+import "./CrearLineaAlbaran.css";
 
 export const CrearLineaAlbaran = ({
     albaran,
@@ -30,6 +31,11 @@ export const CrearLineaAlbaran = ({
         [publicar]
     );
 
+    const cambiarArticulo = (cambios: Partial<typeof modelo>) => {
+        const libre = (cambios.tipoArticulo ?? modelo.tipoArticulo) === "libre";
+        set({ ...modelo, ...cambios, ...(libre ? {} : { pvpUnitario: null }) });
+    };
+
     const [crear, cancelar] = useForm(crear_, cancelar_);
 
     return (
@@ -47,11 +53,13 @@ export const CrearLineaAlbaran = ({
                         descripcionArticulo={modelo.descripcionArticulo}
                         descripcion={modelo.descripcion}
                         nombre="referenciaNuevaLineaAlbaranCompra"
-                        onChange={(cambios) => set({ ...modelo, ...cambios })}
+                        onChange={cambiarArticulo}
                         autoFocus
                     />
                     <QInput label="Cantidad" {...uiProps("cantidad")} />
-                    <QInput label="Coste unitario" {...uiProps("pvpUnitario")} />
+                    {modelo.tipoArticulo === "libre" && (
+                        <QInput label="Coste unitario" {...uiProps("pvpUnitario")} />
+                    )}
                 </quimera-formulario>
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>

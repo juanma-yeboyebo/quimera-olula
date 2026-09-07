@@ -1,0 +1,23 @@
+.CrearCuentaBancoProveedor {
+    quimera-formulario {
+        max-width: 480px;
+    }
+
+    quimera-input[nombre="descripcion"] {
+        grid-column: 1 / span 5;
+    }
+
+    quimera-input[nombre="iban"] {
+        grid-column: span 7;
+    }
+
+    @media (max-width: 768px) {
+        quimera-input[nombre="descripcion"] {
+            grid-column: 1 / span 1 !important;
+        }
+
+        quimera-input[nombre="iban"] {
+            grid-column: 2 / span 1 !important;
+        }
+    }
+}

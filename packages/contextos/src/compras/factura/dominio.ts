@@ -1,5 +1,5 @@
 import { MetaModelo } from "@olula/lib/dominio.ts";
-import { articuloDeLineaValido, costeDeLineaValido, getTipoArticulo } from "../comun/dominio.ts";
+import { articuloDeLineaValido, getTipoArticulo } from "../comun/dominio.ts";
 import {
     Factura,
     LineaFactura,
@@ -44,9 +44,13 @@ export const metaNuevaLineaFactura: MetaModelo<NuevaLineaFactura> = {
         referencia: { tipo: "texto" },
         descripcion: { tipo: "texto" },
         cantidad: { requerido: true, tipo: "decimal", decimales: 2 },
-        pvpUnitario: { tipo: "moneda", decimales: 2 },
+        pvpUnitario: {
+            requerido: (linea) => linea.tipoArticulo === "libre",
+            tipo: "moneda",
+            decimales: 2,
+        },
     },
-    validacion: (linea) => articuloDeLineaValido(linea) && costeDeLineaValido(linea),
+    validacion: articuloDeLineaValido,
 };
 
 export const nuevaLineaFacturaVacia = (): NuevaLineaFactura => ({

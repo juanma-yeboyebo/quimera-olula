@@ -1,3 +1,4 @@
+import { CambioDivisa } from "#/ventas/comun/componentes/moleculas/CambiarDivisa/diseño.ts";
 import { CambioProveedor } from "#/compras/comun/componentes/moleculas/CambioProveedor/diseño.ts";
 import { ProcesarContexto } from "@olula/lib/diseño.ts";
 import { ejecutarListaProcesos, MetaModelo } from "@olula/lib/dominio.ts";
@@ -51,7 +52,8 @@ export const metaFactura: MetaModelo<Factura> = {
         fecha: { requerido: true, tipo: "fecha" },
         hora: { tipo: "hora" },
         numeroProveedor: {},
-        tasaConversion: { tipo: "decimal", decimales: 6 },
+        divisaId: { bloqueado: true },
+        tasaConversion: { tipo: "decimal", decimales: 6, bloqueado: true },
         observaciones: { tipo: "texto" },
         deAbono: { tipo: "checkbox" },
         servicios: { tipo: "checkbox" },
@@ -133,8 +135,6 @@ export const guardarFactura = async (
         "fecha",
         "hora",
         "numeroProveedor",
-        "divisaId",
-        "tasaConversion",
         "grupoIvaNegocioId",
         "formaPagoId",
         "almacenId",
@@ -168,6 +168,15 @@ export const reabrirFacturaProceso: ProcesarDetalle = async (contexto) => {
 export const cambiarRectificativa: ProcesarDetalle = async (contexto, payload) => {
     const rectificativaId = (payload as string | null) || null;
     await patchRectificativa(contexto.factura.id, rectificativaId);
+    return pipeFactura(contexto, [refrescarFactura, 'ABIERTO']);
+};
+
+export const cambiarDivisa: ProcesarDetalle = async (contexto, payload) => {
+    const cambio = payload as CambioDivisa;
+    await patchFactura(contexto.factura.id, {
+        divisaId: cambio.divisa_id,
+        tasaConversion: cambio.tasa_conversion,
+    });
     return pipeFactura(contexto, [refrescarFactura, 'ABIERTO']);
 };
 

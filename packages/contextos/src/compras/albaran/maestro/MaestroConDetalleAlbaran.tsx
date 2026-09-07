@@ -10,8 +10,6 @@ import { CrearAlbaran } from "../crear/CrearAlbaran.tsx";
 import { DetalleAlbaran } from "../detalle/DetalleAlbaran.tsx";
 import { Albaran } from "../diseño.ts";
 import "./MaestroConDetalleAlbaran.css";
-import { FacturarAlbaranes } from "./FacturarAlbaranes.tsx";
-import { puedenFacturarse } from "./maestro.ts";
 import { getMaquina } from "./maquina.ts";
 import { metaTablaAlbaran } from "./metatabla_albaran.tsx";
 import { TarjetaAlbaran } from "./TarjetaAlbaran.tsx";
@@ -30,10 +28,9 @@ export const MaestroConDetalleAlbaran = () => {
     const { ctx, emitir } = useMaquina(getMaquina, {
         estado: "INICIAL",
         albaranes: listaActivaEntidadesInicial<Albaran>(id, criteriaInicial),
-        seleccionados: [],
     });
 
-    const { estado, albaranes, seleccionados } = ctx;
+    const { estado, albaranes } = ctx;
 
     useUrlParams(albaranes.activo, albaranes.criteria);
 
@@ -55,18 +52,11 @@ export const MaestroConDetalleAlbaran = () => {
                             entidades={albaranes.lista}
                             totalEntidades={albaranes.total}
                             seleccionada={albaranes.activo}
-                            seleccionadas={seleccionados}
-                            onMultiSeleccion={(ids) => emitir("seleccionados_cambiados", ids)}
                             renderAcciones={() => (
                                 <div className="maestro-botones">
                                     <QBoton onClick={() => emitir("crear_albaran_solicitado")}>
                                         Nuevo Albarán
                                     </QBoton>
-                                    {puedenFacturarse(seleccionados, albaranes.lista) && (
-                                        <QBoton onClick={() => emitir("facturado_solicitado")}>
-                                            {`Facturar (${seleccionados.length})`}
-                                        </QBoton>
-                                    )}
                                 </div>
                             )}
                             onSeleccion={(payload) => emitir("albaran_seleccionado", payload)}
@@ -81,9 +71,6 @@ export const MaestroConDetalleAlbaran = () => {
 
             {estado === "CREANDO" && <CrearAlbaran publicar={emitir} />}
 
-            {estado === "FACTURANDO" && (
-                <FacturarAlbaranes albaranes={seleccionados.length} publicar={emitir} />
-            )}
         </div>
     );
 };

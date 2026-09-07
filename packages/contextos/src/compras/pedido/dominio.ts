@@ -1,5 +1,5 @@
 import { MetaModelo } from "@olula/lib/dominio.ts";
-import { articuloDeLineaValido, costeDeLineaValido, getTipoArticulo } from "../comun/dominio.ts";
+import { articuloDeLineaValido, getTipoArticulo } from "../comun/dominio.ts";
 import {
     LineaPedido,
     ModeloLineaPedido,
@@ -56,7 +56,7 @@ export const metaNuevaLineaPedido: MetaModelo<NuevaLineaPedido> = {
         tipoIva: { tipo: "decimal", decimales: 2, bloqueado: true },
         tipoRecargo: { tipo: "decimal", decimales: 2, bloqueado: true },
     },
-    validacion: (linea) => articuloDeLineaValido(linea) && costeDeLineaValido(linea),
+    validacion: articuloDeLineaValido,
 };
 
 export const nuevaLineaPedidoVacia = (): NuevaLineaPedido => ({

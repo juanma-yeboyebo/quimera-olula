@@ -44,14 +44,30 @@ export const todosPuedenAlbaranarse = (ids: string[], pedidos: Pedido[]): boolea
     });
 }
 
-export const agruparPorCliente = (ids: string[], pedidos: Pedido[]): string[][] => {
-    const grupos = new Map<string, string[]>();
+export type GrupoAlbaranar = {
+    etiqueta: string;
+    ids: string[];
+};
+
+const etiquetaCliente = (pedido: Pedido): string =>
+    pedido.cliente?.nombre_cliente || pedido.cliente?.cliente_id || "Sin cliente";
+
+const claveCliente = (pedido: Pedido): string =>
+    [
+        pedido.cliente?.cliente_id ?? "",
+        pedido.cliente?.nombre_cliente ?? "",
+        pedido.cliente?.id_fiscal ?? "",
+    ].join("|");
+
+export const agruparPorCliente = (ids: string[], pedidos: Pedido[]): GrupoAlbaranar[] => {
+    const grupos = new Map<string, GrupoAlbaranar>();
 
     ids.forEach(id => {
         const pedido = pedidos.find(p => p.id === id);
         if (!pedido) return;
-        const clave = `${pedido.cliente.cliente_id}|${pedido.forma_pago_id}`;
-        grupos.set(clave, [...(grupos.get(clave) ?? []), id]);
+        const clave = claveCliente(pedido);
+        const grupo = grupos.get(clave) ?? { etiqueta: etiquetaCliente(pedido), ids: [] };
+        grupos.set(clave, { ...grupo, ids: [...grupo.ids, id] });
     });
 
     return [...grupos.values()];
@@ -60,20 +76,22 @@ export const agruparPorCliente = (ids: string[], pedidos: Pedido[]): string[][] 
 export const albaranarPedidos: ProcesarPedidos = async (contexto) => {
     const grupos = agruparPorCliente(contexto.seleccionados, contexto.pedidos.lista);
     const resultados = await Promise.allSettled(
-        grupos.map((ids) => postAlbaranarPedidos(ids))
+        grupos.map((grupo) => postAlbaranarPedidos(grupo.ids))
     );
 
     const { filtro, orden, paginacion } = contexto.pedidos.criteria;
     const lista = await getPedidos(filtro, orden, paginacion);
     const recargado = await Pedidos.recargar(contexto, lista) as ContextoMaestroPedido;
 
-    const albaranesCreados = resultados
-        .filter((resultado) => resultado.status === "fulfilled")
-        .map((resultado) => resultado.value);
+    const albaranesCreados = resultados.flatMap((resultado, indice) =>
+        resultado.status === "fulfilled"
+            ? [{ ...resultado.value, etiqueta: grupos[indice].etiqueta }]
+            : []
+    );
 
     const fallidos = resultados.flatMap((resultado, indice) =>
         resultado.status === "rejected"
-            ? [`${grupos[indice].length} pedido(s): ${mensajeDeError(resultado.reason)}`]
+            ? [`${grupos[indice].etiqueta}: ${mensajeDeError(resultado.reason)}`]
             : []
     );
 

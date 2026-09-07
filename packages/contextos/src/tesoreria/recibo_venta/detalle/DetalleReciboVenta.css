@@ -28,7 +28,7 @@
     }
 
     /* Fila 3: Cliente (8) + ID Fiscal (4) = 12 */
-    quimera-input[nombre="clienteId"] {
+    quimera-autocompletar[nombre="clienteId"] {
         grid-column: span 8;
     }
 
