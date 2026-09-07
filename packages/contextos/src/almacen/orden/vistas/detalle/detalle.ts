@@ -113,6 +113,10 @@ const cargarOrdenPorId: (_: string) => ProcesarDetalle = (idOrden) => async (con
     ]);
 };
 
+export const onOrdenTerminada: ProcesarDetalle = async (contexto) => {
+    return refrescarOrden(contexto);
+};
+
 export const onCajaCreada: ProcesarDetalle = async (contexto, payload) => {
     const idCaja = payload as string;
     await patchOrden(contexto.orden.id, { idCajaDestino: idCaja });

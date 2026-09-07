@@ -9,6 +9,7 @@ import {
     onLineaBorrada,
     onLineaCambiada,
     onLineaCreada,
+    onOrdenTerminada,
     refrescarOrden,
 } from "./detalle.ts";
 
@@ -16,6 +17,7 @@ export type EstadoOrdenAlmacen =
     | 'INICIAL'
     | 'ABIERTA'
     | 'BORRANDO'
+    | 'TERMINANDO'
     | 'CREANDO_LINEA'
     | 'CAMBIANDO_LINEA'
     | 'BORRANDO_LINEA'
@@ -41,6 +43,7 @@ export const getMaquina: () => Maquina<EstadoOrdenAlmacen, ContextoOrdenAlmacen>
             orden_guardada: [refrescarOrden],
             lectura_registrada: [refrescarOrden],
             borrado_solicitado: "BORRANDO",
+            terminado_solicitado: "TERMINANDO",
             orden_id_cambiada: [cargarContexto],
             alta_linea_solicitada: "CREANDO_LINEA",
             cambio_linea_solicitado: "CAMBIANDO_LINEA",
@@ -60,6 +63,11 @@ export const getMaquina: () => Maquina<EstadoOrdenAlmacen, ContextoOrdenAlmacen>
                 "INICIAL",
             ],
             borrado_cancelado: "ABIERTA",
+        },
+
+        TERMINANDO: {
+            orden_terminada: [onOrdenTerminada, "ABIERTA"],
+            terminado_cancelado: "ABIERTA",
         },
 
         CREANDO_LINEA: {

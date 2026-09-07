@@ -17,6 +17,7 @@ import { TipoOrden } from "../../../comun/componentes/TipoOrden.tsx";
 import { LineaOrdenAlmacen, OrdenAlmacen } from "../../diseño.ts";
 import { metaOrden, ordenVacia } from "../../dominio.ts";
 import { BorrarOrden } from "../borrar/BorrarOrden.tsx";
+import { TerminarOrden } from "../terminar/TerminarOrden.tsx";
 import { guardarOrden } from "./detalle.ts";
 import "./DetalleOrden.css";
 import { LecturaOrden } from "./lectura/LecturaLineaOrden.tsx";
@@ -80,6 +81,9 @@ export const DetalleOrden = ({
         >
             <div className="maestro-botones">
                 <QBoton onClick={() => emitir("borrado_solicitado")}>Borrar</QBoton>
+                {modelo.estado !== "TERMINADA" && (
+                    <QBoton onClick={() => emitir("terminado_solicitado")}>Terminar</QBoton>
+                )}
             </div>
             <div className="DetalleOrden">
                 <quimera-formulario>
@@ -152,6 +156,12 @@ export const DetalleOrden = ({
 
             {ctx.estado === "BORRANDO" && (
                 <BorrarOrden
+                    publicar={emitir}
+                    orden={ctx.orden}
+                />
+            )}
+            {ctx.estado === "TERMINANDO" && (
+                <TerminarOrden
                     publicar={emitir}
                     orden={ctx.orden}
                 />

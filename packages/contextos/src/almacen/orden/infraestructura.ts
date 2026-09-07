@@ -23,6 +23,7 @@ import {
     PostEntradaDesdePedido,
     PostLineasOrden,
     PostOrden,
+    TerminarOrden,
 } from "./diseño.ts";
 
 
@@ -410,4 +411,8 @@ export const postEntradaDesdePedido: PostEntradaDesdePedido = async (nueva: Nuev
         "Error al crear entrada desde pedido de compra"
     );
     return respuesta.id as string;
+};
+
+export const terminarOrden: TerminarOrden = async (id) => {
+    await RestAPI.patch(`${baseUrl}/${id}/terminar`, {}, "Error al terminar la orden");
 };
