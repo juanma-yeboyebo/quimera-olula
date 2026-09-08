@@ -1,0 +1,14 @@
+.CrearTipoCaja {
+
+    quimera-input[nombre="descripcion"] {
+        grid-column: span 12;
+    }
+
+    quimera-autocompletar[nombre="sku"] {
+        grid-column: span 6;
+    }
+
+    quimera-input[nombre="capacidad"] {
+        grid-column: span 6;
+    }
+}

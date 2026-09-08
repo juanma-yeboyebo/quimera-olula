@@ -32,5 +32,5 @@ export const getLecturaCajaOrdenVacia = (orden: OrdenAlmacen): ModeloLecturaCaja
     cajaId: "",
     idUbicacionDestino: orden.idUbicacionDestino,
     idCajaDestino: orden.idCajaDestino,
-    cajaCompleta: false,
+    cajaCompleta: true,
 });

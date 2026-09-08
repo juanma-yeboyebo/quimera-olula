@@ -6,6 +6,9 @@ import { MaestroOrden } from "./orden/vistas/maestro/MaestroOrden.tsx"
 import { MaestroConDetalleStock } from "./stock/maestro/MaestroConDetalleStock.tsx"
 import { MaestroDetalleTransferenciasStock } from "./transferencias/vistas/MaestroDetalleTransferenciasStock.tsx"
 import { MaestroConDetalleUbicacion } from "./ubicacion/vistas/maestro/MaestroConDetalleUbicacion.tsx"
+import { MaestroConDetalleTipoCaja } from "./tipo_caja/vistas/maestro/MaestroConDetalleTipoCaja.tsx"
+import { MaestroPedidoVenta } from "./pedido_venta/vistas/maestro/MaestroPedidoVenta.tsx"
+import { MaestroConDetallePedidoCompra } from "./pedido_compra/maestro/MaestroConDetallePedidoCompra.tsx"
 import { MaestroConDetalleZona } from "./zona/vistas/maestro/MaestroConDetalleZona.tsx"
 
 export class RouterFactoryAlmacenOlula {
@@ -16,8 +19,11 @@ export class RouterFactoryAlmacenOlula {
                 "almacen/almacenes": MaestroAlmacen,
                 "almacen/familias": MaestroFamilia,
                 "almacen/ordenes": MaestroOrden,
+                "almacen/pedidos_compra": MaestroConDetallePedidoCompra,
+                "almacen/pedidos_venta": MaestroPedidoVenta,
                 "almacen/stock": MaestroConDetalleStock,
                 "almacen/ubicaciones": MaestroConDetalleUbicacion,
+                "almacen/tipos_caja": MaestroConDetalleTipoCaja,
                 "almacen/zonas": MaestroConDetalleZona,
         }
 }

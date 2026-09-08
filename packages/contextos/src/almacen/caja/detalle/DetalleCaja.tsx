@@ -8,7 +8,7 @@ import { BorrarCaja } from "../borrar/BorrarCaja.js";
 import { Caja } from "../diseño.ts";
 import { ArbolContenidoCaja } from "./ArbolContenidoCaja.tsx";
 import "./DetalleCaja.css";
-import { contextoDetalleCajaInicial, guardarCaja, metaCaja } from "./dominio.ts";
+import { contextoDetalleCajaInicial, esCajaMonoproducto, guardarCaja, metaCaja } from "./dominio.ts";
 import { getMaquina } from "./maquina.ts";
 
 const titulo = ( caja : Caja ) => `Caja ${caja.lpn} en ${caja.ubicacion}`;
@@ -64,7 +64,20 @@ export const DetalleCaja = ({
         >
             <div className="DetalleCaja">
                 <QuimeraAcciones acciones={accionesCaja} />
-                <ArbolContenidoCaja contenido={caja.contenido} />
+                {esCajaMonoproducto(caja)
+                    ? (
+                        <>
+                            <div className="DetalleCaja-monoproducto-info">
+                                <span className="DetalleCaja-monoproducto-sku">{caja.sku ?? "—"}</span>
+                                <span className="DetalleCaja-monoproducto-cantidad">{caja.cantidad} ud.</span>
+                                {caja.idLote && (
+                                    <span className="DetalleCaja-monoproducto-lote">Lote: {caja.idLote}</span>
+                                )}
+                            </div>
+                            <ArbolContenidoCaja contenido={caja.materiales} />
+                        </>
+                    )
+                    : <ArbolContenidoCaja contenido={caja.contenido} />}
             </div>
 
             {estado === "BORRANDO" && (

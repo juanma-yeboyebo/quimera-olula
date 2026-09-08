@@ -3,12 +3,34 @@ import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useEffect } from "react";
-import { Stock } from "../diseño.ts";
+import { Stock, StockUbicacion } from "../diseño.ts";
 import { stockVacio } from "../dominio.ts";
 import "./DetalleStock.css";
 import { getMaquina } from "./maquina.ts";
 
 const titulo = (stock: Stock) => stock.articulo as string;
+
+const UbicacionesStock = ({ ubicaciones }: { ubicaciones: StockUbicacion[] }) => (
+    <details className="DetalleStock-ubicaciones">
+        <summary>Ubicaciones ({ubicaciones.length})</summary>
+        <table>
+            <thead>
+                <tr>
+                    <th>Ubicación</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                {ubicaciones.map((ub) => (
+                    <tr key={ub.id}>
+                        <td>{ub.ubicacion}</td>
+                        <td>{ub.cantidad.toLocaleString("es-ES")}</td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    </details>
+);
 
 export const DetalleStock = ({
     id,
@@ -49,6 +71,7 @@ export const DetalleStock = ({
                     <QInput label="Cantidad física"     nombre="cantidadFisica"     valor={String(stock.cantidadFisica ?? "")}     soloLectura tipo="numero" />
                     <QInput label="Cantidad disponible" nombre="cantidadDisponible" valor={String(stock.cantidadDisponible ?? "")} soloLectura tipo="numero"/>
                 </quimera-formulario>
+                <UbicacionesStock ubicaciones={stock.ubicaciones} />
             </div>
         </Detalle>
     );

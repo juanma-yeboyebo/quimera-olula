@@ -6,7 +6,10 @@ export const menuAlmacen = {
     "Almacén/Familias": { url: "/almacen/familias", regla: "almacen.familia" },
     "Almacén/Transferencias de Stock": { url: "/almacen/transferencias", regla: "almacen.transferencia_stock.leer" },
     "Almacén/Órdenes": { url: "/almacen/ordenes", regla: "almacen.orden.leer" },
+    "Almacén/Pedidos de Compra": { url: "/almacen/pedidos_compra", regla: "almacen.pedido_compra.leer" },
+    "Almacén/Pedidos de Venta": { url: "/almacen/pedidos_venta", regla: "almacen.pedido_venta.leer" },
     "Almacén/Stock": { url: "/almacen/stock", regla: "almacen.stock" },
     "Almacén/Ubicaciones": { url: "/almacen/ubicaciones", regla: "almacen.ubicacion" },
+    "Almacén/Tipos de Caja": { url: "/almacen/tipos_caja", regla: "almacen.tipo_caja" },
     "Almacén/Zonas": { url: "/almacen/zonas", regla: "almacen.zona" },
 };

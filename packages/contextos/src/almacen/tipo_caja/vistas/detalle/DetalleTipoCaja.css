@@ -1,0 +1,31 @@
+/*
+ * DetalleTipoCaja.css — posicionado de campos del detalle principal.
+ */
+
+.DetalleTipoCaja {
+}
+
+.TabGeneral {
+    quimera-input[nombre="descripcion"] {
+        grid-column: span 12;
+    }
+}
+
+.tipo-caja-sku-seccion {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-top: 12px;
+
+    dl {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 4px 16px;
+        margin: 0;
+    }
+
+    dt {
+        font-weight: bold;
+        color: var(--color-texto-secundario, #666);
+    }
+}

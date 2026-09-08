@@ -26,6 +26,7 @@ export interface LineaOrdenAlmacen extends Entidad {
     sku: string;
     articulo: string;
     loteId: string | null;
+    porLotes: boolean;
     cantidadPrevista: number;
     cantidadReal?: number;
     idUbicacionOrigen: string | null;
@@ -36,6 +37,7 @@ export interface LineaOrdenAlmacen extends Entidad {
     ubicacionDestino: string | null;
     idCajaDestino: string | null;
     cajaDestino: string | null;
+    idLineaPick: string | null;
     lecturas: LecturaLineaOrden[];
 }
 
@@ -91,6 +93,8 @@ export interface NuevaLecturaOrden extends Modelo {
     sku: string;
     articulo: string;
     idLote: string | null;
+    idLinea: string | null;
+    cajaCompleta: boolean;
     idCajaDestino: string | null;
     idUbicacionDestino: string | null;
     idCajaOrigen: string | null;
@@ -123,7 +127,13 @@ export interface ItemOrdenAlmacen extends Entidad {
     idCajaOrigen: string | null;
     idUbicacionDestino: string | null;
     idCajaDestino: string | null;
+    idResponsable: string | null;
 }
+
+export type NuevaEntradaDesdePedido = {
+    pedidoCompraId: string;
+    ubicacionId: string;
+};
 
 export type CambiosOrdenAlmacen = Partial<OrdenAlmacen>;
 export type CambiosLineaOrdenAlmacen = Partial<LineaOrdenAlmacen>;
@@ -136,3 +146,5 @@ export type DeleteOrden = (id: string) => Promise<void>;
 export type PostLineasOrden = (id: string, lineas: NuevaLineaOrdenAlmacen[]) => Promise<void>;
 export type PatchLineaOrden = (id: string, lineaId: string, cambios: CambiosLineaOrdenAlmacen) => Promise<void>;
 export type DeleteLineasOrden = (id: string, lineaIds: string[]) => Promise<void>;
+export type PostEntradaDesdePedido = (nueva: NuevaEntradaDesdePedido) => Promise<string>;
+export type TerminarOrden = (id: string) => Promise<void>;

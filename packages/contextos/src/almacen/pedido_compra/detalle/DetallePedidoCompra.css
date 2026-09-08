@@ -1,0 +1,18 @@
+/*
+ * DetallePedidoCompra.css — posicionado de campos del detalle principal.
+ *
+ * Si el detalle tiene campos en un formulario fuera de los tabs,
+ * posiciónalos aquí usando selectores de atributo sobre los elementos
+ * custom que renderizan QInput, QSelect, etc.:
+ *
+ *   .DetallePedidoCompra {
+ *       quimera-input[nombre="codigo"] { grid-column: span 3; }
+ *       quimera-input[nombre="nombre"] { grid-column: span 9; }
+ *   }
+ *
+ * Cada tab tiene su propio CSS file (p.ej. TabLineas.css).
+ * Ver la referencia de anchos en TabLineas.css.
+ */
+
+.DetallePedidoCompra {
+}

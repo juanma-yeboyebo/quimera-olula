@@ -35,7 +35,7 @@ describe("validación de id fiscal según el tipo", () => {
     });
 
     test("el tipo vacío no es válido", () => {
-        expect(validar(cambioIdFiscalVacio, "tipo_id_fiscal")).toBe("El tipo debe ser NIF o VAT");
+        expect(validar(cambioIdFiscalVacio, "tipo_id_fiscal")).toBe("Campo requerido");
     });
 
     test("idFiscalCompletoValido exige tipo e id coherentes", () => {

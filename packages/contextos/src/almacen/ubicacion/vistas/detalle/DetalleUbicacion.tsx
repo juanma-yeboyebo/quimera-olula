@@ -2,7 +2,6 @@ import { Zona } from "#/almacen/comun/componentes/Zona.tsx";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
-import { Tab, Tabs } from "@olula/componentes/detalle/tabs/Tabs.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
 import { ContextoError } from "@olula/lib/contexto.ts";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
@@ -65,19 +64,11 @@ export const DetalleUbicacion = ({
                 <div className="maestro-botones">
                     <QBoton onClick={() => emitir("borrado_solicitado")}>Borrar</QBoton>
                 </div>
-                <Tabs
-                    children={[
-                        <Tab key="general" label="General">
-                            <quimera-formulario>
-                                <QInput label="Código" {...modelo.uiProps("codigo")} />
-                                <Zona {...modelo.uiProps("zonaId")} />
-                            </quimera-formulario>
-                        </Tab>,
-                        <Tab key="stock" label="Stock">
-                            <StocksUbicacion stocks={ctx.stocks} />
-                        </Tab>,
-                    ]}
-                />
+                    <quimera-formulario>
+                        <QInput label="Código" {...modelo.uiProps("codigo")} />
+                        <Zona {...modelo.uiProps("idZona")} />
+                    </quimera-formulario>
+                    <StocksUbicacion stocks={ctx.stocks} />
             </div>
 
             {ctx.estado === "BORRANDO" && (

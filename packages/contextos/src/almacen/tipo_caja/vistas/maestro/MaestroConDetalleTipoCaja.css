@@ -1,0 +1,18 @@
+.TipoCaja {
+}
+
+.tarjeta-tipo-caja {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px;
+}
+
+.tarjeta-tipo-caja-descripcion {
+    font-weight: bold;
+}
+
+.tarjeta-tipo-caja-sku {
+    font-size: 0.85em;
+    color: var(--color-texto-secundario, #666);
+}
