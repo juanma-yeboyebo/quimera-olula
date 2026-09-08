@@ -22,7 +22,7 @@ import "./CrearVentaTpv.css";
 // así que el cliente "Venta PDA" se fija en un segundo paso. "ciudad" no
 // puede quedar en "": el backend exige que la ciudad de la dirección sea un
 // string (aunque el resto de campos sí aceptan null).
-const VENTA_PDA: CambioCliente = {
+export const VENTA_PDA: CambioCliente = {
   nombre_cliente: "Venta PDA",
   ciudad: "-",
 };

@@ -8,12 +8,14 @@ import { Tab, Tabs } from "@olula/componentes/detalle/tabs/Tabs.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
 import { QuimeraAcciones } from "@olula/componentes/index.js";
 import { useEsMovil } from "@olula/componentes/maestro/useEsMovil.ts";
+import { QModalConfirmacion } from "@olula/componentes/moleculas/qmodalconfirmacion.tsx";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { listaEntidadesInicial } from "@olula/lib/ListaEntidades.js";
 import { useModelo } from "@olula/lib/useModelo.js";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BorrarPagoVentaTpv } from "../borrar_pago/BorrarPagoVentaTpv.tsx";
 import { BorrarVentaTpv } from "../borrar/BorrarVentaTpv.tsx";
+import { VENTA_PDA } from "../crear/CrearVentaTpv.tsx";
 import { PagoVentaTpv, VentaTpv } from "../diseño.ts";
 import { PagarTarjetaVentaTpv } from "../pagar_con_tarjeta/PagarTarjetaVentaTpv.tsx";
 import { PagarEfectivoVentaTpv } from "../pagar_en_efectivo/PagarEfectivoVentaTpv.tsx";
@@ -56,10 +58,22 @@ export const DetalleVentaTpv = ({
   const venta = useModelo(metaVentaTpv, ctx.venta, sinAutoGuardar);
   const esMovil = useEsMovil();
 
+  // Igual que en Eneboo ("DATOS FACTURA"): por defecto la venta es
+  // anónima y el tab Cliente queda bloqueado; si la venta ya tiene un
+  // CIF/NIF guardado (se reabre una venta ya facturada a un cliente), se
+  // arranca con el tab desbloqueado. No se persiste en ningún sitio — es
+  // el mismo criterio que usa el propio Eneboo (no hay columna para esto).
+  const [datosFacturaActivo, setDatosFacturaActivo] = useState(false);
+  const [confirmandoDatosFactura, setConfirmandoDatosFactura] = useState(false);
+
   useEffect(() => {
     emitir("venta_id_cambiada", id, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  useEffect(() => {
+    setDatosFacturaActivo(!!ctx.venta.cliente?.idFiscal);
+  }, [ctx.venta.id, ctx.venta.cliente?.idFiscal]);
 
   const { estado, lineaActiva } = ctx;
 
@@ -73,7 +87,28 @@ export const DetalleVentaTpv = ({
 
   const esEditable = editable(ctx.venta);
 
+  // Al desactivar, se limpian los datos de cliente (vuelve al cliente de
+  // paso "Venta PDA"), igual que limpiarDatosCliente() en Eneboo.
+  const desactivarDatosFactura = async () => {
+    await emitir("cambio_cliente_listo", VENTA_PDA);
+    setDatosFacturaActivo(false);
+  };
+
+  const confirmarDatosFactura = () => {
+    setDatosFacturaActivo(true);
+    setConfirmandoDatosFactura(false);
+  };
+
   const acciones = [
+    {
+      icono: datosFacturaActivo ? "candado_abierto" : "candado",
+      texto: "Datos Factura",
+      onClick: () =>
+        datosFacturaActivo
+          ? desactivarDatosFactura()
+          : setConfirmandoDatosFactura(true),
+      deshabilitado: !esEditable,
+    },
     {
       icono: "eliminar",
       texto: "Borrar",
@@ -111,12 +146,20 @@ export const DetalleVentaTpv = ({
   );
 
   const bloqueTabs = (
-    <Tabs>
+    // Tabs solo permite fijar la pestaña inicial en el montaje (no cambia
+    // en caliente) — key fuerza un remontaje cada vez que cambia el
+    // candado, para saltar a "Cliente" (índice 1) al activar y volver a
+    // "Datos" (índice 0) al desactivar, en vez de quedarse en una pestaña
+    // que acaba de (des)habilitarse.
+    <Tabs
+      key={datosFacturaActivo ? "con-datos-factura" : "sin-datos-factura"}
+      tabInicial={datosFacturaActivo ? 1 : 0}
+    >
       <Tab label="Datos">
         <TabDatos venta={venta} />
       </Tab>
 
-      <Tab label="Cliente">
+      <Tab label="Cliente" deshabilitado={!datosFacturaActivo}>
         <TabCliente venta={venta} publicar={emitir} />
       </Tab>
 
@@ -174,6 +217,17 @@ export const DetalleVentaTpv = ({
           ventaId={ctx.venta.id}
           pago={ctx.pagos.activo}
           publicar={emitir}
+        />
+      )}
+
+      {confirmandoDatosFactura && (
+        <QModalConfirmacion
+          nombre="confirmarDatosFacturaVentaTpv"
+          abierto={true}
+          titulo="Datos Factura"
+          mensaje="Vas a facturar esta venta con los datos fiscales de un cliente. ¿Deseas continuar?"
+          onCerrar={() => setConfirmandoDatosFactura(false)}
+          onAceptar={confirmarDatosFactura}
         />
       )}
     </Detalle>
