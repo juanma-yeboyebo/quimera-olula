@@ -1,7 +1,7 @@
 import "./Home.style.scss";
 
 import { Icon, IconButton } from "@quimera/comps";
-import { navigate } from "hookrouter";
+import { navigate } from "quimera/base";
 import Quimera, { PropValidation, useStateValue } from "quimera";
 
 import { ResumenPda } from "../../comps";

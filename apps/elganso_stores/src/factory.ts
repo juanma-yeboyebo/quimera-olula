@@ -4,7 +4,7 @@ import { MenuUsuarioGan } from "./componentes/MenuUsuario/MenuUsuario.tsx";
 import { FactoryAlmacenLegacy } from "./contextos/almacen/factory.ts";
 import { FactoryAuthLegacy } from "./contextos/auth/factory.ts";
 import { MenuUsuarioElementosGanso } from "./contextos/menu/menu.ts";
-import { FactoryVentasLegacy } from "./contextos/ventas/factory.ts";
+import { FactoryVentasGanso } from "./contextos/ventas/factory.ts";
 
 class FactoryComponentesGan extends FactoryComponentesOlula {
     static cabecera = CabeceraGanso;
@@ -13,7 +13,7 @@ class FactoryComponentesGan extends FactoryComponentesOlula {
 }
 
 export class FactoryLegacy {
-    Ventas = FactoryVentasLegacy;
+    Ventas = FactoryVentasGanso;
     Almacen = FactoryAlmacenLegacy;
     Auth = FactoryAuthLegacy;
     Componentes = FactoryComponentesGan;

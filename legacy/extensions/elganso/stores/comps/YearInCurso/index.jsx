@@ -3,7 +3,7 @@ import "./YearInCurso.style.scss";
 
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
-import { navigate } from "hookrouter";
+import { navigate } from "quimera/base";
 import PropTypes from "prop-types";
 import { useStateValue } from "quimera";
 import React from "react";

@@ -1,0 +1,81 @@
+// Envuelve la fila de escaneo (input + botón cámara + acciones) y, debajo,
+// el escáner por cámara cuando está abierto — como un único elemento dentro
+// de la cabecera del listado (que es un flex en fila), para que ambos
+// queden apilados verticalmente en vez de codo con codo con el icono de
+// cambiar a vista de tarjetas.
+.LineasLista-escaner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaciado-xs);
+}
+
+// Contenedor propio del input de escaneo + botón de cámara, alineados
+// verticalmente al centro — en móvil y en escritorio. El escáner por
+// cámara vive también aquí dentro, pero con flex-basis: 100% para que
+// caiga en su propia línea debajo de los otros dos en vez de ir al lado.
+.LineasLista-escaneo-input {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espaciado-xs);
+  flex: 1 1 0%;
+  min-width: 0;
+
+  quimera-input {
+    // quimera-input trae "width: 100%" fijado por CSS base (no solo
+    // dentro del grid de 12 columnas), y eso se usa como base del flex
+    // por delante de "flex: 1 1 auto" — flex-basis: 0 lo ignora.
+    flex: 1 1 0%;
+    width: auto;
+    min-width: 0;
+  }
+
+  .QEscanerCodigoBarras {
+    flex: 1 0 100%;
+  }
+}
+
+// El input de escaneo (con etiqueta encima) es más alto que los botones
+// Nueva/Editar/Borrar: se centran verticalmente para que no queden pegados
+// arriba dentro de la misma fila.
+.LineasLista-botones {
+  quimera-acciones {
+    .acciones.acciones-inline {
+      quimera-boton {
+        margin: auto 5px;
+      }
+    }
+  }
+}
+
+// En móvil, el input de escaneo + los botones (Nueva/Editar/Borrar) no caben
+// en una sola fila (".botones" no hace wrap por defecto) y se salen de la
+// pantalla: se envuelven en varias líneas, y los botones se reparten todo el
+// ancho a partes iguales (antes quedaban apiñados a la derecha, muy
+// pequeños en comparación con el input de escaneo).
+@media (max-width: 768px) {
+  .LineasLista-botones {
+    flex-wrap: wrap;
+
+    .LineasLista-escaneo-input {
+      flex: 1 1 100%;
+    }
+
+    quimera-acciones {
+      flex: 1 1 100%;
+
+      .acciones.acciones-inline {
+        width: 100%;
+        justify-content: stretch;
+
+        quimera-boton {
+          flex: 1;
+
+          button {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}

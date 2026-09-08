@@ -82,13 +82,6 @@ export default parent => ({
   pedidos: {
     title: "Pedidos",
     items: {
-      pedido: {
-        title: "Nuevo Pedido",
-        icons: ["shopping_cart"],
-        color: "primary",
-        variant: "main",
-        url: "/new_pedido",
-      },
       inventarios: {
         title: "Preparación Pedidos Web",
         icons: ["shop", "mode_edit"],

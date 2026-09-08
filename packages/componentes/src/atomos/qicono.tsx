@@ -8,7 +8,10 @@ import {
   IconArrowForwardUp,
   IconArrowUpRight,
   IconBackground,
+  IconBarcode,
   IconBasketDown,
+  IconBolt,
+  IconBoltOff,
   IconBrain,
   IconBrandAzure,
   IconBrandGmail,
@@ -21,6 +24,7 @@ import {
   IconCalendarEvent,
   IconCalendarMonth,
   IconCalendarWeek,
+  IconCameraRotate,
   IconChartBar,
   IconCheck,
   IconCheckbox,
@@ -203,6 +207,10 @@ const iconos: Record<string, Icon> = {
   pausa: IconPlayerPause,
   pausa_relleno: IconPlayerPauseFilled,
   devolucion: IconBasketDown,
+  codigo_barras: IconBarcode,
+  flash: IconBolt,
+  flash_off: IconBoltOff,
+  camara_girar: IconCameraRotate,
 };
 
 export const QIcono = ({

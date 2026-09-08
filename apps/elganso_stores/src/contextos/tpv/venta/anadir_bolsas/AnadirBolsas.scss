@@ -1,0 +1,45 @@
+.VentaTpv .AnadirBolsas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  quimera-formulario {
+    max-width: 400px;
+    width: 100%;
+  }
+
+  quimera-input {
+    grid-column: span 12;
+
+    label {
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: var(--espaciado-s);
+    }
+
+    .etiqueta {
+      flex: 0 0 auto;
+      padding-left: 0;
+    }
+
+    input {
+      flex: 0 0 20%;
+      min-width: 0;
+      text-align: right;
+
+      // Chrome/WebKit oculta las flechas del input numérico salvo en
+      // hover/focus: se fuerza a que estén siempre visibles.
+      &::-webkit-inner-spin-button,
+      &::-webkit-outer-spin-button {
+        opacity: 1;
+      }
+    }
+  }
+
+  .botones {
+    display: flex;
+    justify-content: center;
+    gap: var(--espaciado-s);
+  }
+}

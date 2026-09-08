@@ -1,0 +1,14 @@
+.Lineas-titulo {
+  margin: var(--espaciado-l) var(--padding-horizontal) var(--espaciado-xs);
+  padding-bottom: var(--espaciado-xs);
+  font-size: var(--tamaño-letra-l);
+  font-weight: bold;
+  color: var(--color-texto-primario);
+  border-bottom: var(--tamaño-borde-s) solid var(--color-borde-sutil);
+}
+
+@media (max-width: 768px) {
+  .Lineas-titulo {
+    display: none;
+  }
+}

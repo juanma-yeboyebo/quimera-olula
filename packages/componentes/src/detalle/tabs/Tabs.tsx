@@ -4,6 +4,7 @@ import estilos from "./tabs.module.css";
 interface TabProps {
   label: string;
   children: React.ReactNode;
+  deshabilitado?: boolean;
 }
 
 interface TabsProps {
@@ -65,6 +66,7 @@ const Tabs: React.FC<TabsProps> = ({ children, className }) => {
             <button
               key={index}
               onClick={() => setActiveTab(index)}
+              disabled={tab.props.deshabilitado}
               className={activeTab === index ? active : "inactive"}
             >
               {tab.props.label}
