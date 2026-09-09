@@ -24,9 +24,10 @@ import { editable, ventaTpvVacia, metaVentaTpv } from "./detalle.ts";
 import "./DetalleVentaTpv.css";
 import { Lineas } from "./lineas/Lineas.tsx";
 import { getMaquina } from "./maquina.ts";
+import { aplicarTarjetaACliente, TarjetaGansociety } from "./comps/TarjetaGansociety.tsx";
 import { PendienteVenta } from "./comps/PendienteVenta.tsx";
 import { Pagos } from "./pagos/Pagos.tsx";
-import { aplicarTarjetaACliente, TabCliente } from "./TabCliente/TabCliente.tsx";
+import { TabCliente } from "./TabCliente/TabCliente.tsx";
 import { TabDatos } from "./TabDatos.tsx";
 import { TotalesVentaTpv } from "./TotalesVentaTpv.tsx";
 
@@ -90,9 +91,14 @@ export const DetalleVentaTpv = ({
   const esEditable = editable(ctx.venta);
 
   // Al desactivar, se limpian los datos de cliente (vuelve al cliente de
-  // paso "Venta PDA"), igual que limpiarDatosCliente() en Eneboo.
+  // paso "Venta PDA") y el email, igual que limpiarDatosCliente() en
+  // Eneboo — la tarjeta Gansociety no se toca, se queda vinculada.
   const desactivarDatosFactura = async () => {
     await emitir("cambio_cliente_listo", VENTA_PDA);
+    await emitir("datos_cliente_listo", {
+      email: "",
+      tarjeta_puntos_id: ctx.venta.tarjetaPuntosId ?? "",
+    });
     setDatosFacturaActivo(false);
   };
 
@@ -112,7 +118,7 @@ export const DetalleVentaTpv = ({
 
   const sobrescribirConDatosTarjeta = async () => {
     if (!tarjetaParaSobrescribir) return;
-    await aplicarTarjetaACliente(emitir, tarjetaParaSobrescribir, ctx.venta.email ?? "");
+    await aplicarTarjetaACliente(emitir, tarjetaParaSobrescribir, ctx.venta.email ?? "", true);
     setTarjetaParaSobrescribir(null);
   };
 
@@ -150,6 +156,13 @@ export const DetalleVentaTpv = ({
 
   const bloqueTotales = (
     <>
+      <TarjetaGansociety
+        venta={ctx.venta}
+        publicar={emitir}
+        editable={esEditable}
+        datosFacturaActivo={datosFacturaActivo}
+      />
+
       <TotalesVentaTpv modeloVenta={venta} publicar={emitir} />
 
       {estado === "CAMBIANDO_DESCUENTO" && (

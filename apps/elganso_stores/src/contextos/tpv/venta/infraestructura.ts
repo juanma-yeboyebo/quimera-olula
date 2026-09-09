@@ -232,6 +232,9 @@ export interface TarjetaPuntos {
   codpostal: string | null;
   ciudad: string | null;
   provincia: string | null;
+  deempleado: boolean | null;
+  dtoespecial: boolean | null;
+  dtopor: number | null;
 }
 
 // La tarjeta Gansociety se busca por email o por teléfono (igual que en
