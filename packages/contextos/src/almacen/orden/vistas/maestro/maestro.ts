@@ -48,6 +48,7 @@ export const incluirOrdenCreadaPorId: ProcesarMaestro = async (contexto, payload
         idCajaOrigen: orden.idCajaOrigen,
         idUbicacionDestino: orden.idUbicacionDestino,
         idCajaDestino: orden.idCajaDestino,
+        idResponsable: null,
     };
     return {
         ...contexto,

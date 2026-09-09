@@ -1,4 +1,4 @@
-import { navigate } from "hookrouter";
+import { navigate } from "quimera/base";
 import { getSchemas, util } from "quimera";
 import { applyBunch, shortcutsBunch, shortcutsState } from "quimera/lib";
 

@@ -20,6 +20,7 @@ export * from "./moleculas/Mostrar.tsx";
 export * from "./moleculas/qacciones.tsx";
 export * from "./moleculas/qacordeon.tsx";
 export * from "./moleculas/qeditor_enriquecido.tsx";
+export * from "./moleculas/qescaner_codigo_barras.tsx";
 export * from "./moleculas/qmodal.tsx";
 export * from "./moleculas/qmodalconfirmacion.tsx";
 export * from "./moleculas/qseccion.tsx";

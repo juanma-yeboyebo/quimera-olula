@@ -1,6 +1,7 @@
 import { Entidad, Filtro, Orden, Paginacion, RespuestaLista } from "@olula/lib/diseño.ts";
 
-export interface Stock extends Entidad {
+
+export interface StockItem extends Entidad {
     id: string;
     articulo: string;
     almacen: string;
@@ -10,6 +11,17 @@ export interface Stock extends Entidad {
     cantidadDisponible: number;
     cantidadReservada: number;
     cantidadPendiente: number;
+}
+
+export interface StockUbicacion extends Entidad {
+    id: string;
+    idUbicacion: string;
+    ubicacion: string;
+    cantidad: number;
+}
+
+export interface Stock extends StockItem {
+    ubicaciones: StockUbicacion[]
 }
 
 export interface StockAPI extends Entidad {
@@ -29,4 +41,4 @@ export type GetStocks = (
     filtro: Filtro,
     orden: Orden,
     paginacion?: Paginacion
-) => RespuestaLista<Stock>;
+) => RespuestaLista<StockItem>;

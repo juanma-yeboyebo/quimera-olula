@@ -5,9 +5,11 @@ import { LineaOrdenAlmacen, OrdenAlmacen } from "../../diseño.ts";
 import {
     cargarContexto,
     Lineas,
+    onCajaCreada,
     onLineaBorrada,
     onLineaCambiada,
     onLineaCreada,
+    onOrdenTerminada,
     refrescarOrden,
 } from "./detalle.ts";
 
@@ -15,12 +17,15 @@ export type EstadoOrdenAlmacen =
     | 'INICIAL'
     | 'ABIERTA'
     | 'BORRANDO'
+    | 'TERMINANDO'
     | 'CREANDO_LINEA'
     | 'CAMBIANDO_LINEA'
     | 'BORRANDO_LINEA'
     | 'LEYENDO_LINEA'
     | 'LEYENDO_CAJA'
-    | 'LEYENDO_UBICACION';
+    | 'LEYENDO_UBICACION'
+    | 'LEYENDO_GUION_LINEA'
+    | 'CREANDO_CAJA';
 
 export type ContextoOrdenAlmacen = {
     estado: EstadoOrdenAlmacen;
@@ -38,6 +43,7 @@ export const getMaquina: () => Maquina<EstadoOrdenAlmacen, ContextoOrdenAlmacen>
             orden_guardada: [refrescarOrden],
             lectura_registrada: [refrescarOrden],
             borrado_solicitado: "BORRANDO",
+            terminado_solicitado: "TERMINANDO",
             orden_id_cambiada: [cargarContexto],
             alta_linea_solicitada: "CREANDO_LINEA",
             cambio_linea_solicitado: "CAMBIANDO_LINEA",
@@ -46,6 +52,9 @@ export const getMaquina: () => Maquina<EstadoOrdenAlmacen, ContextoOrdenAlmacen>
             lectura_solicitada: "LEYENDO_LINEA",
             lectura_caja_solicitada: "LEYENDO_CAJA",
             lectura_ubicacion_solicitada: "LEYENDO_UBICACION",
+            lectura_guion_solicitada: "LEYENDO_GUION_LINEA",
+            lectura_guion_linea_solicitada: [Lineas.activar, "LEYENDO_GUION_LINEA"],
+            creacion_de_caja_solicitada: "CREANDO_CAJA",
         },
 
         BORRANDO: {
@@ -54,6 +63,11 @@ export const getMaquina: () => Maquina<EstadoOrdenAlmacen, ContextoOrdenAlmacen>
                 "INICIAL",
             ],
             borrado_cancelado: "ABIERTA",
+        },
+
+        TERMINANDO: {
+            orden_terminada: [onOrdenTerminada, "ABIERTA"],
+            terminado_cancelado: "ABIERTA",
         },
 
         CREANDO_LINEA: {
@@ -84,6 +98,16 @@ export const getMaquina: () => Maquina<EstadoOrdenAlmacen, ContextoOrdenAlmacen>
         LEYENDO_UBICACION: {
             lectura_registrada: [refrescarOrden, "ABIERTA"],
             lectura_ubicacion_cancelada: "ABIERTA",
+        },
+
+        LEYENDO_GUION_LINEA: {
+            lectura_registrada: [refrescarOrden, "ABIERTA"],
+            lectura_guion_cancelada: "ABIERTA",
+        },
+
+        CREANDO_CAJA: {
+            caja_creada: [onCajaCreada, "ABIERTA"],
+            alta_de_caja_cancelada: "ABIERTA",
         },
     };
 };

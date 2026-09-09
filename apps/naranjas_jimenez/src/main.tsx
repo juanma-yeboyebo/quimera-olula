@@ -1,7 +1,6 @@
 import { authMiddleware } from "#/auth/middlewares.ts";
 import { useTimerRefresco } from "#/auth/useTimerRefresco.ts";
 import { Vista } from "@olula/componentes/index.ts";
-import "@olula/lib/comun.css";
 import { FactoryObj, FactoryProvider } from "@olula/lib/factory_ctx.tsx";
 import { crearMenu, MenuContextFactory } from "@olula/lib/menu.ts";
 import { StrictMode, useEffect } from "react";

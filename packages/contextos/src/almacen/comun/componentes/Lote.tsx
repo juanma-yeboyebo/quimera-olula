@@ -28,7 +28,7 @@ export const Lote = ({
         const filtro:Filtro = sku
             ? {
                 and: [
-                    ['articulo_id', "=", sku],
+                    ['sku', "=", sku],
                     ["id", "~", texto]
                 ]
             }
@@ -50,7 +50,7 @@ export const Lote = ({
 
     return (
         <QAutocompletar
-            label={label}
+            label={`${label} SKU ${sku}`}
             nombre={nombre}
             onChange={onChange}
             valor={valor}

@@ -1,25 +1,57 @@
 import { CajaContenido, ComponenteCaja, MaterialCaja, MovimientoCaja } from "../diseño.ts";
 import { esMaterial, esSubcaja } from "./dominio.ts";
 
-const NodoMovimiento = ({ movimiento }: { movimiento: MovimientoCaja }) => (
-    <div className="arbol-movimiento">
-        <span className="arbol-movimiento-cantidad">{movimiento.cantidad}</span>
-        <span className="arbol-movimiento-ubicacion">{movimiento.ubicacion}</span>
-        <span className="arbol-movimiento-fecha">{movimiento.fechaHora.toLocaleString()}</span>
-    </div>
-);
+const formatearFechaHora = (fecha: Date): { fecha: string; hora: string } => {
+    const d = fecha instanceof Date ? fecha : new Date(fecha);
+    const fechaStr = d.toLocaleDateString("es-ES", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+    });
+    const horaStr = d.toLocaleTimeString("es-ES", {
+        hour: "2-digit",
+        minute: "2-digit",
+    });
+    return { fecha: fechaStr, hora: horaStr };
+};
+
+const NodoMovimiento = ({ movimiento }: { movimiento: MovimientoCaja }) => {
+    const { fecha, hora } = formatearFechaHora(movimiento.fechaHora);
+    return (
+        <div className="arbol-movimiento">
+            <span className="arbol-movimiento-cantidad">{movimiento.cantidad}</span>
+            <span className="arbol-movimiento-concepto">{movimiento.concepto}</span>
+            <span className="arbol-movimiento-ubicacion">{movimiento.ubicacion}</span>
+            <span className="arbol-movimiento-fecha">
+                <span className="arbol-movimiento-fecha-dia">{fecha}</span>
+                <span className="arbol-movimiento-fecha-sep">·</span>
+                <span className="arbol-movimiento-fecha-hora">{hora}</span>
+            </span>
+        </div>
+    );
+};
 
 const NodoMaterial = ({ material }: { material: MaterialCaja }) => (
     <details className="arbol-nodo arbol-material">
         <summary>
-            <span className="arbol-material-sku">{material.sku}</span>
-            <span className="arbol-material-descripcion">{material.descripcion}</span>
-            <span className="arbol-material-cantidad">{material.cantidad}</span>
+            <span className="arbol-material-indicador" aria-hidden="true" />
+            <span className="arbol-material-principal">
+                <span className="arbol-material-sku">{material.sku}</span>
+                <span className="arbol-material-descripcion">{material.descripcion}</span>
+            </span>
+            <span className="arbol-material-cantidad">
+                <span className="arbol-material-cantidad-valor">{material.cantidad}</span>
+                <span className="arbol-material-cantidad-label">ud.</span>
+            </span>
         </summary>
         <div className="arbol-material-movimientos">
-            {material.movimientos.map((mov) => (
-                <NodoMovimiento key={mov.id} movimiento={mov} />
-            ))}
+            {material.movimientos.length === 0 ? (
+                <span className="arbol-vacio">Sin movimientos</span>
+            ) : (
+                material.movimientos.map((mov) => (
+                    <NodoMovimiento key={mov.id} movimiento={mov} />
+                ))
+            )}
         </div>
     </details>
 );

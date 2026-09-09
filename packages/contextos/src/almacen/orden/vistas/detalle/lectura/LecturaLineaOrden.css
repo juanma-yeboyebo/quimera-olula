@@ -1,33 +1,43 @@
-.LecturaOrden {
-    /* quimera-autocompletar {
-        grid-column: span 6;
-    } */
-
-    quimera-input[nombre="sku-lote"] {
-        grid-column: span 8;
+quimera-modal[nombre="lecturaOrden"] {
+    dialog {
+        max-width: 540px;
     }
 
-    quimera-input[nombre="cantidad"] {
-        grid-column: span 2;
-    }
+    quimera-formulario {
+        /* quimera-autocompletar {
+            grid-column: span 6;
+        } */
 
-    quimera-autocompletar[nombre="sku"] {
-        grid-column: span 6;
-    }
+        quimera-input[nombre="sku-lote"] {
+            grid-column: span 9;
+        }
 
-    quimera-autocompletar[nombre="idLote"] {
-        grid-column: span 6;
-    }
+        quimera-input[nombre="cantidad"] {
+            grid-column: span 3;
+        }
 
-    quimera-autocompletar[nombre="idUbicacionOrigen"] {
-        grid-column: span 4;
-    }
+        quimera-autocompletar[nombre="sku"] {
+            grid-column: span 6;
+        }
 
-    quimera-autocompletar[nombre="idUbicacionDestino"] {
-        grid-column: span 4;
-    }
+        quimera-autocompletar[nombre="idLote"] {
+            grid-column: span 6;
+        }
 
-    quimera-autocompletar[nombre="idCajaDestino"] {
-        grid-column: span 4;
+        quimera-autocompletar[nombre="idUbicacionOrigen"] {
+            grid-column: span 6;
+        }
+
+        quimera-autocompletar[nombre="idCajaOrigen"] {
+            grid-column: span 6;
+        }
+
+        quimera-autocompletar[nombre="idUbicacionDestino"] {
+            grid-column: span 6;
+        }
+
+        quimera-autocompletar[nombre="idCajaDestino"] {
+            grid-column: span 6;
+        }
     }
 }

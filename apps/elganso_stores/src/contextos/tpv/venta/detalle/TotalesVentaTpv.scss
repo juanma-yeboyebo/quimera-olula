@@ -1,0 +1,18 @@
+// El TotalesVentaTpv de El Ganso añade Pagado/Pendiente a la caja de
+// totales genérica (ver TotalesVentaTpv.tsx): en móvil, el TotalesVenta.css
+// compartido fuerza todos los items en una sola fila sin wrap, y con más
+// items (Neto, IVA, Total, Pagado, Pendiente) se amontonan y dejan de
+// leerse bien. Se sobreescribe aquí (mayor especificidad por ".VentaTpv"),
+// sin tocar el fichero compartido.
+@media (max-width: 768px) {
+  .VentaTpv {
+    .totales-venta {
+      flex-wrap: wrap;
+    }
+
+    .totales-venta-item {
+      flex: 1 1 auto;
+      white-space: normal;
+    }
+  }
+}

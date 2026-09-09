@@ -38,6 +38,8 @@ export const lineaOrdenVacia = (): LineaOrdenAlmacen => ({
     idCajaDestino: null,
     cajaDestino: null,
     lecturas: [],
+    porLotes: false,
+    idLineaPick: null,
 });
 
 const onOrdenCambiada = (orden: OrdenAlmacen, campo: string, _: unknown, otros?: Record<string, unknown>) => {

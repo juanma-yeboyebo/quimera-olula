@@ -4,6 +4,8 @@ import { Criteria } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 
 
+type TagCajaOpcion = { valor: string; descripcion: string } & TagCaja;
+
 interface CajaProps {
   descripcion?: string;
   valor: string;
@@ -11,7 +13,7 @@ interface CajaProps {
   label?: string;
   autoFocus?: boolean;
   ref?: React.RefObject<HTMLInputElement | null>;
-  onChange: (opcion: { valor: string; descripcion: string } | null) => void;
+  onChange: (opcion: TagCajaOpcion | null) => void;
 }
 
 export const Caja = ({
@@ -59,6 +61,10 @@ interface TagCajaApi {
     lpn: string;
     ubicacion_id: string;
     contenedor_id: string | null;
+    sku?: string | null;
+    lote_id?: string | null;
+    cantidad: number | null;
+    capacidad?: number | null;
 }
 
 interface TagCaja {
@@ -66,6 +72,10 @@ interface TagCaja {
     lpn: string;
     idUbicacion: string;
     idConenedor: string | null;
+    sku?: string | null;
+    idLote?: string | null;
+    cantidad: number | null;
+    capacidad?: number | null;
 }
 
 const url = `/almacen/caja`;
@@ -75,6 +85,10 @@ const tagCajaApiATagCaja = (caja: TagCajaApi): TagCaja => ({
     lpn: caja.lpn,
     idUbicacion: caja.ubicacion_id,
     idConenedor: caja.contenedor_id,
+    sku: caja.sku,
+    idLote: caja.lote_id,
+    cantidad: caja.cantidad,
+    capacidad: caja.capacidad,
 })
 
 

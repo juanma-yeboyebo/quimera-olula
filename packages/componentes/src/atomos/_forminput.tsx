@@ -152,13 +152,18 @@ export const FormInput = ({
     onChange?.(target.type === 'checkbox' ? target.checked.toString() : target.value, e);
   };
 
+  // flushSync + ref (no el "evaluarCambio" cerrado en este render): cuando
+  // onBlur dispara a su vez un onChange (p.ej. QAutocompletar al elegir una
+  // opción y perder el foco en el mismo tick), el cambio de modelo aún no
+  // se habría reflejado en el "evaluarCambio" de este cierre y el guardado
+  // se evaluaría contra el valor viejo, sin ver la modificación. Mismo
+  // patrón ya usado en manejarLimpiar.
   const manejarBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     if (esFormateable) setEnfocado(false);
-    onBlur?.(e.target.value, e);
-    // if (evaluarCambio && e.target.value !== valor) {
-    if (evaluarCambio) {
-      evaluarCambio();
-    }
+    flushSync(() => {
+      onBlur?.(e.target.value, e);
+    });
+    evaluarCambioRef.current?.();
   };
 
   const manejarInput = (e: React.FormEvent<HTMLInputElement>) => {

@@ -1,0 +1,17 @@
+.QEscanerCodigoBarras {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaciado-xs);
+}
+
+.QEscanerCodigoBarras-video {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: var(--redondeo-borde-m);
+    background-color: var(--gris-9);
+}
+
+.QEscanerCodigoBarras-botones {
+    justify-content: center;
+}

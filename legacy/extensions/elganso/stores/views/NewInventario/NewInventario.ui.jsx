@@ -3,7 +3,7 @@ import "./NewInventario.style.scss";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { Button, Field, Grid } from "@quimera/comps";
-import { navigate } from "hookrouter";
+import { navigate } from "quimera/base";
 import Quimera, { PropValidation, useStateValue } from "quimera";
 import { useCallback, useEffect, useState } from "react";
 import { useDbState } from "use-db-state";

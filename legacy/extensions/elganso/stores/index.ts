@@ -13,7 +13,6 @@ import * as Home from "./views/Home";
 import * as Inventarios from "./views/Inventarios";
 import * as Login from "./views/Login";
 import * as NewInventario from "./views/NewInventario";
-import * as NewPedido from "./views/NewPedido";
 import * as PedidosWeb from "./views/PedidosWeb";
 import * as PlanificadorSemanal from "./views/PlanificadorSemanal";
 import * as PlanificadorSemanalResumen from "./views/PlanificadorSemanalResumen";
@@ -45,7 +44,6 @@ export default {
     ResumenAgente,
     ControlHorario,
     PedidosWeb,
-    NewPedido,
     ConsultaStock,
   },
   subviews: {},
@@ -65,8 +63,6 @@ export default {
     "/resumen_agente": { type: "view", view: "ResumenAgente" },
     "/control_horario": { type: "view", view: "ControlHorario" },
     "/pedidos_web": { type: "view", view: "PedidosWeb" },
-    "/new_pedido": { type: "view", view: "NewPedido" },
-    "/new_pedido/:idComanda": { type: "view", view: "NewPedido" },
     "/consulta_stock": { type: "view", view: "ConsultaStock" },
   },
   dependencies: [core, login],

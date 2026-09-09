@@ -119,3 +119,11 @@ body .buttonSincro-black {
 .qtarjeta-metatabla-campo .qtarjeta-metatabla-valor {
     color: var(--color-texto-primario);
 }
+
+/* MaestroDetalle en modo "maestro-dinamico" (ventas/pedido) se queda a 30% de
+ancho aunque no haya detalle seleccionado. :not(.contraido) sube la
+especificidad por encima de la regla base de MaestroDetalle.css sin depender
+del orden de carga de las hojas de estilo. */
+maestro-detalle[tipo="maestro-dinamico"] .Maestro:not(.contraido) {
+    max-width: 100%;
+}

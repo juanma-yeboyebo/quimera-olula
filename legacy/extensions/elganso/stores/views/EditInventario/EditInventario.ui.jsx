@@ -12,7 +12,7 @@ import {
   Icon,
   IconButton,
 } from "@quimera/comps";
-import { navigate } from "hookrouter";
+import { navigate } from "quimera/base";
 import Quimera, { PropValidation, useStateValue } from "quimera";
 import { useEffect, useRef, useState } from "react";
 import { useDbState } from "use-db-state";

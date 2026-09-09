@@ -8,6 +8,12 @@ export interface Caja extends Entidad {
     idContenedor?: string | null;
 }
 
+export interface CajaMonoproducto extends Caja {
+    sku: string | null;
+    idLote: string | null;
+    cantidad: number;
+}
+
 export interface MovimientoCaja extends Entidad {
     id: string;
     idLote: string;
@@ -15,6 +21,7 @@ export interface MovimientoCaja extends Entidad {
     fechaHora: Date;
     idUbicacion: string;
     ubicacion: string;
+    concepto: string;
 }
 
 export interface MaterialCaja extends Entidad {
@@ -32,14 +39,26 @@ export interface CajaContenido extends Caja {
 
 export type ComponenteCaja = CajaContenido | MaterialCaja;
 
-export interface NuevaCaja extends Modelo {
-    idUbicacion: string;
-    idContenedor?: string | null;
+// Caja monoproducto con su contenido (lista plana de materiales, sin subcajas anidadas)
+export interface CajaMonoproductoContenido extends CajaMonoproducto {
+    materiales: MaterialCaja[];
 }
 
-export type CambiosCaja = Partial<Caja>;
+// Tipo de retorno del GET de detalle
+export type CajaDetalle = CajaContenido | CajaMonoproductoContenido;
 
-export type GetCaja = (id: string) => Promise<CajaContenido>;
+export interface NuevaCaja extends Modelo {
+    idUbicacion: string;
+    idTipoCaja: string;
+    idContenedor?: string | null;
+    sku?: string | null;
+    idLote?: string | null;
+    cantidad?: number | null;
+}
+
+export type CambiosCaja = Partial<Caja & Pick<CajaMonoproducto, "sku" | "idLote" | "cantidad">>;
+
+export type GetCaja = (id: string) => Promise<CajaDetalle>;
 
 export type GetCajas = (criteria: Criteria) => RespuestaLista<Caja>;
 

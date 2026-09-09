@@ -1,8 +1,8 @@
-import { CajaContenido } from "../diseño.ts";
+import { CajaDetalle } from "../diseño.ts";
 
 export type EstadoCaja = "INICIAL" | "ABIERTO" | "BORRANDO";
 
 export type ContextoCaja = {
     estado: EstadoCaja;
-    caja: CajaContenido;
+    caja: CajaDetalle;
 };

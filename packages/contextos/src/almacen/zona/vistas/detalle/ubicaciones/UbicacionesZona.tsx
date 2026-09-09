@@ -2,7 +2,7 @@ import { MetaTabla } from "@olula/componentes/atomos/qtabla.tsx";
 import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiControlado.tsx";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { useState } from "react";
-import { StockUbicacion, Ubicacion } from "#/almacen/ubicacion/diseño.ts";
+import { StockUbicacionItem, Ubicacion } from "#/almacen/ubicacion/diseño.ts";
 import { getStocksUbicacion } from "#/almacen/ubicacion/infraestructura.ts";
 import { StocksUbicacion } from "#/almacen/ubicacion/vistas/detalle/stocks/StocksUbicacion.tsx";
 
@@ -16,7 +16,7 @@ export const UbicacionesZona = ({
     ubicaciones: Ubicacion[];
 }) => {
     const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState<Ubicacion | null>(null);
-    const [stocks, setStocks] = useState<StockUbicacion[]>([]);
+    const [stocks, setStocks] = useState<StockUbicacionItem[]>([]);
 
     const seleccionarUbicacion = async (ubicacion: Ubicacion) => {
         setUbicacionSeleccionada(ubicacion);

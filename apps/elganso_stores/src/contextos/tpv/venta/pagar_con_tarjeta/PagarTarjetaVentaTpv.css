@@ -1,0 +1,9 @@
+.VentaTpv .PagarTarjetaVentaTpv {
+    div[id="pendiente"] {
+        grid-column: span 6;
+    }
+
+    quimera-input[nombre="importe"] {
+        grid-column: span 6;
+    }
+}

@@ -1,3 +1,4 @@
+import { CrearCaja } from "#/almacen/caja/crear/CrearCaja.tsx";
 import { Almacen } from "#/almacen/comun/componentes/Almacen.tsx";
 import { Caja } from "#/almacen/comun/componentes/Caja.tsx";
 import { Ubicacion } from "#/almacen/comun/componentes/Ubicacion.tsx";
@@ -8,20 +9,21 @@ import { QInput } from "@olula/componentes/index.js";
 import { EmitirEvento } from "@olula/lib/diseño.js";
 import { listaEntidadesInicial } from "@olula/lib/ListaEntidades.js";
 import { useModelo } from "@olula/lib/useModelo.ts";
-import { ContextoError } from "@olula/lib/contexto.ts";
-import { useCallback, useContext, useEffect } from "react";
-import { postCaja } from "../../../caja/infraestructura.ts";
+import { usePreferencia } from "@olula/lib/usePreferencia.ts";
+import { desbloquearTTS, useSintesisVoz } from "@olula/lib/voz/useSintesisVoz.ts";
+import { useCallback, useEffect } from "react";
 import { useParams } from "react-router";
 import { TipoOrden } from "../../../comun/componentes/TipoOrden.tsx";
 import { LineaOrdenAlmacen, OrdenAlmacen } from "../../diseño.ts";
 import { metaOrden, ordenVacia } from "../../dominio.ts";
 import { BorrarOrden } from "../borrar/BorrarOrden.tsx";
+import { TerminarOrden } from "../terminar/TerminarOrden.tsx";
 import { guardarOrden } from "./detalle.ts";
 import "./DetalleOrden.css";
 import { LecturaOrden } from "./lectura/LecturaLineaOrden.tsx";
-import { LecturaCajaOrden } from "./lectura_caja/LecturaCajaOrden.tsx";
-import { LecturaUbicacionOrden } from "./lectura_ubicacion/LecturaUbicacionOrden.tsx";
 import { LecturasCajaOrden } from "./lecturas_caja/LecturasCajaOrden.tsx";
+import { LecturaCajaOrden } from "./leer_caja/LecturaCajaOrden.tsx";
+import { LecturaUbicacionOrden } from "./leer_ubicacion/LecturaUbicacionOrden.tsx";
 import { LineasOrden } from "./lineas/LineasOrden.tsx";
 import { ContextoOrdenAlmacen, getMaquina } from "./maquina.ts";
 
@@ -44,6 +46,8 @@ export const DetalleOrden = ({
     };
 
     const { ctx, emitir } = useMaquina(getMaquina, contextoInicial, publicar);
+    const [modoVoz, setModoVoz] = usePreferencia("sga.modo-voz", false);
+    const tts = useSintesisVoz();
 
     const autoGuardar = useCallback(
         async (orden: OrdenAlmacen) => {
@@ -54,18 +58,7 @@ export const DetalleOrden = ({
     );
 
     const orden = useModelo(metaOrden, ctx.orden, autoGuardar);
-    const { modelo, set } = orden;
-    const { intentar } = useContext(ContextoError);
-
-    const crearCaja = useCallback(async () => {
-        if (!modelo.idUbicacionDestino) return;
-        const id = await intentar(() =>
-            postCaja({ idUbicacion: modelo.idUbicacionDestino! })
-        );
-        if (id) {
-            set({ ...modelo, idCajaDestino: id });
-        }
-    }, [modelo, intentar, set]);
+    const { modelo } = orden;
 
     const mostrarOrigen = ["SALIDA", "TRASPASO"].includes(modelo.tipo);
     const mostrarDestino = ["ENTRADA", "TRASPASO"].includes(modelo.tipo);
@@ -88,12 +81,8 @@ export const DetalleOrden = ({
         >
             <div className="maestro-botones">
                 <QBoton onClick={() => emitir("borrado_solicitado")}>Borrar</QBoton>
-                <QBoton onClick={() => emitir("lectura_solicitada")}>Lectura</QBoton>
-                {["TRASPASO", "SALIDA"].includes(modelo.tipo) && (
-                    <QBoton onClick={() => emitir("lectura_caja_solicitada")}>Lectura caja</QBoton>
-                )}
-                {["TRASPASO", "SALIDA"].includes(modelo.tipo) && (
-                    <QBoton onClick={() => emitir("lectura_ubicacion_solicitada")}>Lectura ubicación</QBoton>
+                {modelo.estado !== "TERMINADA" && (
+                    <QBoton onClick={() => emitir("terminado_solicitado")}>Terminar</QBoton>
                 )}
             </div>
             <div className="DetalleOrden">
@@ -125,7 +114,7 @@ export const DetalleOrden = ({
                         />
                     )}
                     {mostrarDestino && (
-                        <QBoton texto='Nueva caja' onClick={crearCaja} deshabilitado={!modelo.idUbicacionDestino} />
+                        <QBoton texto='Nueva caja' onClick={() => emitir("creacion_de_caja_solicitada")} />
                     )}
                     {mostrarDestino && (
                         <Ubicacion
@@ -136,12 +125,33 @@ export const DetalleOrden = ({
                     )}
                 </quimera-formulario>
             </div>
+            <div className="maestro-botones">
+                <QBoton onClick={() => emitir("lectura_solicitada")}>Lectura</QBoton>
+                {["TRASPASO", "SALIDA"].includes(modelo.tipo) && (
+                    <QBoton onClick={() => emitir("lectura_caja_solicitada")}>Lectura caja</QBoton>
+                )}
+                {["TRASPASO", "SALIDA"].includes(modelo.tipo) && (
+                    <QBoton onClick={() => emitir("lectura_ubicacion_solicitada")}>Lectura bandeja</QBoton>
+                )}
+                <QBoton onClick={() => {
+                    const nuevoValor = !modoVoz;
+                    if (nuevoValor) desbloquearTTS();
+                    setModoVoz(nuevoValor);
+                }}>
+                    {modoVoz ? "Voz ON" : "Voz OFF"}
+                </QBoton>
+                {modoVoz && !tts.vocesDisponibles && (
+                    <p className="q-texto-error">No hay voces TTS instaladas. Instala espeak-ng en el sistema.</p>
+                )}
+            </div>
             <LecturasCajaOrden orden={ctx.orden} />
+            <h3>LÍNEAS</h3>
             <LineasOrden
                 orden={ctx.orden}
                 lineas={ctx.lineas}
                 estado={ctx.estado}
                 publicar={emitir}
+                modoVoz={modoVoz}
             />
 
             {ctx.estado === "BORRANDO" && (
@@ -150,14 +160,23 @@ export const DetalleOrden = ({
                     orden={ctx.orden}
                 />
             )}
+            {ctx.estado === "TERMINANDO" && (
+                <TerminarOrden
+                    publicar={emitir}
+                    orden={ctx.orden}
+                />
+            )}
             {ctx.estado === "LEYENDO_LINEA" && (
-                <LecturaOrden publicar={emitir} orden={modelo} tipo={modelo.tipo} />
+                <LecturaOrden publicar={emitir} orden={modelo} tipo={modelo.tipo} modoVoz={modoVoz} />
             )}
             {ctx.estado === "LEYENDO_CAJA" && (
-                <LecturaCajaOrden publicar={emitir} orden={modelo} tipo={modelo.tipo} />
+                <LecturaCajaOrden publicar={emitir} orden={modelo} tipo={modelo.tipo} modoVoz={modoVoz} />
             )}
             {ctx.estado === "LEYENDO_UBICACION" && (
-                <LecturaUbicacionOrden publicar={emitir} orden={modelo} tipo={modelo.tipo} />
+                <LecturaUbicacionOrden publicar={emitir} orden={modelo} tipo={modelo.tipo} modoVoz={modoVoz} />
+            )}
+            {ctx.estado === "CREANDO_CAJA" && (
+                <CrearCaja publicar={emitir} idUbicacion={modelo.idUbicacionDestino} />
             )}
         </Detalle>
     );

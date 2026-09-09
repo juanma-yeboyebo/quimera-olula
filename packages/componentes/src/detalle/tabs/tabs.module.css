@@ -28,6 +28,11 @@
             font-size: var(--tamaño-letra-m);
             flex: 0 0 25%;
             scroll-snap-align: center;
+
+            &:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+            }
         }
 
         @media screen and (max-width: 768px) {

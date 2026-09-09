@@ -18,6 +18,7 @@ describe("[orden-infra-03] itemOrdenDesdeApi convierte un ItemOrdenApi (snake_ca
         caja_origen_id: "CAJA-001",
         ubicacion_destino_id: "UBI-002",
         caja_destino_id: "CAJA-002",
+        responsable_id: null,
     };
 
     test("mapea id correctamente", () => {

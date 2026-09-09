@@ -9,6 +9,10 @@ interface PaisSelectorProps {
   label?: string;
   deshabilitado?: boolean;
   onChange: (opcion: { valor: string; descripcion: string } | null) => void;
+  // Se usa con "{...uiProps('pais_id')}": evaluarCambio es lo que dispara el
+  // guardado al perder el foco (ver useModelo). Sin recogerlo y reenviarlo a
+  // QAutocompletar aquí, se pierde antes de llegar y el campo nunca guarda.
+  evaluarCambio?: () => void;
 }
 
 export const PaisSelector = ({
@@ -18,6 +22,7 @@ export const PaisSelector = ({
   label = "Seleccionar país",
   deshabilitado = false,
   onChange,
+  evaluarCambio,
 }: PaisSelectorProps) => {
   // El segundo argumento llega cuando QAutocompletar tiene un id sin descripción
   // y necesita resolver su nombre (ej. la dirección ya guardada de un documento).
@@ -50,6 +55,7 @@ export const PaisSelector = ({
       obtenerOpciones={obtenerOpciones}
       descripcion={descripcion}
       deshabilitado={deshabilitado}
+      evaluarCambio={evaluarCambio}
     />
   );
 };

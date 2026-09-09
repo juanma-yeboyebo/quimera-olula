@@ -18,6 +18,8 @@
         "@dnd-kit/sortable": "^10.0.0",
         "@olula/lib": "workspace:*",
         "@tabler/icons-react": "^3.44.0",
+        "@zxing/browser": "^0.2.1",
+        "@zxing/library": "^0.23.0",
         "@tiptap/extension-link": "^3.25.0",
         "@tiptap/extension-placeholder": "^3.25.0",
         "@tiptap/extension-text-align": "^3.25.0",
