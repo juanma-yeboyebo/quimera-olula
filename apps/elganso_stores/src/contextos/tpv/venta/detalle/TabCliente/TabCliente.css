@@ -31,12 +31,13 @@
     }
 
     quimera-input[nombre="tarjeta_puntos_id"] {
-        grid-column: span 5;
+        grid-column: span 4;
     }
 
     .TabCliente-accion {
-        grid-column: span 1;
+        grid-column: span 2;
         display: flex;
+        gap: 0.25rem;
         justify-content: flex-end;
         align-items: end;
         margin: 0;
@@ -46,7 +47,7 @@
 
 @media (max-width: 768px) {
     .VentaTpv .TabCliente quimera-formulario:has(.TabCliente-accion) {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 2.5rem;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 5rem;
     }
 
     .VentaTpv .TabCliente {

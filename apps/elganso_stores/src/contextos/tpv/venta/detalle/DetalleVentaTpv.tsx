@@ -19,13 +19,14 @@ import { VENTA_PDA } from "../crear/CrearVentaTpv.tsx";
 import { PagoVentaTpv, VentaTpv } from "../diseño.ts";
 import { PagarTarjetaVentaTpv } from "../pagar_con_tarjeta/PagarTarjetaVentaTpv.tsx";
 import { PagarEfectivoVentaTpv } from "../pagar_en_efectivo/PagarEfectivoVentaTpv.tsx";
+import { buscarTarjetasPuntos, TarjetaPuntos } from "../infraestructura.ts";
 import { editable, ventaTpvVacia, metaVentaTpv } from "./detalle.ts";
 import "./DetalleVentaTpv.css";
 import { Lineas } from "./lineas/Lineas.tsx";
 import { getMaquina } from "./maquina.ts";
 import { PendienteVenta } from "./comps/PendienteVenta.tsx";
 import { Pagos } from "./pagos/Pagos.tsx";
-import { TabCliente } from "./TabCliente/TabCliente.tsx";
+import { aplicarTarjetaACliente, TabCliente } from "./TabCliente/TabCliente.tsx";
 import { TabDatos } from "./TabDatos.tsx";
 import { TotalesVentaTpv } from "./TotalesVentaTpv.tsx";
 
@@ -65,6 +66,7 @@ export const DetalleVentaTpv = ({
   // el mismo criterio que usa el propio Eneboo (no hay columna para esto).
   const [datosFacturaActivo, setDatosFacturaActivo] = useState(false);
   const [confirmandoDatosFactura, setConfirmandoDatosFactura] = useState(false);
+  const [tarjetaParaSobrescribir, setTarjetaParaSobrescribir] = useState<TarjetaPuntos | null>(null);
 
   useEffect(() => {
     emitir("venta_id_cambiada", id, true);
@@ -94,9 +96,24 @@ export const DetalleVentaTpv = ({
     setDatosFacturaActivo(false);
   };
 
-  const confirmarDatosFactura = () => {
+  // Igual que en Eneboo (tbnDatosFra_toggled): si la venta ya tiene una
+  // tarjeta Gansociety vinculada de antes (p.ej. se desactivó y se vuelve a
+  // activar sin borrar la tarjeta), se pregunta si se quieren volcar de
+  // nuevo los datos de esa tarjeta sobre el cliente o dejarlo como está.
+  const confirmarDatosFactura = async () => {
     setDatosFacturaActivo(true);
     setConfirmandoDatosFactura(false);
+
+    if (ctx.venta.tarjetaPuntosId) {
+      const tarjetas = await buscarTarjetasPuntos({ codigo: ctx.venta.tarjetaPuntosId });
+      if (tarjetas[0]) setTarjetaParaSobrescribir(tarjetas[0]);
+    }
+  };
+
+  const sobrescribirConDatosTarjeta = async () => {
+    if (!tarjetaParaSobrescribir) return;
+    await aplicarTarjetaACliente(emitir, tarjetaParaSobrescribir, ctx.venta.email ?? "");
+    setTarjetaParaSobrescribir(null);
   };
 
   const acciones = [
@@ -228,6 +245,17 @@ export const DetalleVentaTpv = ({
           mensaje="Vas a facturar esta venta con los datos fiscales de un cliente. ¿Deseas continuar?"
           onCerrar={() => setConfirmandoDatosFactura(false)}
           onAceptar={confirmarDatosFactura}
+        />
+      )}
+
+      {tarjetaParaSobrescribir && (
+        <QModalConfirmacion
+          nombre="sobrescribirClienteConTarjetaVentaTpv"
+          abierto={true}
+          titulo="Gansociety"
+          mensaje="Ya hay datos del cliente informados. ¿Desea modificarlos por los de la tarjeta seleccionada?"
+          onCerrar={() => setTarjetaParaSobrescribir(null)}
+          onAceptar={sobrescribirConDatosTarjeta}
         />
       )}
     </Detalle>

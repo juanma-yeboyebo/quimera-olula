@@ -227,14 +227,23 @@ export interface TarjetaPuntos {
   email: string;
   telefono: string;
   saldopuntos: number;
+  cifnif: string | null;
+  direccion: string | null;
+  codpostal: string | null;
+  ciudad: string | null;
+  provincia: string | null;
 }
 
 // La tarjeta Gansociety se busca por email o por teléfono (igual que en
-// Eneboo, las dos únicas opciones que ofrece).
+// Eneboo, las dos únicas opciones que ofrece). `codigo` es un caso aparte:
+// releer una tarjeta ya conocida por su código (no una búsqueda del
+// usuario), p.ej. al reactivar "Datos Factura" con una tarjeta ya
+// vinculada a la venta.
 export const buscarTarjetasPuntos = async (
-  criterio: { email?: string; telefono?: string }
+  criterio: { email?: string; telefono?: string; codigo?: string }
 ): Promise<TarjetaPuntos[]> => {
   const q = new URLSearchParams();
+  if (criterio.codigo) q.set("codigo", criterio.codigo);
   if (criterio.email) q.set("email", criterio.email);
   if (criterio.telefono) q.set("telefono", criterio.telefono);
 
