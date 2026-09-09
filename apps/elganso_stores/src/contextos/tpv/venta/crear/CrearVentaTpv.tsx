@@ -1,11 +1,14 @@
 import { CambioCliente } from "#/ventas/comun/componentes/moleculas/CambioClienteVenta/diseño.ts";
-import { puntoVentaLocal } from "#/tpv/comun/infraestructura.ts";
 import {
+  getJornadaAbierta,
   getPrecheckPedido,
+  getPuntoVentaActual,
+  getTiendaActual,
   getVenta,
   patchCambiarCliente,
   postVenta,
   PuntoVentaOpcion,
+  setPuntoVentaActual,
 } from "../infraestructura.ts";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
@@ -43,28 +46,31 @@ export const CrearVentaTpv = ({
   const [puntosVenta, setPuntosVenta] = useState<PuntoVentaOpcion[]>([]);
 
   // Mismas tres comprobaciones que hacía (a medias) el "Nuevo Pedido" del
-  // legacy antes de dejar crear un pedido: jornada abierta, punto de venta
-  // resuelto (aquí, guardado en localStorage vía puntoVentaLocal) y arqueo
-  // abierto — el arqueo, a diferencia del legacy, se abre solo si falta en
-  // vez de dejar al usuario sin salida (eso se comprueba al pulsar
-  // "Guardar", ver más abajo).
+  // legacy antes de dejar crear un pedido: jornada abierta (RRHH/central,
+  // su propia llamada sin tenant_id), punto de venta resuelto (en
+  // memoria, no localStorage — ver getPuntoVentaActual) y arqueo abierto
+  // (estos dos de la tienda) — el arqueo, a diferencia del legacy, se
+  // abre solo si falta en vez de dejar al usuario sin salida (eso se
+  // comprueba al pulsar "Guardar", ver más abajo).
   useEffect(() => {
     (async () => {
-      const resultado = await getPrecheckPedido();
-
-      if (!resultado.jornada_abierta) {
+      const jornadaAbierta = await getJornadaAbierta();
+      if (!jornadaAbierta) {
         setEstado("sin_jornada");
         return;
       }
 
-      if (puntoVentaLocal.obtenerSeguro()) {
+      await getTiendaActual();
+      const resultado = await getPrecheckPedido();
+
+      if (getPuntoVentaActual()) {
         setEstado("listo");
         return;
       }
 
       if (resultado.puntos_venta.length === 1) {
         const unico = resultado.puntos_venta[0];
-        puntoVentaLocal.actualizar({
+        setPuntoVentaActual({
           id: unico.codtpv_puntoventa,
           nombre: unico.descripcion,
         });
@@ -79,14 +85,14 @@ export const CrearVentaTpv = ({
 
   const elegirPuntoVenta = (opcion: { valor: string; descripcion: string } | null) => {
     if (!opcion) return;
-    puntoVentaLocal.actualizar({ id: opcion.valor, nombre: opcion.descripcion });
+    setPuntoVentaActual({ id: opcion.valor, nombre: opcion.descripcion });
     setEstado("listo");
   };
 
   const guardar_ = useCallback(async () => {
     // Se asegura el arqueo justo antes de crear, no en el precheck inicial:
     // así solo se abre uno cuando de verdad se va a usar.
-    const puntoVentaId = puntoVentaLocal.obtener().id;
+    const puntoVentaId = getPuntoVentaActual()!.id;
     await getPrecheckPedido(puntoVentaId);
 
     const id = await postVenta({ agente_id: "", punto_venta_id: puntoVentaId });

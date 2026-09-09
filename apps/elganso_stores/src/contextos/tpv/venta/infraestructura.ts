@@ -286,19 +286,44 @@ export interface PuntoVentaOpcion {
 }
 
 export interface PrecheckPedido {
-  jornada_abierta: boolean;
   puntos_venta: PuntoVentaOpcion[];
   arqueo_id: string | null;
 }
 
-// Comprobaciones antes de dejar crear un pedido: jornada abierta, puntos de
-// venta disponibles y (si se manda punto_venta_id) arqueo abierto — el
-// backend lo abre solo si no existe. Sin punto_venta_id no se toca arqueo
-// (llamada inicial, solo para saber si hace falta elegir punto de venta).
+// Jornada abierta es un dato de RRHH/central, nunca de la tienda — va en
+// su propia llamada, sin tenant_id (a diferencia de precheck_pedido, que
+// sí lo lleva: puntos de venta y arqueo son de la tienda).
+export const getJornadaAbierta = async (): Promise<boolean> => {
+  const { jornada_abierta } = await RestAPI.get<{ jornada_abierta: boolean }>(
+    "/ventas/jornada_abierta"
+  );
+  return jornada_abierta;
+}
+
+// Puntos de venta disponibles y (si se manda punto_venta_id) arqueo
+// abierto — el backend lo abre solo si no existe. Sin punto_venta_id no
+// se toca arqueo (llamada inicial, solo para saber si hace falta elegir
+// punto de venta).
 export const getPrecheckPedido = async (puntoVentaId?: string): Promise<PrecheckPedido> => {
   const q = puntoVentaId ? `?punto_venta_id=${encodeURIComponent(puntoVentaId)}` : "";
-  return await RestAPI.get<PrecheckPedido>(`/ventas/precheck_pedido${q}`);
+  return await RestAPI.get<PrecheckPedido>(`/ventas/precheck_pedido${q}`, undefined, cabecerasTienda());
 }
+
+// En memoria (no localStorage), mismo motivo que tiendaActualCache: el
+// punto de venta activo se resuelve una vez por carga de página vía
+// precheck_pedido, no se persiste entre sesiones.
+interface PuntoVentaActual {
+  id: string;
+  nombre: string;
+}
+
+let puntoVentaActualCache: PuntoVentaActual | undefined;
+
+export const getPuntoVentaActual = (): PuntoVentaActual | undefined => puntoVentaActualCache;
+
+export const setPuntoVentaActual = (puntoVenta: PuntoVentaActual): void => {
+  puntoVentaActualCache = puntoVenta;
+};
 
 interface PagoVentaTpvAPI {
   id: string;
