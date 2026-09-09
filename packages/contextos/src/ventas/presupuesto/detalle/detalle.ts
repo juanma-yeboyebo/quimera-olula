@@ -1,7 +1,7 @@
 import { CambioAgente } from "#/ventas/comun/componentes/moleculas/CambiarAgente/diseño.ts";
 import { CambioDivisa } from "#/ventas/comun/componentes/moleculas/CambiarDivisa/diseño.ts";
 import { LineaVenta } from "#/ventas/venta/diseño.ts";
-import { clienteVentaVacio, ventaVacia } from "#/ventas/venta/dominio.ts";
+import { clienteVentaVacio, puedeCambiarAlmacen, ventaVacia } from "#/ventas/venta/dominio.ts";
 import { ProcesarContexto } from "@olula/lib/diseño.js";
 import { ejecutarListaProcesos, MetaModelo, modeloEsEditable, publicar } from "@olula/lib/dominio.ts";
 import { CambioClientePresupuesto, LineaPresupuesto, Presupuesto } from "../diseño.ts";
@@ -41,7 +41,8 @@ export const metaPresupuesto: MetaModelo<Presupuesto> = {
         agente_id: { bloqueado: true },
         por_comision: { tipo: "decimal", requerido: false, decimales: 2, positivo: true, maximo: 100, bloqueado: true },
     },
-    editable: (presupuesto: Presupuesto) => !aprobado(presupuesto),
+    editable: (presupuesto: Presupuesto, campo?: string) =>
+        !aprobado(presupuesto) && (campo !== 'almacen_id' || puedeCambiarAlmacen(presupuesto)),
 };
 
 export const editable = modeloEsEditable<Presupuesto>(metaPresupuesto);

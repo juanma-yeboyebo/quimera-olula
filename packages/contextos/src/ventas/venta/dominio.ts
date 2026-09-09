@@ -81,6 +81,8 @@ export const cambioClienteVentaVacio: CambioClienteVenta = {
 
 export const puedeCambiarDivisa = (venta: { lineas?: unknown[] }) => (venta.lineas?.length ?? 0) === 0;
 
+export const puedeCambiarAlmacen = (venta: { lineas?: unknown[] }) => (venta.lineas?.length ?? 0) === 0;
+
 export const DIVISA_EMPRESA = "EUR";
 
 export const enDivisaExtranjera = (venta: { divisa_id: string }): boolean => {

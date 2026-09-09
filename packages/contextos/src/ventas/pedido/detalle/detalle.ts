@@ -1,4 +1,4 @@
-import { cambioClienteVentaVacio, clienteVentaVacio, metaVenta, ventaVacia } from "#/ventas/venta/dominio.ts";
+import { cambioClienteVentaVacio, clienteVentaVacio, metaVenta, puedeCambiarAlmacen, ventaVacia } from "#/ventas/venta/dominio.ts";
 import { CambioAgente } from "#/ventas/comun/componentes/moleculas/CambiarAgente/diseño.ts";
 import { CambioDivisa } from "#/ventas/comun/componentes/moleculas/CambiarDivisa/diseño.ts";
 import { ProcesarContexto } from "@olula/lib/diseño.js";
@@ -50,9 +50,10 @@ const camposPedido: Record<string, MetaCampo<Pedido>> = {
 
 export const metaPedido: MetaModelo<Pedido> = {
     campos: camposPedido,
-    editable: (pedido: Pedido, _?: string) => {
+    editable: (pedido: Pedido, campo?: string) => {
         const servido = pedido.servido?.toUpperCase();
-        return servido !== 'TOTAL' && servido !== 'SERVIDO';
+        if (servido === 'TOTAL' || servido === 'SERVIDO') return false;
+        return campo === 'almacen_id' ? puedeCambiarAlmacen(pedido) : true;
     },
 };
 
@@ -60,9 +61,10 @@ export const getMetaPedido = <T extends Pedido>() => <MetaModelo<T>>({
     campos: {
         ...camposPedido,
     },
-    editable: (pedido: T, _?: string) => {
+    editable: (pedido: T, campo?: string) => {
         const servido = pedido.servido?.toUpperCase();
-        return servido !== 'TOTAL' && servido !== 'SERVIDO';
+        if (servido === 'TOTAL' || servido === 'SERVIDO') return false;
+        return campo === 'almacen_id' ? puedeCambiarAlmacen(pedido) : true;
     },
 });
 
