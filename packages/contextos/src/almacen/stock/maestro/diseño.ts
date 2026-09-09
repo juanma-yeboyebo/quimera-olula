@@ -14,4 +14,6 @@ export const metaTablaStock: MetaTabla<StockItem> = [
     { id: "almacen", cabecera: "Almacén" },
     { id: "cantidadFisica", cabecera: "Cantidad física", tipo: "numero" },
     { id: "cantidadDisponible", cabecera: "Disponible", tipo: "numero" },
+    { id: "cantidadReservada", cabecera: "Reservada", tipo: "numero" },
+    { id: "cantidadPendiente", cabecera: "Por recibir", tipo: "numero" },
 ];

@@ -1,5 +1,12 @@
 import { Criteria, Entidad, RespuestaLista } from "@olula/lib/diseño.ts";
 
+export interface MovimientoRecibo extends Entidad {
+    id: string;
+    fecha: Date | null;
+    tipo: string;
+    estado: boolean;
+}
+
 export interface ReciboVenta extends Entidad {
     id: string;
     facturaId: string;
@@ -11,6 +18,7 @@ export interface ReciboVenta extends Entidad {
     clienteId: string;
     nombreCliente: string;
     idFiscal: string;
+    pagos: MovimientoRecibo[];
 }
 
 export type GetReciboVenta = (id: string) => Promise<ReciboVenta>;

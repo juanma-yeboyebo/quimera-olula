@@ -14,6 +14,8 @@ export const stockItemFromApi = (stockApi: StockAPI): StockItem => ({
     almacenId: stockApi.almacen_id,
     cantidadFisica: stockApi.cantidad_fisica,
     cantidadDisponible: stockApi.cantidad_disponible,
+    cantidadReservada: stockApi.cantidad_reservada,
+    cantidadPendiente: stockApi.cantidad_pendiente,
 });
 
 const stockUbicacionFromApi = (api: StockUbicacionItemApi): StockUbicacion => ({
