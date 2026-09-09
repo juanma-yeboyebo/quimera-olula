@@ -2,6 +2,7 @@ import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
 import { Listado } from "@olula/componentes/maestro/Listado.js";
 import { MaestroDetalle } from "@olula/componentes/maestro/MaestroDetalle.tsx";
+import { useEsMovil } from "@olula/componentes/maestro/useEsMovil.ts";
 import { MetaFiltro } from "@olula/componentes/maestro/maestroFiltros/MaestroFiltrosActivoControlado.js";
 import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
@@ -37,6 +38,7 @@ const campoFiltroEstado: MetaFiltro = {
 };
 
 export const MaestroConDetalleVentaTpv = () => {
+  const esMovil = useEsMovil();
   const { id, criteria } = getUrlParams();
   const criteriaInicial =
     criteria.filtro.length === 0
@@ -89,6 +91,7 @@ export const MaestroConDetalleVentaTpv = () => {
               criteria={ctx.ventas.criteria}
               entidades={ctx.ventas.lista}
               totalEntidades={ctx.ventas.total}
+              modoInicial={esMovil ? "tarjetas" : "tabla"}
               seleccionada={ctx.ventas.activo}
               seleccionadas={ctx.seleccionados}
               onMultiSeleccion={(ids) => emitir("seleccionados_cambiados", ids)}
