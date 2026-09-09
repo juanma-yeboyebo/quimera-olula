@@ -42,9 +42,10 @@ const llamada = async <T>({ method, url, headers = {}, body, msgError }: {
 
 const consulta = async <T>(
   url: string,
-  msgError?: string
+  msgError?: string,
+  headersExtra?: Record<string, string>
 ): Promise<T> => {
-  return llamada({ method: "GET", url, headers: { "Content-Type": "application/json" }, msgError })
+  return llamada({ method: "GET", url, headers: { "Content-Type": "application/json", ...headersExtra }, msgError })
     .then(r => r.json() as Promise<T>);
 };
 
@@ -52,10 +53,13 @@ const comando = async <T, U>(
   method: string,
   url: string,
   msgError?: string,
-  body?: Partial<T>
+  body?: Partial<T>,
+  headersExtra?: Record<string, string>
 ): Promise<U> => {
   const isFormData = body instanceof FormData;
-  const headers: Record<string, string> = isFormData ? {} : { "Content-Type": "application/json" };
+  const headers: Record<string, string> = isFormData
+    ? { ...headersExtra }
+    : { "Content-Type": "application/json", ...headersExtra };
 
   return llamada({ method, url, headers, body, msgError })
     .then(r => {
@@ -131,15 +135,15 @@ export const getItem = async <T, TAPI>(
 };
 
 export const RestAPI: API = {
-  get: <T>(url: string, msgError?: string) => consulta<T>(url, msgError),
+  get: <T>(url: string, msgError?: string, headers?: Record<string, string>) => consulta<T>(url, msgError, headers),
   getLista: getLista,
   getQuery: getQuery,
   getItem: getItem,
   query: <T, R>(url: string, body: T, msgError?: string) => comando<T, R>("POST", url, msgError, body),
-  post: <T>(url: string, body: T, msgError?: string) => comando<T, { id: string }>("POST", url, msgError, body),
+  post: <T>(url: string, body: T, msgError?: string, headers?: Record<string, string>) => comando<T, { id: string }>("POST", url, msgError, body, headers),
   put: <T>(url: string, body: T, msgError?: string) => comando<T, void>("PUT", url, msgError, body),
-  patch: <T>(url: string, body: Partial<T>, msgError?: string) => comando<T, void>("PATCH", url, msgError, body),
-  delete: (url: string, msgError?: string) => comando("DELETE", url, msgError),
+  patch: <T>(url: string, body: Partial<T>, msgError?: string, headers?: Record<string, string>) => comando<T, void>("PATCH", url, msgError, body, headers),
+  delete: (url: string, msgError?: string, headers?: Record<string, string>) => comando("DELETE", url, msgError, undefined, headers),
   blob: (url: string, msgError?: string) => obtenerBlob(url, msgError),
   postBlob: <T>(url: string, body: T, msgError?: string) => enviarPostBlob(url, body, msgError),
 }

@@ -18,6 +18,7 @@ import {
 import { CrearVentaTpv } from "../crear/CrearVentaTpv.tsx";
 import { DetalleVentaTpv } from "../detalle/DetalleVentaTpv.tsx";
 import { VentaTpv } from "../diseño.ts";
+import { getTiendaActual } from "../infraestructura.ts";
 import { TarjetaDocumentoVenta, EstadoDocumento } from "#/ventas/comun/componentes/TarjetaDocumentoVenta.tsx";
 import { colorDeEstado, etiquetaEstado, opcionesEstado } from "./configEstado.tsx";
 import { getMaquina } from "./maquina.ts";
@@ -54,7 +55,12 @@ export const MaestroConDetalleVentaTpv = () => {
   useUrlParams(ctx.ventas.activo, ctx.ventas.criteria);
 
   useEffect(() => {
-    emitir("recarga_de_ventas_solicitada", ctx.ventas.criteria);
+    (async () => {
+      // Se resuelve la tienda del agente antes de la primera carga de
+      // pedidos, para que ya vaya con la cabecera tenant_id correcta.
+      await getTiendaActual();
+      emitir("recarga_de_ventas_solicitada", ctx.ventas.criteria);
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

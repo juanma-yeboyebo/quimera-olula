@@ -14,7 +14,7 @@ export type RespuestaGetQuery<T> = {
 }
 
 export type API = {
-  get: <T>(url: string, msgError?: string) => Promise<T>;
+  get: <T>(url: string, msgError?: string, headers?: Record<string, string>) => Promise<T>;
   getQuery: <T, TAPI>(
     url: string,
     criteria: Criteria,
@@ -32,10 +32,10 @@ export type API = {
     msgError?: string
   ) => Promise<T>;
   query: <T, R>(url: string, body: T, msgError?: string) => Promise<R>;
-  post: <T>(url: string, body: T, msgError?: string) => Promise<{ id: string }>;
+  post: <T>(url: string, body: T, msgError?: string, headers?: Record<string, string>) => Promise<{ id: string }>;
   put: <T>(url: string, body: T, msgError?: string) => Promise<void>;
-  patch: <T>(url: string, body: Partial<T>, msgError?: string) => Promise<void>;
-  delete: (url: string, msgError?: string) => Promise<void>;
+  patch: <T>(url: string, body: Partial<T>, msgError?: string, headers?: Record<string, string>) => Promise<void>;
+  delete: (url: string, msgError?: string, headers?: Record<string, string>) => Promise<void>;
   blob: (url: string, msgError?: string) => Promise<Blob>;
   postBlob: <T>(url: string, body: T, msgError?: string) => Promise<Blob>;
 };

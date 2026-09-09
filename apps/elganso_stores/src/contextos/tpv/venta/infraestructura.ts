@@ -80,6 +80,31 @@ interface VentaTpvAPI {
 
 const baseUrl = new Tpv_Urls().VENTA;
 
+// En memoria (no localStorage): codtienda no es una elección del usuario
+// (a diferencia de puntoVentaLocal), es un dato que resuelve el servidor
+// según el agente — cachearlo en localStorage arriesgaría a dejarlo
+// obsoleto durante días si a alguien lo reasignan de tienda. En memoria
+// se resuelve una vez por carga de página y se autolimpia en cada
+// recarga.
+let tiendaActualCache: string | undefined;
+
+export const getTiendaActual = async (): Promise<string | undefined> => {
+  if (tiendaActualCache !== undefined) return tiendaActualCache;
+
+  const { codtienda } = await RestAPI.get<{ codtienda: string | null }>(
+    "/ventas/tienda_actual"
+  );
+  tiendaActualCache = codtienda ?? "";
+  return codtienda ?? undefined;
+};
+
+// Cabecera que enruta las llamadas de esta venta a la BD de la tienda del
+// agente en vez de a central (ver plugin de tenancy del backend). Búsqueda
+// de tarjeta Gansociety y precheck de pedido quedan fuera a propósito:
+// siguen yendo siempre a central.
+const cabecerasTienda = (): Record<string, string> =>
+  tiendaActualCache ? { tenant_id: tiendaActualCache } : {};
+
 const lineaVentaTpvDesdeApi = (l: LineaVentaTpvAPI): LineaVentaTpv => ({
   ...l,
   descripcionArticulo: l.descripcion_articulo,
@@ -111,7 +136,7 @@ export const ventaTpvDesdeAPI = (v: VentaTpvAPI): VentaTpv => ({
 
 export const getVenta: GetVentaTpv = async (id) => {
   return RestAPI.get<{ datos: VentaTpvAPI }>(
-    `${baseUrl}/${id}`).then((respuesta) => {
+    `${baseUrl}/${id}`, undefined, cabecerasTienda()).then((respuesta) => {
       return ventaTpvDesdeAPI(respuesta.datos);
     });
 }
@@ -123,7 +148,7 @@ export const getVentas: GetVentasTpv = async (
 ) => {
   const q = criteriaQuery(filtro, orden, paginacion);
 
-  const respuesta = await RestAPI.get<{ datos: VentaTpvAPI[]; total: number }>(baseUrl + q);
+  const respuesta = await RestAPI.get<{ datos: VentaTpvAPI[]; total: number }>(baseUrl + q, undefined, cabecerasTienda());
   return { datos: respuesta.datos.map(ventaTpvDesdeAPI), total: respuesta.total };
 };
 
@@ -131,7 +156,7 @@ export const getVentas: GetVentasTpv = async (
 // (cada tienda tiene su propio punto de venta) — se manda vacío por
 // compatibilidad de forma, el backend lo ignora.
 export const postVenta: PostVentaTpv = async (venta: NuevaVentaTpv) => {
-  return await RestAPI.post(baseUrl, venta, "Error al crear la venta").then((respuesta) => respuesta.id);
+  return await RestAPI.post(baseUrl, venta, "Error al crear la venta", cabecerasTienda()).then((respuesta) => respuesta.id);
 }
 
 export const patchCambiarCliente: PatchClienteVentaTpv = async (id, cambio) => {
@@ -153,24 +178,24 @@ export const patchCambiarCliente: PatchClienteVentaTpv = async (id, cambio) => {
         telefono: cambio.telefono || null,
       },
     }
-  }, "Error al cambiar cliente de la venta");
+  }, "Error al cambiar cliente de la venta", cabecerasTienda());
 }
 
 export const patchDatosCliente = async (id: string, cambios: CambiosDatosCliente): Promise<void> => {
   await RestAPI.patch(`${baseUrl}/${id}/datos_cliente`, {
     cambios
-  }, "Error al actualizar email/tarjeta de la venta");
+  }, "Error al actualizar email/tarjeta de la venta", cabecerasTienda());
 }
 
 export const patchCambiarDescuento = async (id: string, dto_porcentual: number): Promise<void> => {
   await RestAPI.patch(`${baseUrl}/${id}`, {
     por_descuento: dto_porcentual,
-  }, "Error al cambiar descuento de la venta");
+  }, "Error al cambiar descuento de la venta", cabecerasTienda());
 }
 
 export const getLineas: GetLineasVentaTpv = async (id) =>
   await RestAPI.get<{ datos: LineaVentaTpvAPI[] }>(
-    `${baseUrl}/${id}/lineas`).then((respuesta) => {
+    `${baseUrl}/${id}/lineas`, undefined, cabecerasTienda()).then((respuesta) => {
       return respuesta.datos.map(lineaVentaTpvDesdeApi);
     });
 
@@ -184,7 +209,7 @@ export const postLineaPorBarcode = async (
   const respuesta = await RestAPI.post(`${baseUrl}/${id}/linea_por_barcode`, {
     barcode: linea.barcode,
     cantidad: linea.cantidad,
-  }, "Error al crear línea de venta");
+  }, "Error al crear línea de venta", cabecerasTienda());
   return (respuesta as unknown as { id: string }).id;
 }
 
@@ -204,21 +229,21 @@ export const patchLinea: PatchLinea = async (id, linea) => {
       comision: linea.por_comision,
     },
   }
-  await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, "Error al actualizar línea de venta");
+  await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, "Error al actualizar línea de venta", cabecerasTienda());
 }
 
 export const patchCantidadLinea: PatchCantidadLinea = async (id, linea, cantidad) => {
   await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, {
     cambios: { cantidad },
-  }, "Error al actualizar cantidad de la línea de venta");
+  }, "Error al actualizar cantidad de la línea de venta", cabecerasTienda());
 }
 
 export const deleteLinea: DeleteLinea = async (id: string, lineaId: string): Promise<void> => {
-  await RestAPI.delete(`${baseUrl}/${id}/linea/${lineaId}`, "Error al borrar línea de venta");
+  await RestAPI.delete(`${baseUrl}/${id}/linea/${lineaId}`, "Error al borrar línea de venta", cabecerasTienda());
 }
 
 export const borrarVenta = async (id: string) => {
-  await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar la venta");
+  await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar la venta", cabecerasTienda());
 }
 
 export interface TarjetaPuntos {
@@ -302,7 +327,7 @@ const pagoVentaTpvDesdeAPI = (p: PagoVentaTpvAPI): PagoVentaTpv => ({
 
 export const getPagos: GetPagosVentaTpv = async (id) =>
   await RestAPI.get<{ datos: PagoVentaTpvAPI[] }>(
-    `${baseUrl}/${id}/pagos`).then((respuesta) =>
+    `${baseUrl}/${id}/pagos`, undefined, cabecerasTienda()).then((respuesta) =>
       respuesta.datos.map(pagoVentaTpvDesdeAPI)
     );
 
@@ -313,10 +338,10 @@ export const postPago: PostPago = async (id, pago) => {
     forma_pago: pago.formaPago,
     tipo_tarjeta_id: pago.idTipoTarjeta,
   };
-  return await RestAPI.post(`${baseUrl}/${id}/pago`, body, "Error al crear pago de venta")
+  return await RestAPI.post(`${baseUrl}/${id}/pago`, body, "Error al crear pago de venta", cabecerasTienda())
     .then((respuesta) => (respuesta as unknown as { id: string }).id);
 }
 
 export const deletePago: DeletePago = async (id, idPago): Promise<void> => {
-  await RestAPI.delete(`${baseUrl}/${id}/pago/${idPago}`, "Error al borrar pago de venta");
+  await RestAPI.delete(`${baseUrl}/${id}/pago/${idPago}`, "Error al borrar pago de venta", cabecerasTienda());
 }
