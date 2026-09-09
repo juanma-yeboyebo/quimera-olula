@@ -12,7 +12,6 @@ export const metaNuevoPresupuesto: MetaModelo<NuevoPresupuesto> = {
     campos: {
         cliente_id: { requerido: true },
         direccion_id: { requerido: true },
-        empresa_id: { requerido: true },
     }
 };
 

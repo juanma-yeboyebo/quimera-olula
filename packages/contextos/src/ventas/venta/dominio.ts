@@ -167,7 +167,6 @@ export const metaNuevaVenta: MetaModelo<NuevaVenta> = {
     campos: {
         cliente_id: { requerido: true },
         direccion_id: { requerido: true },
-        empresa_id: { requerido: true },
     }
 };
 
@@ -179,7 +178,6 @@ export const metaNuevaVentaClienteNoRegistrado: MetaModelo<NuevaVentaClienteNoRe
     campos: {
         nombre_cliente: { requerido: true, tipo: "texto" },
         nombre_via: { requerido: true, tipo: "texto" },
-        empresa_id: { requerido: true },
     }
 };
 
