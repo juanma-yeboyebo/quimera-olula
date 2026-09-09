@@ -1,0 +1,14 @@
+.TabVentas {
+    quimera-input[nombre="precio"] {
+        grid-column: span 3;
+    }
+
+    quimera-select[nombre="grupoIvaProductoId"] {
+        grid-column: span 4;
+    }
+
+    quimera-checkbox[nombre="pvpVariable"],
+    quimera-checkbox[nombre="noStock"] {
+        grid-column: span 2;
+    }
+}

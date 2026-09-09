@@ -7,8 +7,8 @@ import {
     GetArticulo,
     GetArticulos,
     LeerCodBarras,
-    PatchArticulo,
-    PostArticulo
+    PostArticulo,
+    SkuLote
 } from "./diseño.ts";
 
 const baseUrlArticulo = "/almacen/articulo";
@@ -23,13 +23,13 @@ export const obtenerArticulosAlmacen = async (filtro: Filtro, orden: Orden): Pro
     return RestAPI.get<{ datos: ArticuloAlmacenApi[] }>(baseUrlArticulo + q).then((respuesta) => respuesta.datos.map(articuloAlmacenDesdeApi));
 }
 
-
 export const ArticuloFromApi = (ArticuloApi: ArticuloAPI): Articulo => ({
-    ...ArticuloApi,
-});
-
-export const ArticuloToApi = (Articulo: Articulo): ArticuloAPI => ({
-    ...Articulo,
+    id: ArticuloApi.id,
+    descripcion: ArticuloApi.descripcion,
+    observaciones: ArticuloApi.observaciones ?? "",
+    noStock: ArticuloApi.no_stock,
+    seCompra: ArticuloApi.se_compra,
+    seVende: ArticuloApi.se_vende,
 });
 
 export const getArticulo: GetArticulo = async (id) =>
@@ -48,24 +48,28 @@ export const getArticulos: GetArticulos = async (
 };
 
 export const postArticulo: PostArticulo = async (Articulo) => {
-    return await RestAPI.post(baseUrlArticulo, Articulo, "Error al guardar Articulo").then(
-        (respuesta) => respuesta.id
-    );
-};
-
-export const patchArticulo: PatchArticulo = async (id, Articulo) => {
-    const apiArticulo = ArticuloToApi(Articulo as Articulo);
-    const ArticuloSinNulls = Object.fromEntries(
-        Object.entries(apiArticulo).map(([k, v]) => [k, v === null ? "" : v])
-    );
-    await RestAPI.patch(`${baseUrlArticulo}/${id}`, ArticuloSinNulls, "Error al guardar Articulo");
+    return await RestAPI.post(
+        baseUrlArticulo,
+        { descripcion: Articulo.descripcion ?? "" },
+        "Error al guardar Articulo"
+    ).then((respuesta) => respuesta.id);
 };
 
 export const deleteArticulo: DeleteArticulo = async (id) => {
     await RestAPI.delete(`${baseUrlArticulo}/${id}`, "Error al borrar Articulo");
 };
 
+interface SkuLoteApi {
+    id: string;
+    descripcion: string;
+    lote_id: string | null;
+}
+
 export const leerCodBarras: LeerCodBarras = async (codigo) =>
-    await RestAPI.get<{ datos: ArticuloAPI }>(`${baseUrlArticulo}/sku_lote/${codigo}`).then((respuesta) =>
-        ArticuloFromApi(respuesta.datos)
+    await RestAPI.get<{ datos: SkuLoteApi }>(`${baseUrlArticulo}/sku_lote/${codigo}`).then(
+        (respuesta): SkuLote => ({
+            id: respuesta.datos.id,
+            descripcion: respuesta.datos.descripcion,
+            loteId: respuesta.datos.lote_id,
+        })
     );

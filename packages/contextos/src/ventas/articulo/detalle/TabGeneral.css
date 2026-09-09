@@ -1,0 +1,17 @@
+.TabGeneral {
+    quimera-input[nombre="id"] {
+        grid-column: span 3;
+    }
+
+    quimera-input[nombre="descripcion"] {
+        grid-column: span 9;
+    }
+
+    quimera-input[nombre="codbarras"] {
+        grid-column: span 5;
+    }
+
+    quimera-select[nombre="tipoCodBarras"] {
+        grid-column: span 3;
+    }
+}

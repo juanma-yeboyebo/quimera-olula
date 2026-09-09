@@ -1,6 +1,8 @@
 import { Maquina } from "@olula/lib/diseño.ts";
 import { publicar } from "@olula/lib/dominio.ts";
 import {
+    ampliarArticulosProv,
+    ArticulosProv,
     asignarCuentaPagoProceso,
     cargarContexto,
     Cuentas,
@@ -16,6 +18,7 @@ import {
     onDireccionBorrada,
     onDireccionCambiada,
     onDireccionCreada,
+    recargarArticulosProv,
     refrescarProveedor,
 } from "./detalle.ts";
 import { ContextoDetalleProveedor, EstadoDetalleProveedor } from "./diseño.ts";
@@ -58,6 +61,11 @@ export const getMaquina: () => Maquina<EstadoDetalleProveedor, ContextoDetallePr
             baja_cuenta_solicitada: "BORRANDO_CUENTA",
             cuenta_pago_solicitada: [asignarCuentaPagoProceso],
             cuenta_pago_desasignada: [desasignarCuentaPagoProceso],
+
+            articulo_proveedor_seleccionado: [ArticulosProv.activar],
+            recarga_de_articulos_prov_solicitada: [recargarArticulosProv],
+            criteria_de_articulos_prov_cambiado: [ArticulosProv.filtrar, recargarArticulosProv],
+            siguiente_pagina_de_articulos_prov: [ArticulosProv.filtrar, ampliarArticulosProv],
         },
 
         BORRANDO: {

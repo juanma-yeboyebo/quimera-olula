@@ -1,0 +1,9 @@
+.TabGeneral {
+    quimera-input[nombre="id"] {
+        grid-column: span 3;
+    }
+
+    quimera-input[nombre="descripcion"] {
+        grid-column: span 9;
+    }
+}

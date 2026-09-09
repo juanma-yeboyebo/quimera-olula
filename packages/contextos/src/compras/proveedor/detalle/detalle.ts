@@ -1,11 +1,18 @@
 import { idFiscalCompraValido, tipoIdFiscalCompraValido } from "#/compras/comun/valores.ts";
-import { ProcesarContexto } from "@olula/lib/diseño.ts";
+import { Criteria, ProcesarContexto } from "@olula/lib/diseño.ts";
 import { ejecutarListaProcesos, MetaModelo } from "@olula/lib/dominio.ts";
+import {
+    accionesListaActivaEntidades,
+    listaActivaEntidadesInicial,
+    ProcesarListaActivaEntidades,
+} from "@olula/lib/ListaActivaEntidades.ts";
 import {
     accionesListaEntidades,
     listaEntidadesInicial,
     ProcesarListaEntidades,
 } from "@olula/lib/ListaEntidades.ts";
+import { ArticuloProveedor } from "../../articulo_proveedor/diseño.ts";
+import { getArticulosDeProveedor } from "../../articulo_proveedor/infraestructura.ts";
 import { CuentaBancoProveedor, DireccionProveedor, Proveedor } from "../diseño.ts";
 import {
     asignarCuentaPago,
@@ -26,6 +33,11 @@ const conDirecciones = (fn: ProcesarListaEntidades<DireccionProveedor>) =>
 
 const conCuentas = (fn: ProcesarListaEntidades<CuentaBancoProveedor>) =>
     (ctx: ContextoDetalleProveedor) => ({ ...ctx, cuentas: fn(ctx.cuentas) });
+
+const conArticulos = (fn: ProcesarListaActivaEntidades<ArticuloProveedor>) =>
+    (ctx: ContextoDetalleProveedor) => ({ ...ctx, articulos: fn(ctx.articulos) });
+
+export const ArticulosProv = accionesListaActivaEntidades(conArticulos);
 
 export const Direcciones = accionesListaEntidades(conDirecciones);
 export const Cuentas = accionesListaEntidades(conCuentas);
@@ -89,6 +101,21 @@ export const contextoDetalleProveedorInicial: ContextoDetalleProveedor = {
     proveedor: proveedorVacio(),
     direcciones: listaEntidadesInicial<DireccionProveedor>(),
     cuentas: listaEntidadesInicial<CuentaBancoProveedor>(),
+    articulos: listaActivaEntidadesInicial<ArticuloProveedor>(),
+};
+
+export const recargarArticulosProv: ProcesarDetalle = async (contexto, payload) => {
+    const criteria = (payload as Criteria) ?? contexto.articulos.criteria;
+    const resultado = await getArticulosDeProveedor(contexto.proveedor.id, criteria);
+
+    return ArticulosProv.recargar(contexto, resultado);
+};
+
+export const ampliarArticulosProv: ProcesarDetalle = async (contexto, payload) => {
+    const criteria = payload as Criteria;
+    const resultado = await getArticulosDeProveedor(contexto.proveedor.id, criteria);
+
+    return ArticulosProv.ampliar(contexto, resultado);
 };
 
 export const refrescarProveedor: ProcesarDetalle = async (contexto) => {
@@ -256,11 +283,18 @@ export const desasignarCuentaPagoProceso: ProcesarDetalle = async (contexto) => 
 const cuentasDelProveedor = (id: string) =>
     getCuentasBancoProveedor(id).catch(() => [] as CuentaBancoProveedor[]);
 
+const articulosDelProveedor = (id: string, criteria: Criteria) =>
+    getArticulosDeProveedor(id, criteria).catch(() => ({
+        datos: [] as ArticuloProveedor[],
+        total: 0,
+    }));
+
 const cargarProveedor: (_: string) => ProcesarDetalle = (idProveedor) => async (contexto) => {
-    const [proveedor, direcciones, cuentas] = await Promise.all([
+    const [proveedor, direcciones, cuentas, articulos] = await Promise.all([
         getProveedor(idProveedor),
         getDireccionesProveedor(idProveedor),
         cuentasDelProveedor(idProveedor),
+        articulosDelProveedor(idProveedor, contexto.articulos.criteria),
     ]);
 
     return pipeProveedor(contexto, [
@@ -277,6 +311,12 @@ const cargarProveedor: (_: string) => ProcesarDetalle = (idProveedor) => async (
                 total: cuentas.length,
                 activo: cuentas[0] ?? null,
             },
+            articulos: {
+                ...ctx.articulos,
+                lista: articulos.datos,
+                total: articulos.total,
+                activo: undefined,
+            },
         }),
         'ABIERTO',
     ]);
@@ -288,6 +328,7 @@ export const limpiarContexto: ProcesarDetalle = async (contexto) => ({
     proveedor: proveedorVacio(),
     direcciones: listaEntidadesInicial<DireccionProveedor>(),
     cuentas: listaEntidadesInicial<CuentaBancoProveedor>(),
+    articulos: listaActivaEntidadesInicial<ArticuloProveedor>(),
 });
 
 export const cargarContexto: ProcesarDetalle = async (contexto, payload) => {

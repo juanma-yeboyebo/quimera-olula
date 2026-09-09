@@ -1,0 +1,15 @@
+.TabGeneral {
+    quimera-input[nombre="id"] {
+        grid-column: span 3;
+    }
+
+    quimera-input[nombre="descripcion"] {
+        grid-column: span 9;
+    }
+
+    quimera-checkbox[nombre="seVende"],
+    quimera-checkbox[nombre="seCompra"],
+    quimera-checkbox[nombre="noStock"] {
+        grid-column: span 4;
+    }
+}

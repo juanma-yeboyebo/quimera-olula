@@ -1,0 +1,40 @@
+import { QInput } from "@olula/componentes/atomos/qinput.tsx";
+import { EmitirEvento } from "@olula/lib/diseño.ts";
+import { FormModelo } from "@olula/lib/dominio.ts";
+import { ListaEntidades } from "@olula/lib/ListaEntidades.ts";
+import { ArticuloProveedor } from "../../articulo_proveedor/diseño.ts";
+import { Articulo } from "../diseño.ts";
+import { EstadoDetalleArticulo } from "./diseño.ts";
+import { PreciosProveedorArticulo } from "./precios_proveedor/PreciosProveedorArticulo.tsx";
+import "./TabCompras.css";
+
+export const TabCompras = ({
+  form,
+  articulo,
+  precios,
+  estado,
+  publicar,
+}: {
+  form: FormModelo;
+  articulo: Articulo;
+  precios: ListaEntidades<ArticuloProveedor>;
+  estado: EstadoDetalleArticulo;
+  publicar: EmitirEvento;
+}) => {
+  const { uiProps } = form;
+
+  return (
+    <div className="TabCompras">
+      <quimera-formulario>
+        <QInput label="Impuesto" {...uiProps("codImpuesto")} />
+      </quimera-formulario>
+      <h3>Precios por proveedor</h3>
+      <PreciosProveedorArticulo
+        articulo={articulo}
+        precios={precios}
+        estado={estado}
+        publicar={publicar}
+      />
+    </div>
+  );
+};

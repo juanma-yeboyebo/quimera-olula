@@ -1,0 +1,9 @@
+.TabCompras {
+    quimera-input[nombre="codImpuesto"] {
+        grid-column: span 4;
+    }
+
+    h3 {
+        margin: 1rem 0 0.5rem;
+    }
+}

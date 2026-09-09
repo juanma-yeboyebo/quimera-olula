@@ -8,5 +8,4 @@ export type EstadoArticulo =
 export type ContextoArticulo = {
     estado: EstadoArticulo;
     articulo: Articulo;
-    articuloInicial: Articulo;
 };

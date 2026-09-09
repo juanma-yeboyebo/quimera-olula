@@ -1,4 +1,6 @@
+import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.ts";
 import { ListaEntidades } from "@olula/lib/ListaEntidades.ts";
+import { ArticuloProveedor } from "../../articulo_proveedor/diseño.ts";
 import { CuentaBancoProveedor, DireccionProveedor, Proveedor } from "../diseño.ts";
 
 export type EstadoDetalleProveedor =
@@ -17,4 +19,5 @@ export type ContextoDetalleProveedor = {
     proveedor: Proveedor;
     direcciones: ListaEntidades<DireccionProveedor>;
     cuentas: ListaEntidades<CuentaBancoProveedor>;
+    articulos: ListaActivaEntidades<ArticuloProveedor>;
 };

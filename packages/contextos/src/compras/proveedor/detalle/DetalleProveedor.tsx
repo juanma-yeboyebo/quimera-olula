@@ -7,6 +7,7 @@ import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useEffect } from "react";
 import { BorrarProveedor } from "../borrar/BorrarProveedor.tsx";
 import { Proveedor } from "../diseño.ts";
+import { ArticulosProveedor } from "./articulos/ArticulosProveedor.tsx";
 import { CuentasBancoProveedor } from "./cuentas_banco/CuentasBancoProveedor.tsx";
 import {
   contextoDetalleProveedorInicial,
@@ -42,7 +43,7 @@ export const DetalleProveedor = ({
 
   const formModelo = useModelo(metaProveedor, ctx.proveedor, autoGuardar);
 
-  const { estado, proveedor, direcciones, cuentas } = ctx;
+  const { estado, proveedor, direcciones, cuentas, articulos } = ctx;
 
   useEffect(() => {
     emitir("proveedor_id_cambiado", id, true);
@@ -99,6 +100,13 @@ export const DetalleProveedor = ({
                   estado={estado}
                   publicar={emitir}
                 />
+              }
+            />,
+            <Tab
+              key="tab-articulos"
+              label="Artículos"
+              children={
+                <ArticulosProveedor articulos={articulos} publicar={emitir} />
               }
             />,
             <Tab

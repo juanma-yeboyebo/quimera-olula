@@ -1,62 +1,94 @@
-import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
 import { Tab, Tabs } from "@olula/componentes/detalle/tabs/Tabs.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
+import { QuimeraAcciones } from "@olula/componentes/moleculas/qacciones.tsx";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
-import { useEffect } from "react";
-import { useParams } from "react-router";
+import { useModelo } from "@olula/lib/useModelo.ts";
+import { useCallback, useEffect } from "react";
+import { useNavigate, useParams } from "react-router";
 import { Articulo } from "../diseño.ts";
-import { articuloVacio } from "../dominio.ts";
 import "./DetalleArticulo.css";
+import {
+  contextoDetalleArticuloInicial,
+  guardarArticulo,
+  metaArticulo,
+} from "./dominio.ts";
 import { getMaquina } from "./maquina.ts";
+import { TabGeneral } from "./TabGeneral.tsx";
+import { TabVentas } from "./TabVentas.tsx";
 
 const titulo = (articulo: Articulo) => articulo.descripcion;
 
 export const DetalleArticulo = ({
-    id,
-    publicar = async () => {},
+  id,
+  publicar = async () => {},
 }: {
-    id?: string;
-    publicar?: EmitirEvento;
+  id?: string;
+  publicar?: EmitirEvento;
 }) => {
-    const params = useParams();
-    const articuloId = id ?? params.id;
+  const params = useParams();
+  const articuloId = id ?? params.id;
+  const navigate = useNavigate();
 
-    const { ctx, emitir } = useMaquina(
-        getMaquina,
-        { estado: "INICIAL", articulo: articuloVacio() },
-        publicar
-    );
+  const { ctx, emitir } = useMaquina(
+    getMaquina,
+    contextoDetalleArticuloInicial,
+    publicar
+  );
 
-    useEffect(() => {
-        emitir("articulo_id_cambiado", articuloId, true);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [articuloId]);
+  const autoGuardar = useCallback(
+    async (articulo: Articulo) => {
+      await guardarArticulo(ctx, articulo);
+      await emitir("articulo_guardado");
+    },
+    [ctx, emitir]
+  );
 
-    if (!ctx.articulo.id) return null;
+  const form = useModelo(metaArticulo, ctx.articulo, autoGuardar);
 
-    return (
-        <div className="DetalleArticulo">
-            <Detalle
-                id={ctx.articulo.id}
-                obtenerTitulo={titulo}
-                setEntidad={() => {}}
-                entidad={ctx.articulo}
-                cerrarDetalle={() => emitir("articulo_deseleccionado", null)}
-            >
-                <Tabs
-                    children={[
-                        <Tab key="general" label="General">
-                            <quimera-formulario>
-                                <QInput label="Referencia" nombre="id" valor={ctx.articulo.id} soloLectura />
-                                <QInput label="Descripción" nombre="descripcion" valor={ctx.articulo.descripcion} soloLectura />
-                                <QInput label="Precio" nombre="precio" valor={String(ctx.articulo.precio)} soloLectura />
-                                <QInput label="Grupo IVA" nombre="grupo_iva_producto_id" valor={ctx.articulo.grupo_iva_producto_id} soloLectura />
-                            </quimera-formulario>
-                        </Tab>,
-                    ]}
-                />
-            </Detalle>
+  useEffect(() => {
+    emitir("articulo_id_cambiado", articuloId, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [articuloId]);
+
+  const { articulo } = ctx;
+
+  if (!articulo.id) return null;
+
+  const acciones = [
+    {
+      texto: "Ver en almacén",
+      onClick: () => navigate(`/almacen/articulo?id=${articulo.id}`),
+    },
+  ];
+
+  return (
+    <div className="DetalleArticulo">
+      <Detalle
+        id={articulo.id}
+        obtenerTitulo={titulo}
+        setEntidad={() => {}}
+        entidad={articulo}
+        cerrarDetalle={() => emitir("articulo_deseleccionado", null)}
+      >
+        <div className="maestro-botones">
+          <QuimeraAcciones acciones={acciones} vertical />
         </div>
-    );
+        <Tabs
+          children={[
+            <Tab
+              key="tab-general"
+              label="General"
+              children={<TabGeneral form={form} articuloId={articulo.id} />}
+            />,
+            <Tab
+              key="tab-ventas"
+              label="Ventas"
+              children={<TabVentas form={form} articulo={articulo} />}
+            />,
+          ]}
+        />
+      </Detalle>
+    </div>
+  );
 };

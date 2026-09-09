@@ -1,15 +1,77 @@
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
+import { QEtiqueta } from "@olula/componentes/atomos/qetiqueta.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
+import { MetaTabla } from "@olula/componentes/index.js";
 import { Listado } from "@olula/componentes/maestro/Listado.js";
+import { MetaFiltro } from "@olula/componentes/maestro/maestroFiltros/MaestroFiltrosActivoControlado.js";
 import { MaestroDetalle } from "@olula/componentes/maestro/MaestroDetalle.tsx";
+import { ClausulaFiltro } from "@olula/lib/diseño.ts";
 import { listaActivaEntidadesInicial } from "@olula/lib/ListaActivaEntidades.js";
 import { getUrlParams, useUrlParams } from "@olula/lib/url-params.js";
 import { useEffect } from "react";
 import { CrearArticulo } from "../crear/CrearArticulo.tsx";
 import { DetalleArticulo } from "../detalle/DetalleArticulo.tsx";
 import { Articulo } from "../diseño.ts";
-import { ContextoMaestroArticulo, metaTablaArticulo } from "./diseño.ts";
+import { ContextoMaestroArticulo } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+
+const UsoArticulo = (articulo: Articulo) => (
+  <>
+    <QEtiqueta variante={articulo.seVende ? "exito" : "error"}>
+      Venta
+    </QEtiqueta>{" "}
+    <QEtiqueta variante={articulo.seCompra ? "exito" : "error"}>
+      Compra
+    </QEtiqueta>{" "}
+    {articulo.noStock && (
+      <QEtiqueta variante="advertencia">Sin stock</QEtiqueta>
+    )}
+  </>
+);
+
+const metaTablaArticulo: MetaTabla<Articulo> = [
+  { id: "id", cabecera: "Referencia" },
+  { id: "descripcion", cabecera: "Descripción" },
+  { id: "uso", cabecera: "Uso", render: UsoArticulo },
+];
+
+const filtroBooleano =
+  (campo: string) =>
+  (valor: unknown): ClausulaFiltro | null =>
+    valor === undefined || valor === null || valor === ""
+      ? null
+      : [campo, "=", String(valor)];
+
+const metaFiltroArticulo: MetaFiltro = {
+  id: {
+    id: "id",
+    label: "Referencia",
+    filtro: (v) => (v ? ["id", "~", v as string] : null),
+  },
+  descripcion: {
+    id: "descripcion",
+    label: "Descripción",
+    filtro: (v) => (v ? ["descripcion", "~", v as string] : null),
+  },
+  se_vende: {
+    id: "se_vende",
+    label: "Se vende",
+    tipo: "checkbox",
+    filtro: filtroBooleano("se_vende"),
+  },
+  se_compra: {
+    id: "se_compra",
+    label: "Se compra",
+    tipo: "checkbox",
+    filtro: filtroBooleano("se_compra"),
+  },
+  no_stock: {
+    id: "no_stock",
+    label: "No controla stock",
+    tipo: "checkbox",
+    filtro: filtroBooleano("no_stock"),
+  },
+};
 
 export const MaestroConDetalleArticulo = () => {
   const { id, criteria } = getUrlParams();
@@ -35,6 +97,7 @@ export const MaestroConDetalleArticulo = () => {
             <h2>Artículos</h2>
             <Listado<Articulo>
               metaTabla={metaTablaArticulo}
+              metaFiltro={metaFiltroArticulo}
               modo="tabla"
               criteria={ctx.articulos.criteria}
               entidades={ctx.articulos.lista}
