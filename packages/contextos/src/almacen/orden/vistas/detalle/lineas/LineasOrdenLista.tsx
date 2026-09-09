@@ -1,17 +1,22 @@
+import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QEtiqueta } from "@olula/componentes/atomos/qetiqueta.tsx";
 import { MetaTabla } from "@olula/componentes/atomos/qtablacontrolada.tsx";
 import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiControlado.tsx";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
+import { ContextoError } from "@olula/lib/contexto.ts";
+import { useContext } from "react";
 import { LecturaLineaOrden, LineaOrdenAlmacen, OrdenAlmacen } from "../../../diseño.ts";
+import { deleteLecturaOrden } from "../../../infraestructura.ts";
 
 const formatearFechaHoraLectura = (fechaHora: Date | string): string => {
     const d = fechaHora instanceof Date ? fechaHora : new Date(fechaHora);
     return isNaN(d.getTime()) ? String(fechaHora) : d.toLocaleString();
 };
 
-const ExpansionLecturas = (orden: OrdenAlmacen) =>
-    ({ entidad }: { entidad: LineaOrdenAlmacen }) => {
+const ExpansionLecturas = (orden: OrdenAlmacen, publicar: EmitirEvento) => {
+    const Componente = ({ entidad }: { entidad: LineaOrdenAlmacen }) => {
+        const { intentar } = useContext(ContextoError);
         const lecturas: LecturaLineaOrden[] = entidad.lecturas ?? [];
         if (!lecturas.length) return <p>Sin lecturas</p>;
         return (
@@ -25,6 +30,7 @@ const ExpansionLecturas = (orden: OrdenAlmacen) =>
                         {orden.tipo !== "ENTRADA" && <th>Caja Origen</th>}
                         {orden.tipo !== "SALIDA" && <th>Ubi.Destino</th>}
                         {orden.tipo !== "SALIDA" && <th>Caja Destino</th>}
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,17 +43,33 @@ const ExpansionLecturas = (orden: OrdenAlmacen) =>
                             {orden.tipo !== "ENTRADA" && <td>{l.cajaOrigen}</td>}
                             {orden.tipo !== "SALIDA" && <td>{l.ubicacionDestino}</td>}
                             {orden.tipo !== "SALIDA" && <td>{l.cajaDestino}</td>}
+                            <td>
+                                <QBoton
+                                    onClick={(e) => {
+                                        e?.stopPropagation();
+                                        intentar(async () => {
+                                            await deleteLecturaOrden(orden.id, l.id);
+                                            publicar("lectura_registrada");
+                                        });
+                                    }}
+                                >
+                                    Borrar
+                                </QBoton>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
         );
     };
+    return Componente;
+};
 
-const metaTablaLineasOrden = (orden: OrdenAlmacen): MetaTabla<LineaOrdenAlmacen> => ({
+const metaTablaLineasOrden = (orden: OrdenAlmacen, publicar: EmitirEvento): MetaTabla<LineaOrdenAlmacen> => ({
     cols: [
         { id: "sku", cabecera: "SKU" },
         { id: "articulo", cabecera: "Descripción", tipo: "texto" },
+        { id: "loteId", cabecera: "Lote" },
         ...(orden.abierta
             ? [{ id: "cantidadReal" as const, cabecera: "Cantidad real" }]
             : [{
@@ -62,13 +84,29 @@ const metaTablaLineasOrden = (orden: OrdenAlmacen): MetaTabla<LineaOrdenAlmacen>
                         <QEtiqueta variante={variante}>{real} / {prevista}</QEtiqueta>
                     );
                 },
-                
+
             }]
         ),
         ...(orden.tipo !== "ENTRADA" ? [{ id: "ubicacionOrigen" as const, cabecera: "Ubi.Origen" }] : []),
+        ...(orden.tipo !== "ENTRADA" ? [{ id: "cajaOrigen" as const, cabecera: "LPN Origen" }] : []),
         ...(orden.tipo !== "SALIDA" ? [{ id: "ubicacionDestino" as const, cabecera: "Ubi.Destino" }] : []),
+        ...(orden.tipo !== "SALIDA" ? [{ id: "cajaDestino" as const, cabecera: "LPN Destino" }] : []),
+        {
+            id: "acciones",
+            cabecera: "",
+            render: (linea: LineaOrdenAlmacen) => (
+                <QBoton
+                    onClick={(e) => {
+                        e?.stopPropagation();
+                        publicar("lectura_guion_linea_solicitada", linea);
+                    }}
+                >
+                    Leer
+                </QBoton>
+            ),
+        },
     ],
-    expansion: ExpansionLecturas(orden),
+    expansion: ExpansionLecturas(orden, publicar),
 });
 
 export const LineasOrdenLista = ({
@@ -88,7 +126,7 @@ export const LineasOrdenLista = ({
 
     return (
         <ListadoSemiControlado
-            metaTabla={metaTablaLineasOrden(orden)}
+            metaTabla={metaTablaLineasOrden(orden, publicar)}
             entidades={lineas}
             totalEntidades={lineas.length}
             cargando={false}

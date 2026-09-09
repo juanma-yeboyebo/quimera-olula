@@ -3,7 +3,8 @@ import { ContextoError } from "./contexto.ts";
 
 type FuncionesForm = [
     aceptar: () => void,
-    cancelar: () => void
+    cancelar: () => void,
+    aceptando: boolean
 ]
 
 export function useForm(
@@ -35,5 +36,5 @@ export function useForm(
         [aceptando, cancelar_]
     );
 
-    return [aceptar, cancelar];
+    return [aceptar, cancelar, aceptando];
 }

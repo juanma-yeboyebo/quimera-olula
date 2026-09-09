@@ -14,6 +14,7 @@ describe("[orden-infra-01] lineaOrdenDesdeApi convierte correctamente de snake_c
         sku: "PROD-001",
         articulo: "Producto 001",
         lote_id: "LOTE-123",
+        por_lotes: true,
         cantidad_prevista: 10,
         ubicacion_origen_id: "1",
         ubicacion_origen: "UBI-001",
@@ -23,6 +24,7 @@ describe("[orden-infra-01] lineaOrdenDesdeApi convierte correctamente de snake_c
         ubicacion_destino: "UBI-002",
         caja_destino_id: null,
         caja_destino: null,
+        linea_pick_id: null,
         lecturas: [],
     };
 

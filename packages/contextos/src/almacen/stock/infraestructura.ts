@@ -1,10 +1,12 @@
+import { baseUrlStockUbicacion, StockUbicacionItemApi } from "#/almacen/ubicacion/infraestructura.ts";
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
+import { Filtro } from "@olula/lib/diseño.ts";
 import { criteriaQuery } from "@olula/lib/infraestructura.ts";
-import { GetStock, GetStocks, Stock, StockAPI } from "./diseño.ts";
+import { GetStock, GetStocks, StockAPI, StockItem, StockUbicacion } from "./diseño.ts";
 
 const baseUrlStock = `/almacen/stock`;
 
-export const stockFromApi = (stockApi: StockAPI): Stock => ({
+export const stockItemFromApi = (stockApi: StockAPI): StockItem => ({
     id: stockApi.id,
     articulo: stockApi.articulo,
     almacen: stockApi.almacen,
@@ -14,13 +16,28 @@ export const stockFromApi = (stockApi: StockAPI): Stock => ({
     cantidadDisponible: stockApi.cantidad_disponible,
 });
 
-export const getStock: GetStock = async (id) =>
-    await RestAPI.get<{ datos: StockAPI }>(`${baseUrlStock}/${id}`).then((respuesta) =>
-        stockFromApi(respuesta.datos)
-    );
+const stockUbicacionFromApi = (api: StockUbicacionItemApi): StockUbicacion => ({
+    id: api.id,
+    idUbicacion: api.ubicacion_id,
+    ubicacion: api.ubicacion,
+    cantidad: api.cantidad_fisica,
+});
+
+export const getStock: GetStock = async (id) => {
+    const [stockApi, ubicacionesApi] = await Promise.all([
+        RestAPI.get<{ datos: StockAPI }>(`${baseUrlStock}/${id}`),
+        RestAPI.get<{ datos: StockUbicacionItemApi[] }>(
+            baseUrlStockUbicacion + criteriaQuery([["stock_id", "==", id]] as Filtro, [])
+        ),
+    ]);
+    return {
+        ...stockItemFromApi(stockApi.datos),
+        ubicaciones: ubicacionesApi.datos.map(stockUbicacionFromApi),
+    };
+};
 
 export const getStocks: GetStocks = async (filtro, orden, paginacion?) => {
     const q = criteriaQuery(filtro, orden, paginacion);
     const respuesta = await RestAPI.get<{ datos: StockAPI[]; total: number }>(baseUrlStock + q);
-    return { datos: respuesta.datos.map(stockFromApi), total: respuesta.total };
+    return { datos: respuesta.datos.map(stockItemFromApi), total: respuesta.total };
 };

@@ -3,6 +3,9 @@ import { Entidad } from "@olula/lib/diseño.js";
 import {
     Caja,
     CajaContenido,
+    CajaDetalle,
+    CajaMonoproducto,
+    CajaMonoproductoContenido,
     CambiosCaja,
     ComponenteCaja,
     DeleteCaja,
@@ -21,6 +24,9 @@ interface CajaAPI extends Entidad {
     ubicacion_id: string;
     ubicacion: string;
     contenedor_id?: string | null;
+    sku?: string | null;
+    id_lote?: string | null;
+    cantidad?: number | null;
 }
 
 interface MovimientoCajaAPI {
@@ -30,6 +36,7 @@ interface MovimientoCajaAPI {
     lote_id: string;
     ubicacion_id: string;
     ubicacion: string;
+    concepto: string;
 }
 
 interface MaterialCajaAPI {
@@ -43,11 +50,20 @@ interface MaterialCajaAPI {
 interface CajaContenidoAPI extends CajaAPI {
     contenido: ComponenteCajaAPI[];
 }
+
+interface CajaMonoproductoContenidoAPI extends CajaAPI {
+    contenido: MaterialCajaAPI[];
+}
+
 type ComponenteCajaAPI = CajaContenidoAPI | MaterialCajaAPI;
 
 interface NuevaCajaAPI {
     ubicacion_id: string;
+    tipo_id: string;
     contenedor_id?: string | null;
+    sku?: string | null;
+    id_lote?: string | null;
+    cantidad?: number | null;
 }
 
 type CambiosCajaAPI = Partial<CajaAPI>;
@@ -55,7 +71,12 @@ type CambiosCajaAPI = Partial<CajaAPI>;
 const baseUrl = `/almacen/caja`;
 
 const esMaterialAPI = (comp: ComponenteCajaAPI): comp is MaterialCajaAPI =>
-    "sku" in comp;
+    !("lpn" in comp);
+
+const esCajaMonoproductoContenidoAPI = (
+    caja: CajaContenidoAPI
+): caja is CajaMonoproductoContenidoAPI =>
+    caja.sku != null;
 
 const movimientoDesdeApi = (mov: MovimientoCajaAPI): MovimientoCaja => ({
     id: mov.id,
@@ -64,6 +85,7 @@ const movimientoDesdeApi = (mov: MovimientoCajaAPI): MovimientoCaja => ({
     idLote: mov.lote_id,
     idUbicacion: mov.ubicacion_id,
     ubicacion: mov.ubicacion,
+    concepto: mov.concepto,
 });
 
 const materialDesdeApi = (mat: MaterialCajaAPI): MaterialCaja => ({
@@ -78,43 +100,81 @@ const componenteDesdeApi = (comp: ComponenteCajaAPI): ComponenteCaja => {
     if (esMaterialAPI(comp)) {
         return materialDesdeApi(comp);
     }
-    return cajaContenidoDesdeApi(comp);
+    return cajaContenidoNormalDesdeApi(comp);
 };
 
-export const cajaDesdeApi = (cajaApi: CajaAPI): Caja => ({
-    id: cajaApi.id,
-    lpn: cajaApi.lpn,
-    idUbicacion: cajaApi.ubicacion_id,
-    ubicacion: cajaApi.ubicacion,
-    contenedorId: cajaApi.contenedor_id,
-    contenedor: cajaApi.contenedor,
-});
+export const cajaDesdeApi = (cajaApi: CajaAPI): Caja | CajaMonoproducto => {
+    const base: Caja = {
+        id: cajaApi.id,
+        lpn: cajaApi.lpn,
+        idUbicacion: cajaApi.ubicacion_id,
+        ubicacion: cajaApi.ubicacion,
+        idContenedor: cajaApi.contenedor_id ?? null,
+    };
+    if (cajaApi.sku != null) {
+        return {
+            ...base,
+            sku: cajaApi.sku,
+            idLote: cajaApi.id_lote ?? null,
+            cantidad: cajaApi.cantidad ?? 0,
+        };
+    }
+    return base;
+};
 
-const cajaContenidoDesdeApi = (cajaApi: CajaContenidoAPI): CajaContenido => ({
+const cajaContenidoNormalDesdeApi = (cajaApi: CajaContenidoAPI): CajaContenido => ({
     id: cajaApi.id,
     lpn: cajaApi.lpn,
     idUbicacion: cajaApi.ubicacion_id,
     ubicacion: cajaApi.ubicacion,
-    idContenedor: cajaApi.contenedor_id,
+    idContenedor: cajaApi.contenedor_id ?? null,
     contenido: cajaApi.contenido.map(componenteDesdeApi),
 });
 
+const cajaMonoproductoContenidoDesdeApi = (
+    cajaApi: CajaMonoproductoContenidoAPI
+): CajaMonoproductoContenido => ({
+    id: cajaApi.id,
+    lpn: cajaApi.lpn,
+    idUbicacion: cajaApi.ubicacion_id,
+    ubicacion: cajaApi.ubicacion,
+    idContenedor: cajaApi.contenedor_id ?? null,
+    sku: cajaApi.sku ?? null,
+    idLote: cajaApi.id_lote ?? null,
+    cantidad: cajaApi.cantidad ?? 0,
+    materiales: cajaApi.contenido.map(materialDesdeApi),
+});
+
+const cajaDetalleDesdeApi = (cajaApi: CajaContenidoAPI): CajaDetalle => {
+    if (esCajaMonoproductoContenidoAPI(cajaApi)) {
+        return cajaMonoproductoContenidoDesdeApi(cajaApi);
+    }
+    return cajaContenidoNormalDesdeApi(cajaApi);
+};
+
 const nuevaCajaAApi = (caja: NuevaCaja): NuevaCajaAPI => ({
     ubicacion_id: caja.idUbicacion,
+    tipo_id: caja.idTipoCaja,
     contenedor_id: caja.idContenedor,
+    ...(caja.sku != null && { sku: caja.sku }),
+    ...(caja.idLote != null && { id_lote: caja.idLote }),
+    ...(caja.cantidad != null && { cantidad: caja.cantidad }),
 });
 
 const cambiosCajaAApi = (cambios: CambiosCaja): CambiosCajaAPI => {
     const api: CambiosCajaAPI = {};
     if (cambios.idUbicacion !== undefined) api.ubicacion_id = cambios.idUbicacion;
-    if (cambios.idContenedorId !== undefined) api.contenedor_id = cambios.idContenedor;
+    if (cambios.idContenedor !== undefined) api.contenedor_id = cambios.idContenedor;
+    if (cambios.sku !== undefined) api.sku = cambios.sku;
+    if (cambios.idLote !== undefined) api.id_lote = cambios.idLote;
+    if (cambios.cantidad !== undefined) api.cantidad = cambios.cantidad;
     return api;
 };
 
 export const getCaja: GetCaja = async (id) => {
-    return await RestAPI.getItem<CajaContenido, CajaContenidoAPI>(
+    return await RestAPI.getItem<CajaDetalle, CajaContenidoAPI>(
         `${baseUrl}/${id}`,
-        cajaContenidoDesdeApi,
+        cajaDetalleDesdeApi,
     );
 };
 

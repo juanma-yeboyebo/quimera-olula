@@ -1,0 +1,58 @@
+/*
+ * TabDatos.css — posicionado de campos de la pestaña Datos de la venta.
+ * Grid de 12 columnas (quimera-formulario). El Ganso no tiene fecha de
+ * salida, divisa ni % comisión de cabecera (venta TPV en EUR, comisión de
+ * línea): fila 1: fecha (6) + hora (6); fila 2: codalmacen (4) + codtienda
+ * (4) + puntoVentaId (4); fila 3: agente_id (3) + nombre_agente (9,
+ * no editable).
+ */
+.VentaTpv .TabDatos {
+    quimera-date[nombre="fecha"] {
+        grid-column: 1 / span 6;
+    }
+
+    quimera-input[nombre="hora"] {
+        grid-column: span 6;
+    }
+
+    quimera-input[nombre="codalmacen"] {
+        grid-column: span 4;
+    }
+
+    quimera-input[nombre="codtienda"] {
+        grid-column: span 4;
+    }
+
+    quimera-input[nombre="puntoVentaId"] {
+        grid-column: span 4;
+    }
+
+    quimera-input[nombre="agente_id"] {
+        grid-column: 1 / span 3;
+    }
+
+    quimera-input[nombre="nombre_agente"] {
+        grid-column: span 9;
+    }
+}
+
+/* El componente base quimera-formulario pasa a un grid de 2 columnas en
+ * móvil y fuerza cada campo a ocupar la fila entera (1 / -1) — aquí se
+ * sobreescribe a span 1 (mitad de esas 2 columnas) para que queden de
+ * 2 en 2, pedido explícitamente para esta pantalla. */
+@media (max-width: 768px) {
+    .VentaTpv .TabDatos quimera-formulario {
+        quimera-date[nombre="fecha"],
+        quimera-input[nombre="hora"],
+        quimera-input[nombre="codalmacen"],
+        quimera-input[nombre="codtienda"],
+        quimera-input[nombre="puntoVentaId"],
+        quimera-input[nombre="agente_id"] {
+            grid-column: span 1 !important;
+        }
+
+        quimera-input[nombre="nombre_agente"] {
+            grid-column: span 2 !important;
+        }
+    }
+}

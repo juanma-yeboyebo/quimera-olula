@@ -1,12 +1,12 @@
 import { Criteria, ProcesarContexto } from "@olula/lib/diseño.ts";
 import { accionesListaActivaEntidades, ProcesarListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
-import { Stock } from "../diseño.ts";
+import { StockItem } from "../diseño.ts";
 import { getStocks } from "../infraestructura.ts";
 import { ContextoMaestroStock, EstadoMaestroStock } from "./diseño.ts";
 
 type ProcesarMaestroStock = ProcesarContexto<EstadoMaestroStock, ContextoMaestroStock>;
 
-const conStocks = (fn: ProcesarListaActivaEntidades<Stock>) =>
+const conStocks = (fn: ProcesarListaActivaEntidades<StockItem>) =>
     (ctx: ContextoMaestroStock) => ({ ...ctx, stocks: fn(ctx.stocks) });
 
 export const Stocks = accionesListaActivaEntidades(conStocks);

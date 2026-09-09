@@ -8,4 +8,5 @@ export const stockVacio: Stock = {
     almacenId: "",
     cantidadFisica: 0,
     cantidadDisponible: 0,
+    ubicaciones: [],
 };

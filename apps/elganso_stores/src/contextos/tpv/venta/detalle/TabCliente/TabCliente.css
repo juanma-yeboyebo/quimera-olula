@@ -1,0 +1,141 @@
+/*
+ * Nombre del Cliente/ID Fiscal y el resto de campos de dirección (tipo_via,
+ * nombre_via, numero, otros, cod_postal, ciudad, provincia, pais_id,
+ * telefono) se editan aquí mismo, inline. Estos últimos ya traen su propio
+ * grid-column desde CamposDireccionVenta.css (activo vía la clase
+ * "campos-direccion" del quimera-formulario) — solo hace falta posicionar
+ * los campos propios de este tab.
+ *
+ * Todas las reglas de los campos dentro de ".campos-direccion" van con ese
+ * selector explícito (no solo ".VentaTpv .TabCliente"): el TabCliente.css
+ * GENÉRICO de core (packages/contextos/.../ventas/pedido/detalle/TabCliente)
+ * también se cuela en el bundle con selectores para "id_fiscal" con más
+ * especificidad (usa ">quimera-formulario"), y sin este refuerzo sus reglas
+ * ganaban silenciosamente pese al !important de aquí.
+ */
+.VentaTpv .TabCliente {
+    quimera-formulario.campos-direccion {
+        quimera-input[nombre="nombre_cliente"] {
+            grid-column: 1 / span 8;
+            min-width: 0;
+        }
+
+        quimera-input[nombre="id_fiscal"] {
+            grid-column: 9 / span 4;
+            min-width: 0;
+        }
+    }
+
+    quimera-input[nombre="email"] {
+        grid-column: span 6;
+    }
+
+    quimera-input[nombre="tarjeta_puntos_id"] {
+        grid-column: span 5;
+    }
+
+    .TabCliente-accion {
+        grid-column: span 1;
+        display: flex;
+        justify-content: flex-end;
+        align-items: end;
+        margin: 0;
+        min-width: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .VentaTpv .TabCliente quimera-formulario:has(.TabCliente-accion) {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 2.5rem;
+    }
+
+    .VentaTpv .TabCliente {
+        /*
+         * En vez del grid de 2 columnas iguales que fuerza el genérico
+         * (bueno para campos que se parecen en longitud, no para
+         * numero/otros: un número de 3-4 cifras no necesita medio ancho),
+         * se pasa a un grid de 12 columnas como en escritorio, para poder
+         * dar a cada campo el ancho que le corresponde según su valor.
+         */
+        quimera-formulario.campos-direccion {
+            grid-template-columns: repeat(12, 1fr) !important;
+
+            /*
+             * Fila y columna explícitas para cada campo: para subir el
+             * teléfono junto al C.I.F/N.I.F hace falta "grid-auto-flow:
+             * dense", pero con dense cualquier campo sin posición fija
+             * (solo "span N") se cuela en el primer hueco que le quepa —
+             * cada intento de fijar solo la columna acababa con otro campo
+             * distinto colándose en el hueco libre. Fijando fila Y columna
+             * de todos, cada uno tiene una posición única y no compiten.
+             */
+            quimera-input[nombre="nombre_cliente"] {
+                grid-row: 1;
+                grid-column: 1 / -1 !important;
+            }
+
+            quimera-input[nombre="id_fiscal"] {
+                grid-row: 2;
+                grid-column: 1 / span 6 !important;
+            }
+
+            quimera-input[nombre="telefono"] {
+                grid-row: 2;
+                grid-column: 7 / span 6 !important;
+            }
+
+            quimera-input[nombre="tipo_via"] {
+                grid-row: 3;
+                grid-column: 1 / -1 !important;
+            }
+
+            quimera-input[nombre="nombre_via"] {
+                grid-row: 4;
+                grid-column: 1 / -1 !important;
+            }
+
+            quimera-input[nombre="numero"] {
+                grid-row: 5;
+                grid-column: 1 / span 3 !important;
+            }
+
+            quimera-input[nombre="otros"] {
+                grid-row: 5;
+                grid-column: 4 / span 9 !important;
+            }
+
+            quimera-input[nombre="cod_postal"] {
+                grid-row: 6;
+                grid-column: 1 / span 4 !important;
+            }
+
+            quimera-input[nombre="ciudad"] {
+                grid-row: 6;
+                grid-column: 5 / span 8 !important;
+            }
+
+            quimera-input[nombre="provincia"] {
+                grid-row: 7;
+                grid-column: 1 / span 6 !important;
+            }
+
+            [nombre="pais_id"] {
+                grid-row: 7;
+                grid-column: 7 / span 6 !important;
+            }
+        }
+
+        quimera-input[nombre="email"] {
+            grid-column: 1 / -1 !important;
+        }
+
+        quimera-input[nombre="tarjeta_puntos_id"] {
+            grid-column: 1 / span 2 !important;
+        }
+
+        .TabCliente-accion {
+            grid-column: 3 / span 1 !important;
+            justify-content: flex-end;
+        }
+    }
+}

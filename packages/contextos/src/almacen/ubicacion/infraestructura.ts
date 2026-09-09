@@ -4,14 +4,42 @@ import { criteriaQuery } from "@olula/lib/infraestructura.ts";
 import {
     DeleteUbicacion,
     GetStocksUbicacion,
+    GetStockUbicacion,
     GetUbicacion,
     GetUbicaciones,
+    MoviStockUbicacion,
     PatchUbicacion,
     PostUbicacion,
     StockUbicacion,
-    StockUbicacionAPI,
+    StockUbicacionItem,
     Ubicacion,
 } from "./diseño.ts";
+
+export interface StockUbicacionItemApi {
+    id: string;
+    stock_id: string;
+    ubicacion_id: string;
+    ubicacion: string;
+    articulo: string;
+    articulo_id: string;
+    cantidad_fisica: number;
+}
+
+interface MoviStockUbicacionApi extends Entidad {
+    id: string;
+    cantidad: number;
+    fechahora: string;
+    lote_id: string;
+    lote: string;
+    caja_id: string | null;
+    caja: string | null;
+    concepto: string;
+}
+
+interface StockUbicacionApi extends StockUbicacionItemApi {
+    movimientos: MoviStockUbicacionApi[]
+}
+
 
 const baseUrlUbicacion = `/almacen/ubicacion`;
 
@@ -85,9 +113,9 @@ export const deleteUbicacion: DeleteUbicacion = async (id) => {
     await RestAPI.delete(`${baseUrlUbicacion}/${id}`, "Error al borrar Ubicación");
 };
 
-const baseUrlStockUbicacion = `/almacen/stock_ubicacion`;
+export const baseUrlStockUbicacion = `/almacen/stock_ubicacion`;
 
-export const stockUbicacionFromApi = (api: StockUbicacionAPI): StockUbicacion => ({
+const stockUbicacionItemFromApi = (api: StockUbicacionItemApi): StockUbicacionItem => ({
     id: api.id,
     stockId: api.stock_id,
     ubicacionId: api.ubicacion_id,
@@ -100,6 +128,31 @@ export const stockUbicacionFromApi = (api: StockUbicacionAPI): StockUbicacion =>
 export const getStocksUbicacion: GetStocksUbicacion = async (ubicacionId) => {
     const filtro: Filtro = [["ubicacion_id", "==", ubicacionId]];
     const q = criteriaQuery(filtro, []);
-    const respuesta = await RestAPI.get<{ datos: StockUbicacionAPI[] }>(baseUrlStockUbicacion + q);
-    return respuesta.datos.map(stockUbicacionFromApi);
+    const respuesta = await RestAPI.get<{ datos: StockUbicacionItemApi[] }>(baseUrlStockUbicacion + q);
+    return respuesta.datos.map(stockUbicacionItemFromApi);
 };
+
+const movimientoFromApi = (movimiento: MoviStockUbicacionApi): MoviStockUbicacion => {
+    return {
+        id: movimiento.id,
+        cantidad: movimiento.cantidad,
+        fechaHora: new Date(Date.parse(movimiento.fechahora)),
+        idLote: movimiento.lote_id,
+        lote: movimiento.lote,
+        idCaja: movimiento.caja_id,
+        caja: movimiento.caja,
+        concepto: movimiento.concepto,
+    }
+}
+
+const stockUbicacionFromApi = (api: StockUbicacionApi): StockUbicacion => ({
+    ...stockUbicacionItemFromApi(api),
+    movimientos: api.movimientos.map(movimientoFromApi),
+});
+
+
+export const getStockUbicacion: GetStockUbicacion = async (stockUbicacionId) => {
+    const respuesta = await RestAPI.get<{ datos: StockUbicacionApi }>(`${baseUrlStockUbicacion}/${stockUbicacionId}`);
+    return stockUbicacionFromApi(respuesta.datos);
+
+}

@@ -1,0 +1,22 @@
+.VentaTpv .modo-linea {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.VentaTpv .CrearLinea {
+    quimera-formulario {
+        max-width: 500px;
+    }
+
+    quimera-autocompletar[nombre="referencia_nueva_linea_venta"] {
+        grid-column: span 12;
+    }
+
+    quimera-select[nombre="talla_nueva_linea_venta"] {
+        grid-column: span 6;
+    }
+
+    quimera-input[nombre="cantidad_nueva_linea_venta"] {
+        grid-column: span 6;
+    }
+}

@@ -4,6 +4,31 @@
     gap: var(--spacing-md, 1rem);
 }
 
+.DetalleCaja-monoproducto-info {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-md, 1rem);
+    padding: 0.4rem var(--spacing-md, 1rem);
+    background: var(--color-surface-subtle, #f5f5f5);
+    border-radius: 6px;
+    border: 1px solid var(--color-border, #e0e0e0);
+
+    .DetalleCaja-monoproducto-sku {
+        font-weight: 700;
+        color: var(--color-text, #1a1a1a);
+    }
+
+    .DetalleCaja-monoproducto-cantidad {
+        font-variant-numeric: tabular-nums;
+        color: var(--color-text, #333);
+    }
+
+    .DetalleCaja-monoproducto-lote {
+        font-size: 0.85em;
+        color: var(--color-text-muted, #666);
+    }
+}
+
 .ArbolContenidoCaja {
     padding: var(--spacing-md, 1rem);
 
@@ -17,15 +42,18 @@
     }
 
     .arbol-material {
-        border-radius: 4px;
+        border-radius: 6px;
         background: var(--color-surface-subtle, #f5f5f5);
+        border: 1px solid var(--color-border, #e0e0e0);
         font-size: 0.9em;
+        overflow: hidden;
 
         summary {
             display: grid;
-            grid-template-columns: 8rem 1fr 5rem;
+            grid-template-columns: 1.25rem 1fr auto;
+            align-items: center;
             gap: var(--spacing-sm, 0.5rem);
-            padding: 0.25rem 0.5rem;
+            padding: 0.4rem 0.6rem;
             cursor: pointer;
             user-select: none;
             list-style: none;
@@ -35,49 +63,148 @@
             }
 
             &:hover {
-                background: var(--color-surface-hover, #eee);
+                background: var(--color-surface-hover, #eaeaea);
             }
+        }
+
+        &[open] summary {
+            border-bottom: 1px solid var(--color-border, #e0e0e0);
         }
     }
 
+    /* Indicador de expansión triangular */
+    .arbol-material-indicador {
+        display: block;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 5px 0 5px 8px;
+        border-color: transparent transparent transparent var(--color-text-muted, #999);
+        transition: transform 0.15s ease;
+        flex-shrink: 0;
+    }
+
+    .arbol-material[open] .arbol-material-indicador {
+        transform: rotate(90deg);
+    }
+
+    /* Bloque principal: sku + descripcion apilados */
+    .arbol-material-principal {
+        display: flex;
+        flex-direction: column;
+        gap: 0.1rem;
+        min-width: 0;
+    }
+
     .arbol-material-sku {
-        font-weight: 600;
-        color: var(--color-primary, #333);
+        font-weight: 700;
+        font-size: 0.95em;
+        color: var(--color-text, #1a1a1a);
+        letter-spacing: 0.01em;
+        line-height: 1.2;
     }
 
     .arbol-material-descripcion {
+        font-size: 0.82em;
+        color: var(--color-text-muted, #666);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        line-height: 1.3;
     }
 
+    /* Cantidad: valor grande + etiqueta pequeña */
     .arbol-material-cantidad {
-        text-align: right;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        flex-shrink: 0;
+        gap: 0.05rem;
+    }
+
+    .arbol-material-cantidad-valor {
+        font-weight: 700;
+        font-size: 1em;
         font-variant-numeric: tabular-nums;
+        color: var(--color-text, #1a1a1a);
+        line-height: 1.2;
+    }
+
+    .arbol-material-cantidad-label {
+        font-size: 0.75em;
+        color: var(--color-text-muted, #999);
+        line-height: 1;
+        text-transform: lowercase;
     }
 
     .arbol-material-movimientos {
-        padding: var(--spacing-xs, 0.25rem) var(--spacing-sm, 0.5rem) var(--spacing-sm, 0.5rem);
-        border-top: 1px solid var(--color-border, #ddd);
+        padding: var(--spacing-xs, 0.25rem) 0;
+        background: var(--color-surface, #fff);
     }
 
+    /* Fila de movimiento */
     .arbol-movimiento {
         display: grid;
-        grid-template-columns: 5rem 1fr 10rem;
+        grid-template-columns: 4.5rem 1fr 8rem 9rem;
+        align-items: baseline;
         gap: var(--spacing-sm, 0.5rem);
-        padding: 0.15rem 0.5rem;
-        font-size: 0.85em;
-        color: var(--color-text-muted, #666);
+        padding: 0.25rem 0.6rem;
+        font-size: 0.82em;
+        color: var(--color-text-muted, #555);
+        border-bottom: 1px solid var(--color-border, #f0f0f0);
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &:hover {
+            background: var(--color-surface-subtle, #fafafa);
+        }
     }
 
     .arbol-movimiento-cantidad {
         text-align: right;
         font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        color: var(--color-text, #333);
     }
 
+    .arbol-movimiento-concepto {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .arbol-movimiento-ubicacion {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 0.9em;
+        color: var(--color-text-muted, #888);
+    }
+
+    /* Fecha: día y hora como elementos separados */
     .arbol-movimiento-fecha {
-        text-align: right;
+        display: flex;
+        align-items: baseline;
+        gap: 0.3em;
+        justify-content: flex-end;
         font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    .arbol-movimiento-fecha-dia {
+        color: var(--color-text-muted, #555);
+    }
+
+    .arbol-movimiento-fecha-sep {
+        color: var(--color-text-muted, #bbb);
+        font-size: 0.85em;
+    }
+
+    .arbol-movimiento-fecha-hora {
+        font-weight: 600;
+        color: var(--color-text, #333);
     }
 
     .arbol-subcaja {

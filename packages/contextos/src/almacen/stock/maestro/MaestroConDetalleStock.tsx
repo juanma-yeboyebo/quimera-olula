@@ -8,7 +8,7 @@ import { listaActivaEntidadesInicial } from "@olula/lib/ListaActivaEntidades.js"
 import { getUrlParams, useUrlParams } from "@olula/lib/url-params.js";
 import { useEffect } from "react";
 import { DetalleStock } from "../detalle/DetalleStock.tsx";
-import { Stock } from "../diseño.ts";
+import { StockItem } from "../diseño.ts";
 import { metaTablaStock } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
 
@@ -17,7 +17,7 @@ export const MaestroConDetalleStock = () => {
 
     const { ctx, emitir } = useMaquina(getMaquina, {
         estado: "INICIAL",
-        stocks: listaActivaEntidadesInicial<Stock>(id, criteria),
+        stocks: listaActivaEntidadesInicial<StockItem>(id, criteria),
     });
 
     useUrlParams(ctx.stocks.activo, ctx.stocks.criteria);
@@ -29,11 +29,11 @@ export const MaestroConDetalleStock = () => {
 
     return (
         <div className="Stock">
-            <MaestroDetalle<Stock>
+            <MaestroDetalle<StockItem>
                 Maestro={
                     <>
                         <h2>Stock</h2>
-                        <Listado<Stock>
+                        <Listado<StockItem>
                             metaTabla={metaTablaStock}
                             metaFiltro={metaFiltro}
                             criteria={ctx.stocks.criteria}

@@ -1,0 +1,60 @@
+.q-pasos {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.q-pasos__paso {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+/* Conector entre pasos */
+.q-pasos__paso:not(:last-child)::after {
+    content: "";
+    flex: 1;
+    height: var(--tamaño-borde-m);
+    background-color: var(--color-borde-sutil);
+    transition: background-color var(--transicion-normal);
+}
+
+.q-pasos__paso.completado:not(:last-child)::after {
+    background-color: var(--color-primario);
+}
+
+/* Círculo */
+.q-pasos__circulo {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    font-size: var(--tamaño-letra-s);
+    font-weight: var(--grosor-letra-6);
+    line-height: 1;
+    border: var(--tamaño-borde-m) solid var(--color-borde-sutil);
+    background-color: var(--color-superficie);
+    color: var(--color-texto-secundario);
+    transition:
+        background-color var(--transicion-normal),
+        border-color var(--transicion-normal),
+        color var(--transicion-normal);
+    flex-shrink: 0;
+}
+
+.q-pasos__paso.completado .q-pasos__circulo {
+    background-color: var(--color-primario);
+    border-color: var(--color-primario);
+    color: var(--blanco);
+}
+
+.q-pasos__paso.activo .q-pasos__circulo {
+    background-color: var(--color-primario);
+    border-color: var(--color-primario);
+    color: var(--blanco);
+    box-shadow: 0 0 0 3px var(--color-primario-claro);
+}

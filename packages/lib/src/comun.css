@@ -49,6 +49,12 @@
     font-size: var(--tamaño-letra-s);
 }
 
+.q-body2 {
+    font-size: var(--tamaño-letra-s);        /* 0.875rem / 14px */
+    font-weight: var(--grosor-letra-4);      /* 400 */
+    line-height: var(--altura-linea-normal); /* 1.5 */
+}
+
 /* ─── App principal ──────────────────────────────────────────────────────── */
 
 .fondo-inicio {

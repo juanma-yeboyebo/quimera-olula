@@ -25,7 +25,8 @@
         "date-fns": "4",
         "quimera": "workspace:@quimera/core@*",
         "react": "^19.0.0",
-        "use-db-state": "2.0.2"
+        "use-db-state": "2.0.2",
+        "use-sound": "^4.0.3"
     },
     "devDependencies": {
         "@aldabil/react-scheduler": "3.0.4",
