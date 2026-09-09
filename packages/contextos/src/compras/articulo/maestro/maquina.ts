@@ -15,6 +15,14 @@ export const getMaquina: () => Maquina<EstadoMaestroArticulo, ContextoMaestroArt
             criteria_cambiado: [maestro.Articulos.filtrar, maestro.recargarArticulos],
 
             siguiente_pagina: [maestro.Articulos.filtrar, maestro.ampliarArticulos],
+
+            articulo_creado: [maestro.Articulos.incluir],
+            creacion_solicitada: "CREANDO_ARTICULO",
+        },
+
+        CREANDO_ARTICULO: {
+            articulo_creado: [maestro.Articulos.incluir, "INICIAL"],
+            creacion_cancelada: "INICIAL",
         },
     };
 };

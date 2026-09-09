@@ -1,27 +1,19 @@
 .CrearArticuloProveedor {
+    quimera-formulario {
+        max-width: 500px;
+    }
+
     quimera-autocompletar[nombre="proveedorId"] {
         grid-column: span 12;
     }
 
+    quimera-select[nombre="divisaId"],
     quimera-input[nombre="coste"],
-    quimera-select[nombre="divisaId"] {
-        grid-column: span 3;
-    }
-
     quimera-input[nombre="dto"] {
-        grid-column: span 2;
-    }
-
-    quimera-input[nombre="refProveedor"] {
         grid-column: span 4;
     }
 
-    quimera-input[nombre="plazo"],
-    quimera-input[nombre="uniEmbalaje"] {
-        grid-column: span 3;
-    }
-
-    quimera-checkbox[nombre="requiereEmbalajes"] {
-        grid-column: span 6;
+    quimera-input[nombre="refProveedor"] {
+        grid-column: span 12;
     }
 }

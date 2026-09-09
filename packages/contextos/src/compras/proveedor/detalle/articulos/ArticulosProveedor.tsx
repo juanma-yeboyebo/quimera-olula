@@ -40,13 +40,6 @@ const metaTablaArticulos: MetaTabla<ArticuloProveedor> = [
     divisa: (p) => p.divisaId,
   },
   { id: "dto", cabecera: "% Dto.", tipo: "numero" },
-  { id: "plazo", cabecera: "Plazo", tipo: "numero" },
-  {
-    id: "uni_embalaje",
-    cabecera: "Uds. emb.",
-    tipo: "numero",
-    render: (p) => String(p.uniEmbalaje ?? ""),
-  },
 ];
 
 const metaFiltroArticulos: MetaFiltro = {

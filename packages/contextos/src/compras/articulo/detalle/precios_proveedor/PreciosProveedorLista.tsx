@@ -24,7 +24,7 @@ const metaTablaPrecios: MetaTabla<ArticuloProveedor> = [
         ""
       ),
   },
-  { id: "nombre", cabecera: "Proveedor" },
+  { id: "proveedor", cabecera: "Proveedor" },
   {
     id: "coste",
     cabecera: "Coste",

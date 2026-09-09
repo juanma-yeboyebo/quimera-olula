@@ -41,19 +41,19 @@ export const CambiarArticuloProveedor = ({
     <QModal
       abierto={true}
       nombre="cambiar_articulo_proveedor"
-      titulo={`Precio de ${precio.nombre}`}
+      titulo={`Precio de ${precio.proveedor}`}
       onCerrar={cancelar}
     >
       <div className="CambiarArticuloProveedor">
         <quimera-formulario>
           <QInput
             label="Proveedor"
-            nombre="nombre"
-            valor={precio.nombre}
+            nombre="proveedor"
+            valor={precio.proveedor}
             soloLectura
           />
-          <QInput label="Coste" {...uiProps("coste")} />
           <Divisa {...uiProps("divisaId")} />
+          <QInput label="Coste" {...uiProps("coste")} />
           <QInput label="% Dto." {...uiProps("dto")} />
           <QInput label="Ref. proveedor" {...uiProps("refProveedor")} />
         </quimera-formulario>

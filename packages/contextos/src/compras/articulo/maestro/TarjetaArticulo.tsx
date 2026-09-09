@@ -6,6 +6,6 @@ export const TarjetaArticulo = (articulo: Articulo) => (
     avatar={<QAvatar nombre={articulo.descripcion} />}
     arribaIzquierda={articulo.descripcion}
     abajoIzquierda={articulo.id}
-    abajoDerecha={articulo.codImpuesto}
+    abajoDerecha={articulo.grupoIvaProductoId}
   />
 );

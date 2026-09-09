@@ -1,18 +1,19 @@
 .CambiarArticuloProveedor {
-    quimera-input[nombre="nombre"] {
+    quimera-formulario {
+        max-width: 500px;
+    }
+
+    quimera-input[nombre="proveedor"] {
         grid-column: span 12;
     }
 
+    quimera-select[nombre="divisaId"],
     quimera-input[nombre="coste"],
-    quimera-select[nombre="divisaId"] {
-        grid-column: span 3;
-    }
-
     quimera-input[nombre="dto"] {
-        grid-column: span 2;
+        grid-column: span 4;
     }
 
     quimera-input[nombre="refProveedor"] {
-        grid-column: span 4;
+        grid-column: span 12;
     }
 }

@@ -3,8 +3,8 @@ import { QEtiqueta } from "@olula/componentes/atomos/qetiqueta.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
 import { MetaTabla } from "@olula/componentes/index.js";
 import { Listado } from "@olula/componentes/maestro/Listado.js";
-import { MetaFiltro } from "@olula/componentes/maestro/maestroFiltros/MaestroFiltrosActivoControlado.js";
 import { MaestroDetalle } from "@olula/componentes/maestro/MaestroDetalle.tsx";
+import { MetaFiltro } from "@olula/componentes/maestro/maestroFiltros/MaestroFiltrosActivoControlado.js";
 import { ClausulaFiltro } from "@olula/lib/diseño.ts";
 import { listaActivaEntidadesInicial } from "@olula/lib/ListaActivaEntidades.js";
 import { getUrlParams, useUrlParams } from "@olula/lib/url-params.js";
@@ -17,15 +17,13 @@ import { getMaquina } from "./maquina.ts";
 
 const UsoArticulo = (articulo: Articulo) => (
   <>
-    <QEtiqueta variante={articulo.seVende ? "exito" : "error"}>
+    <QEtiqueta variante={articulo.seVende ? "exito" : "advertencia"}>
       Venta
     </QEtiqueta>{" "}
-    <QEtiqueta variante={articulo.seCompra ? "exito" : "error"}>
+    <QEtiqueta variante={articulo.seCompra ? "exito" : "advertencia"}>
       Compra
     </QEtiqueta>{" "}
-    {articulo.noStock && (
-      <QEtiqueta variante="advertencia">Sin stock</QEtiqueta>
-    )}
+    {articulo.noStock && <QEtiqueta variante="error">Sin stock</QEtiqueta>}
   </>
 );
 

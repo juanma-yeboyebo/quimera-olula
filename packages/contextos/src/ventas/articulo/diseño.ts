@@ -33,6 +33,8 @@ export type CambiosArticulo = Partial<
     >
 >;
 
+export type PostArticulo = (articulo: Partial<Articulo>) => Promise<string>;
+
 export type GetArticulo = (id: string) => Promise<Articulo>;
 
 export type GetArticulos = (

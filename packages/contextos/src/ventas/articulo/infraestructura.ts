@@ -8,6 +8,7 @@ import {
     GetArticulos,
     GetTagsArticulo,
     PatchArticulo,
+    PostArticulo,
     TagArticulo,
 } from "./diseño.ts";
 import { filtroArticulosVenta } from "./dominio.ts";
@@ -87,6 +88,13 @@ export const getTagsArticulo: GetTagsArticulo = async (filtro, orden) => {
         (respuesta) => respuesta.datos.map(tagArticuloDesdeApi)
     );
 };
+
+export const postArticulo: PostArticulo = async (articulo) =>
+    await RestAPI.post(
+        baseUrl,
+        { descripcion: articulo.descripcion ?? "" },
+        "Error al crear el artículo"
+    ).then((respuesta) => String(respuesta.id));
 
 export const patchArticulo: PatchArticulo = async (id, cambios) => {
     await RestAPI.patch(

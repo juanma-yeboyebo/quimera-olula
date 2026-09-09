@@ -1,4 +1,4 @@
-import { QInput } from "@olula/componentes/atomos/qinput.tsx";
+import { GrupoIvaProducto } from "#/ventas/comun/componentes/grupo_iva_producto.tsx";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { FormModelo } from "@olula/lib/dominio.ts";
 import { ListaEntidades } from "@olula/lib/ListaEntidades.ts";
@@ -26,7 +26,7 @@ export const TabCompras = ({
   return (
     <div className="TabCompras">
       <quimera-formulario>
-        <QInput label="Impuesto" {...uiProps("codImpuesto")} />
+        <GrupoIvaProducto {...uiProps("grupoIvaProductoId")} />
       </quimera-formulario>
       <h3>Precios por proveedor</h3>
       <PreciosProveedorArticulo

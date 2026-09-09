@@ -1,31 +1,35 @@
+import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
 import { MetaTabla } from "@olula/componentes/index.js";
 import { Listado } from "@olula/componentes/maestro/Listado.js";
-import { MetaFiltro } from "@olula/componentes/maestro/maestroFiltros/MaestroFiltrosActivoControlado.js";
 import { MaestroDetalle } from "@olula/componentes/maestro/MaestroDetalle.tsx";
-import { ClausulaFiltro } from "@olula/lib/diseño.ts";
+import { MetaFiltro } from "@olula/componentes/maestro/maestroFiltros/MaestroFiltrosActivoControlado.js";
+import { ClausulaFiltro, Criteria } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.ts";
 import { listaActivaEntidadesInicial } from "@olula/lib/ListaActivaEntidades.ts";
 import { getUrlParams, useUrlParams } from "@olula/lib/url-params.ts";
 import { useEffect, useMemo } from "react";
+import { CrearArticulo } from "../crear/CrearArticulo.tsx";
 import { DetalleArticulo } from "../detalle/DetalleArticulo.tsx";
 import { Articulo } from "../diseño.ts";
-import { CAMPO_INCLUIR_NO_COMPRABLES } from "../dominio.ts";
 import { getMaquina } from "./maquina.ts";
 import { TarjetaArticulo } from "./TarjetaArticulo.tsx";
 
 const metaTablaArticulo: MetaTabla<Articulo> = [
   { id: "id", cabecera: "Referencia" },
   { id: "descripcion", cabecera: "Descripción" },
-  { id: "cod_impuesto", cabecera: "Impuesto", render: (a) => a.codImpuesto },
+  {
+    id: "grupo_iva_producto_id",
+    cabecera: "Impuesto",
+    render: (a) => a.grupoIvaProductoId,
+  },
 ];
 
-const filtroBooleano =
-  (campo: string) =>
-  (valor: unknown): ClausulaFiltro | null =>
-    valor === undefined || valor === null || valor === ""
-      ? null
-      : [campo, "=", String(valor)];
+const criteriaSinStock = (): Criteria => ({
+  ...criteriaDefecto,
+  filtro: [["no_stock", "=", "false"]] as ClausulaFiltro[],
+  paginacion: { ...criteriaDefecto.paginacion },
+});
 
 const metaFiltroArticulo: MetaFiltro = {
   id: {
@@ -38,28 +42,22 @@ const metaFiltroArticulo: MetaFiltro = {
     label: "Descripción",
     filtro: (v) => (v ? ["descripcion", "~", v as string] : null),
   },
-  cod_impuesto: {
-    id: "cod_impuesto",
-    label: "Impuesto",
-    filtro: (v) => (v ? ["cod_impuesto", "=", v as string] : null),
-  },
   no_stock: {
     id: "no_stock",
-    label: "No controla stock",
+    label: "Sin stock",
     tipo: "checkbox",
-    filtro: filtroBooleano("no_stock"),
-  },
-  incluir_no_comprables: {
-    id: CAMPO_INCLUIR_NO_COMPRABLES,
-    label: "Incluir artículos no comprables",
-    tipo: "checkbox",
-    filtro: (v) =>
-      v === "true" ? [CAMPO_INCLUIR_NO_COMPRABLES, "=", "true"] : null,
+    filtro: (v) => (v === "true" ? ["no_stock", "=", "false"] : null),
+    fromFiltro: (filtro) =>
+      filtro.some(
+        ([campo, , valor]) => campo === "no_stock" && valor === "false"
+      )
+        ? "true"
+        : "",
   },
 };
 
 export const MaestroConDetalleArticulo = () => {
-  const criteriaBase = useMemo(() => criteriaDefecto, []);
+  const criteriaBase = useMemo(criteriaSinStock, []);
 
   const { id, criteria } = getUrlParams();
   const criteriaInicial = criteria.filtro.length > 0 ? criteria : criteriaBase;
@@ -93,15 +91,33 @@ export const MaestroConDetalleArticulo = () => {
               entidades={articulos.lista}
               totalEntidades={articulos.total}
               seleccionada={articulos.activo}
-              onSeleccion={(payload) => emitir("articulo_seleccionado", payload)}
-              onCriteriaChanged={(payload) => emitir("criteria_cambiado", payload)}
-              onSiguientePagina={(payload) => emitir("siguiente_pagina", payload)}
+              renderAcciones={() => (
+                <div className="maestro-botones">
+                  <QBoton onClick={() => emitir("creacion_solicitada")}>
+                    Nuevo Artículo
+                  </QBoton>
+                </div>
+              )}
+              onSeleccion={(payload) =>
+                emitir("articulo_seleccionado", payload)
+              }
+              onCriteriaChanged={(payload) =>
+                emitir("criteria_cambiado", payload)
+              }
+              onSiguientePagina={(payload) =>
+                emitir("siguiente_pagina", payload)
+              }
             />
           </>
         }
         Detalle={<DetalleArticulo id={articulos.activo} publicar={emitir} />}
         seleccionada={articulos.activo}
         modoDisposicion="maestro-50"
+      />
+      <CrearArticulo
+        publicar={emitir}
+        onCancelar={() => emitir("creacion_cancelada")}
+        activo={ctx.estado === "CREANDO_ARTICULO"}
       />
     </div>
   );

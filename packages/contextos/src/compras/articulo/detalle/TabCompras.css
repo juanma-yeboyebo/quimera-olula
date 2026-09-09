@@ -1,5 +1,5 @@
 .TabCompras {
-    quimera-input[nombre="codImpuesto"] {
+    quimera-input[nombre="grupoIvaProductoId"] {
         grid-column: span 4;
     }
 

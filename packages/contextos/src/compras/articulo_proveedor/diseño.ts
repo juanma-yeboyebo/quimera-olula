@@ -6,10 +6,10 @@ export interface ArticuloProveedor extends Entidad {
     articulo: string;
     proveedorId: string;
     proveedor: string;
-    nombre: string;
     coste: number;
     divisaId: string;
     dto: number;
+    descripcionProveedor: string;
     refProveedor: string;
     plazo: number | null;
     uniEmbalaje: number | null;
@@ -21,10 +21,10 @@ export interface NuevoArticuloProveedor extends Modelo {
     articuloId: string;
     proveedorId: string;
     proveedor: string;
-    nombre: string;
     coste: number;
     divisaId: string;
     dto: number;
+    descripcionProveedor: string;
     refProveedor: string;
     plazo: number | null;
     uniEmbalaje: number | null;
@@ -34,10 +34,10 @@ export interface NuevoArticuloProveedor extends Modelo {
 export type CambiosArticuloProveedor = Partial<
     Pick<
         ArticuloProveedor,
-        | "nombre"
         | "coste"
         | "divisaId"
         | "dto"
+        | "descripcionProveedor"
         | "refProveedor"
         | "plazo"
         | "uniEmbalaje"

@@ -4,7 +4,7 @@ export interface Articulo extends Entidad {
     id: string;
     descripcion: string;
     observaciones: string;
-    codImpuesto: string;
+    grupoIvaProductoId: string;
     noStock: boolean;
     seCompra: boolean;
 }
@@ -25,8 +25,10 @@ export interface PrecioProveedorArticulo extends Entidad {
 }
 
 export type CambiosArticulo = Partial<
-    Pick<Articulo, "descripcion" | "observaciones" | "codImpuesto">
+    Pick<Articulo, "descripcion" | "observaciones" | "grupoIvaProductoId">
 >;
+
+export type PostArticulo = (articulo: Partial<Articulo>) => Promise<string>;
 
 export type GetArticulo = (id: string) => Promise<Articulo>;
 

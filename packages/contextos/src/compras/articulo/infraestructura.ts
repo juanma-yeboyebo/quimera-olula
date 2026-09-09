@@ -6,6 +6,7 @@ import {
     GetArticulo,
     GetArticulos,
     PatchArticulo,
+    PostArticulo,
 } from "./diseño.ts";
 import { filtroArticulosCompra } from "./dominio.ts";
 
@@ -13,7 +14,7 @@ interface ArticuloApi {
     id: string;
     descripcion: string;
     observaciones: string | null;
-    cod_impuesto: string | null;
+    grupo_iva_producto_id: string | null;
     no_stock: boolean;
     se_compra: boolean;
 }
@@ -24,7 +25,7 @@ export const articuloDesdeApi = (api: ArticuloApi): Articulo => ({
     id: api.id,
     descripcion: api.descripcion,
     observaciones: api.observaciones ?? "",
-    codImpuesto: api.cod_impuesto ?? "",
+    grupoIvaProductoId: api.grupo_iva_producto_id ?? "",
     noStock: api.no_stock,
     seCompra: api.se_compra,
 });
@@ -36,7 +37,7 @@ const cambiosArticuloAApi = (cambios: CambiosArticulo): Record<string, unknown> 
 
     if (cambios.descripcion !== undefined) api.descripcion = cambios.descripcion;
     if (cambios.observaciones !== undefined) api.observaciones = oNulo(cambios.observaciones);
-    if (cambios.codImpuesto !== undefined) api.cod_impuesto = oNulo(cambios.codImpuesto);
+    if (cambios.grupoIvaProductoId !== undefined) api.grupo_iva_producto_id = oNulo(cambios.grupoIvaProductoId);
 
     return api;
 };
@@ -55,6 +56,13 @@ export const getArticulos: GetArticulos = async (criteria) =>
         articuloDesdeApi,
         "Error al obtener los artículos"
     );
+
+export const postArticulo: PostArticulo = async (articulo) =>
+    await RestAPI.post(
+        baseUrl,
+        { descripcion: articulo.descripcion ?? "" },
+        "Error al crear el artículo"
+    ).then((respuesta) => String(respuesta.id));
 
 export const patchArticulo: PatchArticulo = async (id, cambios) => {
     await RestAPI.patch(

@@ -1,19 +1,17 @@
-import { Articulo as ArticuloSelect } from "#/ventas/comun/componentes/articulo.tsx";
-import { GrupoIvaProducto } from "#/ventas/comun/componentes/grupo_iva_producto.tsx";
+import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
 import { MetaTabla } from "@olula/componentes/index.js";
 import { Listado } from "@olula/componentes/maestro/Listado.js";
-import {
-  filtroNumeros,
-  MetaFiltro,
-} from "@olula/componentes/maestro/maestroFiltros/MaestroFiltrosActivoControlado.js";
+import { MetaFiltro } from "@olula/componentes/maestro/maestroFiltros/MaestroFiltrosActivoControlado.js";
 import { MaestroDetalle } from "@olula/componentes/maestro/MaestroDetalle.tsx";
+import { ClausulaFiltro, Criteria } from "@olula/lib/diseño.ts";
+import { criteriaDefecto } from "@olula/lib/dominio.ts";
 import { listaActivaEntidadesInicial } from "@olula/lib/ListaActivaEntidades.js";
 import { getUrlParams, useUrlParams } from "@olula/lib/url-params.js";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import { CrearArticulo } from "./crear/CrearArticulo.tsx";
 import { DetalleArticulo } from "./detalle/DetalleArticulo.tsx";
 import { Articulo } from "./diseño.ts";
-import { CAMPO_INCLUIR_NO_VENDIBLES } from "./dominio.ts";
 import { getMaquina } from "./maestro/maquina.ts";
 import { TarjetaArticulo } from "./TarjetaArticulo.tsx";
 
@@ -30,11 +28,14 @@ const metaTablaArticulo: MetaTabla<Articulo> = [
 ];
 
 export const MaestroConDetalleArticulo = () => {
+  const criteriaBase = useMemo(criteriaSinStock, []);
+
   const { id, criteria } = getUrlParams();
+  const criteriaInicial = criteria.filtro.length > 0 ? criteria : criteriaBase;
 
   const { ctx, emitir } = useMaquina(getMaquina, {
     estado: "INICIAL",
-    articulos: listaActivaEntidadesInicial<Articulo>(id, criteria),
+    articulos: listaActivaEntidadesInicial<Articulo>(id, criteriaInicial),
   });
 
   useUrlParams(ctx.articulos.activo, ctx.articulos.criteria);
@@ -58,6 +59,13 @@ export const MaestroConDetalleArticulo = () => {
               entidades={ctx.articulos.lista}
               totalEntidades={ctx.articulos.total}
               seleccionada={ctx.articulos.activo}
+              renderAcciones={() => (
+                <div className="maestro-botones">
+                  <QBoton onClick={() => emitir("creacion_solicitada")}>
+                    Nuevo Artículo
+                  </QBoton>
+                </div>
+              )}
               onSeleccion={(payload) => emitir("articulo_seleccionado", payload)}
               onCriteriaChanged={(payload) => emitir("criteria_cambiado", payload)}
               onSiguientePagina={(payload) => emitir("siguiente_pagina", payload)}
@@ -68,67 +76,42 @@ export const MaestroConDetalleArticulo = () => {
         seleccionada={ctx.articulos.activo}
         modoDisposicion="maestro-50"
       />
+      <CrearArticulo
+        publicar={emitir}
+        onCancelar={() => emitir("creacion_cancelada")}
+        activo={ctx.estado === "CREANDO_ARTICULO"}
+      />
     </div>
   );
 };
 
+const criteriaSinStock = (): Criteria => ({
+  ...criteriaDefecto,
+  filtro: [["no_stock", "=", "false"]] as ClausulaFiltro[],
+  paginacion: { ...criteriaDefecto.paginacion },
+});
+
 const metaFiltro: MetaFiltro = {
-  articulo: {
-    id: "articulo",
-    campo: "id",
-    label: "Artículo",
-    filtro: (v) => (v ? ["id", "=", v as string] : null),
-    render: (valor, onChange) => (
-      <ArticuloSelect
-        valor={(valor as string) ?? ""}
-        onChange={(opcion) => onChange(opcion?.valor ?? "")}
-      />
-    ),
+  id: {
+    id: "id",
+    label: "Referencia",
+    filtro: (v) => (v ? ["id", "~", v as string] : null),
   },
   descripcion: {
     id: "descripcion",
-    campo: "nombre",
     label: "Descripción",
-    filtro: (v) => (v ? ["nombre", "~", v as string] : null),
-  },
-  codbarras: {
-    id: "codbarras",
-    label: "Cód. barras",
-    filtro: (v) => (v ? ["codbarras", "~", v as string] : null),
-  },
-  precio: {
-    id: "precio",
-    label: "Precio",
-    tipo: "intervalo_numeros",
-    filtro: (v) => filtroNumeros("precio", v),
-  },
-  grupo_iva_producto: {
-    id: "grupo_iva_producto",
-    campo: "grupo_iva_producto_id",
-    label: "Grupo IVA",
-    filtro: (v) => (v ? ["grupo_iva_producto_id", "=", v as string] : null),
-    render: (valor, onChange) => (
-      <GrupoIvaProducto
-        nombre="grupo_iva_producto"
-        valor={(valor as string) ?? ""}
-        onChange={(opcion) => onChange(opcion?.valor ?? "")}
-      />
-    ),
+    filtro: (v) => (v ? ["descripcion", "~", v as string] : null),
   },
   no_stock: {
     id: "no_stock",
-    label: "No controla stock",
+    label: "Sin stock",
     tipo: "checkbox",
-    filtro: (v) =>
-      v === undefined || v === null || v === ""
-        ? null
-        : ["no_stock", "=", String(v)],
-  },
-  incluir_no_vendibles: {
-    id: CAMPO_INCLUIR_NO_VENDIBLES,
-    label: "Incluir artículos no vendibles",
-    tipo: "checkbox",
-    filtro: (v) =>
-      v === "true" ? [CAMPO_INCLUIR_NO_VENDIBLES, "=", "true"] : null,
+    filtro: (v) => (v === "true" ? ["no_stock", "=", "false"] : null),
+    fromFiltro: (filtro) =>
+      filtro.some(
+        ([campo, , valor]) => campo === "no_stock" && valor === "false"
+      )
+        ? "true"
+        : "",
   },
 };

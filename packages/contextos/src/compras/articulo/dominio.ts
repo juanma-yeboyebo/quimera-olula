@@ -5,7 +5,7 @@ export const articuloVacio = (): Articulo => ({
     id: "",
     descripcion: "",
     observaciones: "",
-    codImpuesto: "",
+    grupoIvaProductoId: "",
     noStock: false,
     seCompra: false,
 });

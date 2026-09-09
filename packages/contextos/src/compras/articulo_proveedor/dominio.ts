@@ -7,10 +7,10 @@ export const articuloProveedorVacio = (): ArticuloProveedor => ({
     articulo: "",
     proveedorId: "",
     proveedor: "",
-    nombre: "",
     coste: 0,
     divisaId: "EUR",
     dto: 0,
+    descripcionProveedor: "",
     refProveedor: "",
     plazo: null,
     uniEmbalaje: null,
@@ -24,10 +24,10 @@ export const nuevoArticuloProveedorVacio = (
     articuloId,
     proveedorId: "",
     proveedor: "",
-    nombre: "",
     coste: 0,
     divisaId: "EUR",
     dto: 0,
+    descripcionProveedor: "",
     refProveedor: "",
     plazo: null,
     uniEmbalaje: null,
@@ -35,7 +35,7 @@ export const nuevoArticuloProveedorVacio = (
 });
 
 const camposComunes = {
-    nombre: { requerido: false },
+    descripcionProveedor: { requerido: false },
     coste: { requerido: true, tipo: "moneda" as const, decimales: 2 },
     divisaId: { requerido: false },
     dto: { requerido: false, tipo: "decimal" as const, decimales: 2 },

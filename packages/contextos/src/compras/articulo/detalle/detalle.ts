@@ -22,7 +22,7 @@ const conPrecios = (fn: ProcesarListaEntidades<ArticuloProveedor>) =>
 
 export const Precios = accionesListaEntidades(conPrecios);
 
-const camposEditables = ["descripcion", "observaciones", "codImpuesto"] as const;
+const camposEditables = ["descripcion", "observaciones", "grupoIvaProductoId"] as const;
 
 export const cambiosArticulo = (anterior: Articulo, nuevo: Articulo): CambiosArticulo =>
     Object.fromEntries(
@@ -38,7 +38,7 @@ export const metaArticulo: MetaModelo<Articulo> = {
             validacion: (m: Articulo) => stringNoVacio(m.descripcion),
         },
         observaciones: { requerido: false, tipo: "texto" },
-        codImpuesto: { requerido: false },
+        grupoIvaProductoId: { requerido: false },
     },
 };
 
