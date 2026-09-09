@@ -41,9 +41,12 @@ const campoFiltroEstado: MetaFiltro = {
 export const MaestroConDetalleVentaTpv = () => {
   const esMovil = useEsMovil();
   const { id, criteria } = getUrlParams();
+  // Por fecha/hora, más nuevos arriba — el orden por id por defecto no
+  // refleja bien la cronología real de los pedidos (ids de fuentes
+  // distintas, p.ej. sincronizados vs generados en tienda).
   const criteriaInicial =
     criteria.filtro.length === 0
-      ? { ...criteriaDefecto, filtro: [] }
+      ? { ...criteriaDefecto, filtro: [], orden: ["fecha", "DESC", "hora", "DESC"] }
       : criteria;
 
   const { ctx, emitir } = useMaquina(getMaquina, {
