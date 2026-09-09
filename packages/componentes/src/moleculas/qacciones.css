@@ -78,6 +78,7 @@ quimera-acciones {
         box-shadow: none;
         background: transparent;
         overflow: visible;
+        z-index: 1;
 
         quimera-boton {
             margin: 0 5px;
