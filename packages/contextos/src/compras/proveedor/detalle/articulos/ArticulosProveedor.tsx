@@ -1,10 +1,7 @@
 import { QIcono } from "@olula/componentes/atomos/qicono.tsx";
 import { MetaTabla } from "@olula/componentes/atomos/qtabla.tsx";
 import { Listado } from "@olula/componentes/maestro/Listado.tsx";
-import {
-  filtroNumeros,
-  MetaFiltro,
-} from "@olula/componentes/maestro/maestroFiltros/MaestroFiltrosActivoControlado.tsx";
+import { MetaFiltro } from "@olula/componentes/maestro/maestroFiltros/MaestroFiltrosActivoControlado.tsx";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { ListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.ts";
 import { ArticuloProveedor } from "../../../articulo_proveedor/diseño.ts";
@@ -27,7 +24,7 @@ const metaTablaArticulos: MetaTabla<ArticuloProveedor> = [
       ),
   },
   { id: "articulo_id", cabecera: "Referencia", render: (p) => p.articuloId },
-  { id: "articulo", cabecera: "Artículo" },
+  { id: "articulo", cabecera: "Artículo", ancho: "20rem" },
   {
     id: "ref_proveedor",
     cabecera: "Ref. proveedor",
@@ -52,23 +49,6 @@ const metaFiltroArticulos: MetaFiltro = {
     id: "articulo",
     label: "Artículo",
     filtro: (v) => (v ? ["articulo", "~", v as string] : null),
-  },
-  ref_proveedor: {
-    id: "ref_proveedor",
-    label: "Ref. proveedor",
-    filtro: (v) => (v ? ["ref_proveedor", "~", v as string] : null),
-  },
-  coste: {
-    id: "coste",
-    label: "Coste",
-    tipo: "intervalo_numeros",
-    filtro: (v) => filtroNumeros("coste", v),
-  },
-  por_defecto: {
-    id: "por_defecto",
-    label: "Solo por defecto",
-    tipo: "checkbox",
-    filtro: (v) => (v === "true" ? ["por_defecto", "=", "true"] : null),
   },
 };
 

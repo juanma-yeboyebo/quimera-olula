@@ -1,7 +1,14 @@
 import { Maquina } from "@olula/lib/diseño.js";
 import { publicar } from "@olula/lib/dominio.js";
 import { ContextoArticulo, EstadoArticulo } from "./diseño.ts";
-import { borrarArticulo, cargarContexto, getContextoVacio } from "./dominio.ts";
+import {
+    alternarCompra,
+    alternarVenta,
+    borrarArticulo,
+    cargarContexto,
+    getContextoVacio,
+    refrescarArticulo,
+} from "./dominio.ts";
 
 export const getMaquina: () => Maquina<EstadoArticulo, ContextoArticulo> = () => ({
     INICIAL: {
@@ -15,6 +22,12 @@ export const getMaquina: () => Maquina<EstadoArticulo, ContextoArticulo> = () =>
 
     ABIERTO: {
         articulo_id_cambiado: [cargarContexto],
+
+        articulo_guardado: [refrescarArticulo],
+
+        venta_alternada_solicitada: [alternarVenta],
+
+        compra_alternada_solicitada: [alternarCompra],
 
         articulo_deseleccionado: [
             getContextoVacio,

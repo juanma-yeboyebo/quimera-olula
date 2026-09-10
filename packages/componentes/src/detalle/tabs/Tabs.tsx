@@ -7,8 +7,10 @@ interface TabProps {
   deshabilitado?: boolean;
 }
 
+type HijoTab = React.ReactElement<TabProps> | false | null | undefined;
+
 interface TabsProps {
-  children: React.ReactElement<TabProps>[];
+  children: HijoTab[];
   className?: string;
 }
 
@@ -20,6 +22,9 @@ const Tabs: React.FC<TabsProps> = ({ children, className }) => {
   const [activeTab, setActiveTab] = React.useState(0);
   const [showArrows, setShowArrows] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
+
+  const tabs = React.Children.toArray(children) as React.ReactElement<TabProps>[];
+  const indice = Math.min(activeTab, tabs.length - 1);
 
   // Detecta overflow
   useEffect(() => {
@@ -62,12 +67,12 @@ const Tabs: React.FC<TabsProps> = ({ children, className }) => {
           </span>
         )}
         <div className={estilos.tabHeaderSlider} ref={sliderRef}>
-          {children.map((tab, index) => (
+          {tabs.map((tab, index) => (
             <button
               key={index}
               onClick={() => setActiveTab(index)}
               disabled={tab.props.deshabilitado}
-              className={activeTab === index ? active : "inactive"}
+              className={indice === index ? active : "inactive"}
             >
               {tab.props.label}
             </button>
@@ -82,7 +87,7 @@ const Tabs: React.FC<TabsProps> = ({ children, className }) => {
           </span>
         )}
       </div>
-      <div className="tab-content">{children[activeTab]}</div>
+      <div className="tab-content">{tabs[indice]}</div>
     </div>
   );
 };

@@ -1,5 +1,4 @@
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
-import { QEtiqueta } from "@olula/componentes/atomos/qetiqueta.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
 import { MetaTabla } from "@olula/componentes/index.js";
 import { Listado } from "@olula/componentes/maestro/Listado.js";
@@ -12,20 +11,9 @@ import { useEffect } from "react";
 import { CrearArticulo } from "../crear/CrearArticulo.tsx";
 import { DetalleArticulo } from "../detalle/DetalleArticulo.tsx";
 import { Articulo } from "../diseño.ts";
+import { UsoArticulo } from "../UsoArticulo.tsx";
 import { ContextoMaestroArticulo } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
-
-const UsoArticulo = (articulo: Articulo) => (
-  <>
-    <QEtiqueta variante={articulo.seVende ? "exito" : "advertencia"}>
-      Venta
-    </QEtiqueta>{" "}
-    <QEtiqueta variante={articulo.seCompra ? "exito" : "advertencia"}>
-      Compra
-    </QEtiqueta>{" "}
-    {articulo.noStock && <QEtiqueta variante="error">Sin stock</QEtiqueta>}
-  </>
-);
 
 const metaTablaArticulo: MetaTabla<Articulo> = [
   { id: "id", cabecera: "Referencia" },

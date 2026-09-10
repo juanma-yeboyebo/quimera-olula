@@ -33,6 +33,8 @@ quimera-tabla {
     table[data-anchos-fijos="true"] th,
     table[data-anchos-fijos="true"] td {
         white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     tr {
