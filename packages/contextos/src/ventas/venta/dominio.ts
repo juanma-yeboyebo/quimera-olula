@@ -81,6 +81,8 @@ export const cambioClienteVentaVacio: CambioClienteVenta = {
 
 export const puedeCambiarDivisa = (venta: { lineas?: unknown[] }) => (venta.lineas?.length ?? 0) === 0;
 
+export const puedeCambiarAlmacen = (venta: { lineas?: unknown[] }) => (venta.lineas?.length ?? 0) === 0;
+
 export const DIVISA_EMPRESA = "EUR";
 
 export const enDivisaExtranjera = (venta: { divisa_id: string }): boolean => {
@@ -167,7 +169,6 @@ export const metaNuevaVenta: MetaModelo<NuevaVenta> = {
     campos: {
         cliente_id: { requerido: true },
         direccion_id: { requerido: true },
-        empresa_id: { requerido: true },
     }
 };
 
@@ -179,7 +180,6 @@ export const metaNuevaVentaClienteNoRegistrado: MetaModelo<NuevaVentaClienteNoRe
     campos: {
         nombre_cliente: { requerido: true, tipo: "texto" },
         nombre_via: { requerido: true, tipo: "texto" },
-        empresa_id: { requerido: true },
     }
 };
 
