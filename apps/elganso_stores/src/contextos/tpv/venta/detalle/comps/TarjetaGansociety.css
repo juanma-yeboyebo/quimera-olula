@@ -1,0 +1,63 @@
+.TarjetaGansociety {
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--color-borde-sutil);
+    border-radius: 8px;
+    background-color: var(--color-superficie-elevada);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    justify-content: space-between;
+
+    /*
+     * El formulario de búsqueda (BuscarTarjetaPuntos) siempre en su propia
+     * fila, a ancho completo — en escritorio, sin esto, se metía apretado
+     * en la misma fila que el código/titular y los botones.
+     */
+    > .BuscarTarjetaPuntos {
+        flex: 1 1 100%;
+    }
+}
+
+.TarjetaGansociety-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    > div {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+    }
+}
+
+.TarjetaGansociety-info label {
+    font-weight: bold;
+}
+
+.TarjetaGansociety-titular {
+    display: flex;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--color-texto-secundario);
+}
+
+.TarjetaGansociety-acciones {
+    display: flex;
+    gap: 0.5rem;
+
+    .BotonCambiar,
+    .BotonEliminar {
+        max-width: 3.5rem;
+        width: 3.5rem;
+        height: 2.75rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .TarjetaGansociety {
+        justify-content: center;
+    }
+}

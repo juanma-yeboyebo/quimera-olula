@@ -80,6 +80,31 @@ interface VentaTpvAPI {
 
 const baseUrl = new Tpv_Urls().VENTA;
 
+// En memoria (no localStorage): codtienda no es una elección del usuario
+// (a diferencia de puntoVentaLocal), es un dato que resuelve el servidor
+// según el agente — cachearlo en localStorage arriesgaría a dejarlo
+// obsoleto durante días si a alguien lo reasignan de tienda. En memoria
+// se resuelve una vez por carga de página y se autolimpia en cada
+// recarga.
+let tiendaActualCache: string | undefined;
+
+export const getTiendaActual = async (): Promise<string | undefined> => {
+  if (tiendaActualCache !== undefined) return tiendaActualCache;
+
+  const { codtienda } = await RestAPI.get<{ codtienda: string | null }>(
+    "/ventas/tienda_actual"
+  );
+  tiendaActualCache = codtienda ?? "";
+  return codtienda ?? undefined;
+};
+
+// Cabecera que enruta las llamadas de esta venta a la BD de la tienda del
+// agente en vez de a central (ver plugin de tenancy del backend). Búsqueda
+// de tarjeta Gansociety y precheck de pedido quedan fuera a propósito:
+// siguen yendo siempre a central.
+const cabecerasTienda = (): Record<string, string> =>
+  tiendaActualCache ? { tenant_id: tiendaActualCache } : {};
+
 const lineaVentaTpvDesdeApi = (l: LineaVentaTpvAPI): LineaVentaTpv => ({
   ...l,
   descripcionArticulo: l.descripcion_articulo,
@@ -111,7 +136,7 @@ export const ventaTpvDesdeAPI = (v: VentaTpvAPI): VentaTpv => ({
 
 export const getVenta: GetVentaTpv = async (id) => {
   return RestAPI.get<{ datos: VentaTpvAPI }>(
-    `${baseUrl}/${id}`).then((respuesta) => {
+    `${baseUrl}/${id}`, undefined, cabecerasTienda()).then((respuesta) => {
       return ventaTpvDesdeAPI(respuesta.datos);
     });
 }
@@ -123,7 +148,7 @@ export const getVentas: GetVentasTpv = async (
 ) => {
   const q = criteriaQuery(filtro, orden, paginacion);
 
-  const respuesta = await RestAPI.get<{ datos: VentaTpvAPI[]; total: number }>(baseUrl + q);
+  const respuesta = await RestAPI.get<{ datos: VentaTpvAPI[]; total: number }>(baseUrl + q, undefined, cabecerasTienda());
   return { datos: respuesta.datos.map(ventaTpvDesdeAPI), total: respuesta.total };
 };
 
@@ -131,7 +156,7 @@ export const getVentas: GetVentasTpv = async (
 // (cada tienda tiene su propio punto de venta) — se manda vacío por
 // compatibilidad de forma, el backend lo ignora.
 export const postVenta: PostVentaTpv = async (venta: NuevaVentaTpv) => {
-  return await RestAPI.post(baseUrl, venta, "Error al crear la venta").then((respuesta) => respuesta.id);
+  return await RestAPI.post(baseUrl, venta, "Error al crear la venta", cabecerasTienda()).then((respuesta) => respuesta.id);
 }
 
 export const patchCambiarCliente: PatchClienteVentaTpv = async (id, cambio) => {
@@ -153,24 +178,24 @@ export const patchCambiarCliente: PatchClienteVentaTpv = async (id, cambio) => {
         telefono: cambio.telefono || null,
       },
     }
-  }, "Error al cambiar cliente de la venta");
+  }, "Error al cambiar cliente de la venta", cabecerasTienda());
 }
 
 export const patchDatosCliente = async (id: string, cambios: CambiosDatosCliente): Promise<void> => {
   await RestAPI.patch(`${baseUrl}/${id}/datos_cliente`, {
     cambios
-  }, "Error al actualizar email/tarjeta de la venta");
+  }, "Error al actualizar email/tarjeta de la venta", cabecerasTienda());
 }
 
 export const patchCambiarDescuento = async (id: string, dto_porcentual: number): Promise<void> => {
   await RestAPI.patch(`${baseUrl}/${id}`, {
     por_descuento: dto_porcentual,
-  }, "Error al cambiar descuento de la venta");
+  }, "Error al cambiar descuento de la venta", cabecerasTienda());
 }
 
 export const getLineas: GetLineasVentaTpv = async (id) =>
   await RestAPI.get<{ datos: LineaVentaTpvAPI[] }>(
-    `${baseUrl}/${id}/lineas`).then((respuesta) => {
+    `${baseUrl}/${id}/lineas`, undefined, cabecerasTienda()).then((respuesta) => {
       return respuesta.datos.map(lineaVentaTpvDesdeApi);
     });
 
@@ -184,7 +209,7 @@ export const postLineaPorBarcode = async (
   const respuesta = await RestAPI.post(`${baseUrl}/${id}/linea_por_barcode`, {
     barcode: linea.barcode,
     cantidad: linea.cantidad,
-  }, "Error al crear línea de venta");
+  }, "Error al crear línea de venta", cabecerasTienda());
   return (respuesta as unknown as { id: string }).id;
 }
 
@@ -204,21 +229,21 @@ export const patchLinea: PatchLinea = async (id, linea) => {
       comision: linea.por_comision,
     },
   }
-  await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, "Error al actualizar línea de venta");
+  await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, payload, "Error al actualizar línea de venta", cabecerasTienda());
 }
 
 export const patchCantidadLinea: PatchCantidadLinea = async (id, linea, cantidad) => {
   await RestAPI.patch(`${baseUrl}/${id}/linea/${linea.id}`, {
     cambios: { cantidad },
-  }, "Error al actualizar cantidad de la línea de venta");
+  }, "Error al actualizar cantidad de la línea de venta", cabecerasTienda());
 }
 
 export const deleteLinea: DeleteLinea = async (id: string, lineaId: string): Promise<void> => {
-  await RestAPI.delete(`${baseUrl}/${id}/linea/${lineaId}`, "Error al borrar línea de venta");
+  await RestAPI.delete(`${baseUrl}/${id}/linea/${lineaId}`, "Error al borrar línea de venta", cabecerasTienda());
 }
 
 export const borrarVenta = async (id: string) => {
-  await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar la venta");
+  await RestAPI.delete(`${baseUrl}/${id}`, "Error al borrar la venta", cabecerasTienda());
 }
 
 export interface TarjetaPuntos {
@@ -227,14 +252,26 @@ export interface TarjetaPuntos {
   email: string;
   telefono: string;
   saldopuntos: number;
+  cifnif: string | null;
+  direccion: string | null;
+  codpostal: string | null;
+  ciudad: string | null;
+  provincia: string | null;
+  deempleado: boolean | null;
+  dtoespecial: boolean | null;
+  dtopor: number | null;
 }
 
 // La tarjeta Gansociety se busca por email o por teléfono (igual que en
-// Eneboo, las dos únicas opciones que ofrece).
+// Eneboo, las dos únicas opciones que ofrece). `codigo` es un caso aparte:
+// releer una tarjeta ya conocida por su código (no una búsqueda del
+// usuario), p.ej. al reactivar "Datos Factura" con una tarjeta ya
+// vinculada a la venta.
 export const buscarTarjetasPuntos = async (
-  criterio: { email?: string; telefono?: string }
+  criterio: { email?: string; telefono?: string; codigo?: string }
 ): Promise<TarjetaPuntos[]> => {
   const q = new URLSearchParams();
+  if (criterio.codigo) q.set("codigo", criterio.codigo);
   if (criterio.email) q.set("email", criterio.email);
   if (criterio.telefono) q.set("telefono", criterio.telefono);
 
@@ -249,19 +286,44 @@ export interface PuntoVentaOpcion {
 }
 
 export interface PrecheckPedido {
-  jornada_abierta: boolean;
   puntos_venta: PuntoVentaOpcion[];
   arqueo_id: string | null;
 }
 
-// Comprobaciones antes de dejar crear un pedido: jornada abierta, puntos de
-// venta disponibles y (si se manda punto_venta_id) arqueo abierto — el
-// backend lo abre solo si no existe. Sin punto_venta_id no se toca arqueo
-// (llamada inicial, solo para saber si hace falta elegir punto de venta).
+// Jornada abierta es un dato de RRHH/central, nunca de la tienda — va en
+// su propia llamada, sin tenant_id (a diferencia de precheck_pedido, que
+// sí lo lleva: puntos de venta y arqueo son de la tienda).
+export const getJornadaAbierta = async (): Promise<boolean> => {
+  const { jornada_abierta } = await RestAPI.get<{ jornada_abierta: boolean }>(
+    "/ventas/jornada_abierta"
+  );
+  return jornada_abierta;
+}
+
+// Puntos de venta disponibles y (si se manda punto_venta_id) arqueo
+// abierto — el backend lo abre solo si no existe. Sin punto_venta_id no
+// se toca arqueo (llamada inicial, solo para saber si hace falta elegir
+// punto de venta).
 export const getPrecheckPedido = async (puntoVentaId?: string): Promise<PrecheckPedido> => {
   const q = puntoVentaId ? `?punto_venta_id=${encodeURIComponent(puntoVentaId)}` : "";
-  return await RestAPI.get<PrecheckPedido>(`/ventas/precheck_pedido${q}`);
+  return await RestAPI.get<PrecheckPedido>(`/ventas/precheck_pedido${q}`, undefined, cabecerasTienda());
 }
+
+// En memoria (no localStorage), mismo motivo que tiendaActualCache: el
+// punto de venta activo se resuelve una vez por carga de página vía
+// precheck_pedido, no se persiste entre sesiones.
+interface PuntoVentaActual {
+  id: string;
+  nombre: string;
+}
+
+let puntoVentaActualCache: PuntoVentaActual | undefined;
+
+export const getPuntoVentaActual = (): PuntoVentaActual | undefined => puntoVentaActualCache;
+
+export const setPuntoVentaActual = (puntoVenta: PuntoVentaActual): void => {
+  puntoVentaActualCache = puntoVenta;
+};
 
 interface PagoVentaTpvAPI {
   id: string;
@@ -290,7 +352,7 @@ const pagoVentaTpvDesdeAPI = (p: PagoVentaTpvAPI): PagoVentaTpv => ({
 
 export const getPagos: GetPagosVentaTpv = async (id) =>
   await RestAPI.get<{ datos: PagoVentaTpvAPI[] }>(
-    `${baseUrl}/${id}/pagos`).then((respuesta) =>
+    `${baseUrl}/${id}/pagos`, undefined, cabecerasTienda()).then((respuesta) =>
       respuesta.datos.map(pagoVentaTpvDesdeAPI)
     );
 
@@ -301,10 +363,10 @@ export const postPago: PostPago = async (id, pago) => {
     forma_pago: pago.formaPago,
     tipo_tarjeta_id: pago.idTipoTarjeta,
   };
-  return await RestAPI.post(`${baseUrl}/${id}/pago`, body, "Error al crear pago de venta")
+  return await RestAPI.post(`${baseUrl}/${id}/pago`, body, "Error al crear pago de venta", cabecerasTienda())
     .then((respuesta) => (respuesta as unknown as { id: string }).id);
 }
 
 export const deletePago: DeletePago = async (id, idPago): Promise<void> => {
-  await RestAPI.delete(`${baseUrl}/${id}/pago/${idPago}`, "Error al borrar pago de venta");
+  await RestAPI.delete(`${baseUrl}/${id}/pago/${idPago}`, "Error al borrar pago de venta", cabecerasTienda());
 }

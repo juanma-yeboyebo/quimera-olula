@@ -2,6 +2,7 @@ import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
 import { Listado } from "@olula/componentes/maestro/Listado.js";
 import { MaestroDetalle } from "@olula/componentes/maestro/MaestroDetalle.tsx";
+import { useEsMovil } from "@olula/componentes/maestro/useEsMovil.ts";
 import { MetaFiltro } from "@olula/componentes/maestro/maestroFiltros/MaestroFiltrosActivoControlado.js";
 import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
@@ -17,6 +18,7 @@ import {
 import { CrearVentaTpv } from "../crear/CrearVentaTpv.tsx";
 import { DetalleVentaTpv } from "../detalle/DetalleVentaTpv.tsx";
 import { VentaTpv } from "../diseño.ts";
+import { getTiendaActual } from "../infraestructura.ts";
 import { TarjetaDocumentoVenta, EstadoDocumento } from "#/ventas/comun/componentes/TarjetaDocumentoVenta.tsx";
 import { colorDeEstado, etiquetaEstado, opcionesEstado } from "./configEstado.tsx";
 import { getMaquina } from "./maquina.ts";
@@ -37,10 +39,14 @@ const campoFiltroEstado: MetaFiltro = {
 };
 
 export const MaestroConDetalleVentaTpv = () => {
+  const esMovil = useEsMovil();
   const { id, criteria } = getUrlParams();
+  // Por fecha/hora, más nuevos arriba — el orden por id por defecto no
+  // refleja bien la cronología real de los pedidos (ids de fuentes
+  // distintas, p.ej. sincronizados vs generados en tienda).
   const criteriaInicial =
     criteria.filtro.length === 0
-      ? { ...criteriaDefecto, filtro: [] }
+      ? { ...criteriaDefecto, filtro: [], orden: ["fecha", "DESC", "hora", "DESC"] }
       : criteria;
 
   const { ctx, emitir } = useMaquina(getMaquina, {
@@ -52,7 +58,12 @@ export const MaestroConDetalleVentaTpv = () => {
   useUrlParams(ctx.ventas.activo, ctx.ventas.criteria);
 
   useEffect(() => {
-    emitir("recarga_de_ventas_solicitada", ctx.ventas.criteria);
+    (async () => {
+      // Se resuelve la tienda del agente antes de la primera carga de
+      // pedidos, para que ya vaya con la cabecera tenant_id correcta.
+      await getTiendaActual();
+      emitir("recarga_de_ventas_solicitada", ctx.ventas.criteria);
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -89,6 +100,7 @@ export const MaestroConDetalleVentaTpv = () => {
               criteria={ctx.ventas.criteria}
               entidades={ctx.ventas.lista}
               totalEntidades={ctx.ventas.total}
+              modoInicial={esMovil ? "tarjetas" : "tabla"}
               seleccionada={ctx.ventas.activo}
               seleccionadas={ctx.seleccionados}
               onMultiSeleccion={(ids) => emitir("seleccionados_cambiados", ids)}

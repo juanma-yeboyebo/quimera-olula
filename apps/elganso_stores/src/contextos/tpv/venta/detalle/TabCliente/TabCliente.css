@@ -27,28 +27,11 @@
     }
 
     quimera-input[nombre="email"] {
-        grid-column: span 6;
-    }
-
-    quimera-input[nombre="tarjeta_puntos_id"] {
-        grid-column: span 5;
-    }
-
-    .TabCliente-accion {
-        grid-column: span 1;
-        display: flex;
-        justify-content: flex-end;
-        align-items: end;
-        margin: 0;
-        min-width: 0;
+        grid-column: 1 / -1;
     }
 }
 
 @media (max-width: 768px) {
-    .VentaTpv .TabCliente quimera-formulario:has(.TabCliente-accion) {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 2.5rem;
-    }
-
     .VentaTpv .TabCliente {
         /*
          * En vez del grid de 2 columnas iguales que fuerza el genérico
@@ -127,15 +110,6 @@
 
         quimera-input[nombre="email"] {
             grid-column: 1 / -1 !important;
-        }
-
-        quimera-input[nombre="tarjeta_puntos_id"] {
-            grid-column: 1 / span 2 !important;
-        }
-
-        .TabCliente-accion {
-            grid-column: 3 / span 1 !important;
-            justify-content: flex-end;
         }
     }
 }
