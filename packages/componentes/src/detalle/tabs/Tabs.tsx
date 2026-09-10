@@ -12,14 +12,15 @@ type HijoTab = React.ReactElement<TabProps> | false | null | undefined;
 interface TabsProps {
   children: HijoTab[];
   className?: string;
+  tabInicial?: number;
 }
 
 const Tab: React.FC<TabProps> = ({ children }) => {
   return <div>{children}</div>;
 };
 
-const Tabs: React.FC<TabsProps> = ({ children, className }) => {
-  const [activeTab, setActiveTab] = React.useState(0);
+const Tabs: React.FC<TabsProps> = ({ children, className, tabInicial = 0 }) => {
+  const [activeTab, setActiveTab] = React.useState(tabInicial);
   const [showArrows, setShowArrows] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
 

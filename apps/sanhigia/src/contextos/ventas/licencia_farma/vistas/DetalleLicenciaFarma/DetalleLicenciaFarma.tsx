@@ -2,7 +2,6 @@ import { Agente } from "#/ventas/comun/componentes/agente.tsx";
 import {
   Detalle,
   QBoton,
-  QDate,
   QInput,
   QModalConfirmacion,
   QSelect,
@@ -108,35 +107,41 @@ export const DetalleLicenciaFarma = ({
               {...licencia.uiProps("tipoLicencia")}
               deshabilitado={!puede("crm.trato.farma")}
             />
-            <QDate
+            <QInput
               label="Fecha de caducidad"
               {...licencia.uiProps("fechaCaducidad")}
               deshabilitado={!puede("crm.trato.farma")}
+              tipo="fecha"
             />
-            <QDate
+            <QInput
               label="Fecha de inicio"
               {...licencia.uiProps("fechaInicio")}
               deshabilitado={!puede("crm.trato.farma")}
+              tipo="fecha"
             />
-            <QDate
+            <QInput
               label="Fecha de fin"
               {...licencia.uiProps("fechaFin")}
               deshabilitado={!puede("crm.trato.farma")}
+              tipo="fecha"
             />
-            <QDate
+            <QInput
               label="Fecha de revisión de datos"
               {...licencia.uiProps("fechaRevisionDatos")}
               // deshabilitado={!puede("crm.trato.farma")}
+              tipo="fecha"
             />
-            <QDate
+            <QInput
               label="Fecha de recepción de acuerdos"
               {...licencia.uiProps("fechaRecepcionAcuerdos")}
               deshabilitado={!puede("crm.trato.farma")}
+              tipo="fecha"
             />
-            <QDate
+            <QInput
               label="Fecha de envío de documentación"
               {...licencia.uiProps("fechaEnvioDocumentacion")}
               deshabilitado={!puede("crm.trato.farma")}
+              tipo="fecha"
             />
             <QSelect
               label="Estado"

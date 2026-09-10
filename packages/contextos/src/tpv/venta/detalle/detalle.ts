@@ -310,8 +310,8 @@ export const emitirVale: ProcesarVentaTpv = async (contexto, payload) => {
         refrescarPagos,
         abiertaOEmitidaContexto,
     ]);
-    await imprimirTicketOFactura(ctx.venta, ctx.pagos.lista);
     await imprimirVale(ctx.venta.codigo);
+    await imprimirTicketOFactura(ctx.venta, ctx.pagos.lista);
     return [ctx, eventos];
 }
 

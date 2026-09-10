@@ -1,26 +1,27 @@
-import { BotonCambiar } from "#/ventas/comun/componentes/BotonCambiar.tsx";
 import { CamposDireccionVenta } from "#/ventas/comun/componentes/CamposDireccionVenta.tsx";
 import { CambioCliente } from "#/ventas/comun/componentes/moleculas/CambioClienteVenta/diseño.ts";
 import { metaCambioClienteNoRegistrado } from "#/ventas/comun/componentes/moleculas/CambioClienteVenta/dominio.ts";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { MetaModelo } from "@olula/lib/dominio.ts";
+import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { HookModelo, useModelo, UiProps } from "@olula/lib/useModelo.ts";
-import { useMemo, useState } from "react";
-import { TarjetaPuntos } from "../../infraestructura.ts";
+import { useMemo } from "react";
 import { CambiosDatosCliente, VentaTpv } from "../../diseño.ts";
-import { BuscarTarjetaPuntos } from "./BuscarTarjetaPuntos.tsx";
 import "./TabCliente.css";
 
+// La tarjeta Gansociety no se toca aquí: se mantiene también en este
+// modelo (aunque no tiene campo propio en el formulario) para que al
+// guardar el email no se pierda el código ya vinculado — ver
+// detalle/comps/TarjetaGansociety.tsx.
 const metaDatosCliente: MetaModelo<CambiosDatosCliente> = {
   campos: {
     email: { tipo: "texto" },
-    tarjeta_puntos_id: { tipo: "texto" },
   },
 };
 
 export interface TabClienteProps {
   venta: HookModelo<VentaTpv>;
-  publicar?: (evento: string, payload?: unknown) => void;
+  publicar?: EmitirEvento;
 }
 
 // Venta TPV de El Ganso: no hay cliente registrado (siempre "Venta PDA"), así
@@ -100,16 +101,6 @@ export const TabCliente = ({
     onGuardarDatosCliente
   );
 
-  const [buscandoTarjeta, setBuscandoTarjeta] = useState(false);
-
-  const onSeleccionarTarjeta = async (tarjeta: TarjetaPuntos) => {
-    setBuscandoTarjeta(false);
-    await publicar("datos_cliente_listo", {
-      email: datosClienteInicial.email,
-      tarjeta_puntos_id: tarjeta.codtarjetapuntos,
-    });
-  };
-
   return (
     <div className="TabCliente">
       <quimera-formulario className="campos-direccion">
@@ -124,27 +115,7 @@ export const TabCliente = ({
           {...uiPropsDatosCliente("email")}
           deshabilitado={!editable}
         />
-        <QInput
-          label="Tarjeta Gansociety"
-          {...uiPropsDatosCliente("tarjeta_puntos_id")}
-          deshabilitado={!editable}
-        />
-        {editable && (
-          <div className="TabCliente-accion">
-            <BotonCambiar
-              titulo="Buscar tarjeta Gansociety"
-              onClick={() => setBuscandoTarjeta(true)}
-            />
-          </div>
-        )}
       </quimera-formulario>
-
-      {buscandoTarjeta && (
-        <BuscarTarjetaPuntos
-          onSeleccionar={onSeleccionarTarjeta}
-          onCerrar={() => setBuscandoTarjeta(false)}
-        />
-      )}
     </div>
   );
 };

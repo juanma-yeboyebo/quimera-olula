@@ -7,27 +7,27 @@
         grid-column: 1 / span 6;
     }
 
-    quimera-date[nombre="fechaCaducidad"] {
+    quimera-input[nombre="fechaCaducidad"] {
         grid-column: 1 / span 4;
     }
 
-    quimera-date[nombre="fechaInicio"] {
+    quimera-input[nombre="fechaInicio"] {
         grid-column: span 4;
     }
 
-    quimera-date[nombre="fechaFin"] {
+    quimera-input[nombre="fechaFin"] {
         grid-column: span 4;
     }
 
-    quimera-date[nombre="fechaRevisionDatos"] {
+    quimera-input[nombre="fechaRevisionDatos"] {
         grid-column: span 4;
     }
 
-    quimera-date[nombre="fechaRecepcionAcuerdos"] {
+    quimera-input[nombre="fechaRecepcionAcuerdos"] {
         grid-column: span 4;
     }
 
-    quimera-date[nombre="fechaEnvioDocumentacion"] {
+    quimera-input[nombre="fechaEnvioDocumentacion"] {
         grid-column: span 4;
     }
 
