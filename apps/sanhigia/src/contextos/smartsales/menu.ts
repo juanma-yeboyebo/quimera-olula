@@ -15,4 +15,5 @@ export const menuSmartsales = {
     "SmartSales/Clientes": { url: "/ss/clientes", regla: "crm.cliente.acceso_clientes" },
     // "SmartSales/Incidencias": { url: "/ss/incidencias" },
     "SmartSales/Incidencias": { url: "/crm/incidencia", regla: "crm.incidencia" },
+    "SmartSales/Motivos de tarea": { url: "/crm/motivo_tarea", regla: "crm.motivo_tarea" },
 };
