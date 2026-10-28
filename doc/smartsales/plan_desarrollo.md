@@ -30,7 +30,7 @@ Puntos en los que el código no coincide con lo que dice la lista y que cambian 
 | # | Lista | Código | Consecuencia |
 |---|---|---|---|
 | 1 | Tipos de tarea: Llamada, Email, Whatsapp, Cita | `ss_tareas.tipo` solo admite `Llamada,Email,Cita` (`principal/tables/ss_tareas.mtd:46`) | Añadir `Whatsapp` al `optionslist` |
-| 2 | PAN4-05 Documentos: "sin cambios en lo básico" | `facturascli.get` no filtra por agente (`facturacion/restapi/facturascli_api.py:18`). Presupuestos filtra por `codagente`/`codagentemkt` pero no por `clientesagente` (`presupuestoscli_api.py:176`). El Jasper genérico (`informes/restapi/flfactinfo_api.py:18`) no controla el acceso | Añadir control de acceso a facturas, presupuestos y PDF |
+| 2 | PAN4-05 Documentos: "sin cambios en lo básico" | `facturascli.get` no filtra por agente (`facturacion/restapi/facturascli_api.py:18`). Presupuestos filtra por `codagente`/`codagentemkt` pero no por `clientesagente` (`presupuestoscli_api.py:176`). El Jasper genérico (`informes/restapi/flfactinfo_api.py:18`) no controla el acceso | Sin cambios de acceso. Falta el PDF de pedidos y facturas (Fase 3) |
 | 3 | PAN4-01: `dame_clientes` ya filtra por agente con `filtro_clientes_x_agente` | Solo filtra por `codagente` principal (`principal/restapi/clientes_api.py:330`) | Usar el `get` de clientes, que sí aplica `add_allowed_filter` con agentes adicionales |
 | 4 | COM-02: las acciones de KPI admiten `codagente` | `dame_kpi_progreso` admite `codAgente` pero **no lo valida** contra `agentes_permitidos`. Sus trimestres son siempre del año en curso, y sin `customDates` da KeyError (`principal/restapi/usuarios_api.py:84-138`) | Validar el agente en el servidor. Admitir el año si Rendimiento debe ver otros años |
 | 5 | PAN10-02: solo falta devolver importes en € | `get_historico_prevision` (`informes/restapi/ss_graficos_api.py:664`) tampoco admite `codagente`, y sus ventas no aplican `incluirenprev` ni series excluidas | Añadir parámetro de agente (validado) y aplicar el criterio de ventas del progreso en la salida en € |
@@ -126,9 +126,9 @@ Bloquea a todas las demás.
 
 **Backend**
 - Acción de resumen de la ficha de cliente (PAN4-02, PAN4-03), con el parámetro de meses para "cliente activo".
-- Control de acceso de facturas, presupuestos y PDF (corrección 2).
+- PDF de documentos (PAN4-05): presupuestos usan el `to_pdf` existente (`sh_presupuestoscli`). Pedidos y facturas, pendientes de saber qué informe Jasper usa el ERP para añadirles `to_pdf`. El control de acceso se queda como está.
 - Mapa de `ss_tratos` con el origen de la campaña (PAN9-01).
-- POST de `ss_tratos` con producto ligado y precio según la tarifa del cliente (PAN9-04).
+- POST de `ss_tratos` con producto ligado; el valor es el PVP del artículo, ya que Sanhigía no tiene precio por cliente (PAN9-04).
 
 **Frontend**
 - Listado de clientes y contactos (PAN4-01), sobre el `get` de clientes.

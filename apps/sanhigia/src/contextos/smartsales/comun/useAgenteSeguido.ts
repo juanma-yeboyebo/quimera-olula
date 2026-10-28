@@ -51,6 +51,7 @@ export const useAgenteSeguido = () => {
     return {
         cargando: datos === null && !error,
         error,
+        usuario: datos?.usuario ?? null,
         agentePropio: datos?.usuario.agente ?? null,
         agenteSeguido: elegido ?? datos?.usuario.agente ?? null,
         agentes,

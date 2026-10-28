@@ -1,12 +1,28 @@
+import { TipoProducto } from "../nueva_tarea/diseño.ts";
+
+const conParametros = (ruta: string, parametros: Record<string, string | null | undefined>) => {
+    const query = new URLSearchParams(
+        Object.entries(parametros).filter((par): par is [string, string] => !!par[1])
+    ).toString();
+    return query ? `${ruta}?${query}` : ruta;
+};
+
 export const rutasSmartsales = {
     hoy: "/ss/hoy",
     tareasAtrasadas: "/ss/hoy/atrasadas",
     agenda: "/ss/mi-agenda",
-    clientes: "/ss/clientes",
+    clientes: "/ss/mis-clientes",
+    fichaCliente: (codCliente: string) => `/ss/mis-clientes/${codCliente}`,
     campanias: "/ss/campanias",
-    nuevoTrato: "/ss/trato/nuevo",
+    tratos: "/ss/mis-tratos",
+    nuevoTrato: "/ss/mi-trato/nuevo",
+    nuevoTratoDesde: (codCliente: string, producto?: { tipo: TipoProducto; codigo: string }) =>
+        conParametros("/ss/mi-trato/nuevo", { cliente: codCliente, [producto?.tipo ?? "producto"]: producto?.codigo }),
     nuevaTarea: "/ss/mi-tarea/nueva",
+    nuevaTareaPara: (codCliente: string, idTrato?: string | null) =>
+        conParametros("/ss/mi-tarea/nueva", { cliente: codCliente, trato: idTrato }),
     nuevoContacto: "/ss/contacto/nuevo",
+    contacto: (codContacto: string) => `/ss/contactosmd/${codContacto}`,
     contactosCursos: "/ss/contactos/cursos/",
     contactosActivos: "/ss/contactos/activos/",
     pedidosOtrosAgentes: "/ss/ventas/pedidos/otrosagentes",

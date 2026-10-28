@@ -61,6 +61,7 @@
     padding-inline: 1rem;
 }
 
+.Hoy .cabecera-tarjeta,
 .Hoy .progreso header {
     display: flex;
     justify-content: space-between;

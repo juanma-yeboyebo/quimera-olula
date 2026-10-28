@@ -13,11 +13,15 @@ export type AgenteAPI = {
 export type UsuarioSmartsales = {
     agente: string;
     superusuario: boolean;
+    tipoTratoFarma: string | null;
+    tipoTratoVentaProducto: string | null;
 };
 
 export type UsuarioSmartsalesAPI = {
     agente: string | null;
     superuser: boolean;
+    tratolicenciafarma: number | string | null;
+    tratoventaproducto: number | string | null;
 };
 
 export type TipoTarea = "Llamada" | "Email" | "Whatsapp" | "Cita";

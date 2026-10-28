@@ -154,7 +154,10 @@ export const Hoy = () => {
                 </section>
 
                 <section className="tarjeta">
-                    <h2>Tratos abiertos</h2>
+                    <header className="cabecera-tarjeta">
+                        <h2>Tratos abiertos</h2>
+                        <Link to={rutasSmartsales.tratos}>Ver todos</Link>
+                    </header>
                     {tratos.length === 0 && <p className="vacio">No hay tratos abiertos</p>}
                     <ul className="tratos">
                         {tratos.map((trato) => (

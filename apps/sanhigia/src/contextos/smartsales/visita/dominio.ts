@@ -73,9 +73,7 @@ export const destinoAlTerminar = (ctx: ContextoVisita): string => {
     const tarea = ctx.tarea;
     if (tarea?.idTrato && ctx.siguientePaso !== "ninguno") return rutasSmartsales.trato(tarea.idTrato);
     if (ctx.generarSiguiente && tarea?.codCliente) {
-        const parametros = new URLSearchParams({ cliente: tarea.codCliente });
-        if (tarea.idTrato && !ctx.tratoCerrado) parametros.set("trato", tarea.idTrato);
-        return `${rutasSmartsales.nuevaTarea}?${parametros}`;
+        return rutasSmartsales.nuevaTareaPara(tarea.codCliente, ctx.tratoCerrado ? null : tarea.idTrato);
     }
     return rutasSmartsales.agenda;
 };
