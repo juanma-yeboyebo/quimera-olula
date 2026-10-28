@@ -29,10 +29,12 @@ export const Visita = () => {
 
     useEffect(() => {
         if (id) emitir("cargar", id, true);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     useEffect(() => {
         if (estado === "TERMINADA" && tarea && !tarea.completada) navigate(destinoAlTerminar(ctx));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [estado]);
 
     if (!tarea) {

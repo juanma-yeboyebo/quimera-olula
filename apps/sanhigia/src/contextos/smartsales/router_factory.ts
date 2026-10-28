@@ -6,6 +6,8 @@ import { NuevoContacto } from "./contacto/vistas/NuevoContacto.tsx";
 import { Hoy } from "./hoy/vistas/Hoy.tsx";
 import { TareasAtrasadas } from "./hoy/vistas/TareasAtrasadas.tsx";
 import { NuevaTarea } from "./nueva_tarea/vistas/NuevaTarea.tsx";
+import { Objetivos } from "./objetivos/vistas/Objetivos.tsx";
+import { Rendimiento } from "./rendimiento/vistas/Rendimiento.tsx";
 import { DetalleTrato } from "./trato/vistas/DetalleTrato.tsx";
 import { NuevoTrato } from "./tratos/vistas/NuevoTrato.tsx";
 import { Tratos } from "./tratos/vistas/Tratos.tsx";
@@ -25,5 +27,7 @@ export class RouterFactorySmartsalesSanhigia {
         "ss/mis-tratos": Tratos,
         "ss/mi-trato/nuevo": NuevoTrato,
         "ss/mi-trato/:id": DetalleTrato,
+        "ss/mi-rendimiento": Rendimiento,
+        "ss/mi-objetivo": Objetivos,
     };
 }

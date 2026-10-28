@@ -10,7 +10,7 @@ import {
     TratoAbiertoAPI,
 } from "./diseño.ts";
 
-const bloqueKpiDesdeAPI = (bloque: BloqueKpiAPI | undefined): BloqueKpi => ({
+export const bloqueKpiDesdeAPI = (bloque: BloqueKpiAPI | undefined): BloqueKpi => ({
     lineas: (bloque?.detalle ?? []).map((linea, indice) => ({
         clave: String(linea.id ?? `${linea.codfamilia ?? ""}-${linea.codsubfamilia ?? ""}-${indice}`),
         etiqueta: linea.etiqueta ?? linea.nombre ?? "",

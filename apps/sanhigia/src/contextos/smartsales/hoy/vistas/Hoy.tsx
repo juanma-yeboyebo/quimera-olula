@@ -115,7 +115,9 @@ export const Hoy = () => {
                     {progreso && (
                         <div className="ventas">
                             <div>
-                                <span className="cifra">{euros.format(progreso.ventas)}</span>
+                                <Link to={rutasSmartsales.rendimiento} className="cifra">
+                                    {euros.format(progreso.ventas)}
+                                </Link>
                                 <span className="secundario">de {euros.format(progreso.objetivo)}</span>
                                 <span className={progreso.incremento < 0 ? "incremento negativo" : "incremento"}>
                                     {progreso.incremento > 0 ? "+" : ""}
@@ -132,7 +134,9 @@ export const Hoy = () => {
                 </section>
 
                 <section className="tarjeta">
-                    <h2>Clientes nuevos por familia</h2>
+                    <h2>
+                        <Link to={rutasSmartsales.objetivos}>Clientes nuevos por familia</Link>
+                    </h2>
                     {progreso && <ListaKpi bloque={progreso.nuevosClientes} textoVacio="Sin objetivos de clientes nuevos en este periodo" />}
                 </section>
 

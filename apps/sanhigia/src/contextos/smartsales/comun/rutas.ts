@@ -32,4 +32,6 @@ export const rutasSmartsales = {
     presupuesto: (id: string) => `/ventas/presupuestos/${id}`,
     pedido: (id: string) => `/ventas/pedidos/${id}`,
     tarea: (id: string) => `/ss/mi-tarea/${id}`,
+    rendimiento: "/ss/mi-rendimiento",
+    objetivos: "/ss/mi-objetivo",
 };

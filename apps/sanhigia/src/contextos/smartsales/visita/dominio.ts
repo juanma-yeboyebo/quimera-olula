@@ -78,7 +78,7 @@ export const destinoAlTerminar = (ctx: ContextoVisita): string => {
     return rutasSmartsales.agenda;
 };
 
-export const cargarProceso: ProcesarVisita = async (ctx, payload) => {
+export const cargarProceso: ProcesarVisita = async (_ctx, payload) => {
     const tarea = await getTareaVisita(String(payload));
     const contactos = tarea.codCliente ? await getContactosCliente(tarea.codCliente) : [];
     return {

@@ -1,6 +1,7 @@
 import { porcentajeConseguido, porcentajeTiempoTranscurrido } from "../../comun/dominio.ts";
 import { IndicadorProgreso } from "../../comun/vistas/IndicadorProgreso.tsx";
 import { BloqueKpi } from "../diseño.ts";
+import "./ListaKpi.css";
 
 type ListaKpiProps = {
     bloque: BloqueKpi;
