@@ -13,16 +13,16 @@
         grid-column: span 4;
     }
 
-    /* Fila 2: Cuenta (6) + Total (3) + Divisa (3) = 12 */
+    /* Fila 2: Cuenta (4) + Total (4) + Divisa (4) = 12 */
     quimera-autocompletar[nombre="cuentaId"] {
-        grid-column: span 6;
+        grid-column: span 4;
     }
 
     quimera-input[nombre="total"] {
-        grid-column: span 3;
+        grid-column: span 4;
     }
 
     quimera-input[nombre="divisaId"] {
-        grid-column: span 3;
+        grid-column: span 4;
     }
 }

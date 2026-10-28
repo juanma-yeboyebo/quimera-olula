@@ -13,11 +13,9 @@ import "./MaestroConDetalleRemesa.css";
 import { getMaquina } from "./maquina.js";
 
 const metaTablaRemesa: MetaTabla<Remesa> = [
-    { id: 'id', cabecera: 'ID' },
     { id: 'fecha', cabecera: 'Fecha', tipo: 'fecha' },
     { id: 'fechaCargo', cabecera: 'F. Cargo', tipo: 'fecha' },
-    { id: 'cuentaId', cabecera: 'Cuenta' },
-    { id: 'descripcionCuenta', cabecera: 'Descripción cuenta' },
+    { id: 'descripcionCuenta', cabecera: 'Cuenta' },
     {
         id: 'estado',
         cabecera: 'Estado',

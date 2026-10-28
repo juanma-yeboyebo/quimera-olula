@@ -24,7 +24,6 @@ export const TabGeneral = ({ form }: TabGeneralProps) => {
                 />
                 <QInput label="Total" {...uiProps("total")} />
                 <QInput label="Divisa" {...uiProps("divisaId")} />
-                <QInput label="Empresa" {...uiProps("empresaId")} />
             </quimera-formulario>
         </div>
     );
