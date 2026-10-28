@@ -1,6 +1,8 @@
 import { Agenda } from "./agenda/vistas/Agenda.tsx";
 import { Clientes } from "./clientes/vistas/Clientes.tsx";
 import { FichaCliente } from "./clientes/vistas/FichaCliente.tsx";
+import { FichaContacto } from "./contacto/vistas/FichaContacto.tsx";
+import { NuevoContacto } from "./contacto/vistas/NuevoContacto.tsx";
 import { Hoy } from "./hoy/vistas/Hoy.tsx";
 import { TareasAtrasadas } from "./hoy/vistas/TareasAtrasadas.tsx";
 import { NuevaTarea } from "./nueva_tarea/vistas/NuevaTarea.tsx";
@@ -18,6 +20,8 @@ export class RouterFactorySmartsalesSanhigia {
         "ss/mi-tarea/:id": Visita,
         "ss/mis-clientes": Clientes,
         "ss/mis-clientes/:codCliente": FichaCliente,
+        "ss/mi-contacto/nuevo": NuevoContacto,
+        "ss/mi-contacto/:codContacto": FichaContacto,
         "ss/mis-tratos": Tratos,
         "ss/mi-trato/nuevo": NuevoTrato,
         "ss/mi-trato/:id": DetalleTrato,

@@ -15,6 +15,8 @@ export type UsuarioSmartsales = {
     superusuario: boolean;
     tipoTratoFarma: string | null;
     tipoTratoVentaProducto: string | null;
+    grupo: string | null;
+    empresa: number | null;
 };
 
 export type UsuarioSmartsalesAPI = {
@@ -22,6 +24,8 @@ export type UsuarioSmartsalesAPI = {
     superuser: boolean;
     tratolicenciafarma: number | string | null;
     tratoventaproducto: number | string | null;
+    group: string | null;
+    company: number | null;
 };
 
 export type TipoTarea = "Llamada" | "Email" | "Whatsapp" | "Cita";

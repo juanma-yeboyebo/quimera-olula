@@ -21,8 +21,8 @@ export const rutasSmartsales = {
     nuevaTarea: "/ss/mi-tarea/nueva",
     nuevaTareaPara: (codCliente: string, idTrato?: string | null) =>
         conParametros("/ss/mi-tarea/nueva", { cliente: codCliente, trato: idTrato }),
-    nuevoContacto: "/ss/contacto/nuevo",
-    contacto: (codContacto: string) => `/ss/contactosmd/${codContacto}`,
+    nuevoContacto: "/ss/mi-contacto/nuevo",
+    contacto: (codContacto: string) => `/ss/mi-contacto/${codContacto}`,
     contactosCursos: "/ss/contactos/cursos/",
     contactosActivos: "/ss/contactos/activos/",
     pedidosOtrosAgentes: "/ss/ventas/pedidos/otrosagentes",

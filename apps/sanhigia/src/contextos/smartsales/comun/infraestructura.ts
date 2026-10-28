@@ -16,6 +16,8 @@ export const getUsuarioSmartsales = async (): Promise<UsuarioSmartsales> => {
         superusuario: !!usuario.superuser,
         tipoTratoFarma: usuario.tratolicenciafarma ? String(usuario.tratolicenciafarma) : null,
         tipoTratoVentaProducto: usuario.tratoventaproducto ? String(usuario.tratoventaproducto) : null,
+        grupo: usuario.group ?? null,
+        empresa: usuario.company ?? null,
     };
 };
 
