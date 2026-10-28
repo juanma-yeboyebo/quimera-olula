@@ -1,0 +1,13 @@
+.SelectorPeriodo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.SelectorPeriodo .trimestres,
+.SelectorPeriodo .fechas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 0.5rem 1rem;
+}
