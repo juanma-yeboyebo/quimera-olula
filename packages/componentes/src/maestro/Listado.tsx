@@ -3,6 +3,7 @@ import { useControlPantalla } from "@olula/lib/controles_pantalla.ts";
 import { ClausulaFiltro, Criteria, Entidad } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { criteriaQueryUrl } from "@olula/lib/infraestructura.ts";
+import { usePreferencia } from "@olula/lib/usePreferencia.ts";
 import { useState } from "react";
 import { QBoton } from "../atomos/qboton.tsx";
 import { QIcono } from "../atomos/qicono.tsx";
@@ -12,6 +13,17 @@ import { QTarjetas } from "../atomos/qtarjetas.tsx";
 import { QTarjetaMetatabla } from "../moleculas/qtarjeta_metatabla.tsx";
 import { SinDatos } from "../SinDatos/SinDatos.tsx";
 import "./Listado.css";
+import { useListadoMovilEnDetalle } from "./contexto_maestro.ts";
+import { SelectorModo } from "./SelectorModo.tsx";
+import { useEsMovil } from "./useEsMovil.ts";
+import { ConfigWidgets } from "./widgets/diseño.ts";
+import { getConteo } from "./widgets/infraestructura.ts";
+import { QPanelWidgets } from "./widgets/QPanelWidgets.tsx";
+import { PersonalizarWidgets } from "./widgets/PersonalizarWidgets.tsx";
+import { useTotalesWidgets } from "./widgets/useTotalesWidgets.ts";
+import { useWidgetsUsuario } from "./widgets/useWidgetsUsuario.ts";
+import { useConfigWidgetsAuto } from "./widgets/useConfigWidgetsAuto.ts";
+import { useEnMaestroPrincipal } from "./contexto_maestro.ts";
 import {
   getMetaFiltroDefecto,
   MaestroFiltrosActivoControlado,
@@ -67,7 +79,11 @@ type ListadoProps<T extends Entidad> = {
   onMultiSeleccion?: (seleccionadas: string[]) => void;
   urlDescarga?: string;
   formatosDescarga?: FormatoDescarga[];
+  /** Totales encima del listado, calculados en el servidor con el filtro activo. */
+  widgets?: ConfigWidgets;
 };
+
+type Densidad = "comoda" | "compacta";
 
 export const Listado = <T extends Entidad>({
   metaTabla,
@@ -86,7 +102,7 @@ export const Listado = <T extends Entidad>({
   totalEntidades,
   seleccionada,
   onSeleccion,
-  modo,
+  modo: modoPantalla,
   modoInicial,
   modosDisponibles,
   mostrarCambioModo,
@@ -99,9 +115,33 @@ export const Listado = <T extends Entidad>({
   onMultiSeleccion,
   urlDescarga,
   formatosDescarga,
+  widgets,
 }: ListadoProps<T>) => {
+  // Sin widgets propios, el maestro principal los ofrece igualmente si su
+  // pantalla tiene un recurso agregable en el servidor (los crea el usuario).
+  const enMaestroPrincipal = useEnMaestroPrincipal();
+  const configAuto = useConfigWidgetsAuto(!widgets && enMaestroPrincipal);
+  const configBase = widgets ?? configAuto;
+  const widgetsUsuario = useWidgetsUsuario(configBase);
+  const configWidgets = configBase && {
+    ...configBase,
+    widgets: widgetsUsuario.widgets,
+  };
+  const { valores: valoresWidgets, series: seriesWidgets, cargando: cargandoWidgets } =
+    useTotalesWidgets(configWidgets, criteria.filtro, totalEntidades);
+  const [personalizandoWidgets, setPersonalizandoWidgets] = useState(false);
+  const [densidad, setDensidad] = usePreferencia<Densidad>(
+    "maestro.densidad",
+    "comoda"
+  );
+  // En móvil, tarjetas si la pantalla no fija el modo (las tablas no caben).
+  const esMovil = useEsMovil();
+  const tarjetasCompactas = useListadoMovilEnDetalle(esMovil);
+  const modo = tarjetasCompactas ? undefined : modoPantalla;
   const [modoEstado, setModoEstado] = useState<Modo>(
-    modo ?? modoInicial ?? "tabla"
+    tarjetasCompactas
+      ? "tarjetas"
+      : (modo ?? modoInicial ?? (esMovil ? "tarjetas" : "tabla"))
   );
   const modoInterno = modo ?? modoEstado;
 
@@ -183,14 +223,6 @@ export const Listado = <T extends Entidad>({
     onModoChanged?.(nuevoModo);
   };
 
-  const siguienteModo = (): Modo | null => {
-    if (!modoEfectivo || modosDisponiblesCalculados.length === 0) return null;
-
-    const indice = modosDisponiblesCalculados.indexOf(modoEfectivo);
-    return modosDisponiblesCalculados[
-      (indice + 1) % modosDisponiblesCalculados.length
-    ];
-  };
 
   const mostrarCambioModoPorDefecto =
     modosDisponiblesCalculados.length > 1 && Boolean(modoEfectivo) && !modo;
@@ -360,7 +392,33 @@ export const Listado = <T extends Entidad>({
   };
 
   return (
-    <div className="Listado">
+    <div className="Listado" data-densidad={tarjetasCompactas ? "compacta" : densidad}
+    >
+      {configWidgets &&
+        (configWidgets.widgets.length > 0 || widgetsUsuario.personalizable) && (
+          <QPanelWidgets
+            widgets={configWidgets.widgets}
+            campos={configWidgets.campos}
+            valores={valoresWidgets}
+            series={seriesWidgets}
+            cargando={cargandoWidgets}
+            onPersonalizar={
+              widgetsUsuario.personalizable
+                ? () => setPersonalizandoWidgets(true)
+                : undefined
+            }
+          />
+        )}
+      {configBase && personalizandoWidgets && (
+        <PersonalizarWidgets
+          config={configBase}
+          widgets={widgetsUsuario.widgets}
+          filtro={criteria.filtro}
+          onGuardar={widgetsUsuario.guardar}
+          onRestaurar={widgetsUsuario.restaurar}
+          onCerrar={() => setPersonalizandoWidgets(false)}
+        />
+      )}
       <div className="listado-cabecera">
         <div className="listado-cabecera-izquierda">
           {mostrarFiltros && (
@@ -368,6 +426,11 @@ export const Listado = <T extends Entidad>({
               metaFiltro={metaFiltroEfectivo}
               filtro={criteria.filtro as ClausulaFiltro[]}
               filtroInicial={criteriaInicial.filtro as ClausulaFiltro[]}
+              contar={
+                configBase
+                  ? (filtro) => getConteo(configBase.recurso, filtro)
+                  : undefined
+              }
               onFiltroChanged={(filtro) => {
                 onCriteriaChanged({
                   ...criteria,
@@ -415,26 +478,27 @@ export const Listado = <T extends Entidad>({
               </span>
             </div>
           )}
-          {mostrarCambioModoFinal && (
+          {mostrarCambioModoFinal && modoEfectivo && (
+            <SelectorModo
+              modos={modosDisponiblesCalculados}
+              modo={modoEfectivo}
+              onCambio={cambiarModo}
+            />
+          )}
+          {modoEfectivo !== "kanban" && !tarjetasCompactas && (
             <div className="cambio-modo">
-              <span
-                className="cambio-modo-icono"
-                onClick={() => {
-                  const nuevoModo = siguienteModo();
-                  if (nuevoModo) cambiarModo(nuevoModo);
-                }}
+              <button
+                type="button"
+                className="cambio-densidad"
+                onClick={() =>
+                  setDensidad(densidad === "comoda" ? "compacta" : "comoda")
+                }
+                aria-pressed={densidad === "compacta"}
+                aria-label="Vista compacta"
+                title="Vista compacta"
               >
-                <QIcono
-                  nombre={
-                    siguienteModo() === "kanban"
-                      ? "kanban"
-                      : siguienteModo() === "tarjetas"
-                        ? "lista"
-                        : "tabla"
-                  }
-                  tamaño="md"
-                />
-              </span>
+                <QIcono nombre="densidad" tamaño="sm" />
+              </button>
             </div>
           )}
         </div>

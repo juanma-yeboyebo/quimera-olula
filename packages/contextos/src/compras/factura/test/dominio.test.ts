@@ -2,7 +2,6 @@ import { facturaVacia } from "#/compras/factura/detalle/detalle.ts";
 import { EstadoExpedicion, Factura } from "#/compras/factura/diseño.ts";
 import {
     estadoExpedicionDesdeApi,
-    facturaReabrible,
     facturaRegistrable,
 } from "#/compras/factura/dominio.ts";
 import { describe, expect, test } from "vitest";
@@ -10,11 +9,6 @@ import { describe, expect, test } from "vitest";
 const conEstado = (estadoExpedicion: EstadoExpedicion): Factura => ({
     ...facturaVacia(),
     estadoExpedicion,
-});
-
-const conAsiento = (asientoId: string | null): Factura => ({
-    ...facturaVacia(),
-    asientoId,
 });
 
 describe("registrar saca la factura de borrador", () => {
@@ -28,21 +22,6 @@ describe("registrar saca la factura de borrador", () => {
 
     test("no se ofrece sin estado, que es la factura sin cargar", () => {
         expect(facturaRegistrable(facturaVacia())).toBe(false);
-    });
-});
-
-describe("reabrir solo aplica a la factura que bloqueó la contabilidad", () => {
-    test("se ofrece cuando hay asiento", () => {
-        expect(facturaReabrible(conAsiento("123"))).toBe(true);
-    });
-
-    test("no se ofrece sin asiento", () => {
-        expect(facturaReabrible(conAsiento(null))).toBe(false);
-    });
-
-    test("no depende del estado de expedición", () => {
-        expect(facturaReabrible({ ...conEstado("BORRADOR"), asientoId: "7" }))
-            .toBe(true);
     });
 });
 

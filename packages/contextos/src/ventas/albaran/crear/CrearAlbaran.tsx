@@ -1,6 +1,7 @@
 import { CamposDireccionVenta } from "#/ventas/comun/componentes/CamposDireccionVenta.tsx";
 import { Cliente } from "#/ventas/comun/componentes/cliente.tsx";
 import { DirCliente } from "#/ventas/comun/componentes/dirCliente.tsx";
+import { EmpresaActual } from "#/comun/componentes/empresaActual.tsx";
 import {
   metaNuevaVentaClienteNoRegistrado,
   nuevaVentaClienteNoRegistradaVacia,
@@ -78,6 +79,9 @@ export const CrearAlbaran = ({
         <quimera-formulario>
           {modoNoRegistrado ? (
             <>
+              <EmpresaActual
+                onChange={(id) => albaranNoRegistrado.uiProps("empresa_id").onChange(id)}
+              />
               <QInput
                 label="Nombre del Cliente"
                 {...albaranNoRegistrado.uiProps("nombre_cliente")}
@@ -91,6 +95,9 @@ export const CrearAlbaran = ({
             </>
           ) : (
             <>
+              <EmpresaActual
+                onChange={(id) => albaranRegistrado.uiProps("empresa_id").onChange(id)}
+              />
               <Cliente
                 {...albaranRegistrado.uiProps("cliente_id", "nombre")}
                 nombre="albaran_cliente_id"

@@ -151,7 +151,6 @@ interface CambiosFacturaApi {
     de_abono?: boolean;
     servicios?: boolean;
     no_generar_asiento?: boolean;
-    editable?: boolean;
 }
 
 interface CambiosLineaFacturaApi {
@@ -274,7 +273,6 @@ const cambiosFacturaAApi = (f: CambiosFactura): CambiosFacturaApi => {
     if (f.deAbono !== undefined) cambios.de_abono = f.deAbono;
     if (f.servicios !== undefined) cambios.servicios = f.servicios;
     if (f.noGenerarAsiento !== undefined) cambios.no_generar_asiento = f.noGenerarAsiento;
-    if (f.editable !== undefined) cambios.editable = f.editable;
     return cambios;
 };
 

@@ -1,5 +1,6 @@
+import { ConfigWidgets } from "@olula/componentes/index.js";
 import { Direccion } from "@olula/lib/diseño.js";
-import { MetaCampo, MetaModelo, plugin } from "@olula/lib/dominio.ts";
+import { formatearFechaDate, formatearMoneda, MetaCampo, MetaModelo, plugin } from "@olula/lib/dominio.ts";
 import { CambioClienteVenta, ClienteVenta, ConTipoArticulo, LineaVenta, ModeloNuevaLinea, NuevaLineaVenta, NuevaVenta, NuevaVentaClienteNoRegistrado, TipoArticuloLinea, Venta } from "./diseño.ts";
 
 export const direccionVacia = (): Direccion => ({
@@ -170,6 +171,7 @@ export const metaNuevaVenta: MetaModelo<NuevaVenta> = {
     campos: {
         cliente_id: { requerido: true },
         direccion_id: { requerido: true },
+        empresa_id: { requerido: true },
     }
 };
 
@@ -181,6 +183,7 @@ export const metaNuevaVentaClienteNoRegistrado: MetaModelo<NuevaVentaClienteNoRe
     campos: {
         nombre_cliente: { requerido: true, tipo: "texto" },
         nombre_via: { requerido: true, tipo: "texto" },
+        empresa_id: { requerido: true },
     }
 };
 
@@ -351,3 +354,40 @@ export const payloadCambioCliente = (cambio: CambioClienteVenta) =>
                 telefono: cambio.telefono || null,
             },
         };
+
+/** Franja de datos clave del detalle de un documento de venta. */
+export const datosClaveDocumentoVenta = (documento: {
+    fecha: Date;
+    nombre_agente?: string;
+    total?: number;
+    divisa_id?: string;
+}) => [
+    { etiqueta: "Fecha", valor: documento.fecha ? formatearFechaDate(new Date(documento.fecha)) : "—" },
+    { etiqueta: "Agente", valor: documento.nombre_agente || "—" },
+    { etiqueta: "Total", valor: formatearMoneda(documento.total ?? 0, documento.divisa_id || "EUR") },
+];
+
+/** Medidas de un documento de venta que se ofrecen al personalizar widgets. */
+const camposWidgetsVenta: ConfigWidgets["campos"] = [
+    { id: "total", etiqueta: "Total", formato: "moneda" },
+    { id: "neto", etiqueta: "Base imponible", formato: "moneda" },
+    { id: "total_iva", etiqueta: "IVA", formato: "moneda" },
+    { id: "total_irpf", etiqueta: "IRPF", formato: "moneda" },
+    { id: "total_recargo", etiqueta: "Recargo de equivalencia", formato: "moneda" },
+];
+
+/** Widgets por defecto de un maestro de documentos de venta. */
+export const widgetsDocumentoVenta = (
+    recurso: string,
+    textos: { plural: string; total: string; medio: string }
+): ConfigWidgets => ({
+    recurso,
+    titulo: textos.plural,
+    campos: camposWidgetsVenta,
+    widgets: [
+        { id: "documentos", titulo: textos.plural, operacion: "conteo", formato: "numero", pie: "Recuento" },
+        { id: "total", titulo: textos.total, operacion: "suma", campo: "total", formato: "moneda", pie: "Suma del total" },
+        { id: "neto", titulo: "Base imponible", operacion: "suma", campo: "neto", formato: "moneda", pie: "Suma de la base" },
+        { id: "medio", titulo: textos.medio, operacion: "promedio", campo: "total", formato: "moneda", pie: "Media del total" },
+    ],
+});

@@ -5,6 +5,7 @@
 
 class Empresa_Urls {
     readonly EMPRESA = `/empresa/empresa`;
+    readonly EMPRESAS_BASICAS = `/empresa/empresa/basicas`;
     readonly CUENTAS_BANCARIAS = `/empresa/cuentas_bancarias`;
 }
 

@@ -1,3 +1,4 @@
+import { EstadoEtiqueta } from "#/comun/diseño.ts";
 import { MetaModelo } from "@olula/lib/dominio.ts";
 import { articuloDeLineaValido, getTipoArticulo } from "../comun/dominio.ts";
 import {
@@ -84,3 +85,8 @@ export const camposConCambiosServidor = [
     'tipoIrpf',
     'grupoIvaProductoId',
 ] as const satisfies readonly (keyof NuevaLineaAlbaran)[];
+
+export const etiquetaEstadoAlbaran = (albaran: Albaran): EstadoEtiqueta =>
+    albaranFacturado(albaran)
+        ? { texto: "Facturado", tono: "completado" }
+        : { texto: "Pendiente", tono: "pendiente" };

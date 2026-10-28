@@ -1,3 +1,4 @@
+import { EstadoEtiqueta } from "#/comun/diseño.ts";
 import { MetaModelo } from "@olula/lib/dominio.ts";
 import { articuloDeLineaValido, getTipoArticulo } from "../comun/dominio.ts";
 import {
@@ -36,13 +37,6 @@ export const descripcionEstadoExpedicion: Record<EstadoExpedicion, string> = {
 /** Solo se registra el borrador: registrar es irreversible. */
 export const facturaRegistrable = (factura: Factura): boolean =>
     factura.estadoExpedicion === "BORRADOR";
-
-/**
- * Reabrir solo tiene sentido en la factura que bloqueó la contabilidad: es el
- * asiento lo que pone `editable` a false, no el usuario.
- */
-export const facturaReabrible = (factura: Factura): boolean =>
-    factura.asientoId !== null;
 
 export const descripcionOrigenFactura = (factura: Factura): string =>
     factura.automatica ? "Desde albaranes" : "Manual";
@@ -120,3 +114,8 @@ export const camposConCambiosServidor = [
     'tipoIrpf',
     'grupoIvaProductoId',
 ] as const satisfies readonly (keyof NuevaLineaFactura)[];
+
+export const etiquetaEstadoFactura = (factura: Factura): EstadoEtiqueta => ({
+    texto: descripcionEstadoExpedicion[factura.estadoExpedicion],
+    tono: factura.estadoExpedicion === "REGISTRADA" ? "completado" : "borrador",
+});

@@ -1,5 +1,5 @@
 import { TarjetaDocumentoVenta } from "#/ventas/comun/componentes/TarjetaDocumentoVenta.tsx";
-import { aprobado } from "../dominio.ts";
+import { aprobado, etiquetaEstadoPresupuesto } from "../dominio.ts";
 import { Presupuesto } from "./diseño.ts";
 
 export const TarjetaMaestroPresupuesto = (presupuesto: Presupuesto) => (
@@ -12,5 +12,6 @@ export const TarjetaMaestroPresupuesto = (presupuesto: Presupuesto) => (
     tasaConversion={presupuesto.tasa_conversion}
     totalDivisaEmpresa={presupuesto.total_divisa_empresa}
     estado={aprobado(presupuesto) ? "cerrado" : "pendiente"}
+    etiquetaEstado={etiquetaEstadoPresupuesto(presupuesto)}
   />
 );

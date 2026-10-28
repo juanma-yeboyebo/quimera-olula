@@ -9,12 +9,17 @@ export interface ElementoMenuBase {
 
 export interface ElementoMenuPadre extends ElementoMenuBase {
     subelementos: ElementoMenuHijo[];
+    /** Título visual bajo el que se agrupa en el menú (Comercial, Operaciones…).
+     *  No es un nivel: solo ordena y rotula los grupos. */
+    area?: string;
 }
 
 export interface ElementoMenuHijo extends ElementoMenuBase {
     url: string;
     descripcionIA?: string;
     parametrosIA?: Record<string, string>;
+    /** Otras palabras con las que se busca la pantalla (búsqueda rápida). */
+    alias?: string[];
 }
 
 export type ElementoMenu = ElementoMenuPadre | ElementoMenuHijo;

@@ -24,3 +24,11 @@ export const ASISTENTE_ABRIR_HILO_EVENT = "quimera:asistente-abrir-hilo";
 export const solicitarAbrirHiloAsistente = (threadId: string) => {
     window.dispatchEvent(new CustomEvent<string>(ASISTENTE_ABRIR_HILO_EVENT, { detail: threadId }));
 };
+
+/** Pide al panel del asistente que se abra y envíe esta pregunta (p. ej. desde la
+ * búsqueda rápida de la cabecera: "Preguntar a Olula"). */
+export const ASISTENTE_PREGUNTAR_EVENT = "quimera:asistente-preguntar";
+
+export const solicitarPreguntaAsistente = (pregunta: string) => {
+    window.dispatchEvent(new CustomEvent<string>(ASISTENTE_PREGUNTAR_EVENT, { detail: pregunta }));
+};

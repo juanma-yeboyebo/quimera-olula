@@ -10,7 +10,6 @@ import {
     onLineaBorrada,
     onLineaCambiada,
     onLineaCreada,
-    reabrirFacturaProceso,
     refrescarFactura,
     registrarFacturaProceso,
 } from "./detalle.ts";
@@ -46,7 +45,6 @@ export const getMaquina: () => Maquina<EstadoDetalleFactura, ContextoDetalleFact
             cambio_divisa_solicitado: "CAMBIANDO_DIVISA",
 
             registro_solicitado: "REGISTRANDO",
-            reapertura_solicitada: [reabrirFacturaProceso],
 
             cambio_rectificativa_solicitado: "CAMBIANDO_RECTIFICATIVA",
 

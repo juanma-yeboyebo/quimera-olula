@@ -2,6 +2,7 @@ import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { ClienteVentaNoRegistrado } from "@olula/ctx/ventas/comun/componentes/moleculas/ClienteVenta/ClienteVentaNoRegistrado.tsx";
 import { ClienteVentaRegistrado } from "@olula/ctx/ventas/comun/componentes/moleculas/ClienteVenta/ClienteVentaRegistrado.tsx";
+import { EmpresaActual } from "#/comun/componentes/empresaActual.tsx";
 import { ContextoError } from "@olula/lib/contexto.ts";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { HookModelo, useModelo } from "@olula/lib/useModelo.ts";
@@ -129,9 +130,21 @@ const FormAltaFactura = ({
       </div>
       <quimera-formulario>
         {modoNoRegistrado ? (
-          <ClienteVentaNoRegistrado cliente={facturaNoRegistrada} />
+          <>
+            <EmpresaActual
+              nombre="idEmpresa"
+              onChange={(id) => facturaNoRegistrada.uiProps("idEmpresa").onChange(id)}
+            />
+            <ClienteVentaNoRegistrado cliente={facturaNoRegistrada} />
+          </>
         ) : (
-          <ClienteVentaRegistrado cliente={facturaRegistrada} />
+          <>
+            <EmpresaActual
+              nombre="idEmpresa"
+              onChange={(id) => facturaRegistrada.uiProps("idEmpresa").onChange(id)}
+            />
+            <ClienteVentaRegistrado cliente={facturaRegistrada} />
+          </>
         )}
       </quimera-formulario>
       <div className="botones">

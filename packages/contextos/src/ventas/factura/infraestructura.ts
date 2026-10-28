@@ -43,6 +43,7 @@ interface FacturaAPI {
     automatica: boolean;
     servicios: boolean;
     rectificativa_id: string | null;
+    asiento_id: string | null;
     grupo_iva_negocio_id: string;
     por_comision?: number;
     por_comision_agente?: number | null;

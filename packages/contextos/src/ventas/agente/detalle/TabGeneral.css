@@ -1,4 +1,4 @@
-.TabGeneral {
+.Agente .TabGeneral {
 
     quimera-input[nombre="nombre_pila"] {
         grid-column: span 4;

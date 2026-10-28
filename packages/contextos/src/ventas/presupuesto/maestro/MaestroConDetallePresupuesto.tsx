@@ -1,3 +1,4 @@
+import { EtiquetaEstado } from "#/comun/componentes/etiqueta_estado/EtiquetaEstado.tsx";
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
 import { MetaTabla } from "@olula/componentes/index.js";
@@ -18,7 +19,6 @@ import {
 } from "../../comun/filtros.tsx";
 import { CrearPresupuesto } from "../crear/CrearPresupuesto.tsx";
 import { DetallePresupuesto } from "../detalle/DetallePresupuesto.tsx";
-import { EstadoPresupuesto } from "../vistas/EstadoPresupuesto.tsx";
 import {
   metaTablaPresupuesto as metaTablaBase,
   Presupuesto,
@@ -26,7 +26,7 @@ import {
 import "./MaestroConDetallePresupuesto.css";
 import { getMaquina } from "./maquina.ts";
 import { TarjetaMaestroPresupuesto } from "./TarjetaMaestroPresupuesto.tsx";
-import { aprobado } from "../dominio.ts";
+import { etiquetaEstadoPresupuesto, widgetsPresupuesto } from "../dominio.ts";
 
 const SIN_APROBAR = "true";
 const APROBADO = "false";
@@ -72,9 +72,9 @@ export const MaestroConDetallePresupuesto = () => {
   const metaTablaPresupuesto = [
     {
       id: "estado",
-      cabecera: "",
+      cabecera: "Estado",
       render: (presupuesto: Presupuesto) => (
-        <EstadoPresupuesto aprobado={aprobado(presupuesto)} />
+        <EtiquetaEstado {...etiquetaEstadoPresupuesto(presupuesto)} />
       ),
     },
     ...metaTablaBase,
@@ -98,6 +98,7 @@ export const MaestroConDetallePresupuesto = () => {
             <Listado<Presupuesto>
               metaTabla={metaTablaPresupuesto}
               metaFiltro={metaFiltroPresupuesto}
+              widgets={widgetsPresupuesto}
               tarjeta={TarjetaMaestroPresupuesto}
               criteria={ctx.presupuestos.criteria}
               entidades={ctx.presupuestos.lista}
