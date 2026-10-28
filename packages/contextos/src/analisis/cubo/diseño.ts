@@ -91,8 +91,25 @@ export type ResultadoPivot = {
     truncado: boolean;
 };
 
-export type GetCatalogo = () => Promise<Cubo[]>;
+export type ValoresMedidas = Record<string, number | null>;
+
+export type Nodo = {
+    ruta: Miembro[];
+    valores: Record<string, ValoresMedidas>;
+    hijos: Nodo[] | null;
+    expandido: boolean;
+};
+
+export type Arbol = {
+    total: Record<string, ValoresMedidas>;
+    nodos: Nodo[];
+    columnas: Miembro[][];
+};
+
+export type GetCatalogo =() => Promise<Cubo[]>;
 
 export type GetMiembros = (cuboId: string, nivel: string, buscar?: string) => Promise<Miembros>;
 
 export type PostPivot = (cuboId: string, peticion: PeticionPivot) => Promise<ResultadoPivot>;
+
+export type ExportarPivot = (cuboId: string, peticion: PeticionPivot) => Promise<Blob>;

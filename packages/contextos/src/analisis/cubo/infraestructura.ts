@@ -5,11 +5,13 @@ import {
     Cubo,
     Dimension,
     EstadoCarga,
+    ExportarPivot,
     FilaPivot,
     GetCatalogo,
     GetMiembros,
     Medida,
     Miembro,
+    PeticionPivot,
     PostPivot,
     TipoNivel,
 } from "./diseño.ts";
@@ -97,20 +99,25 @@ export const getMiembros: GetMiembros = async (cuboId, nivel, buscar) => {
     return { miembros: respuesta.datos, hayMas: respuesta.hay_mas };
 };
 
+const peticionApi = (peticion: PeticionPivot): PeticionPivotApi => ({
+    filas: peticion.filas,
+    columnas: peticion.columnas,
+    medidas: peticion.medidas,
+    filtros: Object.fromEntries(
+        Object.entries(peticion.filtros).map(([nivel, codigos]) => [nivel, codigos.map(codigoApi)])
+    ),
+    orden: peticion.orden,
+    top: peticion.top,
+    excluir_ceros: peticion.excluirCeros,
+});
+
 export const postPivot: PostPivot = async (cuboId, peticion) => {
     const respuesta = await RestAPI.query<PeticionPivotApi, RespuestaPivotApi>(
         `${baseUrl}/${cuboId}/pivot`,
-        {
-            filas: peticion.filas,
-            columnas: peticion.columnas,
-            medidas: peticion.medidas,
-            filtros: Object.fromEntries(
-                Object.entries(peticion.filtros).map(([nivel, codigos]) => [nivel, codigos.map(codigoApi)])
-            ),
-            orden: peticion.orden,
-            top: peticion.top,
-            excluir_ceros: peticion.excluirCeros,
-        }
+        peticionApi(peticion)
     );
     return { filas: respuesta.datos, truncado: respuesta.truncado };
 };
+
+export const exportarPivot: ExportarPivot = (cuboId, peticion) =>
+    RestAPI.postBlob(`${baseUrl}/${cuboId}/exportar`, peticionApi(peticion), "Error al exportar a Excel");
