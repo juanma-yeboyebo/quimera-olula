@@ -1,9 +1,15 @@
 export const rutasSmartsales = {
     hoy: "/ss/hoy",
-    agenda: "/ss/tareas",
+    tareasAtrasadas: "/ss/hoy/atrasadas",
+    agenda: "/ss/mi-agenda",
     clientes: "/ss/clientes",
     campanias: "/ss/campanias",
     nuevoTrato: "/ss/trato/nuevo",
     nuevaTarea: "/ss/tarea/nueva",
     nuevoContacto: "/ss/contacto/nuevo",
+    contactosCursos: "/ss/contactos/cursos/",
+    contactosActivos: "/ss/contactos/activos/",
+    pedidosOtrosAgentes: "/ss/ventas/pedidos/otrosagentes",
+    trato: (id: string) => `/ss/trato/${id}`,
+    tarea: (id: string) => `/ss/tarea/${id}`,
 };

@@ -16,7 +16,7 @@ const fechaLocal = (iso: string): Date => {
     return new Date(año, mes - 1, dia);
 };
 
-const fechaIso = (fecha: Date): string =>
+export const fechaIso = (fecha: Date): string =>
     [
         fecha.getFullYear(),
         String(fecha.getMonth() + 1).padStart(2, "0"),

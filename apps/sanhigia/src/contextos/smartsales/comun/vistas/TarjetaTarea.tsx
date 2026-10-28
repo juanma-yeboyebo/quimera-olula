@@ -1,12 +1,13 @@
 import { QEtiqueta } from "@olula/componentes/atomos/qetiqueta.tsx";
+import { Link } from "react-router";
 import { Tarea } from "../diseño.ts";
 import { estadoTarea, textoTipoTarea } from "../dominio.ts";
+import { rutasSmartsales } from "../rutas.ts";
 import "./TarjetaTarea.css";
 
 type TarjetaTareaProps = {
     tarea: Tarea;
     ahora?: Date;
-    onClick?: (tarea: Tarea) => void;
 };
 
 const textoEstado = {
@@ -14,17 +15,12 @@ const textoEstado = {
     atrasada: "Atrasada",
 } as const;
 
-export const TarjetaTarea = ({ tarea, ahora, onClick }: TarjetaTareaProps) => {
+export const TarjetaTarea = ({ tarea, ahora }: TarjetaTareaProps) => {
     const estado = estadoTarea(tarea, ahora);
     const interlocutores = [tarea.nombreCliente, tarea.nombreContacto].filter(Boolean).join(" · ");
 
     return (
-        <article
-            className={`TarjetaTarea ${estado ?? ""}`}
-            onClick={onClick ? () => onClick(tarea) : undefined}
-            role={onClick ? "button" : undefined}
-            tabIndex={onClick ? 0 : undefined}
-        >
+        <Link to={rutasSmartsales.tarea(tarea.id)} className={`TarjetaTarea ${estado ?? ""}`}>
             <time className="hora">{tarea.hora?.slice(0, 5) ?? "—"}</time>
             <div className="contenido">
                 <strong className="interlocutores">{interlocutores || tarea.titulo}</strong>
@@ -38,6 +34,6 @@ export const TarjetaTarea = ({ tarea, ahora, onClick }: TarjetaTareaProps) => {
                     </QEtiqueta>
                 )}
             </div>
-        </article>
+        </Link>
     );
 };
