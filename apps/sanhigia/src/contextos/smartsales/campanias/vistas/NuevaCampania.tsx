@@ -4,7 +4,6 @@ import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 import { QTextArea } from "@olula/componentes/atomos/qtextarea.tsx";
 import { QAutocompletar } from "@olula/componentes/moleculas/qautocompletar.tsx";
-import { QEtiqueta } from "@olula/componentes/atomos/qetiqueta.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.js";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -12,9 +11,10 @@ import { rutasSmartsales } from "../../comun/rutas.ts";
 import { useAgenteSeguido } from "../../comun/useAgenteSeguido.ts";
 import { EtiquetaAfinidad } from "../../comun/vistas/EtiquetaAfinidad.tsx";
 import { LayoutSmartsales } from "../../comun/vistas/LayoutSmartsales.tsx";
+import { ListaArticulos } from "../../comun/vistas/ListaArticulos.tsx";
 import { SelectorAgente } from "../../comun/vistas/SelectorAgente.tsx";
 import { buscarProductos } from "../../nueva_tarea/infraestructura.ts";
-import { FormularioCampania, ProductoCampania, TipoCampania } from "../diseño.ts";
+import { FormularioCampania, TipoCampania } from "../diseño.ts";
 import { contextoInicial, textoTipoCampania, tipoProductoDe } from "../dominio.ts";
 import { getMaquina } from "../maquina.ts";
 import "./Campanias.css";
@@ -29,48 +29,6 @@ const Errores = ({ errores }: { errores: string[] }) =>
             ))}
         </ul>
     ) : null;
-
-type ListaArticulosProps = {
-    label: string;
-    nombre: string;
-    articulos: ProductoCampania[];
-    onChange: (articulos: ProductoCampania[]) => void;
-};
-
-const ListaArticulos = ({ label, nombre, articulos, onChange }: ListaArticulosProps) => (
-    <>
-        <QAutocompletar
-            label={label}
-            nombre={nombre}
-            opcional
-            valor=""
-            obtenerOpciones={async (texto) =>
-                (await buscarProductos("articulo", texto))
-                    .filter((p) => !articulos.some((a) => a.codigo === p.codigo))
-                    .map((p) => ({ valor: p.codigo, descripcion: p.descripcion }))
-            }
-            onChange={(opcion) => opcion && onChange([...articulos, { codigo: opcion.valor, descripcion: opcion.descripcion }])}
-        />
-        {articulos.length > 0 && (
-            <ul className="productos">
-                {articulos.map((articulo) => (
-                    <li key={articulo.codigo}>
-                        <QEtiqueta variante="neutro">
-                            {articulo.descripcion}
-                            <button
-                                type="button"
-                                aria-label={`Quitar ${articulo.descripcion}`}
-                                onClick={() => onChange(articulos.filter((a) => a.codigo !== articulo.codigo))}
-                            >
-                                ×
-                            </button>
-                        </QEtiqueta>
-                    </li>
-                ))}
-            </ul>
-        )}
-    </>
-);
 
 export const NuevaCampania = () => {
     const navigate = useNavigate();

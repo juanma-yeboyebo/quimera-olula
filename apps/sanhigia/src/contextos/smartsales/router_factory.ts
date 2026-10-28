@@ -10,6 +10,8 @@ import { Hoy } from "./hoy/vistas/Hoy.tsx";
 import { TareasAtrasadas } from "./hoy/vistas/TareasAtrasadas.tsx";
 import { NuevaTarea } from "./nueva_tarea/vistas/NuevaTarea.tsx";
 import { Objetivos } from "./objetivos/vistas/Objetivos.tsx";
+import { FiltrosProspeccion } from "./prospeccion/vistas/FiltrosProspeccion.tsx";
+import { MapaClientes } from "./prospeccion/vistas/MapaClientes.tsx";
 import { Rendimiento } from "./rendimiento/vistas/Rendimiento.tsx";
 import { DetalleTrato } from "./trato/vistas/DetalleTrato.tsx";
 import { NuevoTrato } from "./tratos/vistas/NuevoTrato.tsx";
@@ -35,5 +37,7 @@ export class RouterFactorySmartsalesSanhigia {
         "ss/mis-campanias": Campanias,
         "ss/mis-campanias/nueva": NuevaCampania,
         "ss/mis-campanias/:id": DetalleCampania,
+        "ss/mapa": MapaClientes,
+        "ss/prospeccion": FiltrosProspeccion,
     };
 }

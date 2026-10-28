@@ -36,9 +36,13 @@ export const Clientes = () => {
             <div className="Clientes">
                 <header>
                     <h1>Clientes</h1>
-                    {pestaña === "contactos" && (
+                    {pestaña === "contactos" ? (
                         <QBoton enlace={rutasSmartsales.nuevoContacto} tamaño="pequeño">
                             + Nuevo contacto
+                        </QBoton>
+                    ) : (
+                        <QBoton enlace={rutasSmartsales.mapa} variante="borde" tamaño="pequeño">
+                            Mapa
                         </QBoton>
                     )}
                 </header>

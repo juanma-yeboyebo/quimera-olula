@@ -36,4 +36,6 @@ export const rutasSmartsales = {
     tarea: (id: string) => `/ss/mi-tarea/${id}`,
     rendimiento: "/ss/mi-rendimiento",
     objetivos: "/ss/mi-objetivo",
+    mapa: "/ss/mapa",
+    prospeccion: "/ss/prospeccion",
 };

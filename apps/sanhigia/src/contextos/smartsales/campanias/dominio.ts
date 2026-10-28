@@ -1,6 +1,5 @@
 import { ProcesarContexto } from "@olula/lib/diseño.ts";
 import { fechaIso } from "../comun/dominio.ts";
-import { Posicion } from "../comun/geolocalizacion.ts";
 import {
     CampaniaAPI,
     CampaniaLista,
@@ -149,15 +148,6 @@ export const trabajados = (clientes: ClienteCampania[]) => clientes.filter(traba
 
 export const conVentas = (clientes: ClienteCampania[]) =>
     clientes.filter((c) => c.ventasCampania > 0).sort((a, b) => b.ventasCampania - a.ventasCampania);
-
-export const distanciaKm = (desde: Posicion, latitud: number | null, longitud: number | null): number | null => {
-    if (latitud === null || longitud === null) return null;
-    const radianes = (grados: number) => (grados * Math.PI) / 180;
-    const dLat = radianes(latitud - desde.latitud);
-    const dLon = radianes(longitud - desde.longitud);
-    const a = Math.sin(dLat / 2) ** 2 + Math.cos(radianes(desde.latitud)) * Math.cos(radianes(latitud)) * Math.sin(dLon / 2) ** 2;
-    return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-};
 
 export const cambiarProceso: ProcesarNuevaCampania = async (ctx, payload) => ({
     ...ctx,

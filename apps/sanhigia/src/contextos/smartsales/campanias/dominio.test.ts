@@ -1,8 +1,8 @@
+import { distanciaKm } from "../comun/geolocalizacion.ts";
 import { ClienteCampania } from "./diseño.ts";
 import {
     campaniaParaAPI,
     conVentas,
-    distanciaKm,
     erroresCampania,
     formularioInicial,
     recomendados,

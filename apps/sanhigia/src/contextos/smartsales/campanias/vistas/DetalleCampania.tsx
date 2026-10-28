@@ -3,13 +3,13 @@ import { ContextoError } from "@olula/lib/contexto.ts";
 import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import { porcentajeConseguido } from "../../comun/dominio.ts";
-import { Posicion, posicionActual } from "../../comun/geolocalizacion.ts";
+import { distanciaKm, Posicion, posicionActual } from "../../comun/geolocalizacion.ts";
 import { rutasSmartsales } from "../../comun/rutas.ts";
 import { EtiquetaAfinidad } from "../../comun/vistas/EtiquetaAfinidad.tsx";
 import { IndicadorProgreso } from "../../comun/vistas/IndicadorProgreso.tsx";
 import { LayoutSmartsales } from "../../comun/vistas/LayoutSmartsales.tsx";
 import { ClienteCampania, ResumenCampania } from "../diseño.ts";
-import { conVentas, distanciaKm, recomendados, textoTipoCampania, totalesCampania, trabajados } from "../dominio.ts";
+import { conVentas, recomendados, textoTipoCampania, totalesCampania, trabajados } from "../dominio.ts";
 import { getResumenCampania } from "../infraestructura.ts";
 import "./Campanias.css";
 

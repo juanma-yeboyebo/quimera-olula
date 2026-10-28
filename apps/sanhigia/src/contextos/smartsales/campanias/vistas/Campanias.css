@@ -41,25 +41,13 @@
 
 .Campanias .lista-campanias,
 .Campanias .lista-clientes,
-.Campanias .lista,
-.Campanias .productos {
+.Campanias .lista {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     margin: 0;
     padding: 0;
     list-style: none;
-}
-
-.Campanias .productos {
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-
-.Campanias .productos button {
-    border: none;
-    background: none;
-    cursor: pointer;
 }
 
 .Campanias .lista li,
