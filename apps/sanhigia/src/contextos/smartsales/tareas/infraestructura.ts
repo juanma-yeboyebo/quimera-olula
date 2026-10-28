@@ -60,3 +60,18 @@ export const getTareasCompletadas = async (agente: string | null, limite = 30) =
 
     return respuesta.data.map(tareaDesdeAPI);
 };
+
+export const getTareasTrato = async (idTrato: string) => {
+    const respuesta = await LegacyAPI.get<{ data: TareaAPI[] }>(
+        legacyUrl(baseUrl, {
+            params: {
+                filter: { and: [["idtrato", "eq", Number(idTrato)]] },
+                fields: campos,
+                order: { field: "fecha", direction: "ASC" },
+                page: { limit: 100 },
+            },
+        })
+    );
+
+    return respuesta.data.map(tareaDesdeAPI);
+};

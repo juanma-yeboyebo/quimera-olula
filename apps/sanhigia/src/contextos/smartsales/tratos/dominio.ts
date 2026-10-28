@@ -1,4 +1,12 @@
-import { EstadoTratoFiltro, FiltrosTratos, FormularioTrato, NuevoTratoAPI, OrigenTrato, TratoListaAPI } from "./diseño.ts";
+import {
+    EstadoTratoFiltro,
+    FamiliaTrato,
+    FiltrosTratos,
+    FormularioTrato,
+    NuevoTratoAPI,
+    OrigenTrato,
+    TratoListaAPI,
+} from "./diseño.ts";
 
 export const CUENTA_CAMPANIAS_COMERCIAL = "comercial";
 
@@ -44,6 +52,20 @@ export const erroresTrato = (formulario: FormularioTrato): string[] =>
         formulario.valor < 0 && "El valor no puede ser negativo",
     ].filter((e): e is string => !!e);
 
+export const familiasATexto = (familias: FamiliaTrato[]) => familias.map((familia) => JSON.stringify(familia)).join(";");
+
+export const familiasDesdeTexto = (texto: string | null): FamiliaTrato[] =>
+    (texto ?? "")
+        .split(";")
+        .filter(Boolean)
+        .flatMap((familia) => {
+            try {
+                return [JSON.parse(familia) as FamiliaTrato];
+            } catch {
+                return [];
+            }
+        });
+
 export const tratoParaAPI = (formulario: FormularioTrato): NuevoTratoAPI => {
     const producto = formulario.producto;
     return {
@@ -51,7 +73,7 @@ export const tratoParaAPI = (formulario: FormularioTrato): NuevoTratoAPI => {
         codcliente: formulario.cliente!.codigo,
         idtipotrato: formulario.idTipoTrato ? Number(formulario.idTipoTrato) : null,
         valor: formulario.valor,
-        familias: formulario.familias.map((familia) => JSON.stringify(familia)).join(";"),
+        familias: familiasATexto(formulario.familias),
         referencia: producto?.tipo === "articulo" ? producto.codigo : null,
         codfamilia: producto?.tipo === "familia" ? producto.codigo : null,
         codsubfamilia: producto?.tipo === "subfamilia" ? producto.codigo : null,

@@ -77,7 +77,7 @@ describe("finalizacionParaAPI", () => {
 
 describe("destinoAlTerminar", () => {
     test("presupuesto o pedido llevan al trato", () => {
-        expect(destinoAlTerminar(contexto({ siguientePaso: "pedido" }))).toBe("/ss/trato/40");
+        expect(destinoAlTerminar(contexto({ siguientePaso: "pedido" }))).toBe("/ss/mi-trato/40");
     });
 
     test("generar siguiente tarea precarga cliente y, si sigue abierto, el trato", () => {

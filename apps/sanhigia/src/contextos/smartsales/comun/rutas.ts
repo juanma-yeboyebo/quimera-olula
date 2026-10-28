@@ -26,6 +26,10 @@ export const rutasSmartsales = {
     contactosCursos: "/ss/contactos/cursos/",
     contactosActivos: "/ss/contactos/activos/",
     pedidosOtrosAgentes: "/ss/ventas/pedidos/otrosagentes",
-    trato: (id: string) => `/ss/trato/${id}`,
+    trato: (id: string) => `/ss/mi-trato/${id}`,
+    tratoLegacy: (id: string) => `/ss/trato/${id}`,
+    nuevaTareaTratoLegacy: (id: string) => `/ss/trato/${id}/tarea/nueva`,
+    presupuesto: (id: string) => `/ventas/presupuestos/${id}`,
+    pedido: (id: string) => `/ventas/pedidos/${id}`,
     tarea: (id: string) => `/ss/mi-tarea/${id}`,
 };
