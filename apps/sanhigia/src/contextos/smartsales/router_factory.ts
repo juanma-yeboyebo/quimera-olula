@@ -1,4 +1,7 @@
 import { Agenda } from "./agenda/vistas/Agenda.tsx";
+import { Campanias } from "./campanias/vistas/Campanias.tsx";
+import { DetalleCampania } from "./campanias/vistas/DetalleCampania.tsx";
+import { NuevaCampania } from "./campanias/vistas/NuevaCampania.tsx";
 import { Clientes } from "./clientes/vistas/Clientes.tsx";
 import { FichaCliente } from "./clientes/vistas/FichaCliente.tsx";
 import { FichaContacto } from "./contacto/vistas/FichaContacto.tsx";
@@ -29,5 +32,8 @@ export class RouterFactorySmartsalesSanhigia {
         "ss/mi-trato/:id": DetalleTrato,
         "ss/mi-rendimiento": Rendimiento,
         "ss/mi-objetivo": Objetivos,
+        "ss/mis-campanias": Campanias,
+        "ss/mis-campanias/nueva": NuevaCampania,
+        "ss/mis-campanias/:id": DetalleCampania,
     };
 }

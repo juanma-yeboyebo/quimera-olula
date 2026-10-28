@@ -13,7 +13,9 @@ export const rutasSmartsales = {
     agenda: "/ss/mi-agenda",
     clientes: "/ss/mis-clientes",
     fichaCliente: (codCliente: string) => `/ss/mis-clientes/${codCliente}`,
-    campanias: "/ss/campanias",
+    campanias: "/ss/mis-campanias",
+    nuevaCampania: "/ss/mis-campanias/nueva",
+    campania: (id: string) => `/ss/mis-campanias/${id}`,
     tratos: "/ss/mis-tratos",
     nuevoTrato: "/ss/mi-trato/nuevo",
     nuevoTratoDesde: (codCliente: string, producto?: { tipo: TipoProducto; codigo: string }) =>
