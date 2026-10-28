@@ -1,0 +1,98 @@
+export type TipoNivel = "ano" | "trimestre" | "mes";
+
+export type Nivel = {
+    ref: string;
+    id: string;
+    descripcion: string;
+    tipo: TipoNivel | null;
+};
+
+export type Jerarquia = {
+    id: string;
+    niveles: string[];
+};
+
+export type Dimension = {
+    id: string;
+    descripcion: string;
+    niveles: Nivel[];
+    jerarquias: Jerarquia[];
+};
+
+export type FormatoMedida = "moneda" | "unidades" | "decimales";
+
+export type Medida = {
+    id: string;
+    descripcion: string;
+    agregacion: "suma" | "media_ponderada";
+    formato: FormatoMedida;
+};
+
+export type UltimaCarga = {
+    fecha: Date;
+    usuarioId: string;
+};
+
+export type EstadoCarga = {
+    id: number;
+    estado: "pendiente" | "en_curso" | "ok" | "error";
+    fecha: Date;
+    usuarioId: string;
+    ejercicios: string[];
+    mensaje: string | null;
+};
+
+export type Cubo = {
+    id: string;
+    descripcion: string;
+    dimensiones: Dimension[];
+    medidas: Medida[];
+    ultimaCarga: UltimaCarga | null;
+    estadoCarga: EstadoCarga | null;
+};
+
+export type CodigoMiembro = string | number | null;
+
+export type Miembro = {
+    codigo: CodigoMiembro;
+    etiqueta: string;
+};
+
+export type Miembros = {
+    miembros: Miembro[];
+    hayMas: boolean;
+};
+
+export const POR_ETIQUETA = "etiqueta";
+
+export type OrdenPivot = {
+    por: string;
+    sentido: "asc" | "desc";
+};
+
+export type PeticionPivot = {
+    filas: string[];
+    columnas: string[];
+    medidas: string[];
+    filtros: Record<string, CodigoMiembro[]>;
+    orden: OrdenPivot | null;
+    top: number | null;
+    excluirCeros: boolean;
+};
+
+export type FilaPivot = {
+    filas: (Miembro | null)[];
+    columnas: (Miembro | null)[];
+    medidas: Record<string, number | null>;
+};
+
+export type ResultadoPivot = {
+    filas: FilaPivot[];
+    truncado: boolean;
+};
+
+export type GetCatalogo = () => Promise<Cubo[]>;
+
+export type GetMiembros = (cuboId: string, nivel: string, buscar?: string) => Promise<Miembros>;
+
+export type PostPivot = (cuboId: string, peticion: PeticionPivot) => Promise<ResultadoPivot>;
