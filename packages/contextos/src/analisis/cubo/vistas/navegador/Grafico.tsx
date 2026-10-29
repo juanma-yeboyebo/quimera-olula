@@ -1,6 +1,5 @@
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { COLORES_SERIE } from "@olula/componentes/tema/colores_graficos.ts";
-import { useState } from "react";
 import {
     Bar,
     BarChart,
@@ -16,16 +15,16 @@ import {
     XAxis,
     YAxis,
 } from "recharts";
-import { Arbol, Medida, PeticionPivot } from "../../diseño.ts";
+import { Arbol, Medida, PeticionPivot, TipoGrafico } from "../../diseño.ts";
 import { datosGrafico, graficable } from "../../dominio.ts";
 
 type GraficoProps = {
     arbol: Arbol;
     medida: Medida;
     peticion: PeticionPivot;
+    tipo: TipoGrafico;
+    onTipo: (tipo: TipoGrafico) => void;
 };
-
-type TipoGrafico = "barras" | "lineas" | "tarta";
 
 const TIPOS: { tipo: TipoGrafico; texto: string }[] = [
     { tipo: "barras", texto: "Barras" },
@@ -35,9 +34,7 @@ const TIPOS: { tipo: TipoGrafico; texto: string }[] = [
 
 const color = (i: number) => COLORES_SERIE[i % COLORES_SERIE.length];
 
-export const Grafico = ({ arbol, medida, peticion }: GraficoProps) => {
-    const [tipo, setTipo] = useState<TipoGrafico>("barras");
-
+export const Grafico = ({ arbol, medida, peticion, tipo, onTipo }: GraficoProps) => {
     if (!graficable(peticion)) {
         return (
             <p className="analisis-vacio">
@@ -57,7 +54,7 @@ export const Grafico = ({ arbol, medida, peticion }: GraficoProps) => {
                         key={t.tipo}
                         tamaño="pequeño"
                         variante={t.tipo === tipo ? "solido" : "borde"}
-                        onClick={() => setTipo(t.tipo)}
+                        onClick={() => onTipo(t.tipo)}
                     >
                         {t.texto}
                     </QBoton>

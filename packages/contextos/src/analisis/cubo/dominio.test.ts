@@ -11,6 +11,7 @@ import {
   claveRuta,
   columnasTabla,
   datosGrafico,
+  ejerciciosDesdeTexto,
   etiquetarMeses,
   expandirNodo,
   filasTabla,
@@ -391,5 +392,12 @@ describe("datosGrafico", () => {
     const datos = datosGrafico(arbolDesdePivot(carga), importe, 0);
     expect(datos.series).toEqual([{ clave: claveRuta([]), nombre: "Importe" }]);
     expect(datos.puntos[1]).toEqual({ etiqueta: "Comida", [claveRuta([])]: 30 });
+  });
+});
+
+describe("ejerciciosDesdeTexto", () => {
+  test("separa por comas o espacios, sin vacíos ni repetidos", () => {
+    expect(ejerciciosDesdeTexto(" 2025, 2026 ;2026  ")).toEqual(["2025", "2026"]);
+    expect(ejerciciosDesdeTexto("  ")).toEqual([]);
   });
 });

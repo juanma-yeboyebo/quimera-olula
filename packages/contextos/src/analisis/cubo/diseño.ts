@@ -91,6 +91,14 @@ export type ResultadoPivot = {
     truncado: boolean;
 };
 
+export type TipoGrafico = "barras" | "lineas" | "tarta";
+
+export type Presentacion = {
+    medidasEnColumnas: boolean;
+    verGrafico: boolean;
+    tipoGrafico: TipoGrafico;
+};
+
 export type ValoresMedidas = Record<string, number | null>;
 
 export type Nodo = {
@@ -128,3 +136,5 @@ export type GetMiembros = (cuboId: string, nivel: string, buscar?: string) => Pr
 export type PostPivot = (cuboId: string, peticion: PeticionPivot) => Promise<ResultadoPivot>;
 
 export type ExportarPivot = (cuboId: string, peticion: PeticionPivot) => Promise<Blob>;
+
+export type PostRecarga = (cuboId: string, ejercicios: string[]) => Promise<string>;

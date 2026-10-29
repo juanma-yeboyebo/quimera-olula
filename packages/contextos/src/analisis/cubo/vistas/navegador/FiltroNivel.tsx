@@ -15,7 +15,7 @@ type FiltroNivelProps = {
     onCerrar: () => void;
 };
 
-const clave = (codigo: CodigoMiembro) => JSON.stringify(codigo);
+const clave = (codigo: CodigoMiembro) => JSON.stringify(codigo === null ? null : String(codigo));
 
 export const FiltroNivel = ({ cuboId, nivel, seleccion, onAceptar, onCerrar }: FiltroNivelProps) => {
     const [buscar, setBuscar] = useState("");

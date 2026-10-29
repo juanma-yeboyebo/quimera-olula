@@ -13,6 +13,7 @@ import {
     Miembro,
     PeticionPivot,
     PostPivot,
+    PostRecarga,
     TipoNivel,
 } from "./diseño.ts";
 
@@ -43,7 +44,7 @@ type CuboApi = {
     estado_carga: EstadoCargaApi | null;
 };
 
-type PeticionPivotApi = {
+export type PeticionPivotApi = {
     filas: string[];
     columnas: string[];
     medidas: string[];
@@ -99,7 +100,7 @@ export const getMiembros: GetMiembros = async (cuboId, nivel, buscar) => {
     return { miembros: respuesta.datos, hayMas: respuesta.hay_mas };
 };
 
-const peticionApi = (peticion: PeticionPivot): PeticionPivotApi => ({
+export const peticionApi = (peticion: PeticionPivot): PeticionPivotApi => ({
     filas: peticion.filas,
     columnas: peticion.columnas,
     medidas: peticion.medidas,
@@ -109,6 +110,16 @@ const peticionApi = (peticion: PeticionPivot): PeticionPivotApi => ({
     orden: peticion.orden,
     top: peticion.top,
     excluir_ceros: peticion.excluirCeros,
+});
+
+export const peticionDesdeApi = (p: PeticionPivotApi): PeticionPivot => ({
+    filas: p.filas,
+    columnas: p.columnas,
+    medidas: p.medidas,
+    filtros: p.filtros,
+    orden: p.orden,
+    top: p.top,
+    excluirCeros: p.excluir_ceros,
 });
 
 export const postPivot: PostPivot = async (cuboId, peticion) => {
@@ -121,3 +132,8 @@ export const postPivot: PostPivot = async (cuboId, peticion) => {
 
 export const exportarPivot: ExportarPivot = (cuboId, peticion) =>
     RestAPI.postBlob(`${baseUrl}/${cuboId}/exportar`, peticionApi(peticion), "Error al exportar a Excel");
+
+export const postRecarga: PostRecarga = async (cuboId, ejercicios) => {
+    const respuesta = await RestAPI.post(`${baseUrl}/${cuboId}/recarga`, { ejercicios }, "Error al pedir la recarga");
+    return String(respuesta.id);
+};

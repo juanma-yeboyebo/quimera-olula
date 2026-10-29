@@ -3,21 +3,25 @@ import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 import { FilaMultinivel, QTablaMultinivel } from "@olula/componentes/atomos/qtablamultinivel.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
-import { formatearFechaHora } from "@olula/lib/dominio.ts";
+import { formatearFechaHora, puede } from "@olula/lib/dominio.ts";
 import { useEffect, useState } from "react";
-import { CodigoMiembro, Cubo, PeticionPivot } from "../../diseño.ts";
+import { CodigoMiembro, Cubo, PeticionPivot, Presentacion } from "../../diseño.ts";
 import { columnasTabla, filasTabla, medidaDeColumna, nivelesCubo, ordenTrasPulsar } from "../../dominio.ts";
 import { getMaquina } from "./maquina.ts";
 import { contextoNavegadorInicial } from "./navegador.ts";
 import { BotoneraTiempo } from "./BotoneraTiempo.tsx";
+import { GestionVistas } from "./GestionVistas.tsx";
 import { Grafico } from "./Grafico.tsx";
 import "./Navegador.css";
 import { OpcionesPivot } from "./OpcionesPivot.tsx";
 import { PanelEjes } from "./PanelEjes.tsx";
+import { RecargarCubo } from "./RecargarCubo.tsx";
+
+const recargando = (cubo: Cubo) => cubo.estadoCarga?.estado === "pendiente" || cubo.estadoCarga?.estado === "en_curso";
 
 const textoCarga = (cubo: Cubo) => {
     const { ultimaCarga, estadoCarga } = cubo;
-    if (estadoCarga?.estado === "pendiente" || estadoCarga?.estado === "en_curso") return "Recarga en curso";
+    if (recargando(cubo)) return "Recarga en curso";
     const ultima = ultimaCarga ? `Última carga: ${formatearFechaHora(ultimaCarga.fecha)}` : "Sin cargar";
     return estadoCarga?.estado === "error" ? `${ultima} · La última recarga falló` : ultima;
 };
@@ -25,8 +29,9 @@ const textoCarga = (cubo: Cubo) => {
 export const Navegador = () => {
     const { ctx, emitir } = useMaquina(getMaquina, contextoNavegadorInicial);
     const [cargando, setCargando] = useState(false);
-    const [verGrafico, setVerGrafico] = useState(false);
-    const { estado, cubos, cubo, peticion, arbol, medidasEnColumnas, truncado, historial } = ctx;
+    const [pidiendoRecarga, setPidiendoRecarga] = useState(false);
+    const { estado, cubos, cubo, peticion, arbol, presentacion, truncado, historial, vistas, vista } = ctx;
+    const { medidasEnColumnas, verGrafico, tipoGrafico } = presentacion;
 
     useEffect(() => {
         emitir("iniciado", undefined, true);
@@ -52,6 +57,7 @@ export const Navegador = () => {
     };
 
     const cambiar = (nueva: PeticionPivot) => consultar("peticion_cambiada", nueva);
+    const presentar = (cambios: Partial<Presentacion>) => emitir("presentacion_cambiada", cambios);
     const medidas = cubo.medidas.filter((m) => peticion.medidas.includes(m.id));
     const niveles = nivelesCubo(cubo);
     const cabeceraEtiqueta =
@@ -81,7 +87,22 @@ export const Navegador = () => {
                     opciones={cubos.map((c) => ({ valor: c.id, descripcion: c.descripcion }))}
                     onChange={(opcion) => opcion && consultar("cubo_cambiado", opcion.valor)}
                 />
+                <GestionVistas
+                    vistas={vistas}
+                    vista={vista}
+                    emitir={(evento, payload) => consultar(evento, payload)}
+                />
                 <span className="analisis-carga">{textoCarga(cubo)}</span>
+                {recargando(cubo) && (
+                    <QBoton variante="texto" onClick={() => emitir("catalogo_refrescado")}>
+                        Actualizar estado
+                    </QBoton>
+                )}
+                {puede("analisis.carga") && !recargando(cubo) && (
+                    <QBoton variante="texto" onClick={() => setPidiendoRecarga(true)}>
+                        Recargar
+                    </QBoton>
+                )}
                 <QBoton
                     variante="texto"
                     deshabilitado={!historial || historial.posicion === 0}
@@ -96,7 +117,7 @@ export const Navegador = () => {
                 >
                     Adelante
                 </QBoton>
-                <QBoton variante="texto" onClick={() => setVerGrafico(!verGrafico)}>
+                <QBoton variante="texto" onClick={() => presentar({ verGrafico: !verGrafico })}>
                     {verGrafico ? "Ver tabla" : "Ver gráfico"}
                 </QBoton>
                 <QBoton variante="texto" onClick={() => emitir("exportacion_solicitada")}>
@@ -111,7 +132,7 @@ export const Navegador = () => {
                     peticion={peticion}
                     medidasEnColumnas={medidasEnColumnas}
                     onCambio={cambiar}
-                    onAlternarMedidasEnColumnas={() => emitir("medidas_en_columnas_alternado")}
+                    onAlternarMedidasEnColumnas={() => presentar({ medidasEnColumnas: !medidasEnColumnas })}
                 />
             </aside>
             <main className="analisis-resultado">
@@ -121,7 +142,13 @@ export const Navegador = () => {
                     </QAviso>
                 )}
                 {verGrafico ? (
-                    <Grafico arbol={arbol} medida={medidas[0]} peticion={peticion} />
+                    <Grafico
+                        arbol={arbol}
+                        medida={medidas[0]}
+                        peticion={peticion}
+                        tipo={tipoGrafico}
+                        onTipo={(tipo) => presentar({ tipoGrafico: tipo })}
+                    />
                 ) : (
                     <QTablaMultinivel
                         cabeceraEtiqueta={cabeceraEtiqueta}
@@ -134,6 +161,16 @@ export const Navegador = () => {
                     />
                 )}
             </main>
+            {pidiendoRecarga && (
+                <RecargarCubo
+                    cubo={cubo}
+                    onAceptar={(ejercicios) => {
+                        setPidiendoRecarga(false);
+                        emitir("recarga_solicitada", ejercicios);
+                    }}
+                    onCerrar={() => setPidiendoRecarga(false)}
+                />
+            )}
         </div>
     );
 };

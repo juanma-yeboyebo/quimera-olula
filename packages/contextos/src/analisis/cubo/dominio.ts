@@ -354,3 +354,6 @@ export const datosGrafico = (arbol: Arbol, medida: Medida, nivelesColumna: numbe
         })),
     };
 };
+
+export const ejerciciosDesdeTexto = (texto: string): string[] =>
+    [...new Set(texto.split(/[\s,;]+/).map((e) => e.trim()).filter(Boolean))];
