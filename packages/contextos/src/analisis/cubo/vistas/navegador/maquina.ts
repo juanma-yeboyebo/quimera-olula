@@ -7,6 +7,8 @@ import {
     cambiarPeticion,
     cargarCatalogo,
     exportar,
+    irAdelante,
+    irAtras,
 } from "./navegador.ts";
 
 export const getMaquina: () => Maquina<EstadoNavegador, ContextoNavegador> = () => ({
@@ -22,5 +24,7 @@ export const getMaquina: () => Maquina<EstadoNavegador, ContextoNavegador> = () 
         medidas_en_columnas_alternado: [alternarMedidasEnColumnas],
         nodo_alternado: [alternarNodo],
         exportacion_solicitada: [exportar],
+        historial_atras: [irAtras],
+        historial_adelante: [irAdelante],
     },
 });

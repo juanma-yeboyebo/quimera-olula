@@ -1,10 +1,15 @@
 import { descargarDocumento } from "@olula/lib/api/documentos.ts";
 import { ProcesarContexto } from "@olula/lib/diseño.ts";
+import { preferencias } from "@olula/lib/preferencias.ts";
 import { Cubo, Miembro, PeticionPivot } from "../../diseño.ts";
 import {
     alternarNodo as alternarNodoArbol,
+    apilar,
     arbolDesdePivot,
+    etiquetarMeses,
     expandirNodo,
+    historialNuevo,
+    moverHistorial,
     necesitaCargar,
     nombreExportacion,
     peticionInicial,
@@ -15,6 +20,8 @@ import { ContextoNavegador, EstadoNavegador } from "./diseño.ts";
 
 type ProcesarNavegador = ProcesarContexto<EstadoNavegador, ContextoNavegador>;
 
+const PREFERENCIA_CUBO = "analisis.cubo";
+
 export const contextoNavegadorInicial: ContextoNavegador = {
     estado: "CARGANDO",
     cubos: [],
@@ -23,6 +30,7 @@ export const contextoNavegadorInicial: ContextoNavegador = {
     medidasEnColumnas: true,
     arbol: null,
     truncado: false,
+    historial: null,
 };
 
 const consultar = async (ctx: ContextoNavegador, cubo: Cubo, peticion: PeticionPivot): Promise<ContextoNavegador> => {
@@ -32,7 +40,7 @@ const consultar = async (ctx: ContextoNavegador, cubo: Cubo, peticion: PeticionP
         estado: "NAVEGANDO",
         cubo,
         peticion,
-        arbol: arbolDesdePivot(resultado.filas),
+        arbol: arbolDesdePivot(etiquetarMeses(cubo, peticion, resultado.filas)),
         truncado: resultado.truncado,
     };
 };
@@ -40,17 +48,36 @@ const consultar = async (ctx: ContextoNavegador, cubo: Cubo, peticion: PeticionP
 export const cargarCatalogo: ProcesarNavegador = async (ctx) => {
     const cubos = await getCatalogo();
     if (cubos.length === 0) return { ...ctx, estado: "SIN_CUBOS", cubos };
-    return consultar({ ...ctx, cubos }, cubos[0], peticionInicial(cubos[0]));
+    const preferido = preferencias.get<string | null>(PREFERENCIA_CUBO, null);
+    const cubo = cubos.find((c) => c.id === preferido) ?? cubos[0];
+    const peticion = peticionInicial(cubo);
+    return consultar({ ...ctx, cubos, historial: historialNuevo(peticion) }, cubo, peticion);
 };
 
 export const cambiarCubo: ProcesarNavegador = async (ctx, payload) => {
     const cubo = ctx.cubos.find((c) => c.id === payload);
     if (!cubo || cubo.id === ctx.cubo?.id) return ctx;
-    return consultar(ctx, cubo, peticionInicial(cubo));
+    preferencias.set(PREFERENCIA_CUBO, cubo.id);
+    const peticion = peticionInicial(cubo);
+    return consultar({ ...ctx, historial: historialNuevo(peticion) }, cubo, peticion);
 };
 
-export const cambiarPeticion: ProcesarNavegador = async (ctx, payload) =>
-    ctx.cubo ? consultar(ctx, ctx.cubo, payload as PeticionPivot) : ctx;
+export const cambiarPeticion: ProcesarNavegador = async (ctx, payload) => {
+    const peticion = payload as PeticionPivot;
+    if (!ctx.cubo || !ctx.historial) return ctx;
+    return consultar({ ...ctx, historial: apilar(ctx.historial, peticion) }, ctx.cubo, peticion);
+};
+
+const recorrerHistorial = (paso: -1 | 1): ProcesarNavegador => async (ctx) => {
+    if (!ctx.cubo || !ctx.historial) return ctx;
+    const historial = moverHistorial(ctx.historial, paso);
+    if (historial === ctx.historial) return ctx;
+    return consultar({ ...ctx, historial }, ctx.cubo, historial.peticiones[historial.posicion]);
+};
+
+export const irAtras = recorrerHistorial(-1);
+
+export const irAdelante = recorrerHistorial(1);
 
 export const alternarMedidasEnColumnas: ProcesarNavegador = async (ctx) => ({
     ...ctx,
@@ -65,7 +92,7 @@ export const alternarNodo: ProcesarNavegador = async (ctx, payload) => {
     const resultado = await postPivot(cubo.id, peticionNodo(peticion, ruta));
     return {
         ...ctx,
-        arbol: expandirNodo(arbol, ruta, resultado.filas),
+        arbol: expandirNodo(arbol, ruta, etiquetarMeses(cubo, peticion, resultado.filas)),
         truncado: ctx.truncado || resultado.truncado,
     };
 };

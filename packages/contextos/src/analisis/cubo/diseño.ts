@@ -106,6 +106,21 @@ export type Arbol = {
     columnas: Miembro[][];
 };
 
+export type Historial = {
+    peticiones: PeticionPivot[];
+    posicion: number;
+};
+
+export type SerieGrafico = {
+    clave: string;
+    nombre: string;
+};
+
+export type DatosGrafico = {
+    puntos: Record<string, string | number | null>[];
+    series: SerieGrafico[];
+};
+
 export type GetCatalogo =() => Promise<Cubo[]>;
 
 export type GetMiembros = (cuboId: string, nivel: string, buscar?: string) => Promise<Miembros>;

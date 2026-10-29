@@ -114,6 +114,32 @@
     }
 }
 
+.analisis-botonera {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaciado-xs);
+
+    .analisis-botonera-fila {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--espaciado-xxs);
+    }
+}
+
+.analisis-grafico {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 20rem;
+    gap: var(--espaciado-s);
+
+    .analisis-grafico-tipos {
+        display: flex;
+        align-items: center;
+        gap: var(--espaciado-xs);
+    }
+}
+
 .analisis-filtro-nivel {
     display: flex;
     flex-direction: column;

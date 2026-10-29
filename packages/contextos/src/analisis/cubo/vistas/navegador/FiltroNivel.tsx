@@ -4,6 +4,7 @@ import { QMultiCheckbox } from "@olula/componentes/atomos/qmulticheckbox.tsx";
 import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { useEffect, useState } from "react";
 import { CodigoMiembro, Miembros, Nivel } from "../../diseño.ts";
+import { etiquetaMes } from "../../dominio.ts";
 import { getMiembros } from "../../infraestructura.ts";
 
 type FiltroNivelProps = {
@@ -36,7 +37,9 @@ export const FiltroNivel = ({ cuboId, nivel, seleccion, onAceptar, onCerrar }: F
                     label=""
                     nombre="miembros"
                     valor={elegidos as unknown as string}
-                    opciones={resultado.miembros.map((m) => ({ valor: clave(m.codigo), descripcion: m.etiqueta }))}
+                    opciones={resultado.miembros
+                        .map((m) => (nivel.tipo === "mes" ? etiquetaMes(m) : m))
+                        .map((m) => ({ valor: clave(m.codigo), descripcion: m.etiqueta }))}
                     onChange={(valor) => setElegidos(valor as unknown as string[])}
                 />
                 {resultado.hayMas && <p className="analisis-filtro-mas">Hay más valores: afina la búsqueda.</p>}

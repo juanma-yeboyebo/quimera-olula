@@ -1,4 +1,4 @@
-import { Arbol, Cubo, PeticionPivot } from "../../diseño.ts";
+import { Arbol, Cubo, Historial, PeticionPivot } from "../../diseño.ts";
 
 export type EstadoNavegador = "CARGANDO" | "SIN_CUBOS" | "NAVEGANDO";
 
@@ -10,4 +10,5 @@ export type ContextoNavegador = {
     medidasEnColumnas: boolean;
     arbol: Arbol | null;
     truncado: boolean;
+    historial: Historial | null;
 };

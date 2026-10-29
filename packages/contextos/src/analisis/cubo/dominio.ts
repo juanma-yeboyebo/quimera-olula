@@ -3,14 +3,18 @@ import {
     Arbol,
     CodigoMiembro,
     Cubo,
+    DatosGrafico,
     FilaPivot,
     FormatoMedida,
+    Historial,
     Medida,
     Miembro,
+    Nivel,
     Nodo,
     OrdenPivot,
     PeticionPivot,
     POR_ETIQUETA,
+    TipoNivel,
     ValoresMedidas,
 } from "./diseño.ts";
 
@@ -256,4 +260,97 @@ export const nivelesCubo = (cubo: Cubo) => cubo.dimensiones.flatMap((d) => d.niv
 export const nombreExportacion = (cuboId: string, fecha: Date) => {
     const dos = (n: number) => String(n).padStart(2, "0");
     return `${cuboId}-${fecha.getFullYear()}${dos(fecha.getMonth() + 1)}${dos(fecha.getDate())}.xlsx`;
+};
+
+export const etiquetaMes = (miembro: Miembro): Miembro =>
+    miembro.codigo === null ? miembro : { ...miembro, etiqueta: `${miembro.etiqueta} ${String(miembro.codigo).slice(0, 4)}` };
+
+const mesesSinAno = (cubo: Cubo, refs: string[]) => {
+    const niveles = nivelesCubo(cubo);
+    const tipos = refs.map((ref) => niveles.find((n) => n.ref === ref)?.tipo ?? null);
+    return tipos.map((tipo, i) => tipo === "mes" && !tipos.slice(0, i).includes("ano"));
+};
+
+export const etiquetarMeses = (cubo: Cubo, peticion: PeticionPivot, filas: FilaPivot[]): FilaPivot[] => {
+    const enFilas = mesesSinAno(cubo, peticion.filas);
+    const enColumnas = mesesSinAno(cubo, peticion.columnas);
+    if (!enFilas.includes(true) && !enColumnas.includes(true)) return filas;
+    const etiquetar = (marcas: boolean[]) => (miembro: Miembro | null, i: number) =>
+        miembro && marcas[i] ? etiquetaMes(miembro) : miembro;
+    return filas.map((fila) => ({
+        ...fila,
+        filas: fila.filas.map(etiquetar(enFilas)),
+        columnas: fila.columnas.map(etiquetar(enColumnas)),
+    }));
+};
+
+const MAX_HISTORIAL = 10;
+
+export const historialNuevo = (peticion: PeticionPivot): Historial => ({ peticiones: [peticion], posicion: 0 });
+
+export const apilar = (historial: Historial, peticion: PeticionPivot): Historial => {
+    const peticiones = [...historial.peticiones.slice(0, historial.posicion + 1), peticion].slice(-MAX_HISTORIAL);
+    return { peticiones, posicion: peticiones.length - 1 };
+};
+
+export const moverHistorial = (historial: Historial, paso: -1 | 1): Historial => {
+    const posicion = historial.posicion + paso;
+    return posicion < 0 || posicion >= historial.peticiones.length ? historial : { ...historial, posicion };
+};
+
+export const nivelDeTipo = (cubo: Cubo, tipo: TipoNivel): Nivel | undefined =>
+    nivelesCubo(cubo).find((n) => n.tipo === tipo);
+
+const elegidos = (peticion: PeticionPivot, nivel: Nivel | undefined) => (nivel ? peticion.filtros[nivel.ref] ?? [] : []);
+
+export const anosElegidos = (peticion: PeticionPivot, cubo: Cubo): number[] =>
+    elegidos(peticion, nivelDeTipo(cubo, "ano")).map(Number);
+
+export const trimestresElegidos = (peticion: PeticionPivot, cubo: Cubo): string[] =>
+    elegidos(peticion, nivelDeTipo(cubo, "trimestre")).map(String);
+
+export const mesesElegidos = (peticion: PeticionPivot, cubo: Cubo): number[] =>
+    [...new Set(elegidos(peticion, nivelDeTipo(cubo, "mes")).map((c) => Number(String(c).slice(4, 6))))].sort((a, b) => a - b);
+
+const alternar = <T>(valores: T[], valor: T) =>
+    valores.includes(valor) ? valores.filter((v) => v !== valor) : [...valores, valor];
+
+const conMeses = (peticion: PeticionPivot, cubo: Cubo, meses: number[], anosBotonera: number[]): PeticionPivot => {
+    const mes = nivelDeTipo(cubo, "mes");
+    if (!mes) return peticion;
+    const anos = anosElegidos(peticion, cubo);
+    const codigos = (anos.length > 0 ? anos : anosBotonera).flatMap((ano) =>
+        meses.map((m) => `${ano}${String(m).padStart(2, "0")}`)
+    );
+    return cambiarFiltro(peticion, mes.ref, codigos.sort());
+};
+
+export const alternarAno = (peticion: PeticionPivot, cubo: Cubo, ano: number, anosBotonera: number[]): PeticionPivot => {
+    const nivel = nivelDeTipo(cubo, "ano");
+    if (!nivel) return peticion;
+    const conAnos = cambiarFiltro(peticion, nivel.ref, alternar(anosElegidos(peticion, cubo), ano).sort((a, b) => a - b));
+    return conMeses(conAnos, cubo, mesesElegidos(peticion, cubo), anosBotonera);
+};
+
+export const alternarMes = (peticion: PeticionPivot, cubo: Cubo, mes: number, anosBotonera: number[]): PeticionPivot =>
+    conMeses(peticion, cubo, alternar(mesesElegidos(peticion, cubo), mes), anosBotonera);
+
+export const alternarTrimestre = (peticion: PeticionPivot, cubo: Cubo, trimestre: string): PeticionPivot => {
+    const nivel = nivelDeTipo(cubo, "trimestre");
+    if (!nivel) return peticion;
+    return cambiarFiltro(peticion, nivel.ref, alternar(trimestresElegidos(peticion, cubo), trimestre).sort());
+};
+
+export const graficable = (peticion: PeticionPivot) => peticion.filas.length === 1 && peticion.columnas.length <= 1;
+
+export const datosGrafico = (arbol: Arbol, medida: Medida, nivelesColumna: number): DatosGrafico => {
+    const columnas = nivelesColumna === 1 ? arbol.columnas.filter((c) => c.length === 1) : [[]];
+    const series = columnas.map((c) => ({ clave: claveRuta(c), nombre: c.length > 0 ? c[0].etiqueta : medida.descripcion }));
+    return {
+        series,
+        puntos: arbol.nodos.map((nodo) => ({
+            etiqueta: nodo.ruta[nodo.ruta.length - 1].etiqueta,
+            ...Object.fromEntries(series.map((s) => [s.clave, nodo.valores[s.clave]?.[medida.id] ?? null])),
+        })),
+    };
 };
