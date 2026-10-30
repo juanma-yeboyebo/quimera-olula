@@ -129,6 +129,14 @@ export type DatosGrafico = {
     series: SerieGrafico[];
 };
 
+export type CargaTerminada = {
+    cargaId: number | null;
+    cuboId: string;
+    estado: "ok" | "error";
+    filas: number | null;
+    mensaje: string | null;
+};
+
 export type GetCatalogo =() => Promise<Cubo[]>;
 
 export type GetMiembros = (cuboId: string, nivel: string, buscar?: string) => Promise<Miembros>;

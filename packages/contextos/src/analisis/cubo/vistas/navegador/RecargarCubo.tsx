@@ -7,11 +7,12 @@ import { ejerciciosDesdeTexto } from "../../dominio.ts";
 
 type RecargarCuboProps = {
     cubo: Cubo;
+    avisoAutomatico: boolean;
     onAceptar: (ejercicios: string[]) => void;
     onCerrar: () => void;
 };
 
-export const RecargarCubo = ({ cubo, onAceptar, onCerrar }: RecargarCuboProps) => {
+export const RecargarCubo = ({ cubo, avisoAutomatico, onAceptar, onCerrar }: RecargarCuboProps) => {
     const [texto, setTexto] = useState(String(new Date().getFullYear()));
     const ejercicios = ejerciciosDesdeTexto(texto);
 
@@ -27,7 +28,9 @@ export const RecargarCubo = ({ cubo, onAceptar, onCerrar }: RecargarCuboProps) =
                     autoFocus
                 />
                 <p className="analisis-carga">
-                    La recarga se hace en segundo plano. Cuando termine, se verá en la fecha de la última carga.
+                    {avisoAutomatico
+                        ? "La recarga se hace en segundo plano. Te avisamos al terminar."
+                        : "La recarga se hace en segundo plano. Cuando termine, se verá en la fecha de la última carga."}
                 </p>
                 <div className="analisis-filtro-botones">
                     <QBoton variante="texto" onClick={onCerrar}>

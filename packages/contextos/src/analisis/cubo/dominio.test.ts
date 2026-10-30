@@ -7,6 +7,7 @@ import {
   alternarTrimestre,
   apilar,
   arbolDesdePivot,
+  cargaTerminadaDesdeEvento,
   cambiarFiltro,
   claveRuta,
   columnasTabla,
@@ -23,6 +24,7 @@ import {
   nombreExportacion,
   ordenTrasPulsar,
   peticionNodo,
+  rutasExpandidas,
 } from "./dominio.ts";
 
 const m = (codigo: Miembro["codigo"], etiqueta = String(codigo)): Miembro => ({ codigo, etiqueta });
@@ -399,5 +401,40 @@ describe("ejerciciosDesdeTexto", () => {
   test("separa por comas o espacios, sin vacíos ni repetidos", () => {
     expect(ejerciciosDesdeTexto(" 2025, 2026 ;2026  ")).toEqual(["2025", "2026"]);
     expect(ejerciciosDesdeTexto("  ")).toEqual([]);
+  });
+});
+
+describe("cargaTerminadaDesdeEvento", () => {
+  test("lee el JSON del evento", () => {
+    expect(
+      cargaTerminadaDesdeEvento('{"carga_id": 12, "cubo_id": "ventas", "estado": "ok", "filas": 345, "mensaje": null}')
+    ).toEqual({ cargaId: 12, cuboId: "ventas", estado: "ok", filas: 345, mensaje: null });
+    expect(cargaTerminadaDesdeEvento({ cubo_id: "ventas", estado: "error", mensaje: "Sin datos" })).toEqual({
+      cargaId: null,
+      cuboId: "ventas",
+      estado: "error",
+      filas: null,
+      mensaje: "Sin datos",
+    });
+  });
+
+  test("un estado desconocido se ignora", () => {
+    expect(cargaTerminadaDesdeEvento({ cubo_id: "ventas", estado: "en_curso" })).toBeNull();
+  });
+
+  test("datos no válidos se ignoran", () => {
+    expect(cargaTerminadaDesdeEvento("no es json")).toBeNull();
+    expect(cargaTerminadaDesdeEvento(null)).toBeNull();
+    expect(cargaTerminadaDesdeEvento({ estado: "ok" })).toBeNull();
+  });
+});
+
+describe("rutasExpandidas", () => {
+  test("los nodos expandidos con hijos, padres antes que hijos", () => {
+    const arbol = expandirNodo(arbolDesdePivot(carga), [m("F2", "Bebidas")], [
+      fila([m("F2", "Bebidas"), m("A9", "Agua")], [null], 70),
+    ]);
+    expect(rutasExpandidas(arbol)).toEqual([[m("F2", "Bebidas")]]);
+    expect(rutasExpandidas(alternarNodo(arbol, [m("F2", "Bebidas")]))).toEqual([]);
   });
 });

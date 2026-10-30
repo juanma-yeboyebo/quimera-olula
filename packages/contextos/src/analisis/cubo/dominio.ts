@@ -1,6 +1,7 @@
 import { ColumnaMultinivel, FilaMultinivel } from "@olula/componentes/atomos/qtablamultinivel.tsx";
 import {
     Arbol,
+    CargaTerminada,
     CodigoMiembro,
     Cubo,
     DatosGrafico,
@@ -357,3 +358,36 @@ export const datosGrafico = (arbol: Arbol, medida: Medida, nivelesColumna: numbe
 
 export const ejerciciosDesdeTexto = (texto: string): string[] =>
     [...new Set(texto.split(/[\s,;]+/).map((e) => e.trim()).filter(Boolean))];
+
+export const existeNodo = (arbol: Arbol, camino: Miembro[]) => buscarNodo(arbol.nodos, camino) !== undefined;
+
+export const rutasExpandidas = (arbol: Arbol): Miembro[][] => {
+    const recorrer = (nodos: Nodo[]): Miembro[][] =>
+        nodos.flatMap((nodo) =>
+            nodo.expandido && nodo.hijos ? [nodo.ruta, ...recorrer(nodo.hijos)] : []
+        );
+    return recorrer(arbol.nodos);
+};
+
+const numeroONulo = (valor: unknown) => (typeof valor === "number" && Number.isFinite(valor) ? valor : null);
+
+export const cargaTerminadaDesdeEvento = (data: unknown): CargaTerminada | null => {
+    let valor = data;
+    if (typeof data === "string") {
+        try {
+            valor = JSON.parse(data);
+        } catch {
+            return null;
+        }
+    }
+    if (!valor || typeof valor !== "object") return null;
+    const d = valor as Record<string, unknown>;
+    if (typeof d.cubo_id !== "string" || (d.estado !== "ok" && d.estado !== "error")) return null;
+    return {
+        cargaId: numeroONulo(d.carga_id),
+        cuboId: d.cubo_id,
+        estado: d.estado,
+        filas: numeroONulo(d.filas),
+        mensaje: typeof d.mensaje === "string" ? d.mensaje : null,
+    };
+};

@@ -2,12 +2,13 @@ import { descargarDocumento } from "@olula/lib/api/documentos.ts";
 import { ProcesarContexto } from "@olula/lib/diseño.ts";
 import { preferencias } from "@olula/lib/preferencias.ts";
 import { borrarVista as borrarVistaApi, cambiarVista, crearVista, getVista, getVistas } from "../../../vista/infraestructura.ts";
-import { Cubo, Miembro, PeticionPivot, Presentacion } from "../../diseño.ts";
+import { CargaTerminada, Cubo, Miembro, PeticionPivot, Presentacion } from "../../diseño.ts";
 import {
     alternarNodo as alternarNodoArbol,
     apilar,
     arbolDesdePivot,
     etiquetarMeses,
+    existeNodo,
     expandirNodo,
     historialNuevo,
     moverHistorial,
@@ -15,6 +16,7 @@ import {
     nombreExportacion,
     peticionInicial,
     peticionNodo,
+    rutasExpandidas,
 } from "../../dominio.ts";
 import { exportarPivot, getCatalogo, postPivot, postRecarga } from "../../infraestructura.ts";
 import { ContextoNavegador, EstadoNavegador } from "./diseño.ts";
@@ -97,17 +99,22 @@ export const cambiarPresentacion: ProcesarNavegador = async (ctx, payload) => ({
     presentacion: { ...ctx.presentacion, ...(payload as Partial<Presentacion>) },
 });
 
-export const alternarNodo: ProcesarNavegador = async (ctx, payload) => {
-    const ruta = payload as Miembro[];
+const expandir = async (ctx: ContextoNavegador, ruta: Miembro[]): Promise<ContextoNavegador> => {
     const { cubo, peticion, arbol } = ctx;
     if (!cubo || !peticion || !arbol) return ctx;
-    if (!necesitaCargar(arbol, ruta)) return { ...ctx, arbol: alternarNodoArbol(arbol, ruta) };
     const resultado = await postPivot(cubo.id, peticionNodo(peticion, ruta));
     return {
         ...ctx,
         arbol: expandirNodo(arbol, ruta, etiquetarMeses(cubo, peticion, resultado.filas)),
         truncado: ctx.truncado || resultado.truncado,
     };
+};
+
+export const alternarNodo: ProcesarNavegador = async (ctx, payload) => {
+    const ruta = payload as Miembro[];
+    if (!ctx.arbol) return ctx;
+    if (!necesitaCargar(ctx.arbol, ruta)) return { ...ctx, arbol: alternarNodoArbol(ctx.arbol, ruta) };
+    return expandir(ctx, ruta);
 };
 
 export const exportar: ProcesarNavegador = async (ctx) => {
@@ -117,15 +124,29 @@ export const exportar: ProcesarNavegador = async (ctx) => {
     return ctx;
 };
 
-export const refrescarCatalogo: ProcesarNavegador = async (ctx) => {
+const conCatalogo = async (ctx: ContextoNavegador): Promise<ContextoNavegador> => {
     const cubos = await getCatalogo();
     return { ...ctx, cubos, cubo: cubos.find((c) => c.id === ctx.cubo?.id) ?? ctx.cubo };
 };
 
+export const refrescarCatalogo: ProcesarNavegador = conCatalogo;
+
 export const recargar: ProcesarNavegador = async (ctx, payload) => {
     if (!ctx.cubo) return ctx;
     await postRecarga(ctx.cubo.id, payload as string[]);
-    return refrescarCatalogo(ctx);
+    return conCatalogo(ctx);
+};
+
+export const cargaTerminada: ProcesarNavegador = async (ctx, payload) => {
+    const carga = payload as CargaTerminada;
+    const refrescado = await conCatalogo(ctx);
+    const { cubo, peticion, arbol } = refrescado;
+    if (carga.estado !== "ok" || carga.cuboId !== cubo?.id || !peticion || !arbol) return refrescado;
+    let nuevo = await consultar(refrescado, cubo, peticion);
+    for (const ruta of rutasExpandidas(arbol)) {
+        if (nuevo.arbol && existeNodo(nuevo.arbol, ruta)) nuevo = await expandir(nuevo, ruta);
+    }
+    return nuevo;
 };
 
 export const abrirVista: ProcesarNavegador = async (ctx, payload) => {

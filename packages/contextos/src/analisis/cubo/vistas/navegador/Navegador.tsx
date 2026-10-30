@@ -3,10 +3,18 @@ import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 import { FilaMultinivel, QTablaMultinivel } from "@olula/componentes/atomos/qtablamultinivel.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
-import { formatearFechaHora, puede } from "@olula/lib/dominio.ts";
+import { onGlobalServerSentEvent } from "@olula/lib/api/server_sent_events_session.ts";
+import { formatearFechaHora, plugin, puede } from "@olula/lib/dominio.ts";
 import { useEffect, useState } from "react";
 import { CodigoMiembro, Cubo, PeticionPivot, Presentacion } from "../../diseño.ts";
-import { columnasTabla, filasTabla, medidaDeColumna, nivelesCubo, ordenTrasPulsar } from "../../dominio.ts";
+import {
+    cargaTerminadaDesdeEvento,
+    columnasTabla,
+    filasTabla,
+    medidaDeColumna,
+    nivelesCubo,
+    ordenTrasPulsar,
+} from "../../dominio.ts";
 import { getMaquina } from "./maquina.ts";
 import { contextoNavegadorInicial } from "./navegador.ts";
 import { BotoneraTiempo } from "./BotoneraTiempo.tsx";
@@ -33,10 +41,20 @@ export const Navegador = () => {
     const { estado, cubos, cubo, peticion, arbol, presentacion, truncado, historial, vistas, vista } = ctx;
     const { medidasEnColumnas, verGrafico, tipoGrafico } = presentacion;
 
+    const avisoSse = plugin("eventos_sse") === "activo";
+
     useEffect(() => {
         emitir("iniciado", undefined, true);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        if (!avisoSse || estado !== "NAVEGANDO") return;
+        return onGlobalServerSentEvent("analisis.carga.terminada", (evento) => {
+            const carga = cargaTerminadaDesdeEvento(evento.data);
+            if (carga) emitir("carga_terminada", carga);
+        });
+    }, [avisoSse, estado, emitir]);
 
     if (estado === "SIN_CUBOS") {
         return (
@@ -93,7 +111,7 @@ export const Navegador = () => {
                     emitir={(evento, payload) => consultar(evento, payload)}
                 />
                 <span className="analisis-carga">{textoCarga(cubo)}</span>
-                {recargando(cubo) && (
+                {recargando(cubo) && !avisoSse && (
                     <QBoton variante="texto" onClick={() => emitir("catalogo_refrescado")}>
                         Actualizar estado
                     </QBoton>
@@ -164,6 +182,7 @@ export const Navegador = () => {
             {pidiendoRecarga && (
                 <RecargarCubo
                     cubo={cubo}
+                    avisoAutomatico={avisoSse}
                     onAceptar={(ejercicios) => {
                         setPidiendoRecarga(false);
                         emitir("recarga_solicitada", ejercicios);
