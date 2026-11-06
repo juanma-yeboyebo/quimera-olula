@@ -16,54 +16,54 @@ API del backend (`olula_servidor`, app `tienda_online`). Todas las llamadas env�
 
 ### Carga
 
-<!-- [producto-carga-01] [nueva] -->
+<!-- [producto-carga-01] [x] -->
 La ruta `/producto/<slug>` carga la ficha enviando `X-Carrito-Token` si hay carrito guardado, y la mapea a `FichaProducto` en camelCase (`descripcionCorta`, `descripcionLarga`, `metaTitulo`, `metaDescripcion`, `cantidadDisponible`, `sinControlStock`, `precioConIva`, `tipoIva`, `ivaIncluido`).
 
-<!-- [producto-carga-02] [nueva] -->
+<!-- [producto-carga-02] [x] -->
 [CARGANDO] ficha cargada → LISTO
 
-<!-- [producto-carga-03] [nueva] -->
+<!-- [producto-carga-03] [x] -->
 [CARGANDO] error 404 → NO_ENCONTRADO (mensaje «Este producto no está disponible» y enlace al catálogo)
 
-<!-- [producto-carga-04] [nueva] -->
+<!-- [producto-carga-04] [x] -->
 [CARGANDO] otro error → ERROR (mensaje genérico con «Reintentar»)
 
-<!-- [producto-carga-05] [nueva] -->
+<!-- [producto-carga-05] [x] -->
 Al cargar, el título del documento pasa a ser `metaTitulo` (o la descripción si es nulo) y se actualiza la etiqueta `meta[name=description]` con `metaDescripcion` (o la descripción corta).
 
 ### Contenido
 
-<!-- [producto-contenido-01] [nueva] -->
+<!-- [producto-contenido-01] [x] -->
 La galería muestra primero la imagen con `principal = true` (o la primera de la lista) y permite cambiar a las demás con miniaturas. Sin imágenes se muestra un marcador neutro.
 
-<!-- [producto-contenido-02] [nueva] -->
+<!-- [producto-contenido-02] [x] -->
 Se muestran la descripción, la descripción corta y la descripción larga. La descripción larga se muestra como texto plano con saltos de línea (no se interpreta HTML).
 
-<!-- [producto-contenido-03] [nueva] -->
+<!-- [producto-contenido-03] [x] -->
 Las categorías del producto se muestran como enlaces a `/categoria/<slug>`.
 
-<!-- [producto-contenido-04] [nueva] -->
+<!-- [producto-contenido-04] [x] -->
 El precio mostrado es `precioConIva` con la divisa y el idioma del storeview (mismo formateador que el catálogo), con la leyenda «IVA incluido».
 
-<!-- [producto-contenido-05] [nueva] -->
+<!-- [producto-contenido-05] [x] -->
 La disponibilidad se muestra como «Disponible» o «Sin stock». Con `sinControlStock` siempre «Disponible».
 
-<!-- [producto-contenido-06] [nueva] -->
+<!-- [producto-contenido-06] [x] -->
 La ficha expone el slot de factory `ficha_acciones` (vacío por defecto), reservado para la lista de deseos.
 
 ### Añadir al carrito
 
-<!-- [producto-anadir-01] [nueva] -->
+<!-- [producto-anadir-01] [x] -->
 El selector de cantidad empieza en 1 y no admite valores menores que 1. Si el producto tiene control de stock, no admite valores mayores que `cantidadDisponible`.
 
-<!-- [producto-anadir-02] [nueva] -->
+<!-- [producto-anadir-02] [x] -->
 Si el producto no está disponible, el botón «Añadir al carrito» está deshabilitado.
 
-<!-- [producto-anadir-03] [nueva] -->
+<!-- [producto-anadir-03] [x] -->
 [LISTO] añadir → AÑADIENDO → LISTO (asegura el carrito con `asegurarCarrito()`, que lo crea si no existe; envía `POST …/carrito/<token>/linea` con `{articulo_id: referencia, cantidad}`; llama a `recargarCarrito()` para actualizar el contador de la cabecera y muestra «Añadido al carrito» con enlace a `/carrito`)
 
-<!-- [producto-anadir-04] [nueva] -->
+<!-- [producto-anadir-04] [x] -->
 [AÑADIENDO] error 400 → LISTO (muestra el texto del backend, p. ej. stock insuficiente con las unidades disponibles; la cantidad no cambia)
 
-<!-- [producto-anadir-05] [nueva] -->
+<!-- [producto-anadir-05] [x] -->
 [AÑADIENDO] error 404 o 409 → LISTO (el carrito guardado ya no es válido: se llama a `olvidarCarrito()`, se crea uno nuevo y se reintenta la línea una sola vez; si vuelve a fallar se muestra el error)

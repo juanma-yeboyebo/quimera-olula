@@ -68,6 +68,5 @@ Existe la app `apps/tienda_online` (paquete `@olula/tienda_online`), basada en `
 <!-- [tienda-app-02] [x] -->
 Las rutas públicas de la app son `/`, `/catalogo`, `/categoria`, `/producto`, `/carrito`, `/checkout` y `/registro`: se navega por ellas sin login. `/mi-cuenta` exige login.
 
-<!-- [tienda-app-03] [cambiada] -->
+<!-- [tienda-app-03] [x] -->
 La ruta `/` muestra el catálogo (ver `catalogo-rutas-01`). Si el storeview no está configurado o no existe, en lugar del catálogo se muestra el error de configuración o «Tienda no disponible».
-<!-- antes: la ruta `/` mostraba una página de inicio provisional con el nombre del storeview -->

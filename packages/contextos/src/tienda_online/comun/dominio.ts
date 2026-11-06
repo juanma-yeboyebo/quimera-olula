@@ -11,3 +11,6 @@ export const debeDescartarToken = (estado: EstadoCarrito): boolean =>
 
 export const textoAriaCarrito = (unidades: number): string =>
     `Carrito, ${unidades} artículos`;
+
+export const formatearPrecio = (importe: number, divisa: string, idioma: string): string =>
+    new Intl.NumberFormat(idioma, { style: "currency", currency: divisa }).format(importe);

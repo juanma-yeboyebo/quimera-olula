@@ -3,6 +3,7 @@ import {
     claveCarrito,
     codigoStoreViewDesdeEnv,
     debeDescartarToken,
+    formatearPrecio,
     textoAriaCarrito,
 } from "#/tienda_online/comun/dominio.ts";
 
@@ -53,5 +54,21 @@ describe("[tienda-icono_carrito-02] El icono tiene aria-label «Carrito, N artí
 
     test("tienda_icono_carrito_02_texto_con_cero", () => {
         expect(textoAriaCarrito(0)).toBe("Carrito, 0 artículos");
+    });
+});
+
+describe("[catalogo-tarjeta-02] El precio se formatea con la divisa del producto y el idioma del storeview", () => {
+    test("catalogo_tarjeta_02_formatea_con_intl_en_es_eur", () => {
+        const esperado = new Intl.NumberFormat("es", { style: "currency", currency: "EUR" }).format(12.1);
+        expect(formatearPrecio(12.1, "EUR", "es")).toBe(esperado);
+    });
+
+    test("catalogo_tarjeta_02_respeta_idioma_y_divisa", () => {
+        const esperado = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(1234.5);
+        expect(formatearPrecio(1234.5, "USD", "en-US")).toBe(esperado);
+    });
+
+    test("catalogo_tarjeta_02_incluye_el_simbolo_de_la_divisa", () => {
+        expect(formatearPrecio(12.1, "EUR", "es")).toContain("€");
     });
 });

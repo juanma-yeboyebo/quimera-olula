@@ -1,0 +1,90 @@
+.FichaProducto {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--espaciado-l);
+    padding: var(--espaciado-m);
+
+    .ficha-imagen {
+        aspect-ratio: 1 / 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--color-superficie-sunken);
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
+
+    .ficha-miniaturas {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--espaciado-xs);
+        margin-top: var(--espaciado-xs);
+
+        button {
+            width: 64px;
+            height: 64px;
+            padding: 0;
+            border: var(--tamaño-borde-s) solid var(--color-borde-sutil);
+            background: var(--color-superficie);
+            cursor: pointer;
+        }
+
+        button[aria-pressed="true"] {
+            border-color: var(--color-primario);
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .ficha-precio {
+        font-size: var(--tamaño-letra-xl);
+        font-weight: var(--grosor-letra-6);
+        color: var(--color-primario-texto);
+
+        small {
+            font-size: var(--tamaño-letra-xs);
+            font-weight: normal;
+            color: var(--color-texto-secundario);
+        }
+    }
+
+    .ficha-disponible {
+        color: var(--color-exito);
+    }
+
+    .ficha-sin-stock,
+    .ficha-error {
+        color: var(--color-error);
+    }
+
+    .ficha-categorias {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--espaciado-s);
+    }
+
+    .ficha-compra {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        gap: var(--espaciado-s);
+
+        label {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    .ficha-larga {
+        margin-top: var(--espaciado-m);
+        white-space: pre-line;
+    }
+}

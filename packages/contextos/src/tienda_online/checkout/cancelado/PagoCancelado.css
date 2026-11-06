@@ -1,0 +1,6 @@
+.PagoCancelado {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaciado-m);
+    padding: var(--espaciado-m);
+}
