@@ -12,6 +12,7 @@
         "../../eslint.config.js",
         "../../vite.config.ts",
         "../../legacy/apps/sanhigia/src/project.ts",
-        "../../legacy/apps/sanhigia/src/theme.js"
+        "../../legacy/apps/sanhigia/src/theme.js",
+        "../../packages/contextos/lib/src/voz/speech-recognition.d.ts"
     ]
 }
