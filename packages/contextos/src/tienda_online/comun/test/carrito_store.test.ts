@@ -194,3 +194,18 @@ describe("[tienda-carrito_store-06] olvidarCarrito borra el token y deja el cont
         expect(store.obtenerCarrito()).toBeNull();
     });
 });
+
+describe("[cuenta-login-05] adoptarToken guarda el token y recarga", () => {
+    test("cuenta_login_05_adoptar_token_guarda_en_localstorage_y_recarga_el_carrito", async () => {
+        getCarrito.mockResolvedValue({ ...carritoApi(), token: "tok-usuario" });
+        const store = await cargarAlmacen();
+        await store.iniciarCarrito(SV);
+
+        await store.adoptarToken("tok-usuario");
+
+        expect(localStorage.getItem(CLAVE)).toBe("tok-usuario");
+        expect(store.obtenerToken()).toBe("tok-usuario");
+        expect(getCarrito).toHaveBeenCalledWith("tok-usuario");
+        expect(store.obtenerCarrito()?.token).toBe("tok-usuario");
+    });
+});

@@ -76,3 +76,8 @@ export const asegurarCarrito = async (): Promise<string> => {
 
 export const useCarritoTienda = (): CarritoTienda | null =>
     useSyncExternalStore(suscribir, obtenerCarrito);
+
+export const adoptarToken = async (nuevo: string): Promise<void> => {
+    guardarToken(nuevo);
+    await recargarCarrito();
+};
