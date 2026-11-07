@@ -20,27 +20,6 @@ export type DatosCheckout = {
     direccionEnvio: DireccionCheckout;
 };
 
-export type DireccionCheckoutApi = {
-    nombre_via: string;
-    tipo_via: string | null;
-    numero: string | null;
-    otros: string | null;
-    cod_postal: string;
-    ciudad: string;
-    provincia: string | null;
-    pais_id: string;
-    telefono: string | null;
-};
-
-export type DatosCheckoutApi = {
-    email: string;
-    nombre: string;
-    id_fiscal: string | null;
-    telefono: string | null;
-    direccion_facturacion: DireccionCheckoutApi;
-    direccion_envio: DireccionCheckoutApi | null;
-};
-
 export type ErroresCheckout = Record<string, string>;
 
 export type ResultadoPago = "CONFIRMADO" | "INCIDENCIA" | "PENDIENTE";

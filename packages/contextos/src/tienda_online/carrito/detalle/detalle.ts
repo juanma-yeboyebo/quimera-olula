@@ -1,13 +1,13 @@
 import { ProcesarContexto } from "@olula/lib/diseño.ts";
 import { obtenerToken, olvidarCarrito, recargarCarrito } from "../../comun/carrito_store.ts";
 import { deleteLineaCarrito, patchLineaCarrito } from "../infraestructura.ts";
-import { ContextoCarrito, EstadoCarrito } from "./diseño.ts";
+import { ContextoDetalleCarrito, EstadoDetalleCarrito } from "./diseño.ts";
 
-type ProcesarCarrito = ProcesarContexto<EstadoCarrito, ContextoCarrito>;
+type ProcesarCarrito = ProcesarContexto<EstadoDetalleCarrito, ContextoDetalleCarrito>;
 
 const NO_DISPONIBLE = "Este carrito ya no está disponible";
 
-export const contextoCarritoInicial: ContextoCarrito = { estado: "LISTO", error: null };
+export const contextoCarritoInicial: ContextoDetalleCarrito = { estado: "LISTO", error: null };
 
 const estadoDe = (e: unknown): number | undefined => (e as { estado?: number })?.estado;
 
@@ -15,9 +15,9 @@ const textoDe = (e: unknown): string =>
     (e as { descripcion?: string })?.descripcion ?? "No se ha podido modificar el carrito";
 
 const modificar = async (
-    contexto: ContextoCarrito,
+    contexto: ContextoDetalleCarrito,
     accion: (token: string) => Promise<void>,
-): Promise<ContextoCarrito> => {
+): Promise<ContextoDetalleCarrito> => {
     const token = obtenerToken();
     if (!token) return { ...contexto, estado: "LISTO", error: NO_DISPONIBLE };
 

@@ -4,7 +4,6 @@ import {
     DireccionCuenta,
     ErroresRegistro,
     PedidoResumen,
-    RegistroApi,
 } from "./diseño.ts";
 
 export const PEDIDOS_POR_PAGINA = 20;
@@ -31,7 +30,7 @@ export const datosRegistroIniciales = (): DatosRegistro => ({
 
 const vacio = (valor: string | null): boolean => !valor || valor.trim() === "";
 
-const aNulo = (valor: string | null): string | null => (vacio(valor) ? null : valor);
+export const aNulo = (valor: string | null): string | null => (vacio(valor) ? null : valor);
 
 const emailValido = (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -51,22 +50,6 @@ export const erroresRegistro = (d: DatosRegistro): ErroresRegistro => {
     if (vacio(d.direccion.paisId)) errores["direccion.paisId"] = "El país es obligatorio";
     return errores;
 };
-
-export const registroAApi = (d: DatosRegistro): RegistroApi => ({
-    email: d.email,
-    password: d.password,
-    nombre: d.nombre,
-    id_fiscal: d.idFiscal,
-    telefono: aNulo(d.telefono),
-    direccion: {
-        nombre_via: d.direccion.nombreVia,
-        numero: aNulo(d.direccion.numero),
-        cod_postal: d.direccion.codPostal,
-        ciudad: d.direccion.ciudad,
-        provincia: aNulo(d.direccion.provincia),
-        pais_id: d.direccion.paisId,
-    },
-});
 
 export const criteriaPedidos = (pagina: number): Criteria => {
     const filtro: ClausulaFiltro[] = [];

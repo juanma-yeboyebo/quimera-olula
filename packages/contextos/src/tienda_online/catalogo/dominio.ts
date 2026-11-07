@@ -66,8 +66,6 @@ export const filtrosAUrl = (filtros: FiltrosCatalogo): URLSearchParams => {
     return params;
 };
 
-export const hayMas = (cargados: number, total: number): boolean => cargados < total;
-
 export const añadirPagina = (
     actuales: ProductoCatalogo[],
     nuevos: ProductoCatalogo[],

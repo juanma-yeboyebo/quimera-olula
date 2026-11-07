@@ -1,5 +1,5 @@
+import { CampoFormulario } from "../../comun/componentes/campo_formulario.tsx";
 import { DireccionCheckout, ErroresCheckout } from "../diseño.ts";
-import { CampoFormulario } from "./campo_formulario.tsx";
 
 export const CamposDireccion = ({
     prefijo,
@@ -14,9 +14,12 @@ export const CamposDireccion = ({
     deshabilitado: boolean;
     onCambiar: (direccion: DireccionCheckout) => void;
 }) => {
-    const campo = (clave: keyof DireccionCheckout, etiqueta: string) => (
+    const seccion = prefijo === "direccionEnvio" ? "shipping" : "";
+
+    const campo = (clave: keyof DireccionCheckout, etiqueta: string, autocompletar?: string) => (
         <CampoFormulario
             etiqueta={etiqueta}
+            autocompletar={autocompletar && `${seccion} ${autocompletar}`.trim()}
             valor={direccion[clave]}
             error={errores[`${prefijo}.${clave}`]}
             deshabilitado={deshabilitado}
@@ -27,14 +30,14 @@ export const CamposDireccion = ({
     return (
         <div className="checkout-direccion">
             {campo("tipoVia", "Tipo de vía")}
-            {campo("nombreVia", "Vía")}
+            {campo("nombreVia", "Vía", "address-line1")}
             {campo("numero", "Número")}
-            {campo("otros", "Otros")}
-            {campo("codPostal", "Código postal")}
-            {campo("ciudad", "Ciudad")}
-            {campo("provincia", "Provincia")}
-            {campo("paisId", "País")}
-            {campo("telefono", "Teléfono de contacto")}
+            {campo("otros", "Otros", "address-line2")}
+            {campo("codPostal", "Código postal", "postal-code")}
+            {campo("ciudad", "Ciudad", "address-level2")}
+            {campo("provincia", "Provincia", "address-level1")}
+            {campo("paisId", "País", "country")}
+            {campo("telefono", "Teléfono de contacto", "tel")}
         </div>
     );
 };

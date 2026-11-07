@@ -1,9 +1,7 @@
 import { CarritoTienda, EstadoCarrito } from "../comun/diseño.ts";
 import {
     DatosCheckout,
-    DatosCheckoutApi,
     DireccionCheckout,
-    DireccionCheckoutApi,
     ErroresCheckout,
     ResultadoPago,
 } from "./diseño.ts";
@@ -68,28 +66,7 @@ export const datosCheckoutIniciales = (carrito: CarritoTienda | null): DatosChec
 
 const vacio = (valor: string | null): boolean => !valor || valor.trim() === "";
 
-const aNulo = (valor: string | null): string | null => (vacio(valor) ? null : valor);
-
-const direccionAApi = (d: DireccionCheckout): DireccionCheckoutApi => ({
-    nombre_via: d.nombreVia,
-    tipo_via: aNulo(d.tipoVia),
-    numero: aNulo(d.numero),
-    otros: aNulo(d.otros),
-    cod_postal: d.codPostal,
-    ciudad: d.ciudad,
-    provincia: aNulo(d.provincia),
-    pais_id: d.paisId,
-    telefono: aNulo(d.telefono),
-});
-
-export const datosCheckoutAApi = (d: DatosCheckout): DatosCheckoutApi => ({
-    email: d.email,
-    nombre: d.nombre,
-    id_fiscal: aNulo(d.idFiscal),
-    telefono: aNulo(d.telefono),
-    direccion_facturacion: direccionAApi(d.direccionFacturacion),
-    direccion_envio: d.envioDistinto ? direccionAApi(d.direccionEnvio) : null,
-});
+export const aNulo = (valor: string | null): string | null => (vacio(valor) ? null : valor);
 
 const emailValido = (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 

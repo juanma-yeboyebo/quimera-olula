@@ -1,7 +1,7 @@
 import { ProcesarContexto } from "@olula/lib/diseño.ts";
 import { DatosRegistro } from "../diseño.ts";
-import { erroresRegistro, registroAApi } from "../dominio.ts";
-import { postRegistro } from "../infraestructura.ts";
+import { erroresRegistro } from "../dominio.ts";
+import { postRegistro, registroAApi } from "../infraestructura.ts";
 import { iniciarSesion } from "../sesion.ts";
 import { ContextoRegistro, EstadoRegistro } from "./diseño.ts";
 

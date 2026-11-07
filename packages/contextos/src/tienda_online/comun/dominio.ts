@@ -14,3 +14,5 @@ export const textoAriaCarrito = (unidades: number): string =>
 
 export const formatearPrecio = (importe: number, divisa: string, idioma: string): string =>
     new Intl.NumberFormat(idioma, { style: "currency", currency: divisa }).format(importe);
+
+export const hayMas = (cargados: number, total: number): boolean => cargados < total;

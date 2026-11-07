@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { ContextoCarrito } from "#/tienda_online/carrito/detalle/diseño.ts";
+import { ContextoDetalleCarrito } from "#/tienda_online/carrito/detalle/diseño.ts";
 
 const patchLineaCarrito = vi.fn();
 const deleteLineaCarrito = vi.fn();
@@ -25,10 +25,10 @@ const { cambiarCantidad, borrarLinea } = await import(
 
 const NO_DISPONIBLE = "Este carrito ya no está disponible";
 
-type Resultado = ContextoCarrito | [ContextoCarrito, unknown[]];
-const ctxDe = (r: Resultado): ContextoCarrito => (Array.isArray(r) ? r[0] : r);
+type Resultado = ContextoDetalleCarrito | [ContextoDetalleCarrito, unknown[]];
+const ctxDe = (r: Resultado): ContextoDetalleCarrito => (Array.isArray(r) ? r[0] : r);
 
-const ctxActualizando: ContextoCarrito = { estado: "ACTUALIZANDO", error: null };
+const ctxActualizando: ContextoDetalleCarrito = { estado: "ACTUALIZANDO", error: null };
 
 beforeEach(() => {
     patchLineaCarrito.mockReset();

@@ -5,7 +5,8 @@ import { DatosRegistro } from "#/tienda_online/cuenta/diseño.ts";
 const postRegistro = vi.fn();
 const iniciarSesion = vi.fn();
 
-vi.mock("#/tienda_online/cuenta/infraestructura.ts", () => ({
+vi.mock("#/tienda_online/cuenta/infraestructura.ts", async (importOriginal) => ({
+    ...(await importOriginal<object>()),
     postRegistro: (body: unknown) => postRegistro(body),
 }));
 

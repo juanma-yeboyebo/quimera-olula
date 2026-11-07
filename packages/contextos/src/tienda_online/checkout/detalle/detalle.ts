@@ -2,8 +2,8 @@ import { ProcesarContexto } from "@olula/lib/diseño.ts";
 import { obtenerToken, olvidarCarrito, recargarCarrito } from "../../comun/carrito_store.ts";
 import { codigoStoreViewActivo } from "../../comun/storeview.ts";
 import { DatosCheckout } from "../diseño.ts";
-import { clavePagoEnCurso, datosCheckoutAApi, erroresCheckout } from "../dominio.ts";
-import { patchDatosCheckout, postIniciarPago } from "../infraestructura.ts";
+import { clavePagoEnCurso, erroresCheckout } from "../dominio.ts";
+import { datosCheckoutAApi, patchDatosCheckout, postIniciarPago } from "../infraestructura.ts";
 import { redirigirA } from "../navegacion.ts";
 import { ContextoCheckout, EstadoCheckout } from "./diseño.ts";
 

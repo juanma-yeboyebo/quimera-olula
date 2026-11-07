@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
+import { DatosRegistro } from "#/tienda_online/cuenta/diseño.ts";
 
 const get = vi.fn();
 const post = vi.fn();
@@ -23,7 +24,25 @@ const {
     getPedidos,
     postAsociarCarrito,
     postRegistro,
+    registroAApi,
 } = await import("#/tienda_online/cuenta/infraestructura.ts");
+
+const validos: DatosRegistro = {
+    email: "ana@example.com",
+    password: "12345678",
+    repetirPassword: "12345678",
+    nombre: "Ana",
+    idFiscal: "B12345678",
+    telefono: null,
+    direccion: {
+        nombreVia: "Mayor",
+        numero: null,
+        codPostal: "28001",
+        ciudad: "Madrid",
+        provincia: null,
+        paisId: "ES",
+    },
+};
 
 const CABECERAS = { "X-Store-View": "sanhigia_es" };
 
@@ -206,5 +225,45 @@ describe("[cuenta-pedido-01] GET del detalle de pedido", () => {
         expect(p.lineas).toEqual([
             { referencia: "R1", descripcion: "Guantes", cantidad: 2, precio: 50, importe: 100 },
         ]);
+    });
+});
+
+describe("[cuenta-registro-03] registroAApi", () => {
+    test("cuenta_registro_03_body_en_snake_case_sin_repetir_password", () => {
+        const body = registroAApi({
+            ...validos,
+            telefono: "600000000",
+            direccion: { ...validos.direccion, numero: "5", provincia: "Madrid" },
+        });
+
+        expect(body).toEqual({
+            email: "ana@example.com",
+            password: "12345678",
+            nombre: "Ana",
+            id_fiscal: "B12345678",
+            telefono: "600000000",
+            direccion: {
+                nombre_via: "Mayor",
+                numero: "5",
+                cod_postal: "28001",
+                ciudad: "Madrid",
+                provincia: "Madrid",
+                pais_id: "ES",
+            },
+        });
+        expect(body).not.toHaveProperty("repetir_password");
+        expect(body).not.toHaveProperty("repetirPassword");
+    });
+
+    test("cuenta_registro_03_opcionales_vacios_como_null", () => {
+        const body = registroAApi({
+            ...validos,
+            telefono: "  ",
+            direccion: { ...validos.direccion, numero: "", provincia: null },
+        });
+
+        expect(body.telefono).toBeNull();
+        expect(body.direccion.numero).toBeNull();
+        expect(body.direccion.provincia).toBeNull();
     });
 });

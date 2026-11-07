@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { CampoFormulario } from "../../checkout/detalle/campo_formulario.tsx";
+import { CampoFormulario } from "../../comun/componentes/campo_formulario.tsx";
 import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
 import "../CuentaTienda.css";
 import { iniciarSesion } from "../sesion.ts";
@@ -42,6 +42,7 @@ const FormularioLogin = () => {
             <CampoFormulario
                 etiqueta="Email"
                 tipo="email"
+                autocompletar="username"
                 valor={email}
                 deshabilitado={ocupado}
                 onCambiar={setEmail}
@@ -49,6 +50,7 @@ const FormularioLogin = () => {
             <CampoFormulario
                 etiqueta="Contraseña"
                 tipo="password"
+                autocompletar="current-password"
                 valor={contraseña}
                 deshabilitado={ocupado}
                 onCambiar={setContraseña}

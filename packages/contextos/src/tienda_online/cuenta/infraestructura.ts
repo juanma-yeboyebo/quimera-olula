@@ -1,25 +1,75 @@
 import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { criteriaQuery } from "@olula/lib/infraestructura.ts";
-import { CarritoApi, CarritoTienda } from "../comun/diseño.ts";
-import { cabecerasTienda, carritoDesdeApi } from "../comun/infraestructura.ts";
+import { CarritoTienda } from "../comun/diseño.ts";
+import { CarritoApi, cabecerasTienda, carritoDesdeApi } from "../comun/infraestructura.ts";
 import { codigoStoreViewActivo } from "../comun/storeview.ts";
 import TiendaOnline_Urls from "../comun/urls.ts";
-import {
-    CuentaApi,
-    CuentaTienda,
-    PedidoDetalle,
-    PedidoDetalleApi,
-    PedidoResumen,
-    PedidoResumenApi,
-    RegistroApi,
-} from "./diseño.ts";
-import { criteriaPedidos } from "./dominio.ts";
+import { CuentaTienda, DatosRegistro, PedidoDetalle, PedidoResumen } from "./diseño.ts";
+import { aNulo, criteriaPedidos } from "./dominio.ts";
 
 const urls = new TiendaOnline_Urls();
 
-const URL_REGISTRO = "/public/tienda_online/cuenta/registro";
-const URL_CUENTA = "/tienda_online/cuenta/yo";
-const URL_PEDIDO = "/tienda_online/cuenta/pedido";
+export type DireccionRegistroApi = {
+    nombre_via: string;
+    numero: string | null;
+    cod_postal: string;
+    ciudad: string;
+    provincia: string | null;
+    pais_id: string;
+};
+
+export type RegistroApi = {
+    email: string;
+    password: string;
+    nombre: string;
+    id_fiscal: string;
+    telefono: string | null;
+    direccion: DireccionRegistroApi;
+};
+
+export type DireccionCuentaApi = {
+    id: string;
+    nombre_via: string;
+    numero: string | null;
+    cod_postal: string;
+    ciudad: string;
+    provincia: string | null;
+    pais_id: string;
+    envio: boolean;
+    facturacion: boolean;
+};
+
+export type CuentaApi = {
+    email: string;
+    nombre: string;
+    id_fiscal: string | null;
+    telefono: string | null;
+    cliente_id: string | null;
+    direcciones: DireccionCuentaApi[];
+};
+
+export type PedidoResumenApi = {
+    id: string;
+    codigo: string;
+    fecha: string;
+    total: number;
+    divisa: string;
+    servido: string;
+};
+
+export type LineaPedidoApi = {
+    referencia: string;
+    descripcion: string;
+    cantidad: number;
+    precio: number;
+    importe: number;
+};
+
+export type PedidoDetalleApi = PedidoResumenApi & {
+    neto: number;
+    total_iva: number;
+    lineas: LineaPedidoApi[];
+};
 
 const cabeceras = () => cabecerasTienda(codigoStoreViewActivo() ?? "");
 
@@ -64,8 +114,24 @@ export const pedidoDetalleDesdeApi = (p: PedidoDetalleApi): PedidoDetalle => ({
     })),
 });
 
+export const registroAApi = (d: DatosRegistro): RegistroApi => ({
+    email: d.email,
+    password: d.password,
+    nombre: d.nombre,
+    id_fiscal: d.idFiscal,
+    telefono: aNulo(d.telefono),
+    direccion: {
+        nombre_via: d.direccion.nombreVia,
+        numero: aNulo(d.direccion.numero),
+        cod_postal: d.direccion.codPostal,
+        ciudad: d.direccion.ciudad,
+        provincia: aNulo(d.direccion.provincia),
+        pais_id: d.direccion.paisId,
+    },
+});
+
 export const postRegistro = async (body: RegistroApi): Promise<void> => {
-    await RestAPI.post(URL_REGISTRO, body, "Error al crear la cuenta", cabeceras());
+    await RestAPI.post(urls.REGISTRO, body, "Error al crear la cuenta", cabeceras());
 };
 
 export const postAsociarCarrito = async (token: string): Promise<void> => {
@@ -93,7 +159,7 @@ export const getCarritoUsuario = async (): Promise<CarritoTienda | null> => {
 
 export const getCuenta = async (): Promise<CuentaTienda> => {
     const respuesta = await RestAPI.get<{ datos: CuentaApi }>(
-        URL_CUENTA,
+        urls.CUENTA,
         "Error al cargar la cuenta",
         cabeceras(),
     );
@@ -105,7 +171,7 @@ export const getPedidos = async (
 ): Promise<{ pedidos: PedidoResumen[]; total: number }> => {
     const { filtro, orden, paginacion } = criteriaPedidos(pagina);
     const respuesta = await RestAPI.get<{ datos: PedidoResumenApi[]; total: number }>(
-        `${URL_PEDIDO}${criteriaQuery(filtro, orden, paginacion)}`,
+        `${urls.PEDIDO}${criteriaQuery(filtro, orden, paginacion)}`,
         "Error al cargar los pedidos",
         cabeceras(),
     );
@@ -114,7 +180,7 @@ export const getPedidos = async (
 
 export const getPedido = async (id: string): Promise<PedidoDetalle> => {
     const respuesta = await RestAPI.get<{ datos: PedidoDetalleApi }>(
-        `${URL_PEDIDO}/${id}`,
+        `${urls.PEDIDO}/${id}`,
         "Error al cargar el pedido",
         cabeceras(),
     );

@@ -3,7 +3,6 @@ import { CarritoTienda } from "#/tienda_online/comun/diseño.ts";
 import { DatosCheckout, DireccionCheckout } from "#/tienda_online/checkout/diseño.ts";
 import {
     clavePagoEnCurso,
-    datosCheckoutAApi,
     datosCheckoutIniciales,
     erroresCheckout,
     resultadoPago,
@@ -138,22 +137,6 @@ describe("[checkout-datos-02] La casilla de envío distinto muestra una segunda 
         expect(d.direccionEnvio.ciudad).toBe("Sevilla");
         expect(d.direccionEnvio.codPostal).toBe("28001");
     });
-
-    test("checkout_datos_02_desmarcada_envia_direccion_envio_null", () => {
-        const body = datosCheckoutAApi({ ...datosValidos, envioDistinto: false, direccionEnvio: direccionValida });
-
-        expect(body.direccion_envio).toBeNull();
-    });
-
-    test("checkout_datos_02_marcada_envia_la_direccion_en_snake_case", () => {
-        const body = datosCheckoutAApi({
-            ...datosValidos,
-            envioDistinto: true,
-            direccionEnvio: { ...direccionValida, ciudad: "Sevilla" },
-        });
-
-        expect(body.direccion_envio).toEqual({ ...direccionApi, ciudad: "Sevilla" });
-    });
 });
 
 describe("[checkout-datos-03] Validación en el cliente con erroresCheckout", () => {
@@ -228,25 +211,6 @@ describe("[checkout-datos-03] Validación en el cliente con erroresCheckout", ()
         const e = erroresCheckout({ ...datosValidos, envioDistinto: true, direccionEnvio: direccionValida });
 
         expect(e).toEqual({});
-    });
-});
-
-describe("[checkout-maquina-01] Los datos se envían en snake_case", () => {
-    test("checkout_maquina_01_body_en_snake_case", () => {
-        const body = datosCheckoutAApi({
-            ...datosValidos,
-            idFiscal: "12345678Z",
-            telefono: "600",
-        });
-
-        expect(body).toEqual({
-            email: "ana@example.com",
-            nombre: "Ana",
-            id_fiscal: "12345678Z",
-            telefono: "600",
-            direccion_facturacion: direccionApi,
-            direccion_envio: null,
-        });
     });
 });
 

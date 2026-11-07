@@ -4,6 +4,7 @@ import {
     codigoStoreViewDesdeEnv,
     debeDescartarToken,
     formatearPrecio,
+    hayMas,
     textoAriaCarrito,
 } from "#/tienda_online/comun/dominio.ts";
 
@@ -70,5 +71,19 @@ describe("[catalogo-tarjeta-02] El precio se formatea con la divisa del producto
 
     test("catalogo_tarjeta_02_incluye_el_simbolo_de_la_divisa", () => {
         expect(formatearPrecio(12.1, "EUR", "es")).toContain("€");
+    });
+});
+
+describe("[catalogo-paginacion-01] Mientras los productos cargados sean menos que total se muestra «Ver más», que añade los productos de la página siguiente", () => {
+    test("catalogo_paginacion_01_hay_mas_si_cargados_menor_que_total", () => {
+        expect(hayMas(24, 50)).toBe(true);
+    });
+
+    test("catalogo_paginacion_01_no_hay_mas_si_cargados_igual_a_total", () => {
+        expect(hayMas(50, 50)).toBe(false);
+    });
+
+    test("catalogo_paginacion_01_no_hay_mas_con_catalogo_vacio", () => {
+        expect(hayMas(0, 0)).toBe(false);
     });
 });

@@ -7,11 +7,11 @@ import {
     recargarCarrito,
     useCarritoTienda,
 } from "../../comun/carrito_store.ts";
+import { CampoFormulario } from "../../comun/componentes/campo_formulario.tsx";
 import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
 import { CarritoTienda } from "../../comun/diseño.ts";
 import { formatearPrecio } from "../../comun/dominio.ts";
 import { datosCheckoutIniciales } from "../dominio.ts";
-import { CampoFormulario } from "./campo_formulario.tsx";
 import { CamposDireccion } from "./campos_direccion.tsx";
 import "./CheckoutTienda.css";
 import { contextoCheckoutInicial } from "./detalle.ts";
@@ -130,6 +130,7 @@ const FormularioCheckout = ({ idioma }: { idioma: string }) => {
                 <CampoFormulario
                     etiqueta="Email"
                     tipo="email"
+                    autocompletar="email"
                     valor={datos.email}
                     error={errores.email}
                     deshabilitado={ocupado}
@@ -137,6 +138,7 @@ const FormularioCheckout = ({ idioma }: { idioma: string }) => {
                 />
                 <CampoFormulario
                     etiqueta="Nombre"
+                    autocompletar="name"
                     valor={datos.nombre}
                     error={errores.nombre}
                     deshabilitado={ocupado}
@@ -151,6 +153,7 @@ const FormularioCheckout = ({ idioma }: { idioma: string }) => {
                 <CampoFormulario
                     etiqueta="Teléfono (opcional)"
                     tipo="tel"
+                    autocompletar="tel"
                     valor={datos.telefono}
                     deshabilitado={ocupado}
                     onCambiar={(telefono) => cambiar({ telefono })}

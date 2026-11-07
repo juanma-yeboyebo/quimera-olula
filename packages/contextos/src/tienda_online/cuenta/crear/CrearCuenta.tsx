@@ -1,7 +1,7 @@
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { CampoFormulario } from "../../checkout/detalle/campo_formulario.tsx";
+import { CampoFormulario } from "../../comun/componentes/campo_formulario.tsx";
 import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
 import "../CuentaTienda.css";
 import { DatosRegistro, DireccionRegistro } from "../diseño.ts";
@@ -66,6 +66,7 @@ const FormularioRegistro = () => {
             <CampoFormulario
                 etiqueta="Email"
                 tipo="email"
+                autocompletar="email"
                 valor={datos.email}
                 error={errores.email}
                 deshabilitado={ocupado}
@@ -74,6 +75,7 @@ const FormularioRegistro = () => {
             <CampoFormulario
                 etiqueta="Contraseña"
                 tipo="password"
+                autocompletar="new-password"
                 valor={datos.password}
                 error={errores.password}
                 deshabilitado={ocupado}
@@ -82,6 +84,7 @@ const FormularioRegistro = () => {
             <CampoFormulario
                 etiqueta="Repetir contraseña"
                 tipo="password"
+                autocompletar="new-password"
                 valor={datos.repetirPassword}
                 error={errores.repetirPassword}
                 deshabilitado={ocupado}
@@ -89,6 +92,7 @@ const FormularioRegistro = () => {
             />
             <CampoFormulario
                 etiqueta="Nombre"
+                autocompletar="name"
                 valor={datos.nombre}
                 error={errores.nombre}
                 deshabilitado={ocupado}
@@ -104,6 +108,7 @@ const FormularioRegistro = () => {
             <CampoFormulario
                 etiqueta="Teléfono (opcional)"
                 tipo="tel"
+                autocompletar="tel"
                 valor={datos.telefono}
                 deshabilitado={ocupado}
                 onCambiar={(telefono) => cambiar({ telefono })}
@@ -113,6 +118,7 @@ const FormularioRegistro = () => {
                 <div className="cuenta-direccion">
                     <CampoFormulario
                         etiqueta="Vía"
+                        autocompletar="address-line1"
                         valor={datos.direccion.nombreVia}
                         error={errores["direccion.nombreVia"]}
                         deshabilitado={ocupado}
@@ -126,6 +132,7 @@ const FormularioRegistro = () => {
                     />
                     <CampoFormulario
                         etiqueta="Código postal"
+                        autocompletar="postal-code"
                         valor={datos.direccion.codPostal}
                         error={errores["direccion.codPostal"]}
                         deshabilitado={ocupado}
@@ -133,6 +140,7 @@ const FormularioRegistro = () => {
                     />
                     <CampoFormulario
                         etiqueta="Ciudad"
+                        autocompletar="address-level2"
                         valor={datos.direccion.ciudad}
                         error={errores["direccion.ciudad"]}
                         deshabilitado={ocupado}
@@ -140,12 +148,14 @@ const FormularioRegistro = () => {
                     />
                     <CampoFormulario
                         etiqueta="Provincia"
+                        autocompletar="address-level1"
                         valor={datos.direccion.provincia}
                         deshabilitado={ocupado}
                         onCambiar={(provincia) => cambiarDireccion({ provincia })}
                     />
                     <CampoFormulario
                         etiqueta="País"
+                        autocompletar="country"
                         valor={datos.direccion.paisId}
                         error={errores["direccion.paisId"]}
                         deshabilitado={ocupado}

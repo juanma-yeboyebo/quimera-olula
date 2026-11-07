@@ -2,11 +2,11 @@ import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router";
 import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
+import { hayMas } from "../../comun/dominio.ts";
 import { CategoriaTienda, ContextoCatalogo, OrdenCatalogo } from "../diseño.ts";
 import {
     filtrosAUrl,
     filtrosDesdeUrl,
-    hayMas,
     opcionesOrden,
     rutaCategoria,
 } from "../dominio.ts";

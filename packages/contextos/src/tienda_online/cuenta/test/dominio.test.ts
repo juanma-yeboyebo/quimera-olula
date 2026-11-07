@@ -6,7 +6,6 @@ import {
     datosRegistroIniciales,
     erroresRegistro,
     PEDIDOS_POR_PAGINA,
-    registroAApi,
 } from "#/tienda_online/cuenta/dominio.ts";
 
 const validos: DatosRegistro = {
@@ -75,46 +74,6 @@ describe("[cuenta-registro-02] Validación del registro", () => {
 
     test("cuenta_registro_02_telefono_numero_y_provincia_son_opcionales", () => {
         expect(erroresRegistro({ ...validos, telefono: "" })).toEqual({});
-    });
-});
-
-describe("[cuenta-registro-03] registroAApi", () => {
-    test("cuenta_registro_03_body_en_snake_case_sin_repetir_password", () => {
-        const body = registroAApi({
-            ...validos,
-            telefono: "600000000",
-            direccion: { ...validos.direccion, numero: "5", provincia: "Madrid" },
-        });
-
-        expect(body).toEqual({
-            email: "ana@example.com",
-            password: "12345678",
-            nombre: "Ana",
-            id_fiscal: "B12345678",
-            telefono: "600000000",
-            direccion: {
-                nombre_via: "Mayor",
-                numero: "5",
-                cod_postal: "28001",
-                ciudad: "Madrid",
-                provincia: "Madrid",
-                pais_id: "ES",
-            },
-        });
-        expect(body).not.toHaveProperty("repetir_password");
-        expect(body).not.toHaveProperty("repetirPassword");
-    });
-
-    test("cuenta_registro_03_opcionales_vacios_como_null", () => {
-        const body = registroAApi({
-            ...validos,
-            telefono: "  ",
-            direccion: { ...validos.direccion, numero: "", provincia: null },
-        });
-
-        expect(body.telefono).toBeNull();
-        expect(body.direccion.numero).toBeNull();
-        expect(body.direccion.provincia).toBeNull();
     });
 });
 

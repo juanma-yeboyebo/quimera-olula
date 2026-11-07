@@ -1,0 +1,13 @@
+.campo-formulario {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaciado-xxs);
+
+    input[aria-invalid="true"] {
+        border-color: var(--color-error);
+    }
+}
+
+.campo-formulario-error {
+    color: var(--color-error);
+}

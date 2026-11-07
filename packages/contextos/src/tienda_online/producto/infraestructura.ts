@@ -2,9 +2,30 @@ import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import { obtenerToken } from "../comun/carrito_store.ts";
 import { cabecerasTienda } from "../comun/infraestructura.ts";
 import { codigoStoreViewActivo } from "../comun/storeview.ts";
-import { FichaProducto, FichaProductoApi } from "./diseño.ts";
+import TiendaOnline_Urls from "../comun/urls.ts";
+import { CategoriaProducto, FichaProducto, ImagenProducto } from "./diseño.ts";
 
-const baseUrl = "/public/tienda_online";
+const urls = new TiendaOnline_Urls();
+
+export interface FichaProductoApi {
+    referencia: string;
+    slug: string;
+    descripcion: string;
+    descripcion_corta: string | null;
+    descripcion_larga: string | null;
+    meta_titulo: string | null;
+    meta_descripcion: string | null;
+    imagenes: ImagenProducto[];
+    categorias: CategoriaProducto[];
+    disponible: boolean;
+    cantidad_disponible: number;
+    sin_control_stock: boolean;
+    precio: number;
+    precio_con_iva: number;
+    tipo_iva: number;
+    divisa: string;
+    iva_incluido: boolean;
+}
 
 export const fichaDesdeApi = (p: FichaProductoApi): FichaProducto => ({
     referencia: p.referencia,
@@ -28,7 +49,7 @@ export const fichaDesdeApi = (p: FichaProductoApi): FichaProducto => ({
 
 export const getProducto = async (slug: string): Promise<FichaProducto> => {
     const respuesta = await RestAPI.get<{ datos: FichaProductoApi }>(
-        `${baseUrl}/producto/${slug}`,
+        `${urls.PRODUCTO}/${slug}`,
         "Error al cargar el producto",
         cabecerasTienda(codigoStoreViewActivo() ?? "", obtenerToken() ?? undefined),
     );
@@ -41,7 +62,7 @@ export const postLineaCarrito = async (
     cantidad: number,
 ): Promise<number> => {
     const respuesta = await RestAPI.post(
-        `${baseUrl}/carrito/${token}/linea`,
+        `${urls.CARRITO}/${token}/linea`,
         { articulo_id: referencia, cantidad },
         "Error al añadir al carrito",
         cabecerasTienda(codigoStoreViewActivo() ?? ""),

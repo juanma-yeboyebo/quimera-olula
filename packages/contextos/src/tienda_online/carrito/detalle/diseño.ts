@@ -1,6 +1,6 @@
-export type EstadoCarrito = "LISTO" | "ACTUALIZANDO";
+export type EstadoDetalleCarrito = "LISTO" | "ACTUALIZANDO";
 
-export type ContextoCarrito = {
-    estado: EstadoCarrito;
+export type ContextoDetalleCarrito = {
+    estado: EstadoDetalleCarrito;
     error: string | null;
 };

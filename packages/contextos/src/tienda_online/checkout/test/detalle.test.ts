@@ -10,7 +10,8 @@ const olvidarCarrito = vi.fn();
 const codigoStoreViewActivo = vi.fn();
 const redirigirA = vi.fn();
 
-vi.mock("#/tienda_online/checkout/infraestructura.ts", () => ({
+vi.mock("#/tienda_online/checkout/infraestructura.ts", async (importOriginal) => ({
+    ...(await importOriginal<object>()),
     patchDatosCheckout: (token: string, body: unknown) => patchDatosCheckout(token, body),
     postIniciarPago: (token: string) => postIniciarPago(token),
 }));

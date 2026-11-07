@@ -3,7 +3,7 @@ import { BorrarLineaCarrito } from "../../borrar_linea/BorrarLineaCarrito.tsx";
 import { CambiarCantidadLinea } from "../../cambiar_linea/CambiarCantidadLinea.tsx";
 import { CarritoTienda } from "../../../comun/diseño.ts";
 import { formatearPrecio } from "../../../comun/dominio.ts";
-import { EstadoCarrito } from "../diseño.ts";
+import { EstadoDetalleCarrito } from "../diseño.ts";
 
 export const LineasCarrito = ({
     carrito,
@@ -14,7 +14,7 @@ export const LineasCarrito = ({
 }: {
     carrito: CarritoTienda;
     idioma: string;
-    estado: EstadoCarrito;
+    estado: EstadoDetalleCarrito;
     ocupado: boolean;
     publicar: (evento: string, payload?: unknown) => void | Promise<void>;
 }) => {

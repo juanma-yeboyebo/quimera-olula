@@ -44,26 +44,3 @@ export type ContextoCatalogo = {
     pagina: number;
     filtros: FiltrosCatalogo;
 };
-
-export interface ItemCatalogoApi {
-    referencia: string;
-    slug: string;
-    descripcion: string;
-    descripcion_corta: string;
-    imagen: ImagenCatalogo | null;
-    destacado: boolean;
-    disponible: boolean;
-    sin_control_stock: boolean;
-    precio: number;
-    precio_con_iva: number;
-    tipo_iva: number;
-    divisa: string;
-    iva_incluido: boolean;
-}
-
-export interface NodoCategoriaApi {
-    id: number;
-    nombre: string;
-    slug: string;
-    hijas: NodoCategoriaApi[];
-}

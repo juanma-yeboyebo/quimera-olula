@@ -5,7 +5,6 @@ import {
     estaDisponible,
     filtrosAUrl,
     filtrosDesdeUrl,
-    hayMas,
     rutaCategoria,
 } from "#/tienda_online/catalogo/dominio.ts";
 import {
@@ -172,18 +171,6 @@ describe("[catalogo-rutas-02] Los filtros y el orden se reflejan en la URL (?tex
 });
 
 describe("[catalogo-paginacion-01] Mientras los productos cargados sean menos que total se muestra «Ver más», que añade los productos de la página siguiente", () => {
-    test("catalogo_paginacion_01_hay_mas_si_cargados_menor_que_total", () => {
-        expect(hayMas(24, 50)).toBe(true);
-    });
-
-    test("catalogo_paginacion_01_no_hay_mas_si_cargados_igual_a_total", () => {
-        expect(hayMas(50, 50)).toBe(false);
-    });
-
-    test("catalogo_paginacion_01_no_hay_mas_con_catalogo_vacio", () => {
-        expect(hayMas(0, 0)).toBe(false);
-    });
-
     test("catalogo_paginacion_01_anade_al_final_conservando_el_orden", () => {
         const r = añadirPagina([producto("A"), producto("B")], [producto("C")]);
         expect(r.map((p) => p.referencia)).toEqual(["A", "B", "C"]);

@@ -1,9 +1,8 @@
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router";
-import { hayMas } from "../../catalogo/dominio.ts";
 import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
-import { formatearPrecio } from "../../comun/dominio.ts";
+import { formatearPrecio, hayMas } from "../../comun/dominio.ts";
 import "../CuentaTienda.css";
 import { etiquetasDireccion, textoDireccion } from "../dominio.ts";
 import { contextoCuentaInicial } from "./detalle.ts";
