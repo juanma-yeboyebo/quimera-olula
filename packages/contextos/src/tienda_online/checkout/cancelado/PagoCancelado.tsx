@@ -23,11 +23,16 @@ const ContenidoCancelado = ({ codigo }: { codigo: string }) => {
 
     return (
         <div className="PagoCancelado">
-            <p>Has cancelado el pago. Tu carrito sigue disponible.</p>
             {resultado ? (
-                <Link to="/carrito">Volver al carrito</Link>
+                <>
+                    <p>Has cancelado el pago. Tu carrito sigue disponible.</p>
+                    <Link to="/carrito">Volver al carrito</Link>
+                </>
             ) : (
-                <Link to="/catalogo">Ir al catálogo</Link>
+                <>
+                    <p>Has cancelado el pago.</p>
+                    <Link to="/catalogo">Ir al catálogo</Link>
+                </>
             )}
         </div>
     );

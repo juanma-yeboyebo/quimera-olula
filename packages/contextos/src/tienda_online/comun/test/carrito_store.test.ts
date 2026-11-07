@@ -95,6 +95,33 @@ describe("[tienda-carrito_store-02] Sin token guardado no se crea carrito hasta 
     });
 });
 
+describe("[tienda-carrito_store-02] llamadas concurrentes", () => {
+    test("tienda_carrito_store_02_asegurarCarrito_concurrente_comparte_la_creacion", async () => {
+        postCarrito.mockResolvedValue("tok-nuevo");
+        getCarrito.mockResolvedValue(carritoApi());
+        const store = await cargarAlmacen();
+        await store.iniciarCarrito(SV);
+
+        const [a, b] = await Promise.all([store.asegurarCarrito(), store.asegurarCarrito()]);
+
+        expect(postCarrito).toHaveBeenCalledOnce();
+        expect(a).toBe("tok-nuevo");
+        expect(b).toBe("tok-nuevo");
+    });
+
+    test("tienda_carrito_store_02_si_falla_la_creacion_se_puede_reintentar", async () => {
+        postCarrito.mockRejectedValueOnce({ nombre: "Error", descripcion: "", estado: 500 });
+        postCarrito.mockResolvedValueOnce("tok-2");
+        getCarrito.mockResolvedValue(carritoApi());
+        const store = await cargarAlmacen();
+        await store.iniciarCarrito(SV);
+
+        await expect(store.asegurarCarrito()).rejects.toMatchObject({ estado: 500 });
+
+        expect(await store.asegurarCarrito()).toBe("tok-2");
+    });
+});
+
 describe("[tienda-carrito_store-03] Con token guardado se carga el carrito y se expone el número de unidades", () => {
     test("tienda_carrito_store_03_carga_con_getCarrito_y_expone_unidades", async () => {
         localStorage.setItem(CLAVE, "tok-1");

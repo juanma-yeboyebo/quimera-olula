@@ -1,5 +1,5 @@
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, Navigate } from "react-router";
 import { estaVacio } from "../../carrito/dominio.ts";
 import {
@@ -87,7 +87,22 @@ const FormularioCheckout = ({ idioma }: { idioma: string }) => {
         contextoCheckoutInicial(datosCheckoutIniciales(obtenerCarrito())),
     );
     const { estado, datos, errores, error } = ctx;
-    const ocupado = estado === "GUARDANDO" || estado === "PAGANDO" || estado === "REDIRIGIENDO";
+    const enCurso = useRef(false);
+    const [bloqueado, setBloqueado] = useState(false);
+    const ocupado =
+        bloqueado || estado === "GUARDANDO" || estado === "PAGANDO" || estado === "REDIRIGIENDO";
+
+    const lanzar = async (evento: string) => {
+        if (enCurso.current) return;
+        enCurso.current = true;
+        setBloqueado(true);
+        try {
+            await emitir(evento);
+        } finally {
+            enCurso.current = false;
+            setBloqueado(false);
+        }
+    };
     const editando = estado === "DATOS" || estado === "GUARDANDO";
 
     const cambiar = (cambio: Partial<typeof datos>) => emitir("datos_cambiados", { ...datos, ...cambio });
@@ -106,7 +121,7 @@ const FormularioCheckout = ({ idioma }: { idioma: string }) => {
                 noValidate
                 onSubmit={(e) => {
                     e.preventDefault();
-                    emitir("continuar");
+                    lanzar("continuar");
                 }}
             >
                 <h1>Datos del pedido</h1>
@@ -193,7 +208,7 @@ const FormularioCheckout = ({ idioma }: { idioma: string }) => {
                 <button type="button" disabled={ocupado} onClick={() => emitir("volver")}>
                     Modificar datos
                 </button>
-                <button type="button" disabled={ocupado || !carrito} onClick={() => emitir("pagar")}>
+                <button type="button" disabled={ocupado || !carrito} onClick={() => lanzar("pagar")}>
                     Pagar
                 </button>
             </div>

@@ -1,5 +1,5 @@
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { CampoFormulario } from "../../checkout/detalle/campo_formulario.tsx";
 import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
@@ -16,7 +16,21 @@ const FormularioRegistro = () => {
         contextoRegistroInicial(datosRegistroIniciales()),
     );
     const { estado, datos, errores, error, emailRepetido } = ctx;
-    const ocupado = estado !== "EDITANDO";
+    const enCurso = useRef(false);
+    const [bloqueado, setBloqueado] = useState(false);
+    const ocupado = bloqueado || estado !== "EDITANDO";
+
+    const crear = async () => {
+        if (enCurso.current) return;
+        enCurso.current = true;
+        setBloqueado(true);
+        try {
+            await emitir("crear");
+        } finally {
+            enCurso.current = false;
+            setBloqueado(false);
+        }
+    };
 
     useEffect(() => {
         if (estado === "REGISTRADO") navigate("/mi-cuenta", { replace: true });
@@ -35,7 +49,7 @@ const FormularioRegistro = () => {
             noValidate
             onSubmit={(e) => {
                 e.preventDefault();
-                emitir("crear");
+                crear();
             }}
         >
             <h1>Crear cuenta</h1>

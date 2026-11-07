@@ -1,5 +1,5 @@
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
 import { recargarCarrito, useCarritoTienda } from "../../comun/carrito_store.ts";
@@ -13,6 +13,20 @@ import { getMaquina } from "./maquina.ts";
 const ContenidoCarrito = ({ idioma }: { idioma: string }) => {
     const carrito = useCarritoTienda();
     const { ctx, emitir } = useMaquina(getMaquina, contextoCarritoInicial);
+    const enCurso = useRef(false);
+    const [bloqueado, setBloqueado] = useState(false);
+
+    const publicar = async (evento: string, payload?: unknown) => {
+        if (enCurso.current) return;
+        enCurso.current = true;
+        setBloqueado(true);
+        try {
+            await emitir(evento, payload);
+        } finally {
+            enCurso.current = false;
+            setBloqueado(false);
+        }
+    };
 
     useEffect(() => {
         recargarCarrito().catch(() => undefined);
@@ -47,7 +61,8 @@ const ContenidoCarrito = ({ idioma }: { idioma: string }) => {
                 carrito={carrito}
                 idioma={idioma}
                 estado={ctx.estado}
-                publicar={emitir}
+                ocupado={bloqueado}
+                publicar={publicar}
             />
             <dl className="carrito-totales">
                 <dt>Base imponible</dt>

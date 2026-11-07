@@ -66,12 +66,20 @@ export const iniciarCarrito = async (codigo: string): Promise<void> => {
     if (token) await recargarCarrito();
 };
 
+let creando: Promise<string> | null = null;
+
 export const asegurarCarrito = async (): Promise<string> => {
     if (token) return token;
-    const nuevo = await postCarrito();
-    guardarToken(nuevo);
-    await recargarCarrito();
-    return nuevo;
+    if (creando) return creando;
+    creando = (async () => {
+        const nuevo = await postCarrito();
+        guardarToken(nuevo);
+        await recargarCarrito();
+        return nuevo;
+    })().finally(() => {
+        creando = null;
+    });
+    return creando;
 };
 
 export const useCarritoTienda = (): CarritoTienda | null =>

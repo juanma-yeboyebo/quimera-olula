@@ -1,4 +1,4 @@
-import { KeyboardEvent, useRef, useState } from "react";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { LineaCarritoTienda } from "../../comun/diseño.ts";
 import { cantidadValida } from "../dominio.ts";
 
@@ -13,6 +13,11 @@ export const CambiarCantidadLinea = ({
 }) => {
     const [texto, setTexto] = useState(String(linea.cantidad));
     const enviado = useRef(false);
+
+    useEffect(() => {
+        enviado.current = false;
+        setTexto(String(linea.cantidad));
+    }, [deshabilitado, linea.cantidad]);
 
     const enviar = (valor: unknown) => {
         if (enviado.current) return;
@@ -35,7 +40,7 @@ export const CambiarCantidadLinea = ({
             <button
                 type="button"
                 aria-label={`Quitar una unidad de ${linea.descripcion}`}
-                disabled={deshabilitado}
+                disabled={deshabilitado || linea.cantidad <= 1}
                 onClick={() => linea.cantidad > 1 && enviar(linea.cantidad - 1)}
             >
                 −

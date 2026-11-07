@@ -1,6 +1,6 @@
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
 import { FactoryCtx } from "@olula/lib/factory_ctx.tsx";
-import { ComponentType, useContext, useEffect, useState } from "react";
+import { ComponentType, useContext, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router";
 import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
 import { formatearPrecio } from "../../comun/dominio.ts";
@@ -63,6 +63,20 @@ const ContenidoFicha = ({ idioma }: { idioma: string }) => {
         | undefined;
     const { ctx, emitir } = useMaquina(getMaquina, contextoFichaInicial);
     const { estado, ficha, cantidad, aviso, error } = ctx;
+    const enCurso = useRef(false);
+    const [bloqueado, setBloqueado] = useState(false);
+
+    const anadir = async () => {
+        if (enCurso.current) return;
+        enCurso.current = true;
+        setBloqueado(true);
+        try {
+            await emitir("anadir_solicitado");
+        } finally {
+            enCurso.current = false;
+            setBloqueado(false);
+        }
+    };
 
     useEffect(() => {
         emitir("slug_cambiado", slug);
@@ -70,7 +84,18 @@ const ContenidoFicha = ({ idioma }: { idioma: string }) => {
     }, [slug]);
 
     useEffect(() => {
-        if (ficha) fijarMetadatos(ficha);
+        if (!ficha) return;
+        const tituloPrevio = document.title;
+        const meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+        const descripcionPrevia = meta ? meta.content : null;
+        fijarMetadatos(ficha);
+        return () => {
+            document.title = tituloPrevio;
+            const actual = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+            if (!actual) return;
+            if (descripcionPrevia === null) actual.remove();
+            else actual.content = descripcionPrevia;
+        };
     }, [ficha]);
 
     if (estado === "CARGANDO" && !ficha) return <p>Cargando...</p>;
@@ -128,8 +153,8 @@ const ContenidoFicha = ({ idioma }: { idioma: string }) => {
                     </label>
                     <button
                         type="button"
-                        disabled={!disponible || estado === "AÑADIENDO"}
-                        onClick={() => emitir("anadir_solicitado")}
+                        disabled={!disponible || bloqueado || estado === "AÑADIENDO"}
+                        onClick={anadir}
                     >
                         Añadir al carrito
                     </button>

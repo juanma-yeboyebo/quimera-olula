@@ -39,10 +39,15 @@ export const enlazarCarritoTrasLogin = async (): Promise<void> => {
 export const iniciarSesion = async (email: string, contraseña: string): Promise<boolean> => {
     try {
         await login(email, contraseña);
+    } catch {
+        return false;
+    }
+    try {
         const datos = await whoAmI();
         whoAmIStorage.actualizar(datos);
         permisosGrupo.actualizar(datos.permisos);
     } catch {
+        await logout().catch(() => undefined);
         return false;
     }
     await enlazarCarritoTrasLogin();

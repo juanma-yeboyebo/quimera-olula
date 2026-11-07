@@ -93,6 +93,28 @@ describe("[cuenta-login-02] Login fallido", () => {
 
         expect(await iniciarSesion("a@b.es", "x")).toBe(false);
     });
+
+    test("cuenta_login_02_si_falla_whoami_deshace_la_sesion", async () => {
+        whoAmI.mockRejectedValue(errorApi(500));
+
+        expect(await iniciarSesion("a@b.es", "x")).toBe(false);
+        expect(logout).toHaveBeenCalledOnce();
+    });
+
+    test("cuenta_login_02_si_falla_whoami_y_logout_devuelve_false", async () => {
+        whoAmI.mockRejectedValue(errorApi(500));
+        logout.mockRejectedValue(errorApi(500));
+
+        expect(await iniciarSesion("a@b.es", "x")).toBe(false);
+    });
+
+    test("cuenta_login_02_si_falla_login_no_llama_a_logout", async () => {
+        login.mockRejectedValue(errorApi(401));
+
+        await iniciarSesion("a@b.es", "mala");
+
+        expect(logout).not.toHaveBeenCalled();
+    });
 });
 
 describe("[cuenta-login-03] Con token se asocia y se recarga", () => {

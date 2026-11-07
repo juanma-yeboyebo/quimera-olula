@@ -74,7 +74,7 @@ const ContenidoCatalogo = ({ idioma }: { idioma: string }) => {
     }, [claveFiltros]);
 
     useEffect(() => {
-        setTexto(filtros.texto);
+        setTexto((previo) => (previo.trim() === filtros.texto ? previo : filtros.texto));
     }, [filtros.texto]);
 
     const aplicar = (parcial: Partial<typeof filtros>) =>
@@ -83,7 +83,15 @@ const ContenidoCatalogo = ({ idioma }: { idioma: string }) => {
     useEffect(() => {
         if (texto.trim() === filtros.texto) return;
         const temporizador = setTimeout(
-            () => setParams(filtrosAUrl({ ...filtros, texto: texto.trim() }), { replace: true }),
+            () =>
+                setParams(
+                    (actuales) =>
+                        filtrosAUrl({
+                            ...filtrosDesdeUrl(actuales, slug ?? null),
+                            texto: texto.trim(),
+                        }),
+                    { replace: true }
+                ),
             RETARDO_BUSQUEDA
         );
         return () => clearTimeout(temporizador);

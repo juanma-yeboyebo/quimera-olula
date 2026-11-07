@@ -9,19 +9,21 @@ export const LineasCarrito = ({
     carrito,
     idioma,
     estado,
+    ocupado,
     publicar,
 }: {
     carrito: CarritoTienda;
     idioma: string;
     estado: EstadoCarrito;
-    publicar: (evento: string, payload?: unknown) => void;
+    ocupado: boolean;
+    publicar: (evento: string, payload?: unknown) => void | Promise<void>;
 }) => {
-    const deshabilitado = estado === "ACTUALIZANDO";
+    const deshabilitado = ocupado || estado === "ACTUALIZANDO";
 
     return (
         <ul className="carrito-lineas">
             {carrito.lineas.map((linea) => (
-                <li key={`${linea.id}-${linea.cantidad}-${estado}`} className="carrito-linea">
+                <li key={linea.id} className="carrito-linea">
                     <div className="linea-imagen">
                         {linea.imagen ? (
                             <img src={linea.imagen.url} alt={linea.imagen.alt || linea.descripcion} />
