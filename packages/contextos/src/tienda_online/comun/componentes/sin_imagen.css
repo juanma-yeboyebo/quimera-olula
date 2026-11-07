@@ -1,0 +1,6 @@
+.sin-imagen {
+    width: 40%;
+    max-width: 8rem;
+    height: auto;
+    color: var(--color-borde-sutil);
+}

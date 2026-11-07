@@ -4,6 +4,7 @@ import { ComponentType, useContext, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router";
 import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
 import { formatearPrecio } from "../../comun/dominio.ts";
+import { SinImagen } from "../../comun/componentes/sin_imagen.tsx";
 import { FichaProducto as Ficha, ImagenProducto } from "../diseño.ts";
 import { estaDisponible, imagenInicial, metadatosFicha } from "../dominio.ts";
 import { contextoFichaInicial } from "./detalle.ts";
@@ -32,7 +33,7 @@ const Galeria = ({ ficha }: { ficha: Ficha }) => {
                 {mostrada ? (
                     <img src={mostrada.url} alt={mostrada.alt ?? ficha.descripcion} />
                 ) : (
-                    <span className="ficha-marcador" aria-hidden="true" />
+                    <SinImagen />
                 )}
             </div>
             {ficha.imagenes.length > 1 && (

@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { BorrarLineaCarrito } from "../../borrar_linea/BorrarLineaCarrito.tsx";
 import { CambiarCantidadLinea } from "../../cambiar_linea/CambiarCantidadLinea.tsx";
 import { CarritoTienda } from "../../../comun/diseño.ts";
+import { SinImagen } from "../../../comun/componentes/sin_imagen.tsx";
 import { formatearPrecio } from "../../../comun/dominio.ts";
 import { EstadoDetalleCarrito } from "../diseño.ts";
 
@@ -28,7 +29,7 @@ export const LineasCarrito = ({
                         {linea.imagen ? (
                             <img src={linea.imagen.url} alt={linea.imagen.alt || linea.descripcion} />
                         ) : (
-                            <span className="linea-marcador" aria-hidden="true" />
+                            <SinImagen />
                         )}
                     </div>
                     <div className="linea-datos">

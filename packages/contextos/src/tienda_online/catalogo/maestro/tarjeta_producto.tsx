@@ -2,6 +2,7 @@ import { FactoryCtx } from "@olula/lib/factory_ctx.tsx";
 import { ComponentType, useContext } from "react";
 import { Link } from "react-router";
 import { formatearPrecio } from "../../comun/dominio.ts";
+import { SinImagen } from "../../comun/componentes/sin_imagen.tsx";
 import { ProductoCatalogo } from "../diseño.ts";
 import { estaDisponible } from "../dominio.ts";
 import "./tarjeta_producto.css";
@@ -30,7 +31,7 @@ export const TarjetaProducto = ({
                             loading="lazy"
                         />
                     ) : (
-                        <span className="tarjeta-producto-marcador" aria-hidden="true" />
+                        <SinImagen />
                     )}
                     {producto.destacado && (
                         <span className="tarjeta-producto-distintivo">Destacado</span>
