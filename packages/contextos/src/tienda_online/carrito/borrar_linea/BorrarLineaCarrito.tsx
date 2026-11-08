@@ -1,21 +1,21 @@
+import { BotonTienda } from "../../comun/componentes/boton_tienda.tsx";
 import { LineaCarritoTienda } from "../../comun/diseño.ts";
 
 export const BorrarLineaCarrito = ({
     linea,
-    deshabilitado,
     onBorrar,
+    deshabilitado,
 }: {
     linea: LineaCarritoTienda;
     deshabilitado: boolean;
     onBorrar: () => void;
 }) => (
-    <button
-        type="button"
-        className="linea-borrar"
-        aria-label={`Quitar ${linea.descripcion} del carrito`}
-        disabled={deshabilitado}
+    <BotonTienda
+        variante="enlace"
+        etiqueta={`Quitar ${linea.descripcion} del carrito`}
+        deshabilitado={deshabilitado}
         onClick={onBorrar}
     >
         Quitar
-    </button>
+    </BotonTienda>
 );

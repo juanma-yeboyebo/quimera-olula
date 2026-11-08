@@ -11,6 +11,7 @@ export const BotonTienda = ({
     a,
     tipo = "button",
     deshabilitado,
+    etiqueta,
     onClick,
 }: {
     children: ReactNode;
@@ -19,13 +20,14 @@ export const BotonTienda = ({
     a?: string;
     tipo?: "button" | "submit";
     deshabilitado?: boolean;
+    etiqueta?: string;
     onClick?: MouseEventHandler<HTMLElement>;
 }) => {
     const clase = `boton-tienda boton-tienda-${variante}${ancho ? " boton-tienda-ancho" : ""}`;
 
     if (a) {
         return (
-            <Link to={a} className={clase} onClick={onClick}>
+            <Link to={a} className={clase} aria-label={etiqueta} onClick={onClick}>
                 {children}
             </Link>
         );
@@ -35,6 +37,7 @@ export const BotonTienda = ({
         <button
             type={tipo}
             className={clase}
+            aria-label={etiqueta}
             disabled={deshabilitado}
             onClick={deshabilitado ? undefined : onClick}
         >

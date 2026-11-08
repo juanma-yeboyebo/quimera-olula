@@ -1,4 +1,5 @@
 import { ProcesarContexto } from "@olula/lib/diseño.ts";
+import { abrirCajonCarrito } from "../../comun/cajon_carrito_store.ts";
 import { asegurarCarrito, olvidarCarrito, recargarCarrito } from "../../comun/carrito_store.ts";
 import { limitarCantidad } from "../dominio.ts";
 import { getProducto, postLineaCarrito } from "../infraestructura.ts";
@@ -60,5 +61,6 @@ export const anadirAlCarrito: ProcesarFicha = async (contexto) => {
     }
 
     await recargarCarrito().catch(() => undefined);
+    abrirCajonCarrito();
     return { ...contexto, estado: "LISTO", aviso: "Añadido al carrito", error: null };
 };

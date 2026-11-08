@@ -4,6 +4,7 @@ import { FactoryCtx } from "@olula/lib/factory_ctx.tsx";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router";
 import { CategoriaTienda } from "../../catalogo/diseño.ts";
+import { abrirCajonCarrito } from "../cajon_carrito_store.ts";
 import { useCategoriasTienda } from "../categorias_store.ts";
 import { contenidoMega, nodoDeRuta, repartirMenu } from "../dominio.ts";
 import { ContextoMenuMovil } from "./contexto_menu_movil.ts";
@@ -300,9 +301,16 @@ const CajonMenu = ({ categorias }: { categorias: CategoriaTienda[] }) => {
                                     Entrar
                                 </Link>
                             )}
-                            <Link className="menu-cajon-fila menu-cajon-secundaria" to="/carrito">
+                            <button
+                                type="button"
+                                className="menu-cajon-fila menu-cajon-secundaria"
+                                onClick={() => {
+                                    cerrar();
+                                    abrirCajonCarrito();
+                                }}
+                            >
                                 Carrito
-                            </Link>
+                            </button>
                         </>
                     )}
                 </div>

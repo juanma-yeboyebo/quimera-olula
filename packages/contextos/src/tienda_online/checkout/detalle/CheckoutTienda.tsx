@@ -8,6 +8,9 @@ import {
     useCarritoTienda,
 } from "../../comun/carrito_store.ts";
 import { CampoFormulario } from "../../comun/componentes/campo_formulario.tsx";
+import { BotonTienda } from "../../comun/componentes/boton_tienda.tsx";
+import { DistintivoTienda } from "../../comun/componentes/distintivo_tienda.tsx";
+import { SinImagen } from "../../comun/componentes/sin_imagen.tsx";
 import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
 import { CarritoTienda } from "../../comun/diseño.ts";
 import { formatearPrecio } from "../../comun/dominio.ts";
@@ -56,13 +59,22 @@ const ResumenDatos = ({ ctx }: { ctx: ContextoCheckout }) => {
 };
 
 const ResumenCarrito = ({ carrito, idioma }: { carrito: CarritoTienda; idioma: string }) => (
-    <>
+    <aside className="checkout-resumen">
+        <h2>Resumen</h2>
         <ul className="checkout-resumen-lineas">
             {carrito.lineas.map((l) => (
                 <li key={l.id}>
-                    <span>
-                        {l.cantidad} × {l.descripcion}
-                    </span>
+                    <div className="checkout-linea-imagen">
+                        {l.imagen ? (
+                            <img src={l.imagen.url} alt={l.imagen.alt || l.descripcion} />
+                        ) : (
+                            <SinImagen />
+                        )}
+                        <span className="checkout-linea-cantidad">
+                            <DistintivoTienda>{l.cantidad}</DistintivoTienda>
+                        </span>
+                    </div>
+                    <span className="checkout-linea-descripcion">{l.descripcion}</span>
                     <span>{formatearPrecio(l.importe, carrito.divisa, idioma)}</span>
                 </li>
             ))}
@@ -72,12 +84,12 @@ const ResumenCarrito = ({ carrito, idioma }: { carrito: CarritoTienda; idioma: s
             <dd>{formatearPrecio(carrito.neto, carrito.divisa, idioma)}</dd>
             <dt>IVA</dt>
             <dd>{formatearPrecio(carrito.totalIva, carrito.divisa, idioma)}</dd>
-            <dt>Total</dt>
+            <dt className="checkout-total">Total</dt>
             <dd className="checkout-total">
                 {formatearPrecio(carrito.total, carrito.divisa, idioma)}
             </dd>
         </dl>
-    </>
+    </aside>
 );
 
 const FormularioCheckout = ({ idioma }: { idioma: string }) => {
@@ -114,106 +126,146 @@ const FormularioCheckout = ({ idioma }: { idioma: string }) => {
     );
     const sinCarrito = !carrito && <Link to="/catalogo">Ir al catálogo</Link>;
 
+    const resumen = carrito && <ResumenCarrito carrito={carrito} idioma={idioma} />;
+
     if (editando)
         return (
-            <form
-                className="CheckoutTienda"
-                noValidate
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    lanzar("continuar");
-                }}
-            >
-                <h1>Datos del pedido</h1>
-                {mensajeError}
-                {sinCarrito}
-                <CampoFormulario
-                    etiqueta="Email"
-                    tipo="email"
-                    autocompletar="email"
-                    valor={datos.email}
-                    error={errores.email}
-                    deshabilitado={ocupado}
-                    onCambiar={(email) => cambiar({ email })}
-                />
-                <CampoFormulario
-                    etiqueta="Nombre"
-                    autocompletar="name"
-                    valor={datos.nombre}
-                    error={errores.nombre}
-                    deshabilitado={ocupado}
-                    onCambiar={(nombre) => cambiar({ nombre })}
-                />
-                <CampoFormulario
-                    etiqueta="NIF (opcional)"
-                    valor={datos.idFiscal}
-                    deshabilitado={ocupado}
-                    onCambiar={(idFiscal) => cambiar({ idFiscal })}
-                />
-                <CampoFormulario
-                    etiqueta="Teléfono (opcional)"
-                    tipo="tel"
-                    autocompletar="tel"
-                    valor={datos.telefono}
-                    deshabilitado={ocupado}
-                    onCambiar={(telefono) => cambiar({ telefono })}
-                />
-                <fieldset>
-                    <legend>Dirección de facturación</legend>
-                    <CamposDireccion
-                        prefijo="direccionFacturacion"
-                        direccion={datos.direccionFacturacion}
-                        errores={errores}
-                        deshabilitado={ocupado}
-                        onCambiar={(direccionFacturacion) => cambiar({ direccionFacturacion })}
-                    />
-                </fieldset>
-                <label className="checkout-envio-distinto">
-                    <input
-                        type="checkbox"
-                        checked={datos.envioDistinto}
-                        disabled={ocupado}
-                        onChange={(e) => cambiar({ envioDistinto: e.target.checked })}
-                    />
-                    Enviar a otra dirección
-                </label>
-                {datos.envioDistinto && (
-                    <fieldset>
-                        <legend>Dirección de envío</legend>
-                        <CamposDireccion
-                            prefijo="direccionEnvio"
-                            direccion={datos.direccionEnvio}
-                            errores={errores}
-                            deshabilitado={ocupado}
-                            onCambiar={(direccionEnvio) => cambiar({ direccionEnvio })}
-                        />
-                    </fieldset>
-                )}
-                <button type="submit" disabled={ocupado}>
-                    Continuar
-                </button>
-            </form>
+            <div className="CheckoutTienda">
+                <div className="checkout-contenedor">
+                    <div className="checkout-rejilla">
+                        <form
+                            noValidate
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                lanzar("continuar");
+                            }}
+                        >
+                            <h1>Datos del pedido</h1>
+                            {mensajeError}
+                            {sinCarrito}
+                            <fieldset>
+                                <legend>Contacto</legend>
+                                <div className="ancho">
+                                    <CampoFormulario
+                                        etiqueta="Email"
+                                        tipo="email"
+                                        autocompletar="email"
+                                        valor={datos.email}
+                                        error={errores.email}
+                                        deshabilitado={ocupado}
+                                        onCambiar={(email) => cambiar({ email })}
+                                    />
+                                </div>
+                                <CampoFormulario
+                                    etiqueta="Teléfono (opcional)"
+                                    tipo="tel"
+                                    autocompletar="tel"
+                                    valor={datos.telefono}
+                                    deshabilitado={ocupado}
+                                    onCambiar={(telefono) => cambiar({ telefono })}
+                                />
+                            </fieldset>
+                            <fieldset>
+                                <legend>Facturación</legend>
+                                <CampoFormulario
+                                    etiqueta="Nombre"
+                                    autocompletar="name"
+                                    valor={datos.nombre}
+                                    error={errores.nombre}
+                                    deshabilitado={ocupado}
+                                    onCambiar={(nombre) => cambiar({ nombre })}
+                                />
+                                <CampoFormulario
+                                    etiqueta="NIF (opcional)"
+                                    valor={datos.idFiscal}
+                                    deshabilitado={ocupado}
+                                    onCambiar={(idFiscal) => cambiar({ idFiscal })}
+                                />
+                                <CamposDireccion
+                                    prefijo="direccionFacturacion"
+                                    direccion={datos.direccionFacturacion}
+                                    errores={errores}
+                                    deshabilitado={ocupado}
+                                    onCambiar={(direccionFacturacion) =>
+                                        cambiar({ direccionFacturacion })
+                                    }
+                                />
+                            </fieldset>
+                            <label className="checkout-envio-distinto">
+                                <input
+                                    type="checkbox"
+                                    checked={datos.envioDistinto}
+                                    disabled={ocupado}
+                                    onChange={(e) => cambiar({ envioDistinto: e.target.checked })}
+                                />
+                                Enviar a otra dirección
+                            </label>
+                            {datos.envioDistinto && (
+                                <fieldset>
+                                    <legend>Dirección de envío</legend>
+                                    <CamposDireccion
+                                        prefijo="direccionEnvio"
+                                        direccion={datos.direccionEnvio}
+                                        errores={errores}
+                                        deshabilitado={ocupado}
+                                        onCambiar={(direccionEnvio) => cambiar({ direccionEnvio })}
+                                    />
+                                </fieldset>
+                            )}
+                            <BotonTienda tipo="submit" ancho deshabilitado={ocupado}>
+                                Continuar
+                            </BotonTienda>
+                        </form>
+                        {resumen}
+                    </div>
+                </div>
+            </div>
         );
 
     return (
         <div className="CheckoutTienda">
-            <h1>Revisa tu pedido</h1>
-            {mensajeError}
-            {sinCarrito}
-            {carrito && <ResumenCarrito carrito={carrito} idioma={idioma} />}
-            <ResumenDatos ctx={ctx} />
-            {ocupado && (
-                <p role="status">
-                    {estado === "REDIRIGIENDO" ? "Redirigiendo a la pasarela de pago…" : "Procesando…"}
-                </p>
-            )}
-            <div className="checkout-botones">
-                <button type="button" disabled={ocupado} onClick={() => emitir("volver")}>
-                    Modificar datos
-                </button>
-                <button type="button" disabled={ocupado || !carrito} onClick={() => lanzar("pagar")}>
-                    Pagar
-                </button>
+            <div className="checkout-contenedor">
+                <div className="checkout-rejilla">
+                    <div className="checkout-revision">
+                        <h1>Revisa tu pedido</h1>
+                        {mensajeError}
+                        {sinCarrito}
+                        <ResumenDatos ctx={ctx} />
+                        <section className="checkout-pago">
+                            <h2>Pago</h2>
+                            <p>
+                                Al pulsar «Pagar» irás a la página segura de la pasarela para
+                                introducir la tarjeta. Después volverás aquí.
+                            </p>
+                        </section>
+                        {ocupado && (
+                            <p role="status">
+                                {estado === "REDIRIGIENDO"
+                                    ? "Redirigiendo a la pasarela de pago…"
+                                    : "Procesando…"}
+                            </p>
+                        )}
+                        <div className="checkout-botones">
+                            <BotonTienda
+                                variante="secundario"
+                                deshabilitado={ocupado}
+                                onClick={() => emitir("volver")}
+                            >
+                                Modificar datos
+                            </BotonTienda>
+                            <BotonTienda
+                                ancho
+                                deshabilitado={ocupado || !carrito}
+                                onClick={() => lanzar("pagar")}
+                            >
+                                {carrito
+                                    ? `Pagar ${formatearPrecio(carrito.total, carrito.divisa, idioma)}`
+                                    : "Pagar"}
+                            </BotonTienda>
+                        </div>
+                    </div>
+                    {resumen}
+                </div>
             </div>
         </div>
     );

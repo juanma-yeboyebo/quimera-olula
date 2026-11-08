@@ -1,0 +1,64 @@
+@layer tienda.componentes {
+    .carrito-lineas {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+
+        .carrito-linea {
+            display: grid;
+            grid-template-columns: 72px 1fr auto;
+            align-items: start;
+            gap: var(--tienda-espacio-4);
+            padding: var(--tienda-espacio-4) 0;
+            border-bottom: 1px solid var(--tienda-color-borde);
+        }
+
+        .linea-imagen {
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--tienda-color-superficie-hundida);
+            border-radius: var(--tienda-radio-tarjeta);
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+
+        .linea-datos {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--tienda-espacio-1);
+            font-size: var(--tienda-texto-sm);
+
+            a {
+                color: var(--tienda-color-texto);
+                font-weight: 600;
+                text-decoration: none;
+            }
+        }
+
+        .linea-descuento {
+            color: var(--tienda-color-exito);
+        }
+
+        .linea-acciones {
+            display: flex;
+            align-items: center;
+            gap: var(--tienda-espacio-3);
+            margin-top: var(--tienda-espacio-2);
+        }
+
+        .linea-importe {
+            font-weight: 600;
+            text-align: right;
+        }
+    }
+}

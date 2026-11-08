@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router";
+import { BotonTienda } from "../../comun/componentes/boton_tienda.tsx";
 import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
 import { clavePagoEnCurso } from "../dominio.ts";
 import { cerrarPago, consultarPago, ResultadoConsulta } from "./ok.ts";
@@ -53,19 +53,27 @@ const ContenidoOk = ({ codigo }: { codigo: string }) => {
     if (!token)
         return (
             <div className="PagoOk">
-                <p>No hay ningún pago en curso</p>
-                <Link to="/catalogo">Ir al catálogo</Link>
+                <div className="pago-tarjeta">
+                    <h1>No hay ningún pago en curso</h1>
+                    <BotonTienda a="/catalogo">Ir al catálogo</BotonTienda>
+                </div>
             </div>
         );
 
     return (
         <div className="PagoOk">
-            {consulta ? (
-                <Mensaje consulta={consulta} />
-            ) : (
-                <p role="status">Comprobando tu pago…</p>
-            )}
-            {consulta && <Link to="/catalogo">Seguir comprando</Link>}
+            <div className="pago-tarjeta">
+                {consulta ? (
+                    <Mensaje consulta={consulta} />
+                ) : (
+                    <p role="status">Comprobando tu pago…</p>
+                )}
+                {consulta && (
+                    <BotonTienda variante="secundario" a="/catalogo">
+                        Seguir comprando
+                    </BotonTienda>
+                )}
+            </div>
         </div>
     );
 };

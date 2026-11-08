@@ -1,94 +1,79 @@
-.CarritoTienda {
-    display: flex;
-    flex-direction: column;
-    gap: var(--espaciado-m);
-    padding: var(--espaciado-m);
+@layer tienda.paginas {
+    .CarritoTienda {
+        font-family: var(--tienda-fuente-texto);
+        color: var(--tienda-color-texto);
 
-    .carrito-aviso {
-        color: var(--color-primario-texto);
-    }
-
-    .carrito-error {
-        color: var(--color-error);
-    }
-
-    .carrito-lineas {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        gap: var(--espaciado-s);
-    }
-
-    .carrito-linea {
-        display: grid;
-        grid-template-columns: 80px 1fr auto auto auto;
-        align-items: center;
-        gap: var(--espaciado-m);
-        padding-bottom: var(--espaciado-s);
-        border-bottom: var(--tamaño-borde-s) solid var(--color-borde-sutil);
-
-        @media (max-width: 768px) {
-            grid-template-columns: 64px 1fr;
+        .carrito-contenedor {
+            display: flex;
+            flex-direction: column;
+            gap: var(--tienda-espacio-4);
+            max-width: var(--tienda-ancho-max);
+            margin: 0 auto;
+            padding: 16px 16px var(--tienda-espacio-8);
         }
-    }
 
-    .linea-imagen {
-        aspect-ratio: 1 / 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: var(--color-superficie-sunken);
-
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-    }
-
-    .linea-descuento {
-        color: var(--color-exito);
-    }
-
-    .linea-cantidad {
-        display: flex;
-        align-items: center;
-        gap: var(--espaciado-xs);
-
-        input {
-            width: 4rem;
-            text-align: center;
-        }
-    }
-
-    .linea-importe {
-        font-weight: var(--grosor-letra-6);
-        text-align: right;
-    }
-
-    .carrito-totales {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: var(--espaciado-xs) var(--espaciado-m);
-        margin: 0;
-        max-width: 320px;
-        align-self: flex-end;
-
-        dd {
+        h1 {
             margin: 0;
-            text-align: right;
+            font-family: var(--tienda-fuente-titulos);
+            font-weight: var(--tienda-peso-titulos);
+            letter-spacing: var(--tienda-tracking-titulos);
+            font-size: var(--tienda-texto-xl);
         }
 
-        .carrito-total {
-            font-size: var(--tamaño-letra-xl);
-            font-weight: var(--grosor-letra-6);
-            color: var(--color-primario-texto);
+        .carrito-aviso {
+            margin: 0;
+            color: var(--tienda-color-texto-suave);
         }
-    }
 
-    .carrito-tramitar {
-        align-self: flex-end;
+        .carrito-error {
+            margin: 0;
+            color: var(--tienda-color-error);
+        }
+
+        .carrito-rejilla {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: var(--tienda-espacio-8);
+            align-items: start;
+
+            @media (max-width: 860px) {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .carrito-principal {
+            display: flex;
+            flex-direction: column;
+            gap: var(--tienda-espacio-4);
+        }
+
+        .carrito-resumen {
+            position: sticky;
+            top: var(--tienda-espacio-8);
+            display: flex;
+            flex-direction: column;
+            gap: var(--tienda-espacio-4);
+            padding: var(--tienda-espacio-6);
+            background-color: var(--tienda-color-superficie);
+            border: 1px solid var(--tienda-color-borde);
+            border-radius: var(--tienda-radio-tarjeta);
+
+            @media (max-width: 860px) {
+                position: static;
+            }
+        }
+
+        .carrito-totales {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: var(--tienda-espacio-2) var(--tienda-espacio-4);
+            margin: 0;
+            font-size: var(--tienda-texto-sm);
+
+            dd {
+                margin: 0;
+                text-align: right;
+            }
+        }
     }
 }

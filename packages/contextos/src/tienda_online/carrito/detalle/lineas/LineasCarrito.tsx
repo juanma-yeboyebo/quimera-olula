@@ -2,19 +2,18 @@ import { Link } from "react-router";
 import { BorrarLineaCarrito } from "../../borrar_linea/BorrarLineaCarrito.tsx";
 import { CambiarCantidadLinea } from "../../cambiar_linea/CambiarCantidadLinea.tsx";
 import { CarritoTienda } from "../../../comun/diseño.ts";
+import { PrecioTienda } from "../../../comun/componentes/precio_tienda.tsx";
 import { SinImagen } from "../../../comun/componentes/sin_imagen.tsx";
-import { formatearPrecio } from "../../../comun/dominio.ts";
 import { EstadoDetalleCarrito } from "../diseño.ts";
+import "./LineasCarrito.css";
 
 export const LineasCarrito = ({
     carrito,
-    idioma,
     estado,
     ocupado,
     publicar,
 }: {
     carrito: CarritoTienda;
-    idioma: string;
     estado: EstadoDetalleCarrito;
     ocupado: boolean;
     publicar: (evento: string, payload?: unknown) => void | Promise<void>;
@@ -38,28 +37,28 @@ export const LineasCarrito = ({
                         ) : (
                             <span>{linea.descripcion}</span>
                         )}
-                        <div className="linea-precio">
-                            {formatearPrecio(linea.precio, carrito.divisa, idioma)}
-                            {linea.dtoPorcentual > 0 && (
-                                <small className="linea-descuento"> Dto. {linea.dtoPorcentual}%</small>
-                            )}
+                        <PrecioTienda importe={linea.precio} divisa={carrito.divisa} />
+                        {linea.dtoPorcentual > 0 && (
+                            <small className="linea-descuento">Dto. {linea.dtoPorcentual}%</small>
+                        )}
+                        <div className="linea-acciones">
+                            <CambiarCantidadLinea
+                                linea={linea}
+                                deshabilitado={deshabilitado}
+                                onCambiar={(cantidad) =>
+                                    publicar("cantidad_cambiada", { lineaId: linea.id, cantidad })
+                                }
+                            />
+                            <BorrarLineaCarrito
+                                linea={linea}
+                                deshabilitado={deshabilitado}
+                                onBorrar={() => publicar("linea_borrada", { lineaId: linea.id })}
+                            />
                         </div>
                     </div>
-                    <CambiarCantidadLinea
-                        linea={linea}
-                        deshabilitado={deshabilitado}
-                        onCambiar={(cantidad) =>
-                            publicar("cantidad_cambiada", { lineaId: linea.id, cantidad })
-                        }
-                    />
                     <div className="linea-importe">
-                        {formatearPrecio(linea.importe, carrito.divisa, idioma)}
+                        <PrecioTienda importe={linea.importe} divisa={carrito.divisa} />
                     </div>
-                    <BorrarLineaCarrito
-                        linea={linea}
-                        deshabilitado={deshabilitado}
-                        onBorrar={() => publicar("linea_borrada", { lineaId: linea.id })}
-                    />
                 </li>
             ))}
         </ul>

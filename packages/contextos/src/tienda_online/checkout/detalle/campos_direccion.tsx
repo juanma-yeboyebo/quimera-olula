@@ -28,9 +28,9 @@ export const CamposDireccion = ({
     );
 
     return (
-        <div className="checkout-direccion">
+        <>
             {campo("tipoVia", "Tipo de vía")}
-            {campo("nombreVia", "Vía", "address-line1")}
+            <div className="ancho">{campo("nombreVia", "Vía", "address-line1")}</div>
             {campo("numero", "Número")}
             {campo("otros", "Otros", "address-line2")}
             {campo("codPostal", "Código postal", "postal-code")}
@@ -38,6 +38,6 @@ export const CamposDireccion = ({
             {campo("provincia", "Provincia", "address-level1")}
             {campo("paisId", "País", "country")}
             {campo("telefono", "Teléfono de contacto", "tel")}
-        </div>
+        </>
     );
 };

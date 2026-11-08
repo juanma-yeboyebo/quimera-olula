@@ -52,8 +52,8 @@ El almacén expone el carrito actual a React mediante `useSyncExternalStore` (ho
 ### Icono del carrito en la cabecera
 
 <!-- [tienda-icono_carrito-01] [cambiada] -->
-`AccionesCabeceraTienda` es el componente base del hueco `cabecera_acciones` de la `CabeceraTienda` (ver `tienda-cabecera-02`). Incluye el carrito, que enlaza a `/carrito` y se muestra también sin login.
-<!-- antes: la app lo inyectaba en `Componentes.cabecera_acciones` de la cabecera del ERP -->
+`AccionesCabeceraTienda` es el componente base del hueco `cabecera_acciones` de la `CabeceraTienda` (ver `tienda-cabecera-02`). Incluye el carrito, que abre el cajón del carrito (ver `carrito-cajon-01`) y se muestra también sin login.
+<!-- antes: la app lo inyectaba en `Componentes.cabecera_acciones` de la cabecera del ERP; el carrito enlazaba a `/carrito` -->
 
 <!-- [tienda-icono_carrito-02] [x] -->
 El icono muestra un distintivo con el número de unidades del carrito cuando es mayor que 0, y no lo muestra con 0. Tiene `aria-label` «Carrito, N artículos».

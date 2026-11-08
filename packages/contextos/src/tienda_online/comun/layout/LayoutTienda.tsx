@@ -1,6 +1,8 @@
 import { ContextoError, Intentar, QError } from "@olula/lib/contexto.ts";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router";
+import { CajonCarrito } from "../../carrito/cajon/CajonCarrito.tsx";
+import { cerrarCajonCarrito } from "../cajon_carrito_store.ts";
 import { esRutaCheckout } from "../dominio.ts";
 import { CabeceraCheckoutTienda } from "./cabecera_checkout_tienda.tsx";
 import { CabeceraTienda } from "./cabecera_tienda.tsx";
@@ -36,6 +38,10 @@ export const LayoutTienda = () => {
 
     const checkout = esRutaCheckout(pathname);
 
+    useEffect(() => {
+        cerrarCajonCarrito();
+    }, [pathname]);
+
     return (
         <ContextoError.Provider value={{ error, setError, intentar }}>
             <div className="layout-tienda">
@@ -53,6 +59,7 @@ export const LayoutTienda = () => {
                     <Outlet />
                 </main>
                 {!checkout && <Pie />}
+                {!checkout && <CajonCarrito />}
             </div>
             {error && <DialogoErrorTienda error={error} onCerrar={() => setError(null)} />}
         </ContextoError.Provider>

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { CarritoTienda, LineaCarritoTienda } from "#/tienda_online/comun/diseño.ts";
-import { cantidadValida, estaVacio, hayPagoIniciado } from "#/tienda_online/carrito/dominio.ts";
+import { cantidadValida, estaVacio, hayPagoIniciado, progresoEnvioGratis } from "#/tienda_online/carrito/dominio.ts";
 
 const linea: LineaCarritoTienda = {
     id: 1,
@@ -72,4 +72,34 @@ describe("[carrito-lineas-02] cantidadValida acepta solo números mayores que 0"
             expect(cantidadValida(v)).toBe(false);
         },
     );
+});
+
+describe("[carrito-envio-02] progresoEnvioGratis devuelve falta y porcentaje respecto al umbral", () => {
+    test("carrito_envio_02_total_menor_que_umbral", () => {
+        expect(progresoEnvioGratis(30, 50)).toEqual({ falta: 20, porcentaje: 60 });
+    });
+
+    test("carrito_envio_02_total_cero", () => {
+        expect(progresoEnvioGratis(0, 50)).toEqual({ falta: 50, porcentaje: 0 });
+    });
+
+    test("carrito_envio_02_total_igual_al_umbral", () => {
+        expect(progresoEnvioGratis(50, 50)).toEqual({ falta: 0, porcentaje: 100 });
+    });
+
+    test("carrito_envio_02_total_mayor_que_umbral_se_acota", () => {
+        expect(progresoEnvioGratis(80, 50)).toEqual({ falta: 0, porcentaje: 100 });
+    });
+
+    test("carrito_envio_02_total_negativo_porcentaje_no_baja_de_0", () => {
+        expect(progresoEnvioGratis(-10, 50).porcentaje).toBe(0);
+    });
+
+    test("carrito_envio_02_umbral_cero", () => {
+        expect(progresoEnvioGratis(10, 0)).toEqual({ falta: 0, porcentaje: 100 });
+    });
+
+    test("carrito_envio_02_umbral_negativo", () => {
+        expect(progresoEnvioGratis(10, -5)).toEqual({ falta: 0, porcentaje: 100 });
+    });
 });

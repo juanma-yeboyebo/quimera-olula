@@ -1,0 +1,25 @@
+@layer tienda.componentes {
+    .envio-gratis {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tienda-espacio-2);
+        font-size: var(--tienda-texto-sm);
+
+        p {
+            margin: 0;
+        }
+    }
+
+    .envio-gratis-barra {
+        height: 6px;
+        border-radius: var(--tienda-radio-distintivo);
+        background-color: var(--tienda-color-superficie-hundida);
+        overflow: hidden;
+    }
+
+    .envio-gratis-progreso {
+        height: 100%;
+        background-color: var(--tienda-color-exito);
+        transition: width 0.3s;
+    }
+}

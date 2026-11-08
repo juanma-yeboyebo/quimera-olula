@@ -17,4 +17,5 @@ export class FactoryTiendaOnline {
     static ruta_imagenes_inicio = "/inicio";
     static layout_aviso: ComponentType | null = null;
     static layout_pie: ComponentType | null = null;
+    static envio_gratis_desde: number | null = null;
 }

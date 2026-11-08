@@ -1,32 +1,17 @@
-import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
-import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router";
-import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
+import { useEffect } from "react";
 import { recargarCarrito, useCarritoTienda } from "../../comun/carrito_store.ts";
-import { formatearPrecio } from "../../comun/dominio.ts";
+import { BotonTienda } from "../../comun/componentes/boton_tienda.tsx";
+import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
+import { PrecioTienda } from "../../comun/componentes/precio_tienda.tsx";
 import { estaVacio, hayPagoIniciado } from "../dominio.ts";
+import { EnvioGratis } from "../envio_gratis/EnvioGratis.tsx";
 import "./CarritoTienda.css";
-import { contextoCarritoInicial } from "./detalle.ts";
 import { LineasCarrito } from "./lineas/LineasCarrito.tsx";
-import { getMaquina } from "./maquina.ts";
+import { useEdicionCarrito } from "./usar_edicion_carrito.ts";
 
-const ContenidoCarrito = ({ idioma }: { idioma: string }) => {
+const ContenidoCarrito = () => {
     const carrito = useCarritoTienda();
-    const { ctx, emitir } = useMaquina(getMaquina, contextoCarritoInicial);
-    const enCurso = useRef(false);
-    const [bloqueado, setBloqueado] = useState(false);
-
-    const publicar = async (evento: string, payload?: unknown) => {
-        if (enCurso.current) return;
-        enCurso.current = true;
-        setBloqueado(true);
-        try {
-            await emitir(evento, payload);
-        } finally {
-            enCurso.current = false;
-            setBloqueado(false);
-        }
-    };
+    const { ctx, publicar, bloqueado } = useEdicionCarrito();
 
     useEffect(() => {
         recargarCarrito().catch(() => undefined);
@@ -41,46 +26,58 @@ const ContenidoCarrito = ({ idioma }: { idioma: string }) => {
     if (!carrito || estaVacio(carrito))
         return (
             <div className="CarritoTienda">
-                <h1>Carrito</h1>
-                {error}
-                <p>Tu carrito está vacío</p>
-                <Link to="/catalogo">Ir al catálogo</Link>
+                <div className="carrito-contenedor">
+                    <h1>Carrito</h1>
+                    {error}
+                    <p>Tu carrito está vacío</p>
+                    <BotonTienda a="/catalogo">Ir al catálogo</BotonTienda>
+                </div>
             </div>
         );
 
     return (
         <div className="CarritoTienda">
-            <h1>Carrito</h1>
-            {hayPagoIniciado(carrito) && (
-                <p role="status" className="carrito-aviso">
-                    Tienes un pago iniciado. Si modificas el carrito, tendrás que volver a pagar.
-                </p>
-            )}
-            {error}
-            <LineasCarrito
-                carrito={carrito}
-                idioma={idioma}
-                estado={ctx.estado}
-                ocupado={bloqueado}
-                publicar={publicar}
-            />
-            <dl className="carrito-totales">
-                <dt>Base imponible</dt>
-                <dd>{formatearPrecio(carrito.neto, carrito.divisa, idioma)}</dd>
-                <dt>IVA</dt>
-                <dd>{formatearPrecio(carrito.totalIva, carrito.divisa, idioma)}</dd>
-                <dt>Total</dt>
-                <dd className="carrito-total">
-                    {formatearPrecio(carrito.total, carrito.divisa, idioma)}
-                </dd>
-            </dl>
-            <Link to="/checkout" className="carrito-tramitar">
-                Tramitar pedido
-            </Link>
+            <div className="carrito-contenedor">
+                <h1>Carrito</h1>
+                {hayPagoIniciado(carrito) && (
+                    <p role="status" className="carrito-aviso">
+                        Tienes un pago iniciado. Si modificas el carrito, tendrás que volver a pagar.
+                    </p>
+                )}
+                {error}
+                <div className="carrito-rejilla">
+                    <div className="carrito-principal">
+                        <EnvioGratis total={carrito.total} divisa={carrito.divisa} />
+                        <LineasCarrito
+                            carrito={carrito}
+                            estado={ctx.estado}
+                            ocupado={bloqueado}
+                            publicar={publicar}
+                        />
+                    </div>
+                    <aside className="carrito-resumen">
+                        <dl className="carrito-totales">
+                            <dt>Base imponible</dt>
+                            <dd>
+                                <PrecioTienda importe={carrito.neto} divisa={carrito.divisa} />
+                            </dd>
+                            <dt>IVA</dt>
+                            <dd>
+                                <PrecioTienda importe={carrito.totalIva} divisa={carrito.divisa} />
+                            </dd>
+                            <dt>Total</dt>
+                            <dd>
+                                <PrecioTienda importe={carrito.total} divisa={carrito.divisa} grande />
+                            </dd>
+                        </dl>
+                        <BotonTienda a="/checkout" ancho>
+                            Tramitar pedido
+                        </BotonTienda>
+                    </aside>
+                </div>
+            </div>
         </div>
     );
 };
 
-export const CarritoTienda = () => (
-    <ConStoreView>{(sv) => <ContenidoCarrito idioma={sv.idioma} />}</ConStoreView>
-);
+export const CarritoTienda = () => <ConStoreView>{() => <ContenidoCarrito />}</ConStoreView>;

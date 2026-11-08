@@ -1,5 +1,6 @@
 import { estaAutentificado } from "@olula/componentes/plantilla/autenticacion.ts";
 import { Link } from "react-router";
+import { abrirCajonCarrito } from "../cajon_carrito_store.ts";
 import { useCarritoTienda } from "../carrito_store.ts";
 import { textoAriaCarrito } from "../dominio.ts";
 import { BotonIcono } from "./boton_icono.tsx";
@@ -21,7 +22,7 @@ export const AccionesCabeceraTienda = () => {
                 icono="carrito"
                 etiqueta={textoAriaCarrito(unidades)}
                 contador={unidades}
-                a="/carrito"
+                onClick={abrirCajonCarrito}
             />
         </div>
     );

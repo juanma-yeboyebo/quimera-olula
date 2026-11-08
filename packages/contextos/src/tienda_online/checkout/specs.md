@@ -51,8 +51,9 @@ stateDiagram-v2
 <!-- [checkout-maquina-02] [x] -->
 [GUARDANDO] error → DATOS (muestra el texto del backend; con 404 o 409 llama a `olvidarCarrito()` y muestra «Este carrito ya no está disponible»)
 
-<!-- [checkout-maquina-03] [x] -->
-En `REVISION` se muestran las líneas, los totales y los datos introducidos, con los botones «Modificar datos» (vuelve a `DATOS`) y «Pagar».
+<!-- [checkout-maquina-03] [cambiada] -->
+En `REVISION` se muestran los datos introducidos, un bloque «Pago» con el texto «Al pulsar «Pagar» irás a la página segura de la pasarela para introducir la tarjeta. Después volverás aquí.» y los botones «Modificar datos» (vuelve a `DATOS`) y «Pagar X», con X el total formateado.
+<!-- antes: las líneas y los totales iban en el mismo bloque que los datos; el botón decía solo «Pagar» -->
 
 <!-- [checkout-maquina-04] [x] -->
 [REVISION] pagar → PAGANDO → REDIRIGIENDO (envía `POST …/pago`; antes de redirigir guarda el token en `sessionStorage` bajo `tienda_online.pago_en_curso.<codigo_storeview>` y después navega a la `url` recibida con `window.location.assign`)
@@ -93,3 +94,23 @@ La página `/checkout/cancelado` envía `POST …/pago/cancelar` con el token gu
 
 <!-- [checkout-cancelado-02] [x] -->
 Si la cancelación falla (404 o 409), muestra «Has cancelado el pago.» sin la frase del carrito ni enlace al carrito y llama a `olvidarCarrito()`.
+
+### Diseño
+
+<!-- [checkout-diseño-01] [nueva] -->
+`/checkout` tiene dos columnas: el formulario (o la revisión) a la izquierda y, a la derecha, un resumen del pedido fijo al hacer scroll, visible en `DATOS` y en `REVISION`. En 860 px o menos, una columna con el resumen arriba. Usa el contenedor centrado de las demás páginas.
+
+<!-- [checkout-diseño-02] [nueva] -->
+El resumen tiene el título «Resumen» y una línea por artículo con la imagen pequeña (o `SinImagen`), un distintivo con la cantidad sobre la imagen, la descripción y el importe; debajo, base imponible, IVA y el total destacado.
+
+<!-- [checkout-diseño-03] [nueva] -->
+El formulario se agrupa en `fieldset` sin borde con la leyenda en la fuente de títulos: «Contacto» (email y teléfono), «Facturación» (nombre, NIF y dirección) y, si está marcada la casilla, «Dirección de envío». Los campos van en dos columnas; email, vía y la casilla ocupan el ancho completo. En 480 px o menos, una columna.
+
+<!-- [checkout-diseño-04] [nueva] -->
+Los botones del checkout son `BotonTienda`: «Continuar» y «Pagar X» `principal` a lo ancho; «Modificar datos» `secundario`.
+
+<!-- [checkout-diseño-05] [nueva] -->
+Las páginas `/checkout/ok` y `/checkout/cancelado` muestran su contenido centrado en una tarjeta, con el título en la fuente de títulos y los enlaces como `BotonTienda`.
+
+<!-- [checkout-diseño-06] [nueva] -->
+`CheckoutTienda.css`, `PagoOk.css` y `PagoCancelado.css` usan solo tokens `--tienda-*` y van en `@layer tienda.paginas`.
