@@ -95,39 +95,39 @@ La página tiene el botón «Cerrar sesión», que navega a `/logout`.
 
 ### Editar datos
 
-<!-- [cuenta-editar_datos-01] [nueva] -->
+<!-- [cuenta-editar_datos-01] [x] -->
 La tarjeta «Datos» de `/mi-cuenta` tiene un `BotonTienda` `enlace` «Editar» que la cambia por un formulario con nombre, NIF/CIF y teléfono (`CampoFormulario`), con los valores actuales, y los botones «Guardar» (`principal`) y «Cancelar» (`secundario`). El email se muestra como texto, no editable.
 
-<!-- [cuenta-editar_datos-02] [nueva] -->
+<!-- [cuenta-editar_datos-02] [x] -->
 Validación en el cliente con una función pura `erroresDatosCuenta(datos)` en `cuenta/dominio.ts`: nombre y NIF/CIF obligatorios, con los mismos textos que el registro. Con errores no se envía y cada campo muestra el suyo.
 
-<!-- [cuenta-editar_datos-03] [nueva] -->
+<!-- [cuenta-editar_datos-03] [x] -->
 [LISTA] guardar_datos → GUARDANDO → LISTA (envía `PATCH /tienda_online/cuenta/yo` con `{nombre, id_fiscal, telefono}`, vuelve a cargar la cuenta y cierra el formulario)
 
-<!-- [cuenta-editar_datos-04] [nueva] -->
+<!-- [cuenta-editar_datos-04] [x] -->
 [GUARDANDO] error → LISTA (muestra el texto del backend en el formulario, que sigue abierto con lo escrito)
 
 ### Direcciones
 
-<!-- [cuenta-direcciones-01] [nueva] -->
+<!-- [cuenta-direcciones-01] [x] -->
 La tarjeta «Direcciones» tiene un `BotonTienda` `secundario` «Añadir dirección» y, en cada dirección, «Editar», «Usar para envío» (si no lo es), «Usar para facturación» (si no lo es) y «Borrar» (no aparece en la de facturación), como `BotonTienda` `enlace`.
 
-<!-- [cuenta-direcciones-02] [nueva] -->
+<!-- [cuenta-direcciones-02] [x] -->
 «Añadir dirección» y «Editar» abren dentro de la tarjeta un formulario con vía, número, código postal, ciudad, provincia y país (`ES` por defecto al añadir), con «Guardar» y «Cancelar». Solo hay un formulario de dirección abierto a la vez.
 
-<!-- [cuenta-direcciones-03] [nueva] -->
+<!-- [cuenta-direcciones-03] [x] -->
 Validación en el cliente con una función pura `erroresDireccion(direccion)` en `cuenta/dominio.ts`: vía, código postal, ciudad y país obligatorios, con los mismos textos que el registro. `erroresRegistro` la reutiliza para su dirección.
 
-<!-- [cuenta-direcciones-04] [nueva] -->
+<!-- [cuenta-direcciones-04] [x] -->
 [LISTA] guardar_direccion → GUARDANDO → LISTA (sin id envía `POST /tienda_online/cuenta/direccion`; con id, `PATCH …/direccion/<id>`; vuelve a cargar la cuenta y cierra el formulario. Con error muestra el texto del backend y deja el formulario abierto)
 
-<!-- [cuenta-direcciones-05] [nueva] -->
+<!-- [cuenta-direcciones-05] [x] -->
 «Borrar» pide confirmación en la propia dirección («¿Borrar esta dirección?» con «Sí, borrar» y «No»). Al confirmar: [LISTA] borrar_direccion → GUARDANDO → LISTA (envía `DELETE …/direccion/<id>` y vuelve a cargar la cuenta; con error muestra su texto)
 
-<!-- [cuenta-direcciones-06] [nueva] -->
+<!-- [cuenta-direcciones-06] [x] -->
 [LISTA] marcar_envio / marcar_facturacion → GUARDANDO → LISTA (envía `PATCH …/direccion/<id>/envio` o `…/facturacion` y vuelve a cargar la cuenta; con error muestra su texto)
 
-<!-- [cuenta-direcciones-07] [nueva] -->
+<!-- [cuenta-direcciones-07] [x] -->
 Mientras está en `GUARDANDO`, los botones de datos y direcciones están deshabilitados.
 
 ### Mis pedidos

@@ -1,5 +1,5 @@
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { BotonTienda } from "../../comun/componentes/boton_tienda.tsx";
 import { CampoFormulario } from "../../comun/componentes/campo_formulario.tsx";
@@ -35,21 +35,27 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
     const { estado, cuenta, pedidos, total, errorPedidos, errorEdicion, erroresEdicion } = ctx;
     const [formulario, setFormulario] = useState<Formulario | null>(null);
     const [borrando, setBorrando] = useState<string | null>(null);
-    const anterior = useRef(estado);
-    const guardando = estado === "GUARDANDO";
+    const [guardando, setGuardando] = useState(false);
+    const [guardado, setGuardado] = useState(false);
 
     useEffect(() => {
-        if (
-            anterior.current === "GUARDANDO" &&
-            estado === "LISTA" &&
-            !errorEdicion &&
-            Object.keys(erroresEdicion).length === 0
-        ) {
+        if (!guardado) return;
+        setGuardado(false);
+        if (!errorEdicion && Object.keys(erroresEdicion).length === 0) {
             setFormulario(null);
             setBorrando(null);
         }
-        anterior.current = estado;
-    }, [estado, errorEdicion, erroresEdicion]);
+    }, [guardado, errorEdicion, erroresEdicion]);
+
+    const guardar = async (evento: string, payload: unknown) => {
+        setGuardando(true);
+        try {
+            await emitir(evento, payload);
+            setGuardado(true);
+        } finally {
+            setGuardando(false);
+        }
+    };
 
     const abrir = (f: Formulario | null) => {
         setBorrando(null);
@@ -123,7 +129,7 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
                             noValidate
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                emitir("guardar_datos", formularioDatos.datos);
+                                guardar("guardar_datos", formularioDatos.datos);
                             }}
                         >
                             {errorEdicion && (
@@ -254,7 +260,7 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
                                                     <BotonTienda
                                                         variante="enlace"
                                                         deshabilitado={guardando}
-                                                        onClick={() => emitir("borrar_direccion", d.id)}
+                                                        onClick={() => guardar("borrar_direccion", d.id)}
                                                     >
                                                         Sí, borrar
                                                     </BotonTienda>
@@ -279,7 +285,7 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
                                                         <BotonTienda
                                                             variante="enlace"
                                                             deshabilitado={guardando}
-                                                            onClick={() => emitir("marcar_envio", d.id)}
+                                                            onClick={() => guardar("marcar_envio", d.id)}
                                                         >
                                                             Usar para envío
                                                         </BotonTienda>
@@ -288,7 +294,7 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
                                                         <BotonTienda
                                                             variante="enlace"
                                                             deshabilitado={guardando}
-                                                            onClick={() => emitir("marcar_facturacion", d.id)}
+                                                            onClick={() => guardar("marcar_facturacion", d.id)}
                                                         >
                                                             Usar para facturación
                                                         </BotonTienda>
@@ -318,7 +324,7 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
                                         guardando={guardando}
                                         onCambiar={setFormulario}
                                         onGuardar={() =>
-                                            emitir("guardar_direccion", {
+                                            guardar("guardar_direccion", {
                                                 id: formularioDireccion.id,
                                                 direccion: formularioDireccion.direccion,
                                             })
@@ -337,7 +343,7 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
                             guardando={guardando}
                             onCambiar={setFormulario}
                             onGuardar={() =>
-                                emitir("guardar_direccion", {
+                                guardar("guardar_direccion", {
                                     id: null,
                                     direccion: formularioDireccion.direccion,
                                 })
