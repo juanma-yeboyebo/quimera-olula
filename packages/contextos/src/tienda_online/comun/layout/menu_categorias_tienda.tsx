@@ -78,8 +78,8 @@ const ContenidoCategoria = ({ categoria }: { categoria: CategoriaTienda }) => {
 const BarraMenu = ({ categorias }: { categorias: CategoriaTienda[] }) => {
     const { app } = useContext(FactoryCtx);
     const { pathname } = useLocation();
-    const maxEnBarra = app.TiendaOnline?.menu_max_en_barra ?? 8;
-    const enBarraConTodas = app.TiendaOnline?.menu_en_barra_con_todas ?? 6;
+    const maxEnBarra = (app.TiendaOnline?.menu_max_en_barra ?? 8) as number;
+    const enBarraConTodas = (app.TiendaOnline?.menu_en_barra_con_todas ?? 6) as number;
     const { conTodas, enBarra } = repartirMenu(categorias, maxEnBarra, enBarraConTodas);
 
     const raiz = useRef<HTMLDivElement>(null);

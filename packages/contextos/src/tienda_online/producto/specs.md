@@ -33,35 +33,30 @@ Al cargar, el título del documento pasa a ser `metaTitulo` (o la descripción s
 
 ### Contenido
 
-<!-- [producto-contenido-01] [cambiada] -->
+<!-- [producto-contenido-01] [x] -->
 La galería muestra primero la imagen con `principal = true` (o la primera de la lista) con `ImagenProducto` `prioritaria`, y permite cambiar a las demás con miniaturas.
 - **Escritorio:** las miniaturas van en una columna a la izquierda de la foto.
 - **Pantallas de 860 px o menos:** van en una fila debajo.
 - **Miniatura activa:** se marca con `aria-pressed` y un borde del color de texto.
 - **Una sola imagen:** no hay miniaturas.
 - **Sin imágenes:** se ve `SinImagen`.
-<!-- antes: miniaturas sin posición definida y marcador neutro propio -->
 
-<!-- [producto-contenido-02] [cambiada] -->
+<!-- [producto-contenido-02] [x] -->
 La descripción es el título de la ficha, con la fuente de títulos. La descripción corta va debajo del precio. La descripción larga va dentro de un desplegable «Descripción», abierto por defecto, como texto plano con saltos de línea (no se interpreta HTML).
-<!-- antes: la descripción larga se mostraba siempre visible, sin desplegable -->
 
-<!-- [producto-contenido-03] [cambiada] -->
+<!-- [producto-contenido-03] [x] -->
 Encima de la galería van las migas «Inicio › … › <categoría> › <descripción>». Se calculan con `rutaCategoria` sobre el árbol de `useCategoriasTienda()` a partir de la primera categoría del producto. Si esa categoría no está en el árbol, solo hay «Inicio › <descripción>». Las demás categorías del producto se muestran al final de la ficha como enlaces en forma de píldora a `/categoria/<slug>`.
-<!-- antes: las categorías se mostraban como lista de enlaces, sin migas -->
 
-<!-- [producto-contenido-04] [cambiada] -->
+<!-- [producto-contenido-04] [x] -->
 El precio es `precioConIva`, con `PrecioTienda` `grande` y la leyenda «IVA incluido» en color suave.
-<!-- antes: precio formateado en la propia ficha con estilos del ERP -->
 
-<!-- [producto-contenido-05] [cambiada] -->
+<!-- [producto-contenido-05] [x] -->
 El texto de disponibilidad lo da `textoDisponibilidad(ficha)` en `producto/dominio.ts`:
 - «Agotado» si no está disponible;
 - «Quedan N unidades» si tiene control de stock y `cantidadDisponible` está entre 1 y 5;
 - «En stock» en el resto de casos, y siempre con `sinControlStock`.
 
 Se muestra con un punto delante, verde (`exito`) si está disponible y del color de error si no.
-<!-- antes: «Disponible» o «Sin stock» -->
 
 <!-- [producto-contenido-06] [x] -->
 La ficha expone el slot de factory `ficha_acciones` (vacío por defecto), reservado para la lista de deseos.
@@ -71,9 +66,8 @@ La ficha expone el slot de factory `ficha_acciones` (vacío por defecto), reserv
 <!-- [producto-anadir-01] [x] -->
 El selector de cantidad empieza en 1 y no admite valores menores que 1. Si el producto tiene control de stock, no admite valores mayores que `cantidadDisponible`.
 
-<!-- [producto-anadir-02] [cambiada] -->
+<!-- [producto-anadir-02] [x] -->
 La compra se hace con `SelectorCantidad` (mínimo 1 y, con control de stock, como máximo `cantidadDisponible`) y un `BotonTienda` `principal` «Añadir al carrito», en la misma fila. Si el producto no está disponible, el botón está deshabilitado y su texto es «Agotado».
-<!-- antes: selector de cantidad y botón propios; deshabilitado con el mismo texto «Añadir al carrito» -->
 
 <!-- [producto-anadir-03] [x] -->
 [LISTO] añadir → AÑADIENDO → LISTO (asegura el carrito con `asegurarCarrito()`, que lo crea si no existe; envía `POST …/carrito/<token>/linea` con `{articulo_id: referencia, cantidad}`; llama a `recargarCarrito()` para actualizar el contador de la cabecera y muestra «Añadido al carrito» con enlace a `/carrito`)
@@ -86,15 +80,15 @@ La compra se hace con `SelectorCantidad` (mínimo 1 y, con control de stock, com
 
 ### Diseño
 
-<!-- [producto-diseño-01] [nueva] -->
+<!-- [producto-diseño-01] [x] -->
 En escritorio, la ficha tiene dos columnas: la galería, algo más ancha, y la información, que se queda fija al hacer scroll mientras quepa en la pantalla. En pantallas de 860 px o menos, va todo en una columna.
 
-<!-- [producto-diseño-02] [nueva] -->
+<!-- [producto-diseño-02] [x] -->
 En pantallas de 860 px o menos, abajo hay una barra fija con el precio y el `BotonTienda` «Añadir» (o «Agotado»). Hace lo mismo que el botón principal, y la página deja un hueco abajo para que la barra no tape el contenido.
 
-<!-- [producto-diseño-03] [nueva] -->
+<!-- [producto-diseño-03] [x] -->
 El aviso «Añadido al carrito» y el error al añadir se muestran debajo del botón, en una caja con el color de éxito o de error. El aviso lleva el enlace «Ver carrito».
 
-<!-- [producto-diseño-04] [nueva] -->
+<!-- [producto-diseño-04] [x] -->
 El CSS de la ficha usa solo tokens `--tienda-*` y va en `@layer tienda.paginas`.
 

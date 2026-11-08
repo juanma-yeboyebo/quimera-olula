@@ -17,9 +17,8 @@ API del backend (`olula_servidor`, app `tienda_online`). Todas las llamadas env�
 
 ### Rutas
 
-<!-- [catalogo-rutas-01] [cambiada] -->
+<!-- [catalogo-rutas-01] [x] -->
 La ruta `/catalogo` muestra el catálogo completo (la ruta `/` es la página de inicio). La ruta `/categoria/<slug>` muestra el catálogo filtrado por esa categoría (incluye sus subcategorías, lo resuelve el backend).
-<!-- antes: las rutas `/` y `/catalogo` mostraban el catálogo completo -->
 
 <!-- [catalogo-rutas-02] [x] -->
 Los filtros (texto, categoría, solo destacados) y el orden se reflejan en la URL (`?texto=…&orden=…&destacados=1`), de modo que recargar o compartir la URL muestra el mismo catálogo.
@@ -54,9 +53,8 @@ Si la página siguiente devuelve productos que ya están en la lista (misma `ref
 
 ### Búsqueda, filtros y orden
 
-<!-- [catalogo-filtros-01] [cambiada] -->
+<!-- [catalogo-filtros-01] [x] -->
 El texto de búsqueda sale del parámetro `texto` de la URL, que rellena el buscador de la cabecera (ver `tienda-cabecera-04`), y filtra con `["texto", "~", valor]`. La página ya no tiene campo de búsqueda propio. Con texto, el título es «Resultados de «<texto>»» y aparece el enlace «Quitar búsqueda», que quita `texto` de la URL y conserva el resto de filtros. Sin texto no se envía filtro de texto.
-<!-- antes: la página tenía su propio campo de búsqueda, que se aplicaba al pulsar Intro o tras 400 ms sin teclear -->
 
 <!-- [catalogo-filtros-02] [x] -->
 El selector de orden ofrece «Relevancia» (`orden ASC`, por defecto), «Precio: menor a mayor», «Precio: mayor a menor» y «Nombre».
@@ -84,27 +82,24 @@ En la cabecera del catálogo filtrado se muestra la miga de pan «Inicio › Cat
 
 ### Tarjeta de producto
 
-<!-- [catalogo-tarjeta-01] [cambiada] -->
+<!-- [catalogo-tarjeta-01] [x] -->
 Cada tarjeta muestra la imagen principal con `ImagenProducto` (con su `alt`, o la descripción si `alt` es nulo), la descripción, la descripción corta en una sola línea con el color suave y el precio con `PrecioTienda`. Toda la tarjeta enlaza a `/producto/<slug>`. No tiene borde: la foto lleva el radio `tarjeta` y crece un poco al pasar el ratón (salvo con `prefers-reduced-motion`).
-<!-- antes: la imagen se pintaba a mano con un marcador neutro, la tarjeta tenía borde y el precio se formateaba en la propia tarjeta -->
 
 <!-- [catalogo-tarjeta-02] [x] -->
 El precio que se muestra es `precioConIva`, formateado con la divisa del producto y el idioma del storeview (`Intl.NumberFormat`, p. ej. «12,10 €»).
 
-<!-- [catalogo-tarjeta-03] [cambiada] -->
+<!-- [catalogo-tarjeta-03] [x] -->
 Si el producto no está disponible (`disponible = false`), la tarjeta muestra sobre la foto el `DistintivoTienda` `agotado` con el texto «Agotado», y la foto se atenúa. Los productos con `sinControlStock` siempre se muestran disponibles.
-<!-- antes: mostraba el texto «Sin stock» debajo del precio -->
 
-<!-- [catalogo-tarjeta-04] [cambiada] -->
+<!-- [catalogo-tarjeta-04] [x] -->
 Los productos destacados muestran sobre la foto el `DistintivoTienda` `neutro` con el texto «Destacado».
-<!-- antes: distintivo propio de la tarjeta con los colores del ERP -->
 
 <!-- [catalogo-tarjeta-05] [x] -->
 La tarjeta expone el slot de factory `tarjeta_producto_acciones` (vacío por defecto), reservado para el botón de lista de deseos.
 
 ### Diseño
 
-<!-- [catalogo-diseño-01] [nueva] -->
+<!-- [catalogo-diseño-01] [x] -->
 La parte de arriba del catálogo muestra:
 - las migas (`catalogo-categorias-04`, también sin categoría: «Inicio › Catálogo»);
 - el título con la fuente de títulos: la categoría, «Todo el catálogo» o los resultados de la búsqueda;
@@ -113,18 +108,18 @@ La parte de arriba del catálogo muestra:
 
 En pantallas de 860 px o menos, el orden y el interruptor bajan debajo del título.
 
-<!-- [catalogo-diseño-02] [nueva] -->
+<!-- [catalogo-diseño-02] [x] -->
 El árbol lateral muestra «Todo» arriba y despliega solo la rama de la categoría activa. Los enlaces van con el color suave, y la categoría activa con el color de texto en seminegrita. En pantallas de 860 px o menos, el árbol se oculta: se navega con el menú de la cabecera.
 
-<!-- [catalogo-diseño-03] [nueva] -->
+<!-- [catalogo-diseño-03] [x] -->
 La rejilla de productos usa columnas de 220 px como mínimo, que pasan a 2 en pantallas de 860 px o menos.
 - **Debajo de la rejilla:** «Has visto X de N productos» y, si quedan más, el `BotonTienda` `secundario` «Ver más», centrado.
 - **Mientras carga la primera página:** se muestran 8 tarjetas de esqueleto en lugar de «Cargando catálogo...».
 - **Si falla la carga:** el reintento es un `BotonTienda`.
 
-<!-- [catalogo-diseño-04] [nueva] -->
+<!-- [catalogo-diseño-04] [x] -->
 Los CSS del catálogo y de la tarjeta usan solo tokens `--tienda-*`. Las reglas del catálogo van en `@layer tienda.paginas` y las de la tarjeta en `@layer tienda.componentes`.
 
 
-<!-- [catalogo-diseño-05] [nueva] -->
-Todas las tarjetas de una fila miden lo mismo hasta el precio: la foto mantiene siempre la proporción `--tienda-ratio-foto`, el nombre ocupa siempre dos líneas (se corta con «…» si es más largo) y la descripción corta una (ya se corta). Las columnas de la rejilla tienen todas el mismo ancho, sea cual sea el tamaño de las fotos.
+<!-- [catalogo-diseño-05] [x] -->
+Todas las tarjetas de una fila miden lo mismo hasta el precio: la foto mantiene siempre la proporción `--tienda-ratio-foto`, el nombre ocupa como máximo dos líneas (se corta con «…» si es más largo) y la descripción corta una. Las tarjetas usan `subgrid` sobre las filas de la rejilla, de modo que en cada fila el nombre ocupa lo que el más alto de esa fila: si todos caben en una línea no queda hueco, y el precio queda alineado. Las columnas de la rejilla tienen todas el mismo ancho, sea cual sea el tamaño de las fotos.

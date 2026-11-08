@@ -30,9 +30,8 @@ Si el carrito está en `PAGO_PENDIENTE` se muestra el aviso «Tienes un pago ini
 <!-- [carrito-lineas-01] [x] -->
 Cada línea muestra la imagen (o un marcador), la descripción enlazada a `/producto/<slug>` (sin enlace si `slug` es nulo), el precio unitario, el descuento si es mayor que 0, la cantidad y el importe, formateados con `formatearPrecio` y el idioma del storeview.
 
-<!-- [carrito-lineas-02] [cambiada] -->
+<!-- [carrito-lineas-02] [x] -->
 La cantidad se cambia con `SelectorCantidad` (`tienda-primitivos-07`): «−» y «+» envían el cambio al momento y el campo, al perder el foco o con Intro, validado con `cantidadValida`. «−» está deshabilitado con cantidad 1 (para quitar la línea está «Quitar»).
-<!-- antes: botones y campo numérico propios de la línea; `cantidadValida` estaba en `carrito/dominio.ts` -->
 
 <!-- [carrito-lineas-03] [x] -->
 [LISTO] cantidad_cambiada → ACTUALIZANDO → LISTO (envía `PATCH …/linea/<id>` con `{cantidad}` y llama a `recargarCarrito()`)
@@ -59,42 +58,42 @@ El botón «Tramitar pedido» enlaza a `/checkout`. No se muestra con el carrito
 
 ### Cajón
 
-<!-- [carrito-cajon-01] [nueva] -->
+<!-- [carrito-cajon-01] [x] -->
 `LayoutTienda` monta un cajón lateral derecho del carrito, con un velo detrás, fuera de las rutas `/checkout*`. Su estado está en `comun/cajon_carrito_store.ts` (`abrirCajonCarrito`, `cerrarCajonCarrito`, `useCajonCarrito`). El icono del carrito de la cabecera y la entrada «Carrito» del cajón del menú móvil lo abren en lugar de navegar a `/carrito`. Se cierra con el botón «Cerrar carrito» (icono `cerrar`), con el velo, con Escape y al cambiar de ruta. Al abrirse, el foco pasa al cajón.
 
-<!-- [carrito-cajon-02] [nueva] -->
+<!-- [carrito-cajon-02] [x] -->
 Al añadir un producto desde la ficha con éxito (`producto-anadir-03`) se abre el cajón. El aviso «Añadido al carrito» de la ficha se mantiene.
 
-<!-- [carrito-cajon-03] [nueva] -->
+<!-- [carrito-cajon-03] [x] -->
 El cajón muestra el título «Tu carrito (N)», con N las unidades, y una línea por artículo: imagen (o `SinImagen`), descripción enlazada a `/producto/<slug>` (sin enlace si `slug` es nulo), precio por unidad, `SelectorCantidad`, «Quitar» e importe. Cambiar la cantidad y quitar usan la misma máquina que la página `/carrito` (`carrito-lineas-03` a `07`).
 
-<!-- [carrito-cajon-04] [nueva] -->
+<!-- [carrito-cajon-04] [x] -->
 El pie del cajón muestra «Total» con `total`, la nota «IVA incluido.», un `BotonTienda` `principal` a lo ancho «Finalizar compra» (a `/checkout`), y un `BotonTienda` `enlace` «Seguir comprando» que cierra el cajón.
 
-<!-- [carrito-cajon-05] [nueva] -->
+<!-- [carrito-cajon-05] [x] -->
 Sin carrito o vacío, el cajón muestra «Tu carrito está vacío.» y un `BotonTienda` «Ver la colección» que lleva a `/catalogo` y cierra el cajón.
 
-<!-- [carrito-cajon-06] [nueva] -->
+<!-- [carrito-cajon-06] [x] -->
 Si el carrito está en `PAGO_PENDIENTE`, el cajón muestra el mismo aviso que la página (`carrito-carga-03`).
 
 ### Envío gratis
 
-<!-- [carrito-envio-01] [nueva] -->
+<!-- [carrito-envio-01] [x] -->
 `FactoryTiendaOnline` tiene el valor `envio_gratis_desde: number | null`, `null` por defecto. Con `null` no se muestra nada de envío gratis.
 
-<!-- [carrito-envio-02] [nueva] -->
+<!-- [carrito-envio-02] [x] -->
 Una función pura `progresoEnvioGratis(total, umbral)` en `carrito/dominio.ts` devuelve `{ falta, porcentaje }`: `falta` es `umbral − total` sin bajar de 0, y `porcentaje` es `total / umbral × 100` entre 0 y 100. Con `umbral` menor o igual que 0 devuelve `{ falta: 0, porcentaje: 100 }`.
 
-<!-- [carrito-envio-03] [nueva] -->
+<!-- [carrito-envio-03] [x] -->
 Con umbral configurado, el cajón y la página `/carrito` muestran encima de las líneas «Te faltan X para el envío gratis.» (o «Tienes envío gratis.» si `falta` es 0) y una barra de progreso con `porcentaje`, de color `exito`. X se formatea con `formatearPrecio`.
 
 ### Diseño
 
-<!-- [carrito-diseño-01] [nueva] -->
+<!-- [carrito-diseño-01] [x] -->
 La página `/carrito` tiene dos columnas: las líneas y, a la derecha, un resumen fijo al hacer scroll con base imponible, IVA, total y el botón. En 860 px o menos, una columna con el resumen debajo. Usa el contenedor centrado de las demás páginas.
 
-<!-- [carrito-diseño-02] [nueva] -->
+<!-- [carrito-diseño-02] [x] -->
 Las líneas de la página usan los mismos primitivos que el cajón: `SelectorCantidad` para la cantidad (ver `carrito-lineas-02`), `PrecioTienda` para precio e importe y un `BotonTienda` `enlace` «Quitar». «Tramitar pedido» pasa a ser un `BotonTienda` `principal` a lo ancho.
 
-<!-- [carrito-diseño-03] [nueva] -->
+<!-- [carrito-diseño-03] [x] -->
 `CarritoTienda.css` y los estilos del cajón usan solo tokens `--tienda-*` y van en `@layer tienda.paginas` y `@layer tienda.componentes` respectivamente.

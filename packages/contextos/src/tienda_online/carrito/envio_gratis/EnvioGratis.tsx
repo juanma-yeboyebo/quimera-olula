@@ -8,9 +8,9 @@ import "./EnvioGratis.css";
 export const EnvioGratis = ({ total, divisa }: { total: number; divisa: string }) => {
     const { app } = useContext(FactoryCtx);
     const sv = useStoreView();
-    const umbral = app.TiendaOnline?.envio_gratis_desde ?? null;
+    const umbral = (app.TiendaOnline?.envio_gratis_desde ?? null) as number | null;
 
-    if (umbral === null || umbral === undefined) return null;
+    if (umbral === null) return null;
 
     const idioma = sv.estado === "LISTO" ? sv.storeView.idioma : "es";
     const { falta, porcentaje } = progresoEnvioGratis(total, umbral);
