@@ -68,7 +68,7 @@
         }
 
         .cabecera-tienda-categorias {
-            display: none;
+            border-top: 0;
         }
     }
 }

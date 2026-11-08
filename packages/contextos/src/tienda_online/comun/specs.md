@@ -73,8 +73,9 @@ La ruta raíz de la app usa `LayoutTienda` como componente, en lugar de `Vista` 
 <!-- [tienda-app-02] [x] -->
 Las rutas públicas de la app son `/`, `/catalogo`, `/categoria`, `/producto`, `/carrito`, `/checkout` y `/registro`: se navega por ellas sin login. `/mi-cuenta` exige login.
 
-<!-- [tienda-app-03] [x] -->
-La ruta `/` muestra el catálogo (ver `catalogo-rutas-01`). Si el storeview no está configurado o no existe, en lugar del catálogo se muestra el error de configuración o «Tienda no disponible».
+<!-- [tienda-app-03] [cambiada] -->
+La ruta `/` muestra la página de inicio (ver `inicio-ruta-01`). Si el storeview no está configurado o no existe, en su lugar se muestra el error de configuración o «Tienda no disponible».
+<!-- antes: la ruta `/` mostraba el catálogo -->
 
 ### Identidad visual
 
@@ -214,3 +215,57 @@ En pantallas de 860 px de ancho o menos:
 - la barra de categorías se oculta.
 
 Mientras no haya cajón de menú, el botón de menú lleva a `/catalogo`.
+
+### Menú de categorías
+
+<!-- [tienda-menu-01] [nueva] -->
+`useCategoriasTienda()` (en `comun/categorias_store.ts`) devuelve el árbol de categorías y solo hace una petición a `getCategorias` por carga de la app. La comparten el menú, el pie y el cajón del móvil. Si la petición falla, devuelve una lista vacía y el menú no se pinta.
+
+<!-- [tienda-menu-02] [nueva] -->
+`FactoryTiendaOnline` tiene `menu_max_en_barra = 8` y `menu_en_barra_con_todas = 6`. `repartirMenu(categorias, maxEnBarra, enBarraConTodas)` en `comun/dominio.ts` devuelve `{ conTodas, enBarra }`:
+- con `maxEnBarra` categorías de primer nivel o menos, `conTodas` es `false` y van todas a la barra;
+- con más, `conTodas` es `true` y a la barra van las `enBarraConTodas` primeras.
+
+<!-- [tienda-menu-03] [nueva] -->
+`contenidoMega(categoria)` en `comun/dominio.ts` prepara el panel de una categoría:
+- devuelve `columnas` (las hijas que a su vez tienen hijas) y `sueltas` (las que no);
+- cada columna lleva como mucho 6 nietas, y `verMas` a `true` si tiene más.
+
+El cuarto nivel y los siguientes nunca aparecen en el panel.
+
+<!-- [tienda-menu-04] [nueva] -->
+En escritorio, si una categoría de la barra tiene hijas, al pasar el ratón por ella o al enfocarla con el teclado se abre debajo de la cabecera un panel a todo el ancho:
+- arriba, «Ver todo en <categoría>»;
+- debajo, cada columna con la hija como título y sus nietas como enlaces, más «Ver más» si hay más de 6;
+- las hijas sueltas, como enlaces destacados; si solo hay sueltas, se reparten en varias columnas para no dejar el panel vacío.
+
+El panel se abre con un retardo corto para que no parpadee al cruzar la barra con el ratón. Se cierra al salir de la cabecera, con Escape o al navegar.
+
+<!-- [tienda-menu-05] [nueva] -->
+Cuando `conTodas` es `true`, la barra empieza con el botón «Todas las categorías» (icono `menu`, con `aria-expanded`). Al pulsarlo se abre un panel:
+- a la izquierda, la lista de todas las categorías de primer nivel, con «›» en las que tienen hijas;
+- a la derecha, el contenido de la categoría marcada, igual que en `tienda-menu-04`, que cambia al pasar el ratón o el foco por la lista.
+
+Al principio está marcada la primera. El panel se cierra al pulsar fuera, al salir de la cabecera, con Escape o al navegar. Mientras está abierto, no se abren los paneles de las categorías de la barra.
+
+<!-- [tienda-menu-06] [nueva] -->
+En pantallas de 860 px de ancho o menos, el botón de menú de la cabecera abre un cajón lateral izquierdo con un velo detrás. Sustituye al enlace a `/catalogo` de `tienda-cabecera-06`.
+- **Primer nivel:** el título «Menú», las categorías de primer nivel y, debajo, «Mi cuenta» (o «Entrar» sin sesión) y «Carrito».
+- **Categoría con hijas:** es un botón con «›» que baja un nivel.
+- **Categoría sin hijas:** es un enlace a `/categoria/<slug>`.
+- **Niveles inferiores:** cada uno muestra «‹ Atrás», el nombre de la categoría, «Ver todo en <categoría>» y sus hijas. Admite cualquier profundidad.
+
+El nivel que se muestra lo calcula `nodoDeRuta(arbol, ruta)` en `comun/dominio.ts`: devuelve la categoría a la que lleva la lista de slugs `ruta`, o `null` si la ruta está vacía o algún slug no existe.
+
+<!-- [tienda-menu-07] [nueva] -->
+El cajón del menú se cierra al navegar, con Escape, al pulsar el velo o con el botón «Cerrar menú». Al abrirlo:
+- el foco pasa al cajón;
+- la página de detrás no hace scroll.
+
+Al cerrarlo, el foco vuelve al botón de menú.
+
+<!-- [tienda-menu-08] [nueva] -->
+El hueco `menu_categorias` sustituye a la vez la barra de escritorio y el cajón del móvil. El menú base de `tienda-cabecera-05` pasa a ser el de esta sección.
+
+<!-- [tienda-menu-09] [nueva] -->
+Las fotos de las categorías van en la carpeta pública de la app, con el slug como nombre: `<ruta_imagenes_categoria>/<slug>.jpg`. `ruta_imagenes_categoria` está en `FactoryTiendaOnline` y vale `/categorias` por defecto; esa carpeta no se sube al repositorio. Cuando todas las hijas de una categoría son sueltas, el panel las muestra como tarjetas con la foto y el nombre. Si la foto no existe, la tarjeta se queda solo con el nombre.

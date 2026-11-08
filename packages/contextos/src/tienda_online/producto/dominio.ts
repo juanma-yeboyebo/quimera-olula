@@ -15,3 +15,10 @@ export const metadatosFicha = (ficha: FichaProducto): { titulo: string; descripc
     titulo: ficha.metaTitulo ?? ficha.descripcion,
     descripcion: ficha.metaDescripcion ?? ficha.descripcionCorta ?? "",
 });
+
+export const textoDisponibilidad = (ficha: FichaProducto): string => {
+    if (!estaDisponible(ficha)) return "Agotado";
+    if (!ficha.sinControlStock && ficha.cantidadDisponible >= 1 && ficha.cantidadDisponible <= 5)
+        return `Quedan ${ficha.cantidadDisponible} unidades`;
+    return "En stock";
+};

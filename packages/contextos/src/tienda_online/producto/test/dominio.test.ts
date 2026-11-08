@@ -4,6 +4,7 @@ import {
     imagenInicial,
     limitarCantidad,
     metadatosFicha,
+    textoDisponibilidad,
 } from "#/tienda_online/producto/dominio.ts";
 import { FichaProducto, ImagenProducto } from "#/tienda_online/producto/diseño.ts";
 
@@ -45,7 +46,7 @@ describe("[producto-contenido-01] La galería muestra primero la imagen principa
     });
 });
 
-describe("[producto-contenido-05] La disponibilidad se muestra como Disponible o Sin stock", () => {
+describe("[producto-contenido-05] El texto de disponibilidad lo da textoDisponibilidad(ficha): Agotado, Quedan N unidades o En stock", () => {
     test("producto_contenido_05_disponible", () => {
         expect(estaDisponible(ficha({ disponible: true }))).toBe(true);
     });
@@ -56,6 +57,24 @@ describe("[producto-contenido-05] La disponibilidad se muestra como Disponible o
 
     test("producto_contenido_05_sin_control_de_stock_siempre_disponible", () => {
         expect(estaDisponible(ficha({ disponible: false, sinControlStock: true }))).toBe(true);
+    });
+
+    test("producto_contenido_05_texto_no_disponible_es_agotado", () => {
+        expect(textoDisponibilidad(ficha({ disponible: false, cantidadDisponible: 0 }))).toBe("Agotado");
+    });
+
+    test("producto_contenido_05_texto_quedan_pocas_unidades", () => {
+        expect(textoDisponibilidad(ficha({ cantidadDisponible: 1 }))).toBe("Quedan 1 unidades");
+        expect(textoDisponibilidad(ficha({ cantidadDisponible: 5 }))).toBe("Quedan 5 unidades");
+    });
+
+    test("producto_contenido_05_texto_en_stock_con_mas_de_cinco", () => {
+        expect(textoDisponibilidad(ficha({ cantidadDisponible: 6 }))).toBe("En stock");
+    });
+
+    test("producto_contenido_05_texto_sin_control_de_stock_en_stock", () => {
+        expect(textoDisponibilidad(ficha({ sinControlStock: true, cantidadDisponible: 0 }))).toBe("En stock");
+        expect(textoDisponibilidad(ficha({ sinControlStock: true, cantidadDisponible: 2 }))).toBe("En stock");
     });
 });
 

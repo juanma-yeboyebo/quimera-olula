@@ -1,3 +1,4 @@
+import type { CategoriaTienda } from "../catalogo/diseño.ts";
 import { EstadoCarrito } from "./diseño.ts";
 
 export const codigoStoreViewDesdeEnv = (valor: string | undefined): string | null =>
@@ -31,4 +32,42 @@ export const esRutaCheckout = (pathname: string): boolean =>
 export const rutaBusqueda = (texto: string): string => {
     const limpio = texto.trim();
     return limpio ? `/catalogo?texto=${encodeURIComponent(limpio)}` : "/catalogo";
+};
+
+export const repartirMenu = (
+    categorias: CategoriaTienda[],
+    maxEnBarra: number,
+    enBarraConTodas: number,
+): { conTodas: boolean; enBarra: CategoriaTienda[] } =>
+    categorias.length <= maxEnBarra
+        ? { conTodas: false, enBarra: categorias }
+        : { conTodas: true, enBarra: categorias.slice(0, enBarraConTodas) };
+
+const MAX_NIETAS = 6;
+
+export const contenidoMega = (
+    categoria: CategoriaTienda,
+): {
+    columnas: { categoria: CategoriaTienda; nietas: CategoriaTienda[]; verMas: boolean }[];
+    sueltas: CategoriaTienda[];
+} => ({
+    columnas: categoria.hijas
+        .filter((h) => h.hijas.length > 0)
+        .map((h) => ({
+            categoria: h,
+            nietas: h.hijas.slice(0, MAX_NIETAS),
+            verMas: h.hijas.length > MAX_NIETAS,
+        })),
+    sueltas: categoria.hijas.filter((h) => h.hijas.length === 0),
+});
+
+export const nodoDeRuta = (arbol: CategoriaTienda[], ruta: string[]): CategoriaTienda | null => {
+    let nivel = arbol;
+    let nodo: CategoriaTienda | null = null;
+    for (const slug of ruta) {
+        nodo = nivel.find((c) => c.slug === slug) ?? null;
+        if (!nodo) return null;
+        nivel = nodo.hijas;
+    }
+    return nodo;
 };

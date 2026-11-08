@@ -27,3 +27,5 @@ _tmp/
 *.env*
 .claude/settings.json
 apps/tienda_online/public/productos/
+apps/tienda_online/public/categorias/
+apps/tienda_online/public/inicio/

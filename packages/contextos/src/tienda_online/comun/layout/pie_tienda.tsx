@@ -1,18 +1,12 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import { CategoriaTienda } from "../../catalogo/diseño.ts";
-import { getCategorias } from "../../catalogo/infraestructura.ts";
+import { useCategoriasTienda } from "../categorias_store.ts";
 import { useStoreView } from "../usar_storeview.ts";
 import "./pie_tienda.css";
 
 export const PieTienda = () => {
     const sv = useStoreView();
-    const [categorias, setCategorias] = useState<CategoriaTienda[]>([]);
+    const categorias = useCategoriasTienda();
     const nombre = sv.estado === "LISTO" ? sv.storeView.website.nombre : "";
-
-    useEffect(() => {
-        getCategorias().then(setCategorias).catch(() => setCategorias([]));
-    }, []);
 
     return (
         <footer className="pie-tienda">

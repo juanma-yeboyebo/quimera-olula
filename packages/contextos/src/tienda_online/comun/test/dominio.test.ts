@@ -1,12 +1,16 @@
 import { describe, expect, test } from "vitest";
+import type { CategoriaTienda } from "#/tienda_online/catalogo/diseño.ts";
 import {
     claveCarrito,
+    contenidoMega,
     codigoStoreViewDesdeEnv,
     debeDescartarToken,
     formatearPrecio,
     esRutaCheckout,
     hayMas,
     limitarCantidad,
+    nodoDeRuta,
+    repartirMenu,
     rutaBusqueda,
     textoAriaCarrito,
     textoContador,
@@ -171,5 +175,119 @@ describe("[tienda-cabecera-04] La búsqueda navega a /catalogo, con texto recort
 
     test("tienda_cabecera_04_codifica_caracteres_reservados", () => {
         expect(rutaBusqueda("a&b")).toBe("/catalogo?texto=a%26b");
+    });
+});
+
+const cat = (slug: string, hijas: CategoriaTienda[] = []): CategoriaTienda => ({
+    id: slug.length,
+    nombre: slug.toUpperCase(),
+    slug,
+    hijas,
+});
+
+const nCats = (n: number): CategoriaTienda[] =>
+    Array.from({ length: n }, (_, i) => cat(`c${i + 1}`));
+
+describe("[tienda-menu-02] repartirMenu devuelve conTodas y enBarra según el máximo de la barra", () => {
+    test("tienda_menu_02_con_menos_del_maximo_van_todas_a_la_barra", () => {
+        const cats = nCats(3);
+        expect(repartirMenu(cats, 8, 6)).toEqual({ conTodas: false, enBarra: cats });
+    });
+
+    test("tienda_menu_02_con_exactamente_8_van_todas_a_la_barra", () => {
+        const cats = nCats(8);
+        expect(repartirMenu(cats, 8, 6)).toEqual({ conTodas: false, enBarra: cats });
+    });
+
+    test("tienda_menu_02_con_9_conTodas_y_las_6_primeras_en_la_barra", () => {
+        const cats = nCats(9);
+        expect(repartirMenu(cats, 8, 6)).toEqual({ conTodas: true, enBarra: cats.slice(0, 6) });
+    });
+
+    test("tienda_menu_02_sin_categorias_no_hay_conTodas", () => {
+        expect(repartirMenu([], 8, 6)).toEqual({ conTodas: false, enBarra: [] });
+    });
+
+    test("tienda_menu_02_respeta_los_parametros", () => {
+        const cats = nCats(5);
+        expect(repartirMenu(cats, 4, 2)).toEqual({ conTodas: true, enBarra: cats.slice(0, 2) });
+    });
+});
+
+describe("[tienda-menu-03] contenidoMega separa columnas y sueltas y limita a 6 nietas por columna", () => {
+    test("tienda_menu_03_hijas_con_hijas_son_columnas_y_el_resto_sueltas", () => {
+        const nieta = cat("n1");
+        const conHijas = cat("h1", [nieta]);
+        const suelta = cat("h2");
+        const resultado = contenidoMega(cat("raiz", [conHijas, suelta]));
+        expect(resultado.columnas).toEqual([{ categoria: conHijas, nietas: [nieta], verMas: false }]);
+        expect(resultado.sueltas).toEqual([suelta]);
+    });
+
+    test("tienda_menu_03_columna_con_6_nietas_no_tiene_ver_mas", () => {
+        const nietas = nCats(6);
+        const resultado = contenidoMega(cat("raiz", [cat("h1", nietas)]));
+        expect(resultado.columnas[0].nietas).toEqual(nietas);
+        expect(resultado.columnas[0].verMas).toBe(false);
+    });
+
+    test("tienda_menu_03_columna_con_7_nietas_recorta_a_6_y_tiene_ver_mas", () => {
+        const nietas = nCats(7);
+        const resultado = contenidoMega(cat("raiz", [cat("h1", nietas)]));
+        expect(resultado.columnas[0].nietas).toEqual(nietas.slice(0, 6));
+        expect(resultado.columnas[0].verMas).toBe(true);
+    });
+
+    test("tienda_menu_03_las_nietas_no_llevan_cuarto_nivel", () => {
+        const nieta = cat("n1", [cat("bisnieta")]);
+        const resultado = contenidoMega(cat("raiz", [cat("h1", [nieta])]));
+        expect(resultado.columnas[0].nietas).toHaveLength(1);
+        expect(resultado.columnas[0].nietas[0].slug).toBe("n1");
+        expect(resultado.sueltas).toEqual([]);
+    });
+
+    test("tienda_menu_03_sin_hijas_devuelve_todo_vacio", () => {
+        expect(contenidoMega(cat("raiz"))).toEqual({ columnas: [], sueltas: [] });
+    });
+
+    test("tienda_menu_03_solo_sueltas_no_genera_columnas", () => {
+        const hijas = nCats(3);
+        expect(contenidoMega(cat("raiz", hijas))).toEqual({ columnas: [], sueltas: hijas });
+    });
+});
+
+describe("[tienda-menu-06] nodoDeRuta devuelve la categoría a la que lleva la ruta de slugs, o null", () => {
+    const profunda = cat("c", []);
+    const arbol = [
+        cat("a", [cat("a1", [profunda]), cat("a2")]),
+        cat("b"),
+    ];
+
+    test("tienda_menu_06_ruta_de_un_nivel", () => {
+        expect(nodoDeRuta(arbol, ["b"])).toBe(arbol[1]);
+    });
+
+    test("tienda_menu_06_ruta_de_dos_niveles", () => {
+        expect(nodoDeRuta(arbol, ["a", "a2"])).toBe(arbol[0].hijas[1]);
+    });
+
+    test("tienda_menu_06_ruta_de_tres_niveles", () => {
+        expect(nodoDeRuta(arbol, ["a", "a1", "c"])).toBe(profunda);
+    });
+
+    test("tienda_menu_06_ruta_vacia_devuelve_null", () => {
+        expect(nodoDeRuta(arbol, [])).toBeNull();
+    });
+
+    test("tienda_menu_06_slug_inexistente_en_primer_nivel_devuelve_null", () => {
+        expect(nodoDeRuta(arbol, ["zzz"])).toBeNull();
+    });
+
+    test("tienda_menu_06_slug_inexistente_en_nivel_inferior_devuelve_null", () => {
+        expect(nodoDeRuta(arbol, ["a", "zzz"])).toBeNull();
+    });
+
+    test("tienda_menu_06_slug_de_otra_rama_devuelve_null", () => {
+        expect(nodoDeRuta(arbol, ["b", "a1"])).toBeNull();
     });
 });

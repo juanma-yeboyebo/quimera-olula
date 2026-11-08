@@ -1,12 +1,16 @@
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
 import { FactoryCtx } from "@olula/lib/factory_ctx.tsx";
-import { ComponentType, useContext, useEffect, useRef, useState } from "react";
+import { ComponentType, Fragment, useContext, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router";
 import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
-import { formatearPrecio } from "../../comun/dominio.ts";
-import { SinImagen } from "../../comun/componentes/sin_imagen.tsx";
+import { BotonTienda } from "../../comun/componentes/boton_tienda.tsx";
+import { ImagenProducto as ImagenProductoTienda } from "../../comun/componentes/imagen_producto.tsx";
+import { PrecioTienda } from "../../comun/componentes/precio_tienda.tsx";
+import { SelectorCantidad } from "../../comun/componentes/selector_cantidad.tsx";
+import { useCategoriasTienda } from "../../comun/categorias_store.ts";
+import { rutaCategoria } from "../../catalogo/dominio.ts";
 import { FichaProducto as Ficha, ImagenProducto } from "../diseño.ts";
-import { estaDisponible, imagenInicial, metadatosFicha } from "../dominio.ts";
+import { estaDisponible, imagenInicial, metadatosFicha, textoDisponibilidad } from "../dominio.ts";
 import { contextoFichaInicial } from "./detalle.ts";
 import "./FichaProducto.css";
 import { getMaquina } from "./maquina.ts";
@@ -28,14 +32,7 @@ const Galeria = ({ ficha }: { ficha: Ficha }) => {
     const mostrada = elegida ?? imagenInicial(ficha.imagenes);
 
     return (
-        <div className="ficha-galeria">
-            <div className="ficha-imagen">
-                {mostrada ? (
-                    <img src={mostrada.url} alt={mostrada.alt ?? ficha.descripcion} />
-                ) : (
-                    <SinImagen />
-                )}
-            </div>
+        <div className={`ficha-galeria${ficha.imagenes.length > 1 ? " ficha-galeria-con-miniaturas" : ""}`}>
             {ficha.imagenes.length > 1 && (
                 <div className="ficha-miniaturas">
                     {ficha.imagenes.map((img) => (
@@ -51,11 +48,34 @@ const Galeria = ({ ficha }: { ficha: Ficha }) => {
                     ))}
                 </div>
             )}
+            <div className="ficha-imagen">
+                <ImagenProductoTienda imagen={mostrada} prioritaria />
+            </div>
         </div>
     );
 };
 
-const ContenidoFicha = ({ idioma }: { idioma: string }) => {
+const Migas = ({ ficha }: { ficha: Ficha }) => {
+    const arbol = useCategoriasTienda();
+    const primera = ficha.categorias[0];
+    const ruta = primera ? rutaCategoria(arbol, primera.slug) : [];
+
+    return (
+        <nav className="ficha-migas" aria-label="Migas de pan">
+            <Link to="/">Inicio</Link>
+            {ruta.map((c) => (
+                <Fragment key={c.slug}>
+                    <span aria-hidden="true">/</span>
+                    <Link to={`/categoria/${c.slug}`}>{c.nombre}</Link>
+                </Fragment>
+            ))}
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">{ficha.descripcion}</span>
+        </nav>
+    );
+};
+
+const ContenidoFicha = () => {
     const { slug } = useParams();
     const { app } = useContext(FactoryCtx);
     const Acciones = app.TiendaOnline?.ficha_acciones as
@@ -118,67 +138,82 @@ const ContenidoFicha = ({ idioma }: { idioma: string }) => {
         );
 
     const disponible = estaDisponible(ficha);
+    const deshabilitado = !disponible || bloqueado || estado === "AÑADIENDO";
+    const maximo = ficha.sinControlStock ? undefined : ficha.cantidadDisponible;
+    const textoBoton = disponible ? "Añadir al carrito" : "Agotado";
 
     return (
         <div className="FichaProducto">
-            <Galeria key={ficha.referencia} ficha={ficha} />
-            <div className="ficha-datos">
-                <h1>{ficha.descripcion}</h1>
-                {ficha.descripcionCorta && <p className="ficha-corta">{ficha.descripcionCorta}</p>}
-                <div className="ficha-precio">
-                    {formatearPrecio(ficha.precioConIva, ficha.divisa, idioma)}
-                    <small> IVA incluido</small>
+            <div className="ficha-contenedor">
+                <Migas ficha={ficha} />
+                <div className="ficha-rejilla">
+                    <Galeria key={ficha.referencia} ficha={ficha} />
+                    <div className="ficha-datos">
+                        <h1>{ficha.descripcion}</h1>
+                        <div className="ficha-precio">
+                            <PrecioTienda importe={ficha.precioConIva} divisa={ficha.divisa} grande />
+                            <small>IVA incluido</small>
+                        </div>
+                        {ficha.descripcionCorta && <p className="ficha-corta">{ficha.descripcionCorta}</p>}
+                        <p className={`ficha-disponibilidad ${disponible ? "ficha-disponible" : "ficha-sin-stock"}`}>
+                            <span className="ficha-punto" aria-hidden="true" />
+                            {textoDisponibilidad(ficha)}
+                        </p>
+                        <div className="ficha-compra">
+                            <SelectorCantidad
+                                valor={cantidad}
+                                minimo={1}
+                                maximo={maximo}
+                                onCambiar={(v) => emitir("cantidad_cambiada", v)}
+                            />
+                            <BotonTienda
+                                variante="principal"
+                                ancho
+                                deshabilitado={deshabilitado}
+                                onClick={anadir}
+                            >
+                                {textoBoton}
+                            </BotonTienda>
+                            {Acciones && <Acciones ficha={ficha} />}
+                        </div>
+                        {aviso && (
+                            <p role="status" className="ficha-aviso">
+                                {aviso}. <Link to="/carrito">Ver carrito</Link>
+                            </p>
+                        )}
+                        {error && (
+                            <p role="alert" className="ficha-error">
+                                {error}
+                            </p>
+                        )}
+                        {ficha.descripcionLarga && (
+                            <details className="ficha-desplegable" open>
+                                <summary>Descripción</summary>
+                                <div className="ficha-larga">{ficha.descripcionLarga}</div>
+                            </details>
+                        )}
+                        {ficha.categorias.length > 1 && (
+                            <div className="ficha-categorias">
+                                {ficha.categorias.slice(1).map((c) => (
+                                    <Link key={c.id} to={`/categoria/${c.slug}`}>
+                                        {c.nombre}
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
-                <p className={disponible ? "ficha-disponible" : "ficha-sin-stock"}>
-                    {disponible ? "Disponible" : "Sin stock"}
-                </p>
-                {ficha.categorias.length > 0 && (
-                    <p className="ficha-categorias">
-                        {ficha.categorias.map((c) => (
-                            <Link key={c.id} to={`/categoria/${c.slug}`}>
-                                {c.nombre}
-                            </Link>
-                        ))}
-                    </p>
-                )}
-                <div className="ficha-compra">
-                    <label>
-                        Cantidad
-                        <input
-                            type="number"
-                            min={1}
-                            max={ficha.sinControlStock ? undefined : ficha.cantidadDisponible}
-                            value={cantidad}
-                            onChange={(e) => emitir("cantidad_cambiada", e.target.value)}
-                        />
-                    </label>
-                    <button
-                        type="button"
-                        disabled={!disponible || bloqueado || estado === "AÑADIENDO"}
-                        onClick={anadir}
-                    >
-                        Añadir al carrito
-                    </button>
-                    {Acciones && <Acciones ficha={ficha} />}
-                </div>
-                {aviso && (
-                    <p role="status" className="ficha-aviso">
-                        {aviso}. <Link to="/carrito">Ver carrito</Link>
-                    </p>
-                )}
-                {error && (
-                    <p role="alert" className="ficha-error">
-                        {error}
-                    </p>
-                )}
-                {ficha.descripcionLarga && (
-                    <div className="ficha-larga">{ficha.descripcionLarga}</div>
-                )}
+            </div>
+            <div className="ficha-barra-movil">
+                <PrecioTienda importe={ficha.precioConIva} divisa={ficha.divisa} grande />
+                <BotonTienda variante="principal" deshabilitado={deshabilitado} onClick={anadir}>
+                    {disponible ? "Añadir" : "Agotado"}
+                </BotonTienda>
             </div>
         </div>
     );
 };
 
 export const FichaProducto = () => (
-    <ConStoreView>{(sv) => <ContenidoFicha idioma={sv.idioma} />}</ConStoreView>
+    <ConStoreView>{() => <ContenidoFicha />}</ConStoreView>
 );
