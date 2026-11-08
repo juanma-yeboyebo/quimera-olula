@@ -30,8 +30,9 @@ Si el carrito está en `PAGO_PENDIENTE` se muestra el aviso «Tienes un pago ini
 <!-- [carrito-lineas-01] [x] -->
 Cada línea muestra la imagen (o un marcador), la descripción enlazada a `/producto/<slug>` (sin enlace si `slug` es nulo), el precio unitario, el descuento si es mayor que 0, la cantidad y el importe, formateados con `formatearPrecio` y el idioma del storeview.
 
-<!-- [carrito-lineas-02] [x] -->
-La cantidad se cambia con botones «−» y «+» y con un campo numérico. Una función pura `cantidadValida(valor)` acepta solo números mayores que 0. El campo envía el cambio al perder el foco o con Intro; los botones lo envían al momento. «−» con cantidad 1 no hace nada (para quitar la línea está el botón de borrar).
+<!-- [carrito-lineas-02] [cambiada] -->
+La cantidad se cambia con `SelectorCantidad` (`tienda-primitivos-07`): «−» y «+» envían el cambio al momento y el campo, al perder el foco o con Intro, validado con `cantidadValida`. «−» está deshabilitado con cantidad 1 (para quitar la línea está «Quitar»).
+<!-- antes: botones y campo numérico propios de la línea; `cantidadValida` estaba en `carrito/dominio.ts` -->
 
 <!-- [carrito-lineas-03] [x] -->
 [LISTO] cantidad_cambiada → ACTUALIZANDO → LISTO (envía `PATCH …/linea/<id>` con `{cantidad}` y llama a `recargarCarrito()`)
@@ -93,7 +94,7 @@ Con umbral configurado, el cajón y la página `/carrito` muestran encima de las
 La página `/carrito` tiene dos columnas: las líneas y, a la derecha, un resumen fijo al hacer scroll con base imponible, IVA, total y el botón. En 860 px o menos, una columna con el resumen debajo. Usa el contenedor centrado de las demás páginas.
 
 <!-- [carrito-diseño-02] [nueva] -->
-Las líneas de la página usan los mismos primitivos que el cajón: `SelectorCantidad` para la cantidad (sustituye a los botones y el campo numérico de `carrito-lineas-02`, que deja de admitir escribir la cantidad), `PrecioTienda` para precio e importe y un `BotonTienda` `enlace` «Quitar». «Tramitar pedido» pasa a ser un `BotonTienda` `principal` a lo ancho.
+Las líneas de la página usan los mismos primitivos que el cajón: `SelectorCantidad` para la cantidad (ver `carrito-lineas-02`), `PrecioTienda` para precio e importe y un `BotonTienda` `enlace` «Quitar». «Tramitar pedido» pasa a ser un `BotonTienda` `principal` a lo ancho.
 
 <!-- [carrito-diseño-03] [nueva] -->
 `CarritoTienda.css` y los estilos del cajón usan solo tokens `--tienda-*` y van en `@layer tienda.paginas` y `@layer tienda.componentes` respectivamente.

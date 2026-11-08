@@ -17,23 +17,38 @@ const ContenidoPedido = ({ idioma }: { idioma: string }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
-    if (estado === "CARGANDO") return <p>Cargando...</p>;
+    if (estado === "CARGANDO")
+        return (
+            <div className="CuentaTienda">
+                <div className="cuenta-contenedor">
+                    <p>Cargando...</p>
+                </div>
+            </div>
+        );
 
     if (estado === "NO_ENCONTRADO")
         return (
             <div className="CuentaTienda">
-                <p>Pedido no encontrado</p>
-                <Link to="/mi-cuenta">Volver a mi cuenta</Link>
+                <div className="cuenta-contenedor">
+                    <div className="cuenta-tarjeta">
+                        <p>Pedido no encontrado</p>
+                        <Link to="/mi-cuenta">Volver a mi cuenta</Link>
+                    </div>
+                </div>
             </div>
         );
 
     if (estado === "ERROR" || !pedido)
         return (
             <div className="CuentaTienda">
-                <p role="alert" className="cuenta-error">
-                    No se ha podido cargar el pedido
-                </p>
-                <Link to="/mi-cuenta">Volver a mi cuenta</Link>
+                <div className="cuenta-contenedor">
+                    <div className="cuenta-tarjeta">
+                        <p role="alert" className="cuenta-error">
+                            No se ha podido cargar el pedido
+                        </p>
+                        <Link to="/mi-cuenta">Volver a mi cuenta</Link>
+                    </div>
+                </div>
             </div>
         );
 
@@ -41,44 +56,50 @@ const ContenidoPedido = ({ idioma }: { idioma: string }) => {
 
     return (
         <div className="CuentaTienda">
-            <h1>Pedido {pedido.codigo}</h1>
-            <dl className="cuenta-datos">
-                <dt>Fecha</dt>
-                <dd>{pedido.fecha}</dd>
-                <dt>Estado</dt>
-                <dd>{pedido.servido}</dd>
-            </dl>
-            <table className="cuenta-tabla">
-                <thead>
-                    <tr>
-                        <th>Referencia</th>
-                        <th>Descripción</th>
-                        <th>Cantidad</th>
-                        <th>Precio</th>
-                        <th>Importe</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {pedido.lineas.map((l, i) => (
-                        <tr key={`${l.referencia}-${i}`}>
-                            <td>{l.referencia}</td>
-                            <td>{l.descripcion}</td>
-                            <td>{l.cantidad}</td>
-                            <td>{precio(l.precio)}</td>
-                            <td>{precio(l.importe)}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <dl className="cuenta-totales">
-                <dt>Base imponible</dt>
-                <dd>{precio(pedido.neto)}</dd>
-                <dt>IVA</dt>
-                <dd>{precio(pedido.totalIva)}</dd>
-                <dt>Total</dt>
-                <dd className="cuenta-total">{precio(pedido.total)}</dd>
-            </dl>
-            <Link to="/mi-cuenta">Volver a mi cuenta</Link>
+            <div className="cuenta-contenedor">
+                <Link to="/mi-cuenta" className="cuenta-volver">
+                    Volver a mi cuenta
+                </Link>
+                <h1>Pedido {pedido.codigo}</h1>
+                <section className="cuenta-tarjeta">
+                    <dl className="cuenta-datos">
+                        <dt>Fecha</dt>
+                        <dd>{pedido.fecha}</dd>
+                        <dt>Estado</dt>
+                        <dd>{pedido.servido}</dd>
+                    </dl>
+                    <table className="cuenta-tabla">
+                        <thead>
+                            <tr>
+                                <th>Referencia</th>
+                                <th>Descripción</th>
+                                <th className="importe">Cantidad</th>
+                                <th className="importe">Precio</th>
+                                <th className="importe">Importe</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {pedido.lineas.map((l, i) => (
+                                <tr key={`${l.referencia}-${i}`}>
+                                    <td data-etiqueta="Referencia">{l.referencia}</td>
+                                    <td data-etiqueta="Descripción">{l.descripcion}</td>
+                                    <td data-etiqueta="Cantidad" className="importe">{l.cantidad}</td>
+                                    <td data-etiqueta="Precio" className="importe">{precio(l.precio)}</td>
+                                    <td data-etiqueta="Importe" className="importe">{precio(l.importe)}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <dl className="cuenta-totales">
+                        <dt>Base imponible</dt>
+                        <dd>{precio(pedido.neto)}</dd>
+                        <dt>IVA</dt>
+                        <dd>{precio(pedido.totalIva)}</dd>
+                        <dt className="cuenta-total">Total</dt>
+                        <dd className="cuenta-total">{precio(pedido.total)}</dd>
+                    </dl>
+                </section>
+            </div>
         </div>
     );
 };

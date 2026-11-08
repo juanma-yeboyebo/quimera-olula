@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import type { CategoriaTienda } from "#/tienda_online/catalogo/diseño.ts";
 import {
+    cantidadValida,
     claveCarrito,
     contenidoMega,
     codigoStoreViewDesdeEnv,
@@ -290,4 +291,21 @@ describe("[tienda-menu-06] nodoDeRuta devuelve la categoría a la que lleva la r
     test("tienda_menu_06_slug_de_otra_rama_devuelve_null", () => {
         expect(nodoDeRuta(arbol, ["b", "a1"])).toBeNull();
     });
+});
+
+describe("[tienda-primitivos-07] cantidadValida acepta solo números mayores que 0", () => {
+    test.each([1, 2, 10, 0.5, "3", "1.5", " 4 "])("tienda_primitivos_07_%s_es_valida", (v) => {
+        expect(cantidadValida(v)).toBe(true);
+    });
+
+    test.each([0, -1, -0.5, "0", "-2"])("tienda_primitivos_07_%s_no_es_valida", (v) => {
+        expect(cantidadValida(v)).toBe(false);
+    });
+
+    test.each([NaN, Infinity, -Infinity, "", "   ", "abc", "1a", null, undefined, {}, [], true])(
+        "tienda_primitivos_07_no_numerico_%s_no_es_valida",
+        (v) => {
+            expect(cantidadValida(v)).toBe(false);
+        },
+    );
 });

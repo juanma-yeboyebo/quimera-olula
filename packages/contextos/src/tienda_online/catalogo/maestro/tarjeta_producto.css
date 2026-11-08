@@ -15,6 +15,12 @@
         h3 {
             margin: var(--tienda-espacio-2) 0 0;
             font-family: var(--tienda-fuente-texto);
+            display: -webkit-box;
+            overflow: hidden;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            min-height: 2lh;
             font-size: var(--tienda-texto-md);
             font-weight: 600;
         }

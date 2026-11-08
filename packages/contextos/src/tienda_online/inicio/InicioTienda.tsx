@@ -74,7 +74,7 @@ const Categorias = () => {
     return (
         <section className="inicio-seccion">
             <div className="inicio-seccion-cabecera">
-                <h2>Comprar por categoría</h2>
+                <h2>Categorías</h2>
             </div>
             <div className="inicio-categorias">
                 {categorias.map((c) => (

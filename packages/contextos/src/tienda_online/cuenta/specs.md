@@ -106,3 +106,20 @@ La página `/mi-cuenta/pedido/:id` carga `GET /tienda_online/cuenta/pedido/<id>`
 
 <!-- [cuenta-pedido-02] [x] -->
 Con 404 muestra «Pedido no encontrado» con enlace a `/mi-cuenta`.
+
+### Diseño
+
+<!-- [cuenta-diseño-01] [nueva] -->
+`/login` y `/registro` muestran el formulario centrado en una tarjeta estrecha, con el título en la fuente de títulos. Los campos usan `CampoFormulario` y el botón de envío es un `BotonTienda` `principal` a lo ancho. Bajo el login, «¿No tienes cuenta? Crear cuenta» enlaza a `/registro`, y bajo el registro, «¿Ya tienes cuenta? Entrar» enlaza a `/login`, si no estaban ya.
+
+<!-- [cuenta-diseño-02] [nueva] -->
+En `/registro`, los datos y la dirección van en `fieldset` sin borde con la leyenda en la fuente de títulos y los campos en dos columnas (una en 480 px o menos).
+
+<!-- [cuenta-diseño-03] [nueva] -->
+`/mi-cuenta` usa el contenedor centrado de las demás páginas. Datos, direcciones y pedidos son tarjetas con su título. La tabla de pedidos tiene cabecera en texto suave, filas separadas por una línea fina e importes alineados a la derecha; en 860 px o menos cada pedido se muestra como una fila apilada. «Ver más», «Reintentar» y «Cerrar sesión» son `BotonTienda` `secundario`.
+
+<!-- [cuenta-diseño-04] [nueva] -->
+`/mi-cuenta/pedido/:id` usa el contenedor centrado, un enlace «Volver a mi cuenta» encima del título, la misma tabla que `/mi-cuenta` y los totales a la derecha con el total destacado. Los importes usan `formatearPrecio` como ahora.
+
+<!-- [cuenta-diseño-05] [nueva] -->
+`CuentaTienda.css` usa solo tokens `--tienda-*` y va en `@layer tienda.paginas`.

@@ -125,3 +125,6 @@ La rejilla de productos usa columnas de 220 px como mínimo, que pasan a 2 en pa
 <!-- [catalogo-diseño-04] [nueva] -->
 Los CSS del catálogo y de la tarjeta usan solo tokens `--tienda-*`. Las reglas del catálogo van en `@layer tienda.paginas` y las de la tarjeta en `@layer tienda.componentes`.
 
+
+<!-- [catalogo-diseño-05] [nueva] -->
+Todas las tarjetas de una fila miden lo mismo hasta el precio: la foto mantiene siempre la proporción `--tienda-ratio-foto`, el nombre ocupa siempre dos líneas (se corta con «…» si es más largo) y la descripción corta una (ya se corta). Las columnas de la rejilla tienen todas el mismo ancho, sea cual sea el tamaño de las fotos.

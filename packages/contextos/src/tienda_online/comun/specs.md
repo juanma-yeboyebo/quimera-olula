@@ -153,10 +153,11 @@ Sus props y su comportamiento no cambian.
 - `agotado`, con el texto suave.
 
 <!-- [tienda-primitivos-07] [nueva] -->
-`SelectorCantidad` muestra `−`, el valor y `+`.
-- Recibe `valor`, `minimo` (1 por defecto), `maximo` opcional y `onCambiar`.
+`SelectorCantidad` muestra `−`, un campo numérico editable con el valor y `+`.
+- Recibe `valor`, `minimo` (1 por defecto), `maximo` opcional, `deshabilitado` y `onCambiar`.
 - El nuevo valor lo calcula `limitarCantidad(valor, minimo, maximo)` en `comun/dominio.ts`, sin salirse de los límites.
 - Cada botón se deshabilita al llegar a su límite.
+- El campo envía el cambio al perder el foco o con Intro. Una función pura `cantidadValida(valor)` en `comun/dominio.ts` acepta solo números mayores que 0; si lo escrito no es válido, el campo vuelve a `valor` sin llamar a `onCambiar`. Si es válido, se ajusta con `limitarCantidad` y solo se llama a `onCambiar` si cambia. El campo tiene la etiqueta accesible «Cantidad».
 - Etiquetas de los botones: «Restar uno» y «Sumar uno».
 
 <!-- [tienda-primitivos-08] [nueva] -->

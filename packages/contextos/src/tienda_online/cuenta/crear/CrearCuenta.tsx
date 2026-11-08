@@ -1,6 +1,7 @@
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { BotonTienda } from "../../comun/componentes/boton_tienda.tsx";
 import { CampoFormulario } from "../../comun/componentes/campo_formulario.tsx";
 import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
 import "../CuentaTienda.css";
@@ -44,132 +45,143 @@ const FormularioRegistro = () => {
         cambiar({ direccion: { ...datos.direccion, ...cambio } });
 
     return (
-        <form
-            className="CuentaTienda"
-            noValidate
-            onSubmit={(e) => {
-                e.preventDefault();
-                crear();
-            }}
-        >
-            <h1>Crear cuenta</h1>
-            {emailRepetido && (
-                <p role="alert" className="cuenta-error">
-                    Ya existe una cuenta con ese email. <Link to="/login">Iniciar sesión</Link>
-                </p>
-            )}
-            {error && (
-                <p role="alert" className="cuenta-error">
-                    {error}
-                </p>
-            )}
-            <CampoFormulario
-                etiqueta="Email"
-                tipo="email"
-                autocompletar="email"
-                valor={datos.email}
-                error={errores.email}
-                deshabilitado={ocupado}
-                onCambiar={(email) => cambiar({ email })}
-            />
-            <CampoFormulario
-                etiqueta="Contraseña"
-                tipo="password"
-                autocompletar="new-password"
-                valor={datos.password}
-                error={errores.password}
-                deshabilitado={ocupado}
-                onCambiar={(password) => cambiar({ password })}
-            />
-            <CampoFormulario
-                etiqueta="Repetir contraseña"
-                tipo="password"
-                autocompletar="new-password"
-                valor={datos.repetirPassword}
-                error={errores.repetirPassword}
-                deshabilitado={ocupado}
-                onCambiar={(repetirPassword) => cambiar({ repetirPassword })}
-            />
-            <CampoFormulario
-                etiqueta="Nombre"
-                autocompletar="name"
-                valor={datos.nombre}
-                error={errores.nombre}
-                deshabilitado={ocupado}
-                onCambiar={(nombre) => cambiar({ nombre })}
-            />
-            <CampoFormulario
-                etiqueta="NIF/CIF"
-                valor={datos.idFiscal}
-                error={errores.idFiscal}
-                deshabilitado={ocupado}
-                onCambiar={(idFiscal) => cambiar({ idFiscal })}
-            />
-            <CampoFormulario
-                etiqueta="Teléfono (opcional)"
-                tipo="tel"
-                autocompletar="tel"
-                valor={datos.telefono}
-                deshabilitado={ocupado}
-                onCambiar={(telefono) => cambiar({ telefono })}
-            />
-            <fieldset>
-                <legend>Dirección</legend>
-                <div className="cuenta-direccion">
-                    <CampoFormulario
-                        etiqueta="Vía"
-                        autocompletar="address-line1"
-                        valor={datos.direccion.nombreVia}
-                        error={errores["direccion.nombreVia"]}
-                        deshabilitado={ocupado}
-                        onCambiar={(nombreVia) => cambiarDireccion({ nombreVia })}
-                    />
-                    <CampoFormulario
-                        etiqueta="Número"
-                        valor={datos.direccion.numero}
-                        deshabilitado={ocupado}
-                        onCambiar={(numero) => cambiarDireccion({ numero })}
-                    />
-                    <CampoFormulario
-                        etiqueta="Código postal"
-                        autocompletar="postal-code"
-                        valor={datos.direccion.codPostal}
-                        error={errores["direccion.codPostal"]}
-                        deshabilitado={ocupado}
-                        onCambiar={(codPostal) => cambiarDireccion({ codPostal })}
-                    />
-                    <CampoFormulario
-                        etiqueta="Ciudad"
-                        autocompletar="address-level2"
-                        valor={datos.direccion.ciudad}
-                        error={errores["direccion.ciudad"]}
-                        deshabilitado={ocupado}
-                        onCambiar={(ciudad) => cambiarDireccion({ ciudad })}
-                    />
-                    <CampoFormulario
-                        etiqueta="Provincia"
-                        autocompletar="address-level1"
-                        valor={datos.direccion.provincia}
-                        deshabilitado={ocupado}
-                        onCambiar={(provincia) => cambiarDireccion({ provincia })}
-                    />
-                    <CampoFormulario
-                        etiqueta="País"
-                        autocompletar="country"
-                        valor={datos.direccion.paisId}
-                        error={errores["direccion.paisId"]}
-                        deshabilitado={ocupado}
-                        onCambiar={(paisId) => cambiarDireccion({ paisId })}
-                    />
-                </div>
-            </fieldset>
-            <div className="cuenta-botones">
-                <button type="submit" disabled={ocupado}>
-                    Crear cuenta
-                </button>
-                <Link to="/login">Ya tengo cuenta</Link>
+        <div className="CuentaTienda">
+            <div className="cuenta-contenedor">
+                <form
+                    className="cuenta-tarjeta cuenta-estrecha cuenta-ancha"
+                    noValidate
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        crear();
+                    }}
+                >
+                    <h1>Crear cuenta</h1>
+                    {emailRepetido && (
+                        <p role="alert" className="cuenta-error">
+                            Ya existe una cuenta con ese email. <Link to="/login">Iniciar sesión</Link>
+                        </p>
+                    )}
+                    {error && (
+                        <p role="alert" className="cuenta-error">
+                            {error}
+                        </p>
+                    )}
+                    <fieldset>
+                        <legend>Datos</legend>
+                        <div className="ancho">
+                            <CampoFormulario
+                                etiqueta="Email"
+                                tipo="email"
+                                autocompletar="email"
+                                valor={datos.email}
+                                error={errores.email}
+                                deshabilitado={ocupado}
+                                onCambiar={(email) => cambiar({ email })}
+                            />
+                        </div>
+                        <CampoFormulario
+                            etiqueta="Contraseña"
+                            tipo="password"
+                            autocompletar="new-password"
+                            valor={datos.password}
+                            error={errores.password}
+                            deshabilitado={ocupado}
+                            onCambiar={(password) => cambiar({ password })}
+                        />
+                        <CampoFormulario
+                            etiqueta="Repetir contraseña"
+                            tipo="password"
+                            autocompletar="new-password"
+                            valor={datos.repetirPassword}
+                            error={errores.repetirPassword}
+                            deshabilitado={ocupado}
+                            onCambiar={(repetirPassword) => cambiar({ repetirPassword })}
+                        />
+                        <div className="ancho">
+                            <CampoFormulario
+                                etiqueta="Nombre"
+                                autocompletar="name"
+                                valor={datos.nombre}
+                                error={errores.nombre}
+                                deshabilitado={ocupado}
+                                onCambiar={(nombre) => cambiar({ nombre })}
+                            />
+                        </div>
+                        <CampoFormulario
+                            etiqueta="NIF/CIF"
+                            valor={datos.idFiscal}
+                            error={errores.idFiscal}
+                            deshabilitado={ocupado}
+                            onCambiar={(idFiscal) => cambiar({ idFiscal })}
+                        />
+                        <CampoFormulario
+                            etiqueta="Teléfono (opcional)"
+                            tipo="tel"
+                            autocompletar="tel"
+                            valor={datos.telefono}
+                            deshabilitado={ocupado}
+                            onCambiar={(telefono) => cambiar({ telefono })}
+                        />
+                    </fieldset>
+                    <fieldset>
+                        <legend>Dirección</legend>
+                        <div className="ancho">
+                            <CampoFormulario
+                                etiqueta="Vía"
+                                autocompletar="address-line1"
+                                valor={datos.direccion.nombreVia}
+                                error={errores["direccion.nombreVia"]}
+                                deshabilitado={ocupado}
+                                onCambiar={(nombreVia) => cambiarDireccion({ nombreVia })}
+                            />
+                        </div>
+                        <CampoFormulario
+                            etiqueta="Número"
+                            valor={datos.direccion.numero}
+                            deshabilitado={ocupado}
+                            onCambiar={(numero) => cambiarDireccion({ numero })}
+                        />
+                        <CampoFormulario
+                            etiqueta="Código postal"
+                            autocompletar="postal-code"
+                            valor={datos.direccion.codPostal}
+                            error={errores["direccion.codPostal"]}
+                            deshabilitado={ocupado}
+                            onCambiar={(codPostal) => cambiarDireccion({ codPostal })}
+                        />
+                        <CampoFormulario
+                            etiqueta="Ciudad"
+                            autocompletar="address-level2"
+                            valor={datos.direccion.ciudad}
+                            error={errores["direccion.ciudad"]}
+                            deshabilitado={ocupado}
+                            onCambiar={(ciudad) => cambiarDireccion({ ciudad })}
+                        />
+                        <CampoFormulario
+                            etiqueta="Provincia"
+                            autocompletar="address-level1"
+                            valor={datos.direccion.provincia}
+                            deshabilitado={ocupado}
+                            onCambiar={(provincia) => cambiarDireccion({ provincia })}
+                        />
+                        <CampoFormulario
+                            etiqueta="País"
+                            autocompletar="country"
+                            valor={datos.direccion.paisId}
+                            error={errores["direccion.paisId"]}
+                            deshabilitado={ocupado}
+                            onCambiar={(paisId) => cambiarDireccion({ paisId })}
+                        />
+                    </fieldset>
+                    <BotonTienda tipo="submit" ancho deshabilitado={ocupado}>
+                        Crear cuenta
+                    </BotonTienda>
+                    <p className="cuenta-alterna">
+                        ¿Ya tienes cuenta? <Link to="/login">Entrar</Link>
+                    </p>
+                </form>
             </div>
-        </form>
+        </div>
     );
 };
 

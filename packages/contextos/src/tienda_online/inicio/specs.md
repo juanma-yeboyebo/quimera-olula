@@ -23,7 +23,7 @@ Si la foto no existe, el texto ocupa todo el ancho. En pantallas de 860 px o men
 ### Categorías
 
 <!-- [inicio-categorias-01] [nueva] -->
-La sección «Comprar por categoría» muestra las categorías de primer nivel (8 como máximo), con `useCategoriasTienda()`.
+La sección «Categorías» muestra las categorías de primer nivel (8 como máximo), con `useCategoriasTienda()`.
 - Cada una es una tarjeta con la foto `<ruta_imagenes_categoria>/<slug>.jpg` (ver `tienda-menu-09`) y el nombre, y enlaza a `/categoria/<slug>`.
 - Sin foto, la tarjeta muestra el nombre sobre el color `superficie-hundida`.
 - Sin categorías, la sección no aparece.

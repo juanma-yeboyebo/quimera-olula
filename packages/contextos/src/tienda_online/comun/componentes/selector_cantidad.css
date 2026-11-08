@@ -23,8 +23,25 @@
     }
 
     .selector-cantidad-valor {
-        min-width: 2.5ch;
+        width: 4ch;
+        height: 44px;
+        padding: 0;
+        border: 0;
+        background: none;
+        color: var(--tienda-color-texto);
+        font: inherit;
         text-align: center;
         font-variant-numeric: tabular-nums;
+        appearance: textfield;
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            appearance: none;
+            margin: 0;
+        }
+
+        &:disabled {
+            opacity: 0.4;
+        }
     }
 }
