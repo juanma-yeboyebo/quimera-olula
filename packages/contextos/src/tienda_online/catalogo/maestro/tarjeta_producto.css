@@ -81,7 +81,68 @@
             gap: var(--tienda-espacio-1);
         }
 
+        .tarjeta-producto-rapido {
+            position: absolute;
+            grid-row: 1;
+            grid-column: 1;
+            align-self: end;
+            justify-self: end;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            margin: var(--tienda-espacio-2);
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            background-color: var(--tienda-color-accion);
+            color: var(--tienda-color-accion-texto);
+            box-shadow: var(--tienda-sombra-elevada);
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s, background-color 0.15s;
+
+            &:hover:not(:disabled) {
+                background-color: var(--tienda-color-accion-hover);
+            }
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
+            &:focus-visible {
+                outline: 2px solid var(--tienda-color-accion);
+                outline-offset: 2px;
+            }
+
+            quimera-icono {
+                display: inline-flex;
+            }
+        }
+
+        &:hover .tarjeta-producto-rapido:not(:disabled),
+        &:focus-within .tarjeta-producto-rapido:not(:disabled) {
+            opacity: 1;
+        }
+
+        @media (hover: none) {
+            .tarjeta-producto-rapido:not(:disabled) {
+                opacity: 1;
+            }
+
+            .tarjeta-producto-rapido {
+                width: 32px;
+                height: 32px;
+            }
+        }
+
         @media (prefers-reduced-motion: reduce) {
+            .tarjeta-producto-rapido {
+                transition: none;
+            }
+
             .tarjeta-producto-enlace:hover .imagen-producto {
                 transform: none;
             }

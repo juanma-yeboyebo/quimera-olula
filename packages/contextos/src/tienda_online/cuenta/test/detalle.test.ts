@@ -5,6 +5,7 @@ import { CuentaTienda, PedidoResumen } from "#/tienda_online/cuenta/diseño.ts";
 const getCuenta = vi.fn();
 const getPedidos = vi.fn();
 const patchCuenta = vi.fn();
+const patchPassword = vi.fn();
 const postDireccion = vi.fn();
 const patchDireccion = vi.fn();
 const deleteDireccion = vi.fn();
@@ -15,6 +16,7 @@ vi.mock("#/tienda_online/cuenta/infraestructura.ts", () => ({
     getCuenta: () => getCuenta(),
     getPedidos: (pagina: number) => getPedidos(pagina),
     patchCuenta: (d: unknown) => patchCuenta(d),
+    patchPassword: (c: unknown) => patchPassword(c),
     postDireccion: (d: unknown) => postDireccion(d),
     patchDireccion: (id: string, d: unknown) => patchDireccion(id, d),
     deleteDireccion: (id: string) => deleteDireccion(id),
@@ -29,6 +31,7 @@ const {
     contextoCuentaInicial,
     guardarDatos,
     guardarDireccion,
+    guardarPassword,
     marcarEnvio,
     marcarFacturacion,
     verMasPedidos,
@@ -208,6 +211,51 @@ describe("[cuenta-editar_datos-04] Error al guardar datos", () => {
 
         expect(r.estado).toBe("LISTA");
         expect(r.errorEdicion).toBe("NIF no válido");
+        expect(getCuenta).not.toHaveBeenCalled();
+    });
+});
+
+describe("[cuenta-password-01] Validación de contraseña", () => {
+    test("cuenta_password_01_con_errores_no_se_envia", async () => {
+        const r = ctxDe(await guardarPassword(enLista, { actual: "", nueva: "123", repetir: "1234" }));
+
+        expect(patchPassword).not.toHaveBeenCalled();
+        expect(r.estado).toBe("LISTA");
+        expect(r.erroresEdicion.actual).toBeTruthy();
+        expect(r.erroresEdicion.nueva).toBeTruthy();
+        expect(r.erroresEdicion.repetir).toBeTruthy();
+    });
+});
+
+describe("[cuenta-password-02] Guardar contraseña", () => {
+    test("cuenta_password_02_envia_el_cambio_y_vuelve_a_lista", async () => {
+        const cambio = { actual: "vieja", nueva: "12345678", repetir: "12345678" };
+        patchPassword.mockResolvedValue(undefined);
+        getCuenta.mockResolvedValue(cuentaNueva);
+
+        const r = ctxDe(await guardarPassword(enLista, cambio));
+
+        expect(patchPassword).toHaveBeenCalledWith(cambio);
+        expect(r.estado).toBe("LISTA");
+        expect(r.errorEdicion).toBeNull();
+        expect(r.erroresEdicion).toEqual({});
+    });
+});
+
+describe("[cuenta-password-03] Error al cambiar la contraseña", () => {
+    test("cuenta_password_03_muestra_el_texto_del_backend", async () => {
+        patchPassword.mockRejectedValue({
+            nombre: "Error",
+            descripcion: "La contraseña actual no es correcta",
+            estado: 400,
+        });
+
+        const r = ctxDe(
+            await guardarPassword(enLista, { actual: "mala", nueva: "12345678", repetir: "12345678" }),
+        );
+
+        expect(r.estado).toBe("LISTA");
+        expect(r.errorEdicion).toBe("La contraseña actual no es correcta");
         expect(getCuenta).not.toHaveBeenCalled();
     });
 });

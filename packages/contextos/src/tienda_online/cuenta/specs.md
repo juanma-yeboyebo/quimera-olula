@@ -107,6 +107,20 @@ Validación en el cliente con una función pura `erroresDatosCuenta(datos)` en `
 <!-- [cuenta-editar_datos-04] [x] -->
 [GUARDANDO] error → LISTA (muestra el texto del backend en el formulario, que sigue abierto con lo escrito)
 
+### Cambiar contraseña
+
+<!-- [cuenta-password-01] [nueva] -->
+La tarjeta «Contraseña» de `/mi-cuenta` tiene un `BotonTienda` `secundario` «Cambiar contraseña» que la cambia por un formulario con contraseña actual, nueva y repetición (`CampoFormulario` tipo `password`, autocomplete `current-password` / `new-password`) y «Guardar» / «Cancelar». Validación en el cliente con una función pura `erroresCambioPassword({actual, nueva, repetir})` en `cuenta/dominio.ts`: actual obligatoria, nueva de al menos 8 caracteres (como el registro) y repetición igual a la nueva. Con errores no se envía y cada campo muestra el suyo.
+
+<!-- [cuenta-password-02] [nueva] -->
+[LISTA] guardar_password → GUARDANDO → LISTA (envía `PATCH /tienda_online/cuenta/password` con `{password_actual, password_nueva}` y cierra el formulario)
+
+<!-- [cuenta-password-03] [nueva] -->
+[GUARDANDO] error → LISTA (muestra el texto del backend, p. ej. «La contraseña actual no es correcta», en el formulario, que sigue abierto)
+
+<!-- [cuenta-password-04] [nueva] -->
+Tras guardar con éxito se muestra bajo el título «Contraseña» un aviso `role="status"` «Contraseña cambiada», que desaparece al abrir cualquier formulario.
+
 ### Direcciones
 
 <!-- [cuenta-direcciones-01] [x] -->

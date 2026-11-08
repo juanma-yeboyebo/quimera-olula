@@ -20,6 +20,11 @@ vi.mock("#/tienda_online/comun/carrito_store.ts", () => ({
     olvidarCarrito: () => olvidarCarrito(),
 }));
 
+const { obtenerAvisos, reiniciarAvisos } = await import("#/tienda_online/comun/avisos_store.ts");
+const { estaCajonCarritoAbierto, cerrarCajonCarrito } = await import(
+    "#/tienda_online/comun/cajon_carrito_store.ts"
+);
+
 const { cargarContexto, anadirAlCarrito, contextoFichaInicial } = await import(
     "#/tienda_online/producto/detalle/detalle.ts"
 );
@@ -61,6 +66,8 @@ beforeEach(() => {
     recargarCarrito.mockReset();
     olvidarCarrito.mockReset();
     recargarCarrito.mockResolvedValue(undefined);
+    reiniciarAvisos();
+    cerrarCajonCarrito();
 });
 
 describe("[producto-carga-02] [CARGANDO] ficha cargada → LISTO", () => {
@@ -132,6 +139,19 @@ describe("[producto-anadir-03] [LISTO] añadir → AÑADIENDO → LISTO", () => 
         expect(r.estado).toBe("LISTO");
         expect(r.aviso).toBeTruthy();
         expect(r.error).toBeNull();
+    });
+
+    test("producto_anadir_03_no_abre_el_cajon_y_muestra_aviso_con_ver_carrito", async () => {
+        asegurarCarrito.mockResolvedValue("tok-1");
+        postLineaCarrito.mockResolvedValue(9);
+
+        await anadirAlCarrito(contextoAnadiendo(2));
+
+        expect(estaCajonCarritoAbierto()).toBe(false);
+        const [aviso] = obtenerAvisos();
+        expect(aviso.tipo).toBe("ok");
+        expect(aviso.texto).toBe("Producto 1 añadido al carrito");
+        expect(aviso.accion?.texto).toBe("Ver carrito");
     });
 });
 

@@ -5,6 +5,7 @@ import { CarritoApi, cabecerasTienda, carritoDesdeApi } from "../comun/infraestr
 import { codigoStoreViewActivo } from "../comun/storeview.ts";
 import TiendaOnline_Urls from "../comun/urls.ts";
 import {
+    CambioPassword,
     CuentaTienda,
     DatosCuenta,
     DatosRegistro,
@@ -207,6 +208,15 @@ export const patchCuenta = async (d: DatosCuenta): Promise<void> => {
         urls.CUENTA,
         { nombre: d.nombre, id_fiscal: d.idFiscal, telefono: aNulo(d.telefono) },
         "Error al guardar los datos",
+        cabeceras(),
+    );
+};
+
+export const patchPassword = async (c: CambioPassword): Promise<void> => {
+    await RestAPI.patch(
+        urls.PASSWORD,
+        { password_actual: c.actual, password_nueva: c.nueva },
+        "Error al cambiar la contraseña",
         cabeceras(),
     );
 };

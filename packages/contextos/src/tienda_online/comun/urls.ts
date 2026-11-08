@@ -7,6 +7,7 @@ class TiendaOnline_Urls {
     readonly PRODUCTO = `/public/tienda_online/producto`;
     readonly REGISTRO = `/public/tienda_online/cuenta/registro`;
     readonly CUENTA = `/tienda_online/cuenta/yo`;
+    readonly PASSWORD = `/tienda_online/cuenta/password`;
     readonly DIRECCION = `/tienda_online/cuenta/direccion`;
     readonly PEDIDO = `/tienda_online/cuenta/pedido`;
 }

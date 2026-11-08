@@ -23,6 +23,12 @@ export type DatosCuenta = {
     telefono: string | null;
 };
 
+export type CambioPassword = {
+    actual: string;
+    nueva: string;
+    repetir: string;
+};
+
 export type ErroresRegistro = Record<string, string>;
 
 export type DireccionCuenta = {

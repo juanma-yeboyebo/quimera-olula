@@ -1,12 +1,39 @@
+import { QIcono } from "@olula/componentes/atomos/qicono.tsx";
 import { FactoryCtx } from "@olula/lib/factory_ctx.tsx";
-import { ComponentType, useContext } from "react";
+import { ComponentType, useContext, useState } from "react";
 import { Link } from "react-router";
 import { DistintivoTienda } from "../../comun/componentes/distintivo_tienda.tsx";
 import { ImagenProducto } from "../../comun/componentes/imagen_producto.tsx";
 import { PrecioTienda } from "../../comun/componentes/precio_tienda.tsx";
+import { anadirRapido } from "../../producto/anadir.ts";
 import { ProductoCatalogo } from "../diseño.ts";
 import { estaDisponible } from "../dominio.ts";
 import "./tarjeta_producto.css";
+
+const BotonRapidoCarrito = ({ producto }: { producto: ProductoCatalogo }) => {
+    const [anadiendo, setAnadiendo] = useState(false);
+
+    const anadir = async () => {
+        setAnadiendo(true);
+        try {
+            await anadirRapido(producto.referencia, producto.descripcion);
+        } finally {
+            setAnadiendo(false);
+        }
+    };
+
+    return (
+        <button
+            type="button"
+            className="tarjeta-producto-rapido"
+            aria-label={`Añadir ${producto.descripcion} al carrito`}
+            disabled={anadiendo}
+            onClick={anadir}
+        >
+            <QIcono nombre="carrito" tamaño="md" />
+        </button>
+    );
+};
 
 export const TarjetaProducto = ({ producto }: { producto: ProductoCatalogo }) => {
     const { app } = useContext(FactoryCtx);
@@ -43,6 +70,7 @@ export const TarjetaProducto = ({ producto }: { producto: ProductoCatalogo }) =>
                 )}
                 <PrecioTienda importe={producto.precioConIva} divisa={producto.divisa} />
             </Link>
+            {disponible && <BotonRapidoCarrito producto={producto} />}
             {Acciones && <Acciones producto={producto} />}
         </article>
     );

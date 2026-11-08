@@ -4,6 +4,7 @@ import {
     añadirPedidos,
     criteriaPedidos,
     datosRegistroIniciales,
+    erroresCambioPassword,
     erroresDatosCuenta,
     erroresDireccion,
     erroresRegistro,
@@ -115,6 +116,28 @@ describe("[cuenta-editar_datos-02] Validación de datos de cuenta", () => {
         const e = erroresDatosCuenta({ nombre: " ", idFiscal: "", telefono: null });
         expect(e.nombre).toBe("El nombre es obligatorio");
         expect(e.idFiscal).toBe("El NIF/CIF es obligatorio");
+    });
+});
+
+describe("[cuenta-password-01] Validación del cambio de contraseña", () => {
+    test("cuenta_password_01_datos_validos_no_dan_errores", () => {
+        expect(erroresCambioPassword({ actual: "vieja", nueva: "12345678", repetir: "12345678" })).toEqual({});
+    });
+
+    test("cuenta_password_01_actual_obligatoria", () => {
+        const e = erroresCambioPassword({ actual: "", nueva: "12345678", repetir: "12345678" });
+        expect(e.actual).toBe("La contraseña actual es obligatoria");
+        expect(e.nueva).toBeUndefined();
+    });
+
+    test("cuenta_password_01_nueva_minimo_8_caracteres", () => {
+        const e = erroresCambioPassword({ actual: "vieja", nueva: "1234567", repetir: "1234567" });
+        expect(e.nueva).toBe("La contraseña debe tener al menos 8 caracteres");
+    });
+
+    test("cuenta_password_01_repetir_debe_coincidir", () => {
+        const e = erroresCambioPassword({ actual: "vieja", nueva: "12345678", repetir: "12345679" });
+        expect(e.repetir).toBe("Las contraseñas no coinciden");
     });
 });
 

@@ -1,5 +1,6 @@
 import { ClausulaFiltro, Criteria } from "@olula/lib/diseño.ts";
 import {
+    CambioPassword,
     DatosCuenta,
     DatosRegistro,
     DireccionCuenta,
@@ -51,6 +52,17 @@ export const erroresDatosCuenta = (d: DatosCuenta): ErroresRegistro => {
     if (vacio(d.idFiscal)) errores.idFiscal = "El NIF/CIF es obligatorio";
     return errores;
 };
+
+export const erroresCambioPassword = (c: CambioPassword): ErroresRegistro => {
+    const errores: ErroresRegistro = {};
+    if (c.actual === "") errores.actual = "La contraseña actual es obligatoria";
+    if (c.nueva.length < LONGITUD_MINIMA_PASSWORD)
+        errores.nueva = `La contraseña debe tener al menos ${LONGITUD_MINIMA_PASSWORD} caracteres`;
+    if (c.repetir !== c.nueva) errores.repetir = "Las contraseñas no coinciden";
+    return errores;
+};
+
+export const passwordNuevoInicial = (): CambioPassword => ({ actual: "", nueva: "", repetir: "" });
 
 export const direccionNuevaInicial = (): DireccionRegistro => ({
     nombreVia: "",

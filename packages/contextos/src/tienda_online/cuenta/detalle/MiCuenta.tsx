@@ -6,14 +6,20 @@ import { CampoFormulario } from "../../comun/componentes/campo_formulario.tsx";
 import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
 import { formatearPrecio, hayMas } from "../../comun/dominio.ts";
 import "../CuentaTienda.css";
-import { DatosCuenta, DireccionCuenta, DireccionRegistro } from "../diseño.ts";
-import { direccionNuevaInicial, etiquetasDireccion, textoDireccion } from "../dominio.ts";
+import { CambioPassword, DatosCuenta, DireccionCuenta, DireccionRegistro } from "../diseño.ts";
+import {
+    direccionNuevaInicial,
+    etiquetasDireccion,
+    passwordNuevoInicial,
+    textoDireccion,
+} from "../dominio.ts";
 import { CamposDireccionCuenta } from "./campos_direccion.tsx";
 import { contextoCuentaInicial } from "./detalle.ts";
 import { getMaquina } from "./maquina.ts";
 
 type Formulario =
     | { tipo: "datos"; datos: DatosCuenta }
+    | { tipo: "password"; password: CambioPassword }
     | { tipo: "direccion"; id: string | null; direccion: DireccionRegistro };
 
 const aFormularioDireccion = (d: DireccionCuenta): Formulario => ({
@@ -37,15 +43,17 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
     const [borrando, setBorrando] = useState<string | null>(null);
     const [guardando, setGuardando] = useState(false);
     const [guardado, setGuardado] = useState(false);
+    const [passwordCambiado, setPasswordCambiado] = useState(false);
 
     useEffect(() => {
         if (!guardado) return;
         setGuardado(false);
         if (!errorEdicion && Object.keys(erroresEdicion).length === 0) {
+            if (formulario?.tipo === "password") setPasswordCambiado(true);
             setFormulario(null);
             setBorrando(null);
         }
-    }, [guardado, errorEdicion, erroresEdicion]);
+    }, [guardado, errorEdicion, erroresEdicion, formulario]);
 
     const guardar = async (evento: string, payload: unknown) => {
         setGuardando(true);
@@ -59,12 +67,14 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
 
     const abrir = (f: Formulario | null) => {
         setBorrando(null);
+        setPasswordCambiado(false);
         setFormulario(f);
         emitir("cerrar_formulario");
     };
 
     const formularioDatos = formulario?.tipo === "datos" ? formulario : null;
     const formularioDireccion = formulario?.tipo === "direccion" ? formulario : null;
+    const formularioPassword = formulario?.tipo === "password" ? formulario : null;
 
     useEffect(() => {
         emitir("cargar");
@@ -239,7 +249,7 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
 
                 <section className="cuenta-tarjeta">
                     <h2>Direcciones</h2>
-                    {errorEdicion && !formularioDatos && !formularioDireccion && (
+                    {errorEdicion && !formularioDatos && !formularioDireccion && !formularioPassword && (
                         <p role="alert" className="cuenta-error">
                             {errorEdicion}
                         </p>
@@ -366,6 +376,97 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
                                 Añadir dirección
                             </BotonTienda>
                         </div>
+                    )}
+                </section>
+
+                <section className="cuenta-tarjeta">
+                    <h2>Contraseña</h2>
+                    {formularioPassword ? (
+                        <form
+                            className="cuenta-formulario"
+                            noValidate
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                guardar("guardar_password", formularioPassword.password);
+                            }}
+                        >
+                            {errorEdicion && (
+                                <p role="alert" className="cuenta-error">
+                                    {errorEdicion}
+                                </p>
+                            )}
+                            <fieldset>
+                                <CampoFormulario
+                                    etiqueta="Contraseña actual"
+                                    tipo="password"
+                                    autocompletar="current-password"
+                                    valor={formularioPassword.password.actual}
+                                    error={erroresEdicion.actual}
+                                    deshabilitado={guardando}
+                                    onCambiar={(actual) =>
+                                        setFormulario({
+                                            ...formularioPassword,
+                                            password: { ...formularioPassword.password, actual },
+                                        })
+                                    }
+                                />
+                                <CampoFormulario
+                                    etiqueta="Nueva contraseña"
+                                    tipo="password"
+                                    autocompletar="new-password"
+                                    valor={formularioPassword.password.nueva}
+                                    error={erroresEdicion.nueva}
+                                    deshabilitado={guardando}
+                                    onCambiar={(nueva) =>
+                                        setFormulario({
+                                            ...formularioPassword,
+                                            password: { ...formularioPassword.password, nueva },
+                                        })
+                                    }
+                                />
+                                <CampoFormulario
+                                    etiqueta="Repite la nueva contraseña"
+                                    tipo="password"
+                                    autocompletar="new-password"
+                                    valor={formularioPassword.password.repetir}
+                                    error={erroresEdicion.repetir}
+                                    deshabilitado={guardando}
+                                    onCambiar={(repetir) =>
+                                        setFormulario({
+                                            ...formularioPassword,
+                                            password: { ...formularioPassword.password, repetir },
+                                        })
+                                    }
+                                />
+                            </fieldset>
+                            <div className="cuenta-botones">
+                                <BotonTienda tipo="submit" deshabilitado={guardando}>
+                                    Guardar
+                                </BotonTienda>
+                                <BotonTienda
+                                    variante="secundario"
+                                    deshabilitado={guardando}
+                                    onClick={() => abrir(null)}
+                                >
+                                    Cancelar
+                                </BotonTienda>
+                            </div>
+                        </form>
+                    ) : (
+                        <>
+                            {passwordCambiado && <p role="status">Contraseña cambiada</p>}
+                            <div className="cuenta-botones">
+                                <BotonTienda
+                                    variante="secundario"
+                                    deshabilitado={guardando}
+                                    onClick={() =>
+                                        abrir({ tipo: "password", password: passwordNuevoInicial() })
+                                    }
+                                >
+                                    Cambiar contraseña
+                                </BotonTienda>
+                            </div>
+                        </>
                     )}
                 </section>
 

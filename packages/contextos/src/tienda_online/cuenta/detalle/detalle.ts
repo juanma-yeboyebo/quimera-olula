@@ -1,6 +1,6 @@
 import { ProcesarContexto } from "@olula/lib/diseño.ts";
-import { DatosCuenta, DireccionRegistro } from "../diseño.ts";
-import { añadirPedidos, erroresDatosCuenta, erroresDireccion } from "../dominio.ts";
+import { CambioPassword, DatosCuenta, DireccionRegistro } from "../diseño.ts";
+import { añadirPedidos, erroresCambioPassword, erroresDatosCuenta, erroresDireccion } from "../dominio.ts";
 import {
     deleteDireccion,
     getCuenta,
@@ -9,6 +9,7 @@ import {
     patchDireccion,
     patchDireccionEnvio,
     patchDireccionFacturacion,
+    patchPassword,
     postDireccion,
 } from "../infraestructura.ts";
 import { ContextoCuenta, EstadoCuenta } from "./diseño.ts";
@@ -92,6 +93,14 @@ export const guardarDatos: ProcesarCuenta = async (contexto, payload) => {
     if (Object.keys(errores).length > 0)
         return { ...contexto, estado: "LISTA", errorEdicion: null, erroresEdicion: errores };
     return ejecutarEdicion(contexto, () => patchCuenta(datos));
+};
+
+export const guardarPassword: ProcesarCuenta = async (contexto, payload) => {
+    const cambio = payload as CambioPassword;
+    const errores = erroresCambioPassword(cambio);
+    if (Object.keys(errores).length > 0)
+        return { ...contexto, estado: "LISTA", errorEdicion: null, erroresEdicion: errores };
+    return ejecutarEdicion(contexto, () => patchPassword(cambio));
 };
 
 export const guardarDireccion: ProcesarCuenta = async (contexto, payload) => {

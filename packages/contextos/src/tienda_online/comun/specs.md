@@ -196,6 +196,17 @@ Las páginas usan la clase común `.contenedor-tienda` (`comun/layout/layout_tie
 <!-- [tienda-layout-07] [x] -->
 `CabeceraTienda` mide su altura con un `ResizeObserver` y la publica en `--tienda-alto-cabecera` en `document.documentElement`. Los bloques fijos de la ficha, el carrito y el checkout la suman a su `top`.
 
+### Avisos
+
+<!-- [tienda-avisos-01] [nueva] -->
+`comun/avisos_store.ts` es el almacén de avisos efímeros (`useSyncExternalStore`, solo notifica si algo cambia). `mostrarAviso({texto, tipo: "ok" | "error", accion?: {texto, onClick}})` añade un aviso con `id` y lo devuelve; `cerrarAviso(id)` lo quita; `useAvisos()` los lee; `reiniciarAvisos()` los vacía (para tests). `AvisosTienda` los pinta en un contenedor fijo con `role="status"` y `aria-live="polite"`, dentro de `LayoutTienda` (también en checkout): arriba a la derecha bajo la cabecera en escritorio y abajo a todo el ancho en pantallas de 860 px o menos. Cada aviso tiene un botón «×» con `aria-label` «Cerrar aviso» y, si tiene `accion`, un `BotonTienda` `enlace` que la ejecuta y cierra el aviso. El de error usa el color `error`. Con `prefers-reduced-motion` no hay animación.
+
+<!-- [tienda-avisos-02] [nueva] -->
+Cada aviso se cierra solo a los 3000 ms. `pausarAviso(id)` detiene la cuenta y `reanudarAviso(id)` la reinicia; `AvisosTienda` las llama al entrar y salir el ratón del aviso.
+
+<!-- [tienda-avisos-03] [nueva] -->
+Como mucho hay 3 avisos visibles: al mostrar uno más, sale el más antiguo.
+
 ### Cabecera
 
 <!-- [tienda-cabecera-01] [x] -->
