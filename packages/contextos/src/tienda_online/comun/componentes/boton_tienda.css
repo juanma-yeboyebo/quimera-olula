@@ -1,0 +1,59 @@
+@layer tienda.primitivos {
+    .boton-tienda {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--tienda-espacio-2);
+        min-height: 44px;
+        padding: 0 var(--tienda-espacio-6);
+        border: 1px solid transparent;
+        border-radius: var(--tienda-radio-boton);
+        font-family: var(--tienda-fuente-texto);
+        font-size: var(--tienda-texto-sm);
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.15s, border-color 0.15s;
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--tienda-color-accion);
+            outline-offset: 2px;
+        }
+    }
+
+    .boton-tienda-principal {
+        background-color: var(--tienda-color-accion);
+        color: var(--tienda-color-accion-texto);
+
+        &:hover:not(:disabled) {
+            background-color: var(--tienda-color-accion-hover);
+        }
+    }
+
+    .boton-tienda-secundario {
+        background-color: var(--tienda-color-superficie);
+        border-color: var(--tienda-color-borde-fuerte);
+        color: var(--tienda-color-texto);
+
+        &:hover:not(:disabled) {
+            border-color: var(--tienda-color-texto);
+        }
+    }
+
+    .boton-tienda-enlace {
+        background: none;
+        padding: 0 var(--tienda-espacio-2);
+        color: var(--tienda-color-texto);
+        text-decoration: underline;
+    }
+
+    .boton-tienda-ancho {
+        display: flex;
+        width: 100%;
+    }
+}

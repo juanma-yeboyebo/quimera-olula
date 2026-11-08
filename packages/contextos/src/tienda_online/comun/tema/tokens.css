@@ -1,0 +1,65 @@
+@layer tienda.tokens {
+    :root {
+        --tienda-neutro-0: #ffffff;
+        --tienda-neutro-50: #f6f6f4;
+        --tienda-neutro-100: #ececea;
+        --tienda-neutro-300: #cfcfcb;
+        --tienda-neutro-500: #85857f;
+        --tienda-neutro-700: #4a4a46;
+        --tienda-neutro-900: #1b1b19;
+        --tienda-marca-500: #1b1b19;
+        --tienda-marca-600: #000000;
+        --tienda-realce-500: #b4462b;
+        --tienda-exito-500: #2f7a4f;
+
+        --tienda-fuente-texto: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+        --tienda-fuente-titulos: "Instrument Serif", Georgia, "Times New Roman", serif;
+        --tienda-peso-titulos: 400;
+        --tienda-tracking-titulos: -0.01em;
+
+        --tienda-texto-xs: 0.75rem;
+        --tienda-texto-sm: 0.875rem;
+        --tienda-texto-md: 1rem;
+        --tienda-texto-lg: 1.25rem;
+        --tienda-texto-xl: clamp(1.6rem, 3vw, 2.1rem);
+        --tienda-texto-xxl: clamp(2.4rem, 6vw, 4.2rem);
+
+        --tienda-espacio-1: 0.25rem;
+        --tienda-espacio-2: 0.5rem;
+        --tienda-espacio-3: 0.75rem;
+        --tienda-espacio-4: 1rem;
+        --tienda-espacio-6: 1.5rem;
+        --tienda-espacio-8: 2rem;
+        --tienda-espacio-seccion: clamp(2.5rem, 6vw, 4.5rem);
+        --tienda-ancho-max: 1240px;
+
+        --tienda-radio-control: 6px;
+        --tienda-radio-tarjeta: 4px;
+        --tienda-radio-boton: 6px;
+        --tienda-radio-distintivo: 999px;
+
+        --tienda-sombra-elevada: 0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px rgb(0 0 0 / 0.06);
+        --tienda-sombra-cajon: -12px 0 40px rgb(0 0 0 / 0.12);
+
+        --tienda-ratio-foto: 4 / 5;
+
+        --tienda-color-fondo: var(--tienda-neutro-50);
+        --tienda-color-superficie: var(--tienda-neutro-0);
+        --tienda-color-superficie-hundida: var(--tienda-neutro-100);
+        --tienda-color-texto: var(--tienda-neutro-900);
+        --tienda-color-texto-suave: var(--tienda-neutro-500);
+        --tienda-color-borde: var(--tienda-neutro-100);
+        --tienda-color-borde-fuerte: var(--tienda-neutro-300);
+        --tienda-color-accion: var(--tienda-marca-500);
+        --tienda-color-accion-hover: var(--tienda-marca-600);
+        --tienda-color-accion-texto: var(--tienda-neutro-0);
+        --tienda-color-precio: var(--tienda-neutro-900);
+        --tienda-color-oferta: var(--tienda-realce-500);
+        --tienda-color-exito: var(--tienda-exito-500);
+        --tienda-color-error: #b3261e;
+        --tienda-color-aviso-fondo: var(--tienda-neutro-900);
+        --tienda-color-aviso-texto: var(--tienda-neutro-0);
+        --tienda-color-distintivo-fondo: var(--tienda-neutro-0);
+        --tienda-color-distintivo-texto: var(--tienda-neutro-900);
+    }
+}

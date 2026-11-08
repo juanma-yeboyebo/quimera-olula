@@ -1,38 +1,18 @@
-.acciones-cabecera-tienda {
-    display: inline-flex;
-    align-items: center;
-    gap: 16px;
+@layer tienda.componentes {
+    .acciones-cabecera-tienda {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--tienda-espacio-3);
 
-    a {
-        color: var(--blanco);
-        text-decoration: none;
+        a:not(.boton-icono) {
+            color: var(--tienda-color-texto);
+            font-size: var(--tienda-texto-sm);
+            font-weight: 500;
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
     }
-}
-
-.accion-cabecera-carrito {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    quimera-icono {
-        fill: var(--blanco);
-    }
-}
-
-.accion-cabecera-carrito-badge {
-    position: absolute;
-    top: -6px;
-    right: -8px;
-    min-width: 18px;
-    height: 18px;
-    padding: 0 4px;
-    border-radius: 8px;
-    background-color: var(--color-error, #d32f2f);
-    color: #ccc;
-    font-size: 12px;
-    font-weight: 700;
-    line-height: 16px;
-    text-align: center;
-    pointer-events: none;
 }

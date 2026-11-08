@@ -1,0 +1,37 @@
+@layer tienda.componentes {
+    .buscador-tienda {
+        display: flex;
+        align-items: center;
+        gap: var(--tienda-espacio-2);
+        width: 100%;
+        max-width: 560px;
+        margin: 0 auto;
+        padding: 0 var(--tienda-espacio-4);
+        border-radius: var(--tienda-radio-distintivo);
+        background-color: var(--tienda-color-superficie-hundida);
+        color: var(--tienda-color-texto-suave);
+
+        quimera-icono {
+            display: inline-flex;
+        }
+
+        input {
+            flex: 1;
+            min-width: 0;
+            height: 40px;
+            border: 0;
+            background: none;
+            color: var(--tienda-color-texto);
+            font-family: var(--tienda-fuente-texto);
+            font-size: var(--tienda-texto-sm);
+
+            &:focus {
+                outline: none;
+            }
+        }
+
+        &:focus-within {
+            box-shadow: 0 0 0 2px var(--tienda-color-accion);
+        }
+    }
+}

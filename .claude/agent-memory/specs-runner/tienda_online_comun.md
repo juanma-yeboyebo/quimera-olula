@@ -59,3 +59,14 @@ pnpm run --filter @olula/olula type-check   # el cambio del middleware afecta a 
 
 - Trampa de Vitest: `beforeEach(() => mock.mockReset())` devuelve el mock y Vitest lo ejecuta como teardown tras cada test; con `mockRejectedValue` el test falla. Usar siempre llaves: `beforeEach(() => { mock.mockReset(); })`.
 - Fase 7 cerrada el 2026-11-06: 50 tests en verde, type-check de `@olula/tienda_online`, `@olula/olula` y `@olula/ctx` y eslint de los ficheros nuevos sin errores.
+
+## Fases de diseño 1–3 (2026-11-08, sin verificar)
+
+- Capas: `comun/tema/capas.css` (orden `erp, tienda.tokens, tienda.primitivos, tienda.componentes, tienda.paginas, cliente`) y `comun/tema/tokens.css`. `apps/tienda_online/index.css` importa capas → `tema.css` del ERP con `layer(erp)` → tokens, con el alias `@olula/ctx/tienda_online/...`.
+- Primitivos en `comun/componentes/`: `boton_tienda`, `boton_icono` (icono = nombre de `QIcono`), `precio_tienda` (usa `useStoreView`), `distintivo_tienda`, `selector_cantidad`, `imagen_producto`.
+- Layout en `comun/layout/`: `LayoutTienda` (sustituye a `Vista` y da `ContextoError`), `cabecera_tienda`, `cabecera_checkout_tienda`, `pie_tienda`, `logo_tienda`, `buscador_tienda`, `menu_categorias_tienda`, `dialogo_error_tienda`. `usar_hueco.ts`: `useHueco(nombre, base)` lee `app.TiendaOnline[nombre]`.
+- Huecos de `FactoryTiendaOnline`: `cabecera_logo`, `cabecera_buscador`, `cabecera_acciones`, `menu_categorias`, `layout_aviso`, `layout_pie`.
+- Ruta `/estilos` (`comun/estilos/PaginaEstilos.tsx`) solo con `import.meta.env.DEV`.
+- Pendiente de mejorar: menú y pie llaman cada uno a `getCategorias()`, y `useStoreView` pide el storeview en cada montaje.
+- Tests: `dominio.test.ts` → `textoContador` (primitivos-02), `limitarCantidad` (primitivos-07), `esRutaCheckout` (layout-03), `rutaBusqueda` (cabecera-04).
+- Nunca lanzar tests ni type-check en el flujo: lo decide Juanma.

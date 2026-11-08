@@ -4,8 +4,12 @@ import {
     codigoStoreViewDesdeEnv,
     debeDescartarToken,
     formatearPrecio,
+    esRutaCheckout,
     hayMas,
+    limitarCantidad,
+    rutaBusqueda,
     textoAriaCarrito,
+    textoContador,
 } from "#/tienda_online/comun/dominio.ts";
 
 describe("[tienda-storeview-01] El código del storeview activo sale de VITE_STORE_VIEW", () => {
@@ -85,5 +89,87 @@ describe("[catalogo-paginacion-01] Mientras los productos cargados sean menos qu
 
     test("catalogo_paginacion_01_no_hay_mas_con_catalogo_vacio", () => {
         expect(hayMas(0, 0)).toBe(false);
+    });
+});
+
+describe("[tienda-primitivos-02] El contador muestra null si es 0 o menos, el número hasta 99 y «99+» por encima", () => {
+    test("tienda_primitivos_02_null_con_cero", () => {
+        expect(textoContador(0)).toBeNull();
+    });
+
+    test("tienda_primitivos_02_null_con_negativo", () => {
+        expect(textoContador(-1)).toBeNull();
+    });
+
+    test("tienda_primitivos_02_numero_con_uno", () => {
+        expect(textoContador(1)).toBe("1");
+    });
+
+    test("tienda_primitivos_02_numero_con_99", () => {
+        expect(textoContador(99)).toBe("99");
+    });
+
+    test("tienda_primitivos_02_99_mas_con_100", () => {
+        expect(textoContador(100)).toBe("99+");
+    });
+});
+
+describe("[tienda-primitivos-07] La cantidad se acota a [minimo, maximo]; sin máximo solo se aplica el mínimo", () => {
+    test("tienda_primitivos_07_dentro_del_rango_no_cambia", () => {
+        expect(limitarCantidad(5, 1, 10)).toBe(5);
+    });
+
+    test("tienda_primitivos_07_por_debajo_del_minimo_devuelve_minimo", () => {
+        expect(limitarCantidad(0, 1, 10)).toBe(1);
+    });
+
+    test("tienda_primitivos_07_por_encima_del_maximo_devuelve_maximo", () => {
+        expect(limitarCantidad(11, 1, 10)).toBe(10);
+    });
+
+    test("tienda_primitivos_07_sin_maximo_conserva_valor_grande", () => {
+        expect(limitarCantidad(1000, 1)).toBe(1000);
+    });
+
+    test("tienda_primitivos_07_sin_maximo_aplica_minimo", () => {
+        expect(limitarCantidad(-3, 1)).toBe(1);
+    });
+});
+
+describe("[tienda-layout-03] Es ruta de checkout /checkout y sus subrutas, no otras que solo compartan prefijo de texto", () => {
+    test.each(["/checkout", "/checkout/ok", "/checkout/cancelado"])(
+        "tienda_layout_03_es_checkout_%s",
+        (ruta) => {
+            expect(esRutaCheckout(ruta)).toBe(true);
+        },
+    );
+
+    test.each(["/", "/carrito", "/checkouts"])(
+        "tienda_layout_03_no_es_checkout_%s",
+        (ruta) => {
+            expect(esRutaCheckout(ruta)).toBe(false);
+        },
+    );
+});
+
+describe("[tienda-cabecera-04] La búsqueda navega a /catalogo, con texto recortado y codificado si no está vacío", () => {
+    test("tienda_cabecera_04_vacio_va_al_catalogo", () => {
+        expect(rutaBusqueda("")).toBe("/catalogo");
+    });
+
+    test("tienda_cabecera_04_solo_espacios_va_al_catalogo", () => {
+        expect(rutaBusqueda("   ")).toBe("/catalogo");
+    });
+
+    test("tienda_cabecera_04_recorta_espacios_de_los_extremos", () => {
+        expect(rutaBusqueda(" bolso ")).toBe("/catalogo?texto=bolso");
+    });
+
+    test("tienda_cabecera_04_codifica_espacios_internos", () => {
+        expect(rutaBusqueda("bolso piel")).toBe("/catalogo?texto=bolso%20piel");
+    });
+
+    test("tienda_cabecera_04_codifica_caracteres_reservados", () => {
+        expect(rutaBusqueda("a&b")).toBe("/catalogo?texto=a%26b");
     });
 });

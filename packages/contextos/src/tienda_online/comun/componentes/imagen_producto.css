@@ -1,0 +1,16 @@
+@layer tienda.primitivos {
+    .imagen-producto {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        aspect-ratio: var(--tienda-ratio-foto);
+        overflow: hidden;
+        background-color: var(--tienda-color-superficie-hundida);
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}

@@ -1,0 +1,11 @@
+@layer tienda.componentes {
+    .logo-tienda {
+        color: var(--tienda-color-texto);
+        font-family: var(--tienda-fuente-titulos);
+        font-size: var(--tienda-texto-lg);
+        font-weight: var(--tienda-peso-titulos);
+        letter-spacing: var(--tienda-tracking-titulos);
+        text-decoration: none;
+        white-space: nowrap;
+    }
+}

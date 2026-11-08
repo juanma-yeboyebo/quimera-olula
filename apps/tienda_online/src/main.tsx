@@ -1,11 +1,12 @@
 import { crearAuthMiddleware } from "#/auth/middlewares.ts";
 import { useTimerRefresco } from "#/auth/useTimerRefresco.ts";
-import { InicioOlula, Vista } from "@olula/componentes/index.ts";
+import { InicioOlula } from "@olula/componentes/index.ts";
 import { FactoryObj, FactoryProvider } from "@olula/lib/factory_ctx.tsx";
 import { crearMenu, MenuContextFactory } from "@olula/lib/menu.ts";
 import { StrictMode, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouteObject, RouterProvider } from "react-router";
+import { LayoutTienda } from "#/tienda_online/comun/layout/LayoutTienda.tsx";
 import { iniciarCarrito } from "#/tienda_online/comun/carrito_store.ts";
 import { codigoStoreViewDesdeEnv } from "#/tienda_online/comun/dominio.ts";
 import { getStoreView } from "#/tienda_online/comun/infraestructura.ts";
@@ -30,7 +31,7 @@ const rutas = createBrowserRouter([
     {
         path: "/",
         middleware: [crearAuthMiddleware(FactoryAuthTienda.rutas_publicas)],
-        Component: Vista,
+        Component: LayoutTienda,
         children: router as RouteObject[],
     },
 ]);

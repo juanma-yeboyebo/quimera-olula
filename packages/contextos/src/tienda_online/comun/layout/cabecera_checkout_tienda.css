@@ -1,0 +1,20 @@
+@layer tienda.componentes {
+    .cabecera-checkout-tienda {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        padding: 0 16px;
+        background-color: var(--tienda-color-superficie);
+        border-bottom: 1px solid var(--tienda-color-borde);
+        font-family: var(--tienda-fuente-texto);
+    }
+
+    .cabecera-checkout-seguro {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--tienda-espacio-2);
+        color: var(--tienda-color-texto-suave);
+        font-size: var(--tienda-texto-sm);
+    }
+}

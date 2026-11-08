@@ -1,0 +1,12 @@
+@layer tienda.primitivos {
+    .precio-tienda {
+        color: var(--tienda-color-precio);
+        font-size: var(--tienda-texto-md);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .precio-tienda-grande {
+        font-size: var(--tienda-texto-xl);
+    }
+}

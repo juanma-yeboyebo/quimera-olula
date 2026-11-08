@@ -1,0 +1,25 @@
+@layer tienda.componentes {
+    .menu-categorias-tienda {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        gap: var(--tienda-espacio-6);
+        height: 46px;
+        overflow-x: auto;
+        white-space: nowrap;
+
+        a {
+            display: inline-flex;
+            align-items: center;
+            border-bottom: 2px solid transparent;
+            color: var(--tienda-color-texto);
+            font-size: var(--tienda-texto-sm);
+            text-decoration: none;
+
+            &:hover,
+            &[aria-current="page"] {
+                border-bottom-color: var(--tienda-color-texto);
+            }
+        }
+    }
+}

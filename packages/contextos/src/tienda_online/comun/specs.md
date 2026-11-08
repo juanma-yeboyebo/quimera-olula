@@ -51,8 +51,9 @@ El almacén expone el carrito actual a React mediante `useSyncExternalStore` (ho
 
 ### Icono del carrito en la cabecera
 
-<!-- [tienda-icono_carrito-01] [x] -->
-La app inyecta en `Componentes.cabecera_acciones` un componente con el icono `carrito` que enlaza a `/carrito`. A diferencia de `monterelax_area_clientes`, el icono se muestra también sin login.
+<!-- [tienda-icono_carrito-01] [cambiada] -->
+`AccionesCabeceraTienda` es el componente base del hueco `cabecera_acciones` de la `CabeceraTienda` (ver `tienda-cabecera-02`). Incluye el carrito, que enlaza a `/carrito` y se muestra también sin login.
+<!-- antes: la app lo inyectaba en `Componentes.cabecera_acciones` de la cabecera del ERP -->
 
 <!-- [tienda-icono_carrito-02] [x] -->
 El icono muestra un distintivo con el número de unidades del carrito cuando es mayor que 0, y no lo muestra con 0. Tiene `aria-label` «Carrito, N artículos».
@@ -62,11 +63,154 @@ Junto al icono aparece «Entrar» (enlace a `/login`) sin sesión, o «Mi cuenta
 
 ### App `tienda_online`
 
-<!-- [tienda-app-01] [x] -->
-Existe la app `apps/tienda_online` (paquete `@olula/tienda_online`), basada en `apps/jornadas`, con su factory (`TiendaOnline`, `Auth` con `rutas_publicas`, `Componentes` con `cabecera_acciones`), router y `.env` de ejemplo con `VITE_API_URL` y `VITE_STORE_VIEW`. Pasa `type-check` y `lint`.
+<!-- [tienda-app-01] [cambiada] -->
+Existe la app `apps/tienda_online` (paquete `@olula/tienda_online`), basada en `apps/jornadas`, con su factory (`TiendaOnline`, `Auth` con `rutas_publicas`), router y `.env` de ejemplo con `VITE_API_URL` y `VITE_STORE_VIEW`. La factory de la app no registra nada en `Componentes` porque la tienda no usa la cabecera del ERP.
+<!-- antes: la factory registraba `Componentes.cabecera_logo` y `Componentes.cabecera_acciones` para la cabecera del ERP -->
+
+<!-- [tienda-app-04] [nueva] -->
+La ruta raíz de la app usa `LayoutTienda` como componente, en lugar de `Vista` (ver `tienda-layout-01`).
 
 <!-- [tienda-app-02] [x] -->
 Las rutas públicas de la app son `/`, `/catalogo`, `/categoria`, `/producto`, `/carrito`, `/checkout` y `/registro`: se navega por ellas sin login. `/mi-cuenta` exige login.
 
 <!-- [tienda-app-03] [x] -->
 La ruta `/` muestra el catálogo (ver `catalogo-rutas-01`). Si el storeview no está configurado o no existe, en lugar del catálogo se muestra el error de configuración o «Tienda no disponible».
+
+### Identidad visual
+
+<!-- [tienda-identidad-01] [nueva] -->
+`comun/tema/capas.css` declara el orden de capas de cascada de la tienda: `@layer erp, tienda.tokens, tienda.primitivos, tienda.componentes, tienda.paginas, cliente;`. Es lo primero que importa el `index.css` de la app.
+
+<!-- [tienda-identidad-02] [nueva] -->
+El `index.css` de la app importa el CSS del ERP (`@olula/componentes/tema/tema.css`) dentro de la capa `erp`, con `@import "…" layer(erp)`. Así sus estilos globales de `html`, `body`, títulos y formularios no pisan las capas de la tienda.
+
+<!-- [tienda-identidad-03] [nueva] -->
+`comun/tema/tokens.css`, dentro de `@layer tienda.tokens`, define en `:root`:
+- la paleta: `--tienda-neutro-{0,50,100,300,500,700,900}`, `--tienda-marca-{500,600}`, `--tienda-realce-500` y `--tienda-exito-500`;
+- la tipografía: `--tienda-fuente-texto`, `--tienda-fuente-titulos`, `--tienda-peso-titulos` y `--tienda-tracking-titulos`;
+- la escala de texto: `--tienda-texto-{xs,sm,md,lg,xl,xxl}`;
+- los espacios: `--tienda-espacio-{1,2,3,4,6,8}`, `--tienda-espacio-seccion` y `--tienda-ancho-max`;
+- los radios: `--tienda-radio-{control,tarjeta,boton,distintivo}`;
+- las sombras: `--tienda-sombra-{elevada,cajon}`;
+- la proporción de las fotos: `--tienda-ratio-foto`.
+
+Los valores son los de la identidad base neutra de la maqueta: Instrument Sans e Instrument Serif, neutros cálidos, acento casi negro, radios pequeños y fotos 4:5.
+
+<!-- [tienda-identidad-04] [nueva] -->
+`tokens.css` define también los tokens semánticos `--tienda-color-*`, que apuntan a la paleta: `fondo`, `superficie`, `superficie-hundida`, `texto`, `texto-suave`, `borde`, `borde-fuerte`, `accion`, `accion-hover`, `accion-texto`, `precio`, `oferta`, `exito`, `error`, `aviso-fondo`, `aviso-texto`, `distintivo-fondo` y `distintivo-texto`.
+
+Los componentes y las páginas de la tienda solo leen los semánticos y los de escala (texto, espacio, radio, sombra, ratio). Nunca leen la paleta directamente ni los tokens del ERP (`--color-*`, `--espaciado-*`, `--tamaño-*`, `--redondeo-*`).
+
+<!-- [tienda-identidad-05] [nueva] -->
+Cada app de tienda puede tener un `src/identidad.css`, que se importa lo último en su `index.css` y deja todas sus reglas dentro de `@layer cliente`.
+- Si sobrescribe un token en `:root`, cambia toda la tienda.
+- También puede añadir reglas para componentes concretos.
+
+La app base `tienda_online` no tiene `identidad.css`.
+
+<!-- [tienda-identidad-06] [nueva] -->
+Las fuentes de la identidad base se cargan desde el `index.html` de la app. Cada app cliente carga las suyas.
+
+<!-- [tienda-identidad-07] [nueva] -->
+Cada CSS nuevo de la tienda mete sus reglas en su capa:
+- `tienda.primitivos`: los primitivos;
+- `tienda.componentes`: los compuestos (cabecera, pie, tarjeta, cajones);
+- `tienda.paginas`: los estilos propios de cada pantalla.
+
+### Primitivos
+
+Componentes propios de la tienda en `comun/componentes/`. No usan `QBoton` ni `QInput`. Los iconos son los de `QIcono`.
+
+<!-- [tienda-primitivos-01] [nueva] -->
+`BotonTienda`:
+- **Variantes:** `principal` (la de por defecto), `secundario` y `enlace`, más la opción `ancho` para ocupar todo el ancho.
+- **Como enlace:** con la prop `a` pinta un `Link` de react-router con el mismo aspecto.
+- **Deshabilitado:** se ve atenuado, con el cursor de no permitido, y no dispara `onClick`.
+- **Tamaño:** altura mínima de 44 px.
+
+<!-- [tienda-primitivos-02] [nueva] -->
+`BotonIcono` es un botón redondo de 40 px:
+- **Props:** `icono` (nombre de `QIcono`), `etiqueta` (obligatoria, va al `aria-label`) y `contador` opcional. Con la prop `a` es un `Link`.
+- **Contador:** el texto lo calcula `textoContador(n)` en `comun/dominio.ts`: `null` con 0 o menos (no se pinta), el número de 1 a 99 y «99+» por encima de 99.
+
+<!-- [tienda-primitivos-04] [nueva] -->
+`CampoFormulario` usa los tokens de la tienda:
+- etiqueta encima;
+- campo con el radio de control y borde fuerte;
+- al enfocar, el borde y un anillo con el color de acción;
+- con error, el borde y el mensaje en el color de error.
+
+Sus props y su comportamiento no cambian.
+
+<!-- [tienda-primitivos-05] [nueva] -->
+`PrecioTienda` recibe `importe` y `divisa`, y lo formatea con `formatearPrecio` en el idioma del storeview activo. Tiene la variante `grande` para la ficha. Se pinta con `--tienda-color-precio` y cifras tabulares.
+
+<!-- [tienda-primitivos-06] [nueva] -->
+`DistintivoTienda` es una etiqueta corta en versalitas y con forma de píldora. Variantes:
+- `neutro`, por ejemplo «Destacado»;
+- `oferta`, con el color de oferta;
+- `agotado`, con el texto suave.
+
+<!-- [tienda-primitivos-07] [nueva] -->
+`SelectorCantidad` muestra `−`, el valor y `+`.
+- Recibe `valor`, `minimo` (1 por defecto), `maximo` opcional y `onCambiar`.
+- El nuevo valor lo calcula `limitarCantidad(valor, minimo, maximo)` en `comun/dominio.ts`, sin salirse de los límites.
+- Cada botón se deshabilita al llegar a su límite.
+- Etiquetas de los botones: «Restar uno» y «Sumar uno».
+
+<!-- [tienda-primitivos-08] [nueva] -->
+`ImagenProducto` recibe `imagen: {url, alt} | null` y la opción `prioritaria`.
+- **Contenedor:** con `aspect-ratio: var(--tienda-ratio-foto)` y fondo `superficie-hundida`.
+- **Foto:** con `object-fit: cover` y `loading="lazy"`, salvo si es prioritaria.
+- **Sin foto:** si no hay imagen o falla la carga (`onError`), muestra `SinImagen`.
+
+<!-- [tienda-primitivos-09] [nueva] -->
+Solo en desarrollo (`import.meta.env.DEV`) existe la ruta `/estilos`, con muestras de los tokens activos y de todos los primitivos, para revisar una identidad nueva. En producción no se registra.
+
+### Layout
+
+<!-- [tienda-layout-01] [nueva] -->
+`comun/layout/LayoutTienda.tsx` pinta, por este orden, el aviso, la `CabeceraTienda`, un `<main>` con el `Outlet` de la ruta y el pie. No usa `Vista`, `Plantilla` ni la cabecera o el menú lateral del ERP.
+
+<!-- [tienda-layout-02] [nueva] -->
+`LayoutTienda` proporciona `ContextoError` con `intentar`, igual que `Vista`, para que `useMaquina` funcione en las pantallas. Si `intentar` captura un error, lo muestra en un diálogo propio de la tienda con el título, la descripción y el botón «Cerrar».
+
+<!-- [tienda-layout-03] [nueva] -->
+En las rutas que empiezan por `/checkout`, el layout muestra una cabecera mínima: el logo y «Pago seguro» con el icono `candado`. No hay aviso, buscador, acciones, menú de categorías ni pie. Lo decide `esRutaCheckout(pathname)` en `comun/dominio.ts`.
+
+<!-- [tienda-layout-04] [nueva] -->
+Si el hueco `layout_aviso` de `FactoryTiendaOnline` tiene componente, se pinta encima de la cabecera una barra con los colores `aviso-fondo` y `aviso-texto`. Por defecto es `null` y no hay barra.
+
+<!-- [tienda-layout-05] [nueva] -->
+El pie base (`PieTienda`, hueco `layout_pie`) muestra:
+- el nombre del website;
+- enlaces a las categorías de primer nivel (6 como máximo);
+- enlaces a «Mi cuenta» y «Carrito»;
+- «© <año> <nombre del website>».
+
+### Cabecera
+
+<!-- [tienda-cabecera-01] [nueva] -->
+`CabeceraTienda` se queda fija arriba al hacer scroll. Tiene una fila con el logo, el buscador y las acciones, y debajo el menú de categorías.
+
+<!-- [tienda-cabecera-02] [nueva] -->
+`FactoryTiendaOnline` tiene los huecos `cabecera_logo`, `cabecera_buscador`, `cabecera_acciones`, `menu_categorias`, `layout_aviso` y `layout_pie`, todos `null` por defecto. Con `null` se usa el componente base, y una app cliente puede sustituir cualquiera sin rehacer la cabecera.
+
+<!-- [tienda-cabecera-03] [nueva] -->
+El logo base es el nombre del website del storeview activo, con la fuente de títulos, y enlaza a `/`.
+
+<!-- [tienda-cabecera-04] [nueva] -->
+El buscador base es un campo de búsqueda con el texto de ayuda «Buscar productos» y la etiqueta accesible «Buscar productos».
+- **Al enviar:** navega a la ruta que devuelve `rutaBusqueda(texto)` en `comun/dominio.ts`. Quita los espacios de los extremos; si queda vacío devuelve `/catalogo`, y si no, `/catalogo?texto=<texto codificado>`.
+- **En el catálogo:** el campo muestra el `texto` de la URL.
+
+<!-- [tienda-cabecera-05] [nueva] -->
+El menú de categorías base enlaza a `/categoria/<slug>` cada categoría de primer nivel del árbol (`getCategorias`), en una sola línea. Marca con `aria-current` la de la ruta actual. Mientras no haya mega menú, las subcategorías no se muestran.
+
+<!-- [tienda-cabecera-06] [nueva] -->
+En pantallas de 860 px de ancho o menos:
+- la primera fila lleva el botón de menú (icono `menu`, etiqueta «Abrir menú»), el logo y las acciones;
+- el buscador pasa a una segunda fila a todo el ancho;
+- la barra de categorías se oculta.
+
+Mientras no haya cajón de menú, el botón de menú lleva a `/catalogo`.

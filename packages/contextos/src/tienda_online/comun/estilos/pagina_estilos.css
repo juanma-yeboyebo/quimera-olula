@@ -1,0 +1,64 @@
+@layer tienda.paginas {
+    .pagina-estilos {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tienda-espacio-6);
+        max-width: var(--tienda-ancho-max);
+        margin: 0 auto;
+        padding: var(--tienda-espacio-6) 16px;
+        color: var(--tienda-color-texto);
+
+        h1,
+        h2 {
+            margin: 0;
+            font-family: var(--tienda-fuente-titulos);
+            font-weight: var(--tienda-peso-titulos);
+            letter-spacing: var(--tienda-tracking-titulos);
+        }
+
+        section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--tienda-espacio-3);
+        }
+
+        p {
+            margin: 0;
+        }
+    }
+
+    .pagina-estilos-colores {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: var(--tienda-espacio-3);
+    }
+
+    .pagina-estilos-color {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tienda-espacio-1);
+        font-size: var(--tienda-texto-xs);
+
+        span {
+            height: 48px;
+            border: 1px solid var(--tienda-color-borde-fuerte);
+            border-radius: var(--tienda-radio-tarjeta);
+        }
+    }
+
+    .pagina-estilos-titulo {
+        font-family: var(--tienda-fuente-titulos);
+        font-size: var(--tienda-texto-xl);
+    }
+
+    .pagina-estilos-fila {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--tienda-espacio-3);
+    }
+
+    .pagina-estilos-imagen {
+        width: 200px;
+    }
+}

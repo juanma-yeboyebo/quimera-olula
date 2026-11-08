@@ -1,0 +1,22 @@
+@layer tienda.primitivos {
+    .distintivo-tienda {
+        display: inline-block;
+        padding: var(--tienda-espacio-1) var(--tienda-espacio-3);
+        border-radius: var(--tienda-radio-distintivo);
+        background-color: var(--tienda-color-distintivo-fondo);
+        color: var(--tienda-color-distintivo-texto);
+        font-size: var(--tienda-texto-xs);
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        line-height: 1.2;
+        text-transform: uppercase;
+    }
+
+    .distintivo-tienda-oferta {
+        color: var(--tienda-color-oferta);
+    }
+
+    .distintivo-tienda-agotado {
+        color: var(--tienda-color-texto-suave);
+    }
+}

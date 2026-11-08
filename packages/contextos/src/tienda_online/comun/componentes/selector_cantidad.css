@@ -1,0 +1,30 @@
+@layer tienda.primitivos {
+    .selector-cantidad {
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid var(--tienda-color-borde-fuerte);
+        border-radius: var(--tienda-radio-control);
+        background-color: var(--tienda-color-superficie);
+
+        button {
+            width: 40px;
+            height: 44px;
+            border: 0;
+            background: none;
+            color: var(--tienda-color-texto);
+            font-size: var(--tienda-texto-lg);
+            cursor: pointer;
+
+            &:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+            }
+        }
+    }
+
+    .selector-cantidad-valor {
+        min-width: 2.5ch;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+    }
+}

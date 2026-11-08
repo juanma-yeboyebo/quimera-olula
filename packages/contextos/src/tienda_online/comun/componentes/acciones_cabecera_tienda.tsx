@@ -1,8 +1,8 @@
-import { QIcono } from "@olula/componentes/atomos/qicono.tsx";
 import { estaAutentificado } from "@olula/componentes/plantilla/autenticacion.ts";
 import { Link } from "react-router";
 import { useCarritoTienda } from "../carrito_store.ts";
 import { textoAriaCarrito } from "../dominio.ts";
+import { BotonIcono } from "./boton_icono.tsx";
 import "./acciones_cabecera_tienda.css";
 
 export const AccionesCabeceraTienda = () => {
@@ -12,22 +12,17 @@ export const AccionesCabeceraTienda = () => {
 
     return (
         <div className="acciones-cabecera-tienda">
-            <Link
-                to="/carrito"
-                className="accion-cabecera-carrito"
-                aria-label={textoAriaCarrito(unidades)}
-                title="Carrito"
-            >
-                <QIcono nombre="carrito" tamaño="sm" />
-                {unidades > 0 && (
-                    <span className="accion-cabecera-carrito-badge">{unidades}</span>
-                )}
-            </Link>
             {autentificado ? (
                 <Link to="/mi-cuenta">Mi cuenta</Link>
             ) : (
                 <Link to="/login">Entrar</Link>
             )}
+            <BotonIcono
+                icono="carrito"
+                etiqueta={textoAriaCarrito(unidades)}
+                contador={unidades}
+                a="/carrito"
+            />
         </div>
     );
 };

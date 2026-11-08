@@ -1,0 +1,46 @@
+@layer tienda.primitivos {
+    .boton-icono {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: none;
+        color: var(--tienda-color-texto);
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--tienda-color-superficie-hundida);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--tienda-color-accion);
+            outline-offset: 2px;
+        }
+
+        quimera-icono {
+            display: inline-flex;
+        }
+    }
+
+    .boton-icono-contador {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 18px;
+        height: 18px;
+        padding: 0 4px;
+        border-radius: var(--tienda-radio-distintivo);
+        background-color: var(--tienda-color-accion);
+        color: var(--tienda-color-accion-texto);
+        font-size: var(--tienda-texto-xs);
+        font-weight: 700;
+        line-height: 18px;
+        text-align: center;
+        pointer-events: none;
+    }
+}

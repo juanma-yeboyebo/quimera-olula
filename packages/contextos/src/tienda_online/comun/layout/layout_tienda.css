@@ -1,0 +1,22 @@
+@layer tienda.componentes {
+    .layout-tienda {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background-color: var(--tienda-color-fondo);
+        color: var(--tienda-color-texto);
+        font-family: var(--tienda-fuente-texto);
+
+        main {
+            flex: 1;
+        }
+    }
+
+    .layout-tienda-aviso:not(:empty) {
+        padding: var(--tienda-espacio-2) var(--tienda-espacio-4);
+        background-color: var(--tienda-color-aviso-fondo);
+        color: var(--tienda-color-aviso-texto);
+        font-size: var(--tienda-texto-xs);
+        text-align: center;
+    }
+}
