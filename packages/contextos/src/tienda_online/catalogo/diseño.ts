@@ -25,6 +25,7 @@ export interface CategoriaTienda {
     id: number;
     nombre: string;
     slug: string;
+    enMenu: boolean;
     hijas: CategoriaTienda[];
 }
 

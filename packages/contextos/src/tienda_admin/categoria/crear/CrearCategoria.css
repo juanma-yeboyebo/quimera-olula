@@ -1,0 +1,21 @@
+.CrearCategoria {
+    quimera-input[nombre="codigo"] {
+        grid-column: span 4;
+    }
+
+    quimera-input[nombre="nombre"] {
+        grid-column: span 8;
+    }
+
+    quimera-input[nombre="slug"] {
+        grid-column: span 12;
+    }
+
+    quimera-checkbox[nombre="visible"] {
+        grid-column: span 6;
+    }
+
+    quimera-checkbox[nombre="enMenu"] {
+        grid-column: span 6;
+    }
+}

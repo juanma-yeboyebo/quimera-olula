@@ -1,0 +1,76 @@
+.ArbolCategorias,
+.ArbolCategorias ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ArbolCategorias ul {
+    padding-left: 20px;
+}
+
+.ArbolCategorias-fila {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 6px;
+    border-top: 2px solid transparent;
+    border-bottom: 2px solid transparent;
+    border-radius: 4px;
+    cursor: grab;
+}
+
+.ArbolCategorias-fila.activa {
+    background: var(--color-fondo-seleccion, rgba(0, 0, 0, 0.06));
+}
+
+.ArbolCategorias-fila.arrastrando {
+    opacity: 0.5;
+}
+
+.ArbolCategorias-fila.objetivo-antes {
+    border-top-color: currentColor;
+}
+
+.ArbolCategorias-fila.objetivo-despues {
+    border-bottom-color: currentColor;
+}
+
+.ArbolCategorias-fila.objetivo-dentro {
+    outline: 2px dashed currentColor;
+}
+
+.ArbolCategorias-plegar {
+    width: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+}
+
+.ArbolCategorias-nombre {
+    flex: 1;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+    font: inherit;
+}
+
+.ArbolCategorias-articulos {
+    opacity: 0.7;
+    font-size: 0.85em;
+}
+
+.ArbolCategorias-distintivo {
+    font-size: 0.75em;
+    padding: 1px 6px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.ArbolCategorias-acciones {
+    display: flex;
+    gap: 2px;
+}

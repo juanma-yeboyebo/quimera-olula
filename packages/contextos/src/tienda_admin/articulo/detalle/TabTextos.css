@@ -1,0 +1,8 @@
+.TabTextos {
+    small[id^="contador-"] {
+        grid-column: span 12;
+        text-align: right;
+        opacity: 0.7;
+        margin-top: -8px;
+    }
+}

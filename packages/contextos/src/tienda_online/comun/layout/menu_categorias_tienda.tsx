@@ -1,12 +1,12 @@
 import { QIcono } from "@olula/componentes/atomos/qicono.tsx";
 import { estaAutentificado } from "@olula/componentes/plantilla/autenticacion.ts";
 import { FactoryCtx } from "@olula/lib/factory_ctx.tsx";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router";
 import { CategoriaTienda } from "../../catalogo/diseño.ts";
 import { abrirCajonCarrito } from "../cajon_carrito_store.ts";
 import { useCategoriasTienda } from "../categorias_store.ts";
-import { contenidoMega, nodoDeRuta, repartirMenu } from "../dominio.ts";
+import { categoriasEnMenu, contenidoMega, nodoDeRuta, repartirMenu } from "../dominio.ts";
 import { ContextoMenuMovil } from "./contexto_menu_movil.ts";
 import "./menu_categorias_tienda.css";
 
@@ -320,7 +320,8 @@ const CajonMenu = ({ categorias }: { categorias: CategoriaTienda[] }) => {
 };
 
 export const MenuCategoriasTienda = () => {
-    const categorias = useCategoriasTienda();
+    const todas = useCategoriasTienda();
+    const categorias = useMemo(() => categoriasEnMenu(todas), [todas]);
 
     if (categorias.length === 0) return null;
 

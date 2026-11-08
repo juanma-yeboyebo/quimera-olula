@@ -1,0 +1,29 @@
+.DetalleCategoria {
+    quimera-input[nombre="nombre"] {
+        grid-column: span 6;
+    }
+
+    quimera-input[nombre="slug"] {
+        grid-column: span 6;
+    }
+
+    quimera-checkbox[nombre="visible"] {
+        grid-column: span 6;
+    }
+
+    quimera-checkbox[nombre="enMenu"] {
+        grid-column: span 6;
+    }
+}
+
+.DetalleCategoria-motivo {
+    margin: 4px 0;
+    opacity: 0.8;
+}
+
+.DetalleCategoria-datos {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 4px 12px;
+    margin: 12px 0;
+}

@@ -1,0 +1,12 @@
+.ConfiguracionTiendaAdmin {
+    max-width: 720px;
+}
+
+.ConfiguracionTiendaAdmin-seccion {
+    margin-bottom: 24px;
+}
+
+.ConfiguracionTiendaAdmin-aviso {
+    opacity: 0.7;
+    margin: 0 0 8px;
+}

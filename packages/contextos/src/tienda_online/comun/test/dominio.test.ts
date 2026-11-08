@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import type { CategoriaTienda } from "#/tienda_online/catalogo/diseño.ts";
 import {
     cantidadValida,
+    categoriasEnMenu,
     claveCarrito,
     contenidoMega,
     codigoStoreViewDesdeEnv,
@@ -183,6 +184,7 @@ const cat = (slug: string, hijas: CategoriaTienda[] = []): CategoriaTienda => ({
     id: slug.length,
     nombre: slug.toUpperCase(),
     slug,
+    enMenu: true,
     hijas,
 });
 
@@ -308,4 +310,32 @@ describe("[tienda-primitivos-07] cantidadValida acepta solo números mayores que
             expect(cantidadValida(v)).toBe(false);
         },
     );
+});
+
+describe("[tienda-menu-10] categoriasEnMenu descarta las categorías fuera del menú", () => {
+    const fuera = (slug: string, hijas: CategoriaTienda[] = []): CategoriaTienda => ({
+        ...cat(slug, hijas),
+        enMenu: false,
+    });
+
+    test("tienda_menu_10_quita_las_de_primer_nivel_sin_en_menu", () => {
+        const res = categoriasEnMenu([cat("a"), fuera("b"), cat("c")]);
+        expect(res.map((c) => c.slug)).toEqual(["a", "c"]);
+    });
+
+    test("tienda_menu_10_quita_las_hijas_sin_en_menu_dentro_de_su_madre", () => {
+        const res = categoriasEnMenu([cat("a", [cat("a1"), fuera("a2"), cat("a3", [fuera("a31")])])]);
+        expect(res[0].hijas.map((c) => c.slug)).toEqual(["a1", "a3"]);
+        expect(res[0].hijas[1].hijas).toEqual([]);
+    });
+
+    test("tienda_menu_10_una_madre_fuera_se_lleva_a_sus_hijas", () => {
+        expect(categoriasEnMenu([fuera("a", [cat("a1")])])).toEqual([]);
+    });
+
+    test("tienda_menu_10_no_modifica_el_arbol_original", () => {
+        const arbol = [cat("a", [fuera("a1")])];
+        categoriasEnMenu(arbol);
+        expect(arbol[0].hijas).toHaveLength(1);
+    });
 });

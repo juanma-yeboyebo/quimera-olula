@@ -296,3 +296,6 @@ El hueco `menu_categorias` sustituye a la vez la barra de escritorio y el cajón
 
 <!-- [tienda-menu-09] [x] -->
 Las fotos de las categorías van en la carpeta pública de la app, con el slug como nombre: `<ruta_imagenes_categoria>/<slug>.jpg`. `ruta_imagenes_categoria` está en `FactoryTiendaOnline` y vale `/categorias` por defecto; esa carpeta no se sube al repositorio. Cuando todas las hijas de una categoría son sueltas, el panel las muestra como tarjetas con la foto y el nombre. Si la foto no existe, la tarjeta se queda solo con el nombre.
+
+<!-- [tienda-menu-10] [nueva] -->
+Cada categoría del árbol trae `en_menu` (`categorias-05` del servidor). La barra, el mega menú, «Todas las categorías» y el cajón del móvil solo muestran las categorías con `en_menu`, y una hija sin `en_menu` tampoco sale dentro de su madre. El lateral del catálogo, la portada y el pie siguen mostrando todas.

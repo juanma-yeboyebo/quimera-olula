@@ -1,0 +1,28 @@
+.TabFotos-rejilla {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.TabFotos-foto {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.TabFotos-foto img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.TabFotos-foto[data-principal="true"] img {
+    outline: 3px solid currentColor;
+}
+
+.TabFotos-aviso {
+    opacity: 0.7;
+}

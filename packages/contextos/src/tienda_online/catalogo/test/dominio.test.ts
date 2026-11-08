@@ -39,14 +39,14 @@ const producto = (referencia: string, extra: Partial<ProductoCatalogo> = {}): Pr
 
 const arbol: CategoriaTienda[] = [
     {
-        id: 1, nombre: "Higiene", slug: "higiene", hijas: [
-            { id: 2, nombre: "Manos", slug: "manos", hijas: [
-                { id: 4, nombre: "Geles", slug: "geles", hijas: [] },
+        id: 1, nombre: "Higiene", slug: "higiene", enMenu: true, hijas: [
+            { id: 2, nombre: "Manos", slug: "manos", enMenu: true, hijas: [
+                { id: 4, nombre: "Geles", slug: "geles", enMenu: true, hijas: [] },
             ] },
-            { id: 3, nombre: "Cuerpo", slug: "cuerpo", hijas: [] },
+            { id: 3, nombre: "Cuerpo", slug: "cuerpo", enMenu: true, hijas: [] },
         ],
     },
-    { id: 5, nombre: "Material", slug: "material", hijas: [] },
+    { id: 5, nombre: "Material", slug: "material", enMenu: true, hijas: [] },
 ];
 
 describe("[catalogo-carga-01] La consulta del catálogo siempre envía criteria con orden explícito y paginación {limite: 24, pagina: N}", () => {

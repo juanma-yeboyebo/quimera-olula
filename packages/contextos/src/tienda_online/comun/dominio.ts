@@ -80,3 +80,8 @@ export const nodoDeRuta = (arbol: CategoriaTienda[], ruta: string[]): CategoriaT
     }
     return nodo;
 };
+
+export const categoriasEnMenu = (categorias: CategoriaTienda[]): CategoriaTienda[] =>
+    categorias
+        .filter((c) => c.enMenu)
+        .map((c) => ({ ...c, hijas: categoriasEnMenu(c.hijas) }));

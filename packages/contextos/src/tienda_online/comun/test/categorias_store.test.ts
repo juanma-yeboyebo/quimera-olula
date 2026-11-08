@@ -7,8 +7,8 @@ vi.mock("#/tienda_online/catalogo/infraestructura.ts", () => ({
 }));
 
 const arbol = [
-    { id: 1, nombre: "Ropa", slug: "ropa", hijas: [] },
-    { id: 2, nombre: "Calzado", slug: "calzado", hijas: [] },
+    { id: 1, nombre: "Ropa", slug: "ropa", enMenu: true, hijas: [] },
+    { id: 2, nombre: "Calzado", slug: "calzado", enMenu: true, hijas: [] },
 ];
 
 const cargarAlmacen = async () => await import("#/tienda_online/comun/categorias_store.ts");

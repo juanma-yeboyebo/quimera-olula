@@ -177,10 +177,23 @@ describe("[catalogo-categorias-01] El árbol de categorías se mapea a Categoria
 
         expect(arbol).toEqual([
             {
-                id: 1, nombre: "Higiene", slug: "higiene", hijas: [
-                    { id: 2, nombre: "Manos", slug: "manos", hijas: [] },
+                id: 1, nombre: "Higiene", slug: "higiene", enMenu: true, hijas: [
+                    { id: 2, nombre: "Manos", slug: "manos", enMenu: true, hijas: [] },
                 ],
             },
         ]);
+    });
+
+    test("tienda_menu_10_mapea_en_menu_y_por_defecto_es_true", async () => {
+        get.mockResolvedValue({
+            datos: [
+                { id: 1, nombre: "A", slug: "a", en_menu: false, hijas: [] },
+                { id: 2, nombre: "B", slug: "b", hijas: [] },
+            ],
+        });
+
+        const arbol = await getCategorias();
+
+        expect(arbol.map((c) => c.enMenu)).toEqual([false, true]);
     });
 });

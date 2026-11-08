@@ -34,6 +34,7 @@ export interface NodoCategoriaApi {
     id: number;
     nombre: string;
     slug: string;
+    en_menu?: boolean;
     hijas: NodoCategoriaApi[];
 }
 
@@ -57,6 +58,7 @@ export const categoriaDesdeApi = (n: NodoCategoriaApi): CategoriaTienda => ({
     id: n.id,
     nombre: n.nombre,
     slug: n.slug,
+    enMenu: n.en_menu ?? true,
     hijas: n.hijas.map(categoriaDesdeApi),
 });
 

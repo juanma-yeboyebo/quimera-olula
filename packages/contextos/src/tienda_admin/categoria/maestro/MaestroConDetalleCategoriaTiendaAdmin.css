@@ -1,0 +1,12 @@
+.CategoriaTiendaAdmin-cuerpo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+}
+
+@media (max-width: 860px) {
+    .CategoriaTiendaAdmin-cuerpo {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
