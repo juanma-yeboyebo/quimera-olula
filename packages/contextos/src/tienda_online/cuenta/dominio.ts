@@ -1,7 +1,9 @@
 import { ClausulaFiltro, Criteria } from "@olula/lib/diseño.ts";
 import {
+    DatosCuenta,
     DatosRegistro,
     DireccionCuenta,
+    DireccionRegistro,
     ErroresRegistro,
     PedidoResumen,
 } from "./diseño.ts";
@@ -34,6 +36,31 @@ export const aNulo = (valor: string | null): string | null => (vacio(valor) ? nu
 
 const emailValido = (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
+export const erroresDireccion = (d: DireccionRegistro): ErroresRegistro => {
+    const errores: ErroresRegistro = {};
+    if (vacio(d.nombreVia)) errores["direccion.nombreVia"] = "La vía es obligatoria";
+    if (vacio(d.codPostal)) errores["direccion.codPostal"] = "El código postal es obligatorio";
+    if (vacio(d.ciudad)) errores["direccion.ciudad"] = "La ciudad es obligatoria";
+    if (vacio(d.paisId)) errores["direccion.paisId"] = "El país es obligatorio";
+    return errores;
+};
+
+export const erroresDatosCuenta = (d: DatosCuenta): ErroresRegistro => {
+    const errores: ErroresRegistro = {};
+    if (vacio(d.nombre)) errores.nombre = "El nombre es obligatorio";
+    if (vacio(d.idFiscal)) errores.idFiscal = "El NIF/CIF es obligatorio";
+    return errores;
+};
+
+export const direccionNuevaInicial = (): DireccionRegistro => ({
+    nombreVia: "",
+    numero: null,
+    codPostal: "",
+    ciudad: "",
+    provincia: null,
+    paisId: PAIS_POR_DEFECTO,
+});
+
 export const erroresRegistro = (d: DatosRegistro): ErroresRegistro => {
     const errores: ErroresRegistro = {};
     if (!emailValido(d.email.trim())) errores.email = "Introduce un email válido";
@@ -43,11 +70,7 @@ export const erroresRegistro = (d: DatosRegistro): ErroresRegistro => {
         errores.repetirPassword = "Las contraseñas no coinciden";
     if (vacio(d.nombre)) errores.nombre = "El nombre es obligatorio";
     if (vacio(d.idFiscal)) errores.idFiscal = "El NIF/CIF es obligatorio";
-    if (vacio(d.direccion.nombreVia)) errores["direccion.nombreVia"] = "La vía es obligatoria";
-    if (vacio(d.direccion.codPostal))
-        errores["direccion.codPostal"] = "El código postal es obligatorio";
-    if (vacio(d.direccion.ciudad)) errores["direccion.ciudad"] = "La ciudad es obligatoria";
-    if (vacio(d.direccion.paisId)) errores["direccion.paisId"] = "El país es obligatorio";
+    Object.assign(errores, erroresDireccion(d.direccion));
     return errores;
 };
 

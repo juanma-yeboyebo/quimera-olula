@@ -11,6 +11,11 @@ API del backend (`olula_servidor`, app `tienda_online`). Todas las llamadas env�
 | POST | `/tienda_online/carrito/<token>/asociar` (con login) | `{}`; absorbe los otros carritos abiertos del comprador en el del token; 404, 409 |
 | GET | `/tienda_online/carrito` (con login) | `{datos: CarritoPublico}` del carrito abierto del usuario; 404 si no tiene |
 | GET | `/tienda_online/cuenta/yo` (con login) | `{datos: {email, nombre, id_fiscal, telefono, cliente_id, direcciones: [{id, nombre_via, numero, cod_postal, ciudad, provincia, pais_id, envio, facturacion}]}}`; 404 sin cuenta en la tienda |
+| PATCH | `/tienda_online/cuenta/yo` (con login) | body `{nombre, id_fiscal, telefono}`; `{}`; 400 datos no válidos, 404 sin cuenta |
+| POST | `/tienda_online/cuenta/direccion` (con login) | body `{nombre_via, numero, cod_postal, ciudad, provincia, pais_id}`; `{id}`; 400 |
+| PATCH | `/tienda_online/cuenta/direccion/<id>` (con login) | mismo body; `{}`; 400, 404 |
+| DELETE | `/tienda_online/cuenta/direccion/<id>` (con login) | `{}`; 404, 409 si es la de facturación |
+| PATCH | `/tienda_online/cuenta/direccion/<id>/envio` y `…/facturacion` (con login) | `{}`; 404 |
 | GET | `/tienda_online/cuenta/pedido?q=…` (con login) | `{datos: [{id, codigo, fecha, total, divisa, servido}], total}` |
 | GET | `/tienda_online/cuenta/pedido/<id>` (con login) | `{datos: {id, codigo, fecha, total, divisa, servido, neto, total_iva, lineas: [{referencia, descripcion, cantidad, precio, importe}]}}`; 404 |
 
@@ -87,6 +92,43 @@ Con 404 muestra «Tu usuario no tiene cuenta en esta tienda» y el botón «Cerr
 
 <!-- [cuenta-mi_cuenta-03] [x] -->
 La página tiene el botón «Cerrar sesión», que navega a `/logout`.
+
+### Editar datos
+
+<!-- [cuenta-editar_datos-01] [nueva] -->
+La tarjeta «Datos» de `/mi-cuenta` tiene un `BotonTienda` `enlace` «Editar» que la cambia por un formulario con nombre, NIF/CIF y teléfono (`CampoFormulario`), con los valores actuales, y los botones «Guardar» (`principal`) y «Cancelar» (`secundario`). El email se muestra como texto, no editable.
+
+<!-- [cuenta-editar_datos-02] [nueva] -->
+Validación en el cliente con una función pura `erroresDatosCuenta(datos)` en `cuenta/dominio.ts`: nombre y NIF/CIF obligatorios, con los mismos textos que el registro. Con errores no se envía y cada campo muestra el suyo.
+
+<!-- [cuenta-editar_datos-03] [nueva] -->
+[LISTA] guardar_datos → GUARDANDO → LISTA (envía `PATCH /tienda_online/cuenta/yo` con `{nombre, id_fiscal, telefono}`, vuelve a cargar la cuenta y cierra el formulario)
+
+<!-- [cuenta-editar_datos-04] [nueva] -->
+[GUARDANDO] error → LISTA (muestra el texto del backend en el formulario, que sigue abierto con lo escrito)
+
+### Direcciones
+
+<!-- [cuenta-direcciones-01] [nueva] -->
+La tarjeta «Direcciones» tiene un `BotonTienda` `secundario` «Añadir dirección» y, en cada dirección, «Editar», «Usar para envío» (si no lo es), «Usar para facturación» (si no lo es) y «Borrar» (no aparece en la de facturación), como `BotonTienda` `enlace`.
+
+<!-- [cuenta-direcciones-02] [nueva] -->
+«Añadir dirección» y «Editar» abren dentro de la tarjeta un formulario con vía, número, código postal, ciudad, provincia y país (`ES` por defecto al añadir), con «Guardar» y «Cancelar». Solo hay un formulario de dirección abierto a la vez.
+
+<!-- [cuenta-direcciones-03] [nueva] -->
+Validación en el cliente con una función pura `erroresDireccion(direccion)` en `cuenta/dominio.ts`: vía, código postal, ciudad y país obligatorios, con los mismos textos que el registro. `erroresRegistro` la reutiliza para su dirección.
+
+<!-- [cuenta-direcciones-04] [nueva] -->
+[LISTA] guardar_direccion → GUARDANDO → LISTA (sin id envía `POST /tienda_online/cuenta/direccion`; con id, `PATCH …/direccion/<id>`; vuelve a cargar la cuenta y cierra el formulario. Con error muestra el texto del backend y deja el formulario abierto)
+
+<!-- [cuenta-direcciones-05] [nueva] -->
+«Borrar» pide confirmación en la propia dirección («¿Borrar esta dirección?» con «Sí, borrar» y «No»). Al confirmar: [LISTA] borrar_direccion → GUARDANDO → LISTA (envía `DELETE …/direccion/<id>` y vuelve a cargar la cuenta; con error muestra su texto)
+
+<!-- [cuenta-direcciones-06] [nueva] -->
+[LISTA] marcar_envio / marcar_facturacion → GUARDANDO → LISTA (envía `PATCH …/direccion/<id>/envio` o `…/facturacion` y vuelve a cargar la cuenta; con error muestra su texto)
+
+<!-- [cuenta-direcciones-07] [nueva] -->
+Mientras está en `GUARDANDO`, los botones de datos y direcciones están deshabilitados.
 
 ### Mis pedidos
 

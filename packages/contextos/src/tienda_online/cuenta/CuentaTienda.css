@@ -181,6 +181,19 @@
             }
         }
 
+        .cuenta-formulario {
+            display: flex;
+            flex-direction: column;
+            gap: var(--tienda-espacio-4);
+            flex-basis: 100%;
+            min-width: 0;
+        }
+
+        .cuenta-acciones {
+            flex-basis: 100%;
+            align-items: center;
+        }
+
         .cuenta-botones {
             display: flex;
             flex-wrap: wrap;

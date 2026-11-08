@@ -17,6 +17,12 @@ export type DatosRegistro = {
     direccion: DireccionRegistro;
 };
 
+export type DatosCuenta = {
+    nombre: string;
+    idFiscal: string;
+    telefono: string | null;
+};
+
 export type ErroresRegistro = Record<string, string>;
 
 export type DireccionCuenta = {

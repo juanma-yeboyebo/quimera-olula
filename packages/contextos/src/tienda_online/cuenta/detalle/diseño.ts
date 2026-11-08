@@ -1,6 +1,6 @@
-import { CuentaTienda, PedidoResumen } from "../diseño.ts";
+import { CuentaTienda, ErroresRegistro, PedidoResumen } from "../diseño.ts";
 
-export type EstadoCuenta = "CARGANDO" | "LISTA" | "SIN_CUENTA" | "ERROR";
+export type EstadoCuenta = "CARGANDO" | "LISTA" | "GUARDANDO" | "SIN_CUENTA" | "ERROR";
 
 export type ContextoCuenta = {
     estado: EstadoCuenta;
@@ -9,4 +9,6 @@ export type ContextoCuenta = {
     total: number;
     pagina: number;
     errorPedidos: boolean;
+    errorEdicion: string | null;
+    erroresEdicion: ErroresRegistro;
 };

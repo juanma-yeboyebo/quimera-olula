@@ -4,6 +4,8 @@ import {
     añadirPedidos,
     criteriaPedidos,
     datosRegistroIniciales,
+    erroresDatosCuenta,
+    erroresDireccion,
     erroresRegistro,
     PEDIDOS_POR_PAGINA,
 } from "#/tienda_online/cuenta/dominio.ts";
@@ -101,5 +103,36 @@ describe("[cuenta-pedidos-02] añadirPedidos", () => {
         const r = añadirPedidos([pedido("1"), pedido("2")], [pedido("2"), pedido("3")]);
 
         expect(r.map((p) => p.id)).toEqual(["1", "2", "3"]);
+    });
+});
+
+describe("[cuenta-editar_datos-02] Validación de datos de cuenta", () => {
+    test("cuenta_editar_datos_02_datos_validos_no_dan_errores", () => {
+        expect(erroresDatosCuenta({ nombre: "Ana", idFiscal: "B1", telefono: null })).toEqual({});
+    });
+
+    test("cuenta_editar_datos_02_nombre_e_id_fiscal_son_obligatorios", () => {
+        const e = erroresDatosCuenta({ nombre: " ", idFiscal: "", telefono: null });
+        expect(e.nombre).toBe("El nombre es obligatorio");
+        expect(e.idFiscal).toBe("El NIF/CIF es obligatorio");
+    });
+});
+
+describe("[cuenta-direcciones-03] Validación de dirección", () => {
+    test("cuenta_direcciones_03_direccion_valida_no_da_errores", () => {
+        expect(erroresDireccion(validos.direccion)).toEqual({});
+    });
+
+    test("cuenta_direcciones_03_campos_obligatorios_con_los_textos_del_registro", () => {
+        const e = erroresDireccion({ ...validos.direccion, nombreVia: "", codPostal: "", ciudad: "", paisId: "" });
+        expect(e["direccion.nombreVia"]).toBe("La vía es obligatoria");
+        expect(e["direccion.codPostal"]).toBe("El código postal es obligatorio");
+        expect(e["direccion.ciudad"]).toBe("La ciudad es obligatoria");
+        expect(e["direccion.paisId"]).toBe("El país es obligatorio");
+    });
+
+    test("cuenta_direcciones_03_el_registro_reutiliza_los_errores_de_direccion", () => {
+        const direccion = { ...validos.direccion, ciudad: "" };
+        expect(erroresRegistro({ ...validos, direccion })).toEqual(erroresDireccion(direccion));
     });
 });

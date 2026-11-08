@@ -4,7 +4,13 @@ import { CarritoTienda } from "../comun/diseño.ts";
 import { CarritoApi, cabecerasTienda, carritoDesdeApi } from "../comun/infraestructura.ts";
 import { codigoStoreViewActivo } from "../comun/storeview.ts";
 import TiendaOnline_Urls from "../comun/urls.ts";
-import { CuentaTienda, DatosRegistro, PedidoDetalle, PedidoResumen } from "./diseño.ts";
+import {
+    CuentaTienda,
+    DatosCuenta,
+    DatosRegistro,
+    DireccionRegistro, PedidoDetalle,
+    PedidoResumen,
+} from "./diseño.ts";
 import { aNulo, criteriaPedidos } from "./dominio.ts";
 
 const urls = new TiendaOnline_Urls();
@@ -185,4 +191,52 @@ export const getPedido = async (id: string): Promise<PedidoDetalle> => {
         cabeceras(),
     );
     return pedidoDetalleDesdeApi(respuesta.datos);
+};
+
+export const direccionAApi = (d: DireccionRegistro): DireccionRegistroApi => ({
+    nombre_via: d.nombreVia,
+    numero: aNulo(d.numero),
+    cod_postal: d.codPostal,
+    ciudad: d.ciudad,
+    provincia: aNulo(d.provincia),
+    pais_id: d.paisId,
+});
+
+export const patchCuenta = async (d: DatosCuenta): Promise<void> => {
+    await RestAPI.patch(
+        urls.CUENTA,
+        { nombre: d.nombre, id_fiscal: d.idFiscal, telefono: aNulo(d.telefono) },
+        "Error al guardar los datos",
+        cabeceras(),
+    );
+};
+
+export const postDireccion = async (d: DireccionRegistro): Promise<void> => {
+    await RestAPI.post(urls.DIRECCION, direccionAApi(d), "Error al guardar la dirección", cabeceras());
+};
+
+export const patchDireccion = async (id: string, d: DireccionRegistro): Promise<void> => {
+    await RestAPI.patch(
+        `${urls.DIRECCION}/${id}`,
+        direccionAApi(d),
+        "Error al guardar la dirección",
+        cabeceras(),
+    );
+};
+
+export const deleteDireccion = async (id: string): Promise<void> => {
+    await RestAPI.delete(`${urls.DIRECCION}/${id}`, "Error al borrar la dirección", cabeceras());
+};
+
+export const patchDireccionEnvio = async (id: string): Promise<void> => {
+    await RestAPI.patch(`${urls.DIRECCION}/${id}/envio`, {}, "Error al cambiar la dirección", cabeceras());
+};
+
+export const patchDireccionFacturacion = async (id: string): Promise<void> => {
+    await RestAPI.patch(
+        `${urls.DIRECCION}/${id}/facturacion`,
+        {},
+        "Error al cambiar la dirección",
+        cabeceras(),
+    );
 };

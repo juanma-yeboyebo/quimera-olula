@@ -1,6 +1,16 @@
 import { ProcesarContexto } from "@olula/lib/diseño.ts";
-import { añadirPedidos } from "../dominio.ts";
-import { getCuenta, getPedidos } from "../infraestructura.ts";
+import { DatosCuenta, DireccionRegistro } from "../diseño.ts";
+import { añadirPedidos, erroresDatosCuenta, erroresDireccion } from "../dominio.ts";
+import {
+    deleteDireccion,
+    getCuenta,
+    getPedidos,
+    patchCuenta,
+    patchDireccion,
+    patchDireccionEnvio,
+    patchDireccionFacturacion,
+    postDireccion,
+} from "../infraestructura.ts";
 import { ContextoCuenta, EstadoCuenta } from "./diseño.ts";
 
 type ProcesarCuenta = ProcesarContexto<EstadoCuenta, ContextoCuenta>;
@@ -12,6 +22,8 @@ export const contextoCuentaInicial: ContextoCuenta = {
     total: 0,
     pagina: 1,
     errorPedidos: false,
+    errorEdicion: null,
+    erroresEdicion: {},
 };
 
 export const cargarCuenta: ProcesarCuenta = async (contexto) => {
@@ -47,3 +59,56 @@ export const verMasPedidos: ProcesarCuenta = async (contexto) => {
         return { ...contexto, errorPedidos: true };
     }
 };
+
+const ERROR_EDICION = "No se ha podido guardar. Inténtalo de nuevo.";
+
+const ejecutarEdicion = async (
+    contexto: ContextoCuenta,
+    accion: () => Promise<void>,
+): Promise<ContextoCuenta> => {
+    const limpio = { ...contexto, estado: "LISTA" as const, errorEdicion: null, erroresEdicion: {} };
+    try {
+        await accion();
+    } catch (e) {
+        const descripcion = (e as { descripcion?: string })?.descripcion;
+        return { ...limpio, errorEdicion: descripcion || ERROR_EDICION };
+    }
+    try {
+        return { ...limpio, cuenta: await getCuenta() };
+    } catch {
+        return { ...limpio, errorEdicion: ERROR_EDICION };
+    }
+};
+
+export const cerrarFormulario: ProcesarCuenta = async (contexto) => ({
+    ...contexto,
+    errorEdicion: null,
+    erroresEdicion: {},
+});
+
+export const guardarDatos: ProcesarCuenta = async (contexto, payload) => {
+    const datos = payload as DatosCuenta;
+    const errores = erroresDatosCuenta(datos);
+    if (Object.keys(errores).length > 0)
+        return { ...contexto, estado: "LISTA", errorEdicion: null, erroresEdicion: errores };
+    return ejecutarEdicion(contexto, () => patchCuenta(datos));
+};
+
+export const guardarDireccion: ProcesarCuenta = async (contexto, payload) => {
+    const { id, direccion } = payload as { id: string | null; direccion: DireccionRegistro };
+    const errores = erroresDireccion(direccion);
+    if (Object.keys(errores).length > 0)
+        return { ...contexto, estado: "LISTA", errorEdicion: null, erroresEdicion: errores };
+    return ejecutarEdicion(contexto, () =>
+        id ? patchDireccion(id, direccion) : postDireccion(direccion),
+    );
+};
+
+export const borrarDireccion: ProcesarCuenta = (contexto, payload) =>
+    ejecutarEdicion(contexto, () => deleteDireccion(payload as string));
+
+export const marcarEnvio: ProcesarCuenta = (contexto, payload) =>
+    ejecutarEdicion(contexto, () => patchDireccionEnvio(payload as string));
+
+export const marcarFacturacion: ProcesarCuenta = (contexto, payload) =>
+    ejecutarEdicion(contexto, () => patchDireccionFacturacion(payload as string));
