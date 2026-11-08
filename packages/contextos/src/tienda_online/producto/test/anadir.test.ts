@@ -43,17 +43,7 @@ describe("[catalogo-tarjeta-07] añadir desde la tarjeta", () => {
         const [aviso] = obtenerAvisos();
         expect(aviso.tipo).toBe("ok");
         expect(aviso.texto).toBe("Producto 1 añadido al carrito");
-        expect(aviso.accion?.texto).toBe("Ver carrito");
-    });
-
-    test("catalogo_tarjeta_07_ver_carrito_abre_el_cajon", async () => {
-        asegurarCarrito.mockResolvedValue("tok-1");
-        postLineaCarrito.mockResolvedValue(9);
-
-        await anadirRapido("REF1", "Producto 1");
-        obtenerAvisos()[0].accion?.onClick();
-
-        expect(estaCajonCarritoAbierto()).toBe(true);
+        expect(aviso.accion).toBeUndefined();
     });
 
     test("catalogo_tarjeta_07_error_muestra_aviso_de_error_con_el_texto_del_backend", async () => {

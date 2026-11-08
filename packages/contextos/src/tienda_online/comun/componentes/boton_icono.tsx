@@ -9,12 +9,14 @@ export const BotonIcono = ({
     etiqueta,
     contador,
     a,
+    expandido,
     onClick,
 }: {
     icono: string;
     etiqueta: string;
     contador?: number;
     a?: string;
+    expandido?: boolean;
     onClick?: MouseEventHandler<HTMLElement>;
 }) => {
     const texto = textoContador(contador ?? 0);
@@ -34,7 +36,13 @@ export const BotonIcono = ({
     }
 
     return (
-        <button type="button" className="boton-icono" aria-label={etiqueta} onClick={onClick}>
+        <button
+            type="button"
+            className="boton-icono"
+            aria-label={etiqueta}
+            aria-expanded={expandido}
+            onClick={onClick}
+        >
             {contenido}
         </button>
     );

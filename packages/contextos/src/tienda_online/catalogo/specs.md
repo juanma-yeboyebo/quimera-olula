@@ -97,11 +97,12 @@ Los productos destacados muestran sobre la foto el `DistintivoTienda` `neutro` c
 <!-- [catalogo-tarjeta-05] [x] -->
 La tarjeta expone el slot de factory `tarjeta_producto_acciones` (vacío por defecto), reservado para el botón de lista de deseos.
 
-<!-- [catalogo-tarjeta-06] [nueva] -->
+<!-- [catalogo-tarjeta-06] [x] -->
 Si el producto está disponible (`estaDisponible`), la tarjeta tiene un botón redondo con el icono `carrito` y `aria-label` «Añadir <descripción> al carrito», sobre la esquina inferior derecha de la foto. Es hermano del enlace de la tarjeta (no va dentro del `<a>`) y se coloca con `position: absolute` en la fila de la foto de la subgrid, sin alterar la alineación. Es visible al pasar el ratón o con el foco dentro de la tarjeta; en dispositivos sin hover (`hover: none`) es visible siempre y más pequeño. No se muestra si el producto no está disponible. Convive con el slot `tarjeta_producto_acciones`.
 
-<!-- [catalogo-tarjeta-07] [nueva] -->
-Al pulsar el botón se añade 1 unidad con el mismo flujo que la ficha (`anadirLineaAlCarrito`: asegura el carrito, envía la línea, reintenta una vez ante 404/409 y recarga el carrito), con el botón deshabilitado mientras añade. No abre el cajón. Con éxito muestra el aviso `ok` «<descripción> añadido al carrito» con la acción «Ver carrito», que abre el cajón; con error, un aviso `error` con el texto del backend o «No se ha podido añadir al carrito».
+<!-- [catalogo-tarjeta-07] [cambiada] -->
+Al pulsar el botón se añade 1 unidad con el mismo flujo que la ficha (`anadirLineaAlCarrito`: asegura el carrito, envía la línea, reintenta una vez ante 404/409 y recarga el carrito), con el botón deshabilitado mientras añade. No abre el cajón. Con éxito muestra el aviso `ok` «<descripción> añadido al carrito», sin acciones; con error, un aviso `error` con el texto del backend o «No se ha podido añadir al carrito».
+<!-- antes: el aviso llevaba la acción «Ver carrito», que abría el cajón -->
 
 ### Diseño
 

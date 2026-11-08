@@ -151,7 +151,7 @@ describe("[producto-anadir-03] [LISTO] añadir → AÑADIENDO → LISTO", () => 
         const [aviso] = obtenerAvisos();
         expect(aviso.tipo).toBe("ok");
         expect(aviso.texto).toBe("Producto 1 añadido al carrito");
-        expect(aviso.accion?.texto).toBe("Ver carrito");
+        expect(aviso.accion).toBeUndefined();
     });
 });
 

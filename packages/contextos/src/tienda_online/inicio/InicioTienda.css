@@ -54,12 +54,6 @@
             }
         }
 
-        .inicio-contenedor {
-            @media (min-width: 861px) {
-                padding-inline: 24px;
-            }
-        }
-
         .inicio-seccion {
             padding-block: var(--tienda-espacio-seccion);
         }

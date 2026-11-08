@@ -1,4 +1,3 @@
-import { abrirCajonCarrito } from "../comun/cajon_carrito_store.ts";
 import { mostrarAviso } from "../comun/avisos_store.ts";
 import { asegurarCarrito, olvidarCarrito, recargarCarrito } from "../comun/carrito_store.ts";
 import { postLineaCarrito } from "./infraestructura.ts";
@@ -29,7 +28,6 @@ export const avisarAnadido = (nombre: string) => {
     mostrarAviso({
         texto: `${nombre} añadido al carrito`,
         tipo: "ok",
-        accion: { texto: "Ver carrito", onClick: abrirCajonCarrito },
     });
 };
 

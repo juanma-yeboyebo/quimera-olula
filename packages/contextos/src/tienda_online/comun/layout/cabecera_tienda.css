@@ -10,15 +10,14 @@
 
     .cabecera-tienda-fila,
     .cabecera-tienda-contenedor {
-        max-width: var(--tienda-ancho-max);
-        margin: 0 auto;
         padding: 0 16px;
     }
 
     .cabecera-tienda-fila {
+        position: relative;
         display: grid;
         grid-template-columns: auto minmax(0, 1fr) auto;
-        grid-template-areas: "logo buscador acciones";
+        grid-template-areas: "logo . acciones";
         align-items: center;
         gap: var(--tienda-espacio-6);
         height: 68px;
@@ -34,10 +33,14 @@
     }
 
     .cabecera-tienda-buscador {
-        grid-area: buscador;
+        padding: var(--tienda-espacio-3) 16px;
+        border-top: 1px solid var(--tienda-color-borde);
     }
 
     .cabecera-tienda-acciones {
+        display: flex;
+        align-items: center;
+        gap: var(--tienda-espacio-3);
         grid-area: acciones;
     }
 
@@ -50,17 +53,38 @@
         .cabecera-tienda-contenedor {
             padding: 0 24px;
         }
+
+        .cabecera-tienda-buscador {
+            padding-inline: 24px;
+        }
+
+        .cabecera-tienda-fila .avisos-tienda {
+            position: absolute;
+            top: calc(100% - var(--tienda-espacio-2));
+            right: 24px;
+
+            &:not(:empty)::before {
+                content: "";
+                position: absolute;
+                top: -6px;
+                right: 14px;
+                width: 12px;
+                height: 12px;
+                border-top: 1px solid var(--tienda-color-borde);
+                border-left: 1px solid var(--tienda-color-borde);
+                background-color: var(--tienda-color-superficie);
+                z-index: 1;
+                transform: rotate(45deg);
+            }
+        }
     }
 
     @media (max-width: 860px) {
         .cabecera-tienda-fila {
             grid-template-columns: auto 1fr auto;
-            grid-template-areas:
-                "menu logo acciones"
-                "buscador buscador buscador";
-            height: auto;
-            gap: var(--tienda-espacio-2) var(--tienda-espacio-3);
-            padding-bottom: var(--tienda-espacio-3);
+            grid-template-areas: "menu logo acciones";
+            height: 56px;
+            gap: var(--tienda-espacio-3);
         }
 
         .cabecera-tienda-menu {

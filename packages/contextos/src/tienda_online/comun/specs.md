@@ -190,33 +190,41 @@ El pie base (`PieTienda`, hueco `layout_pie`) muestra:
 - enlaces a «Mi cuenta» y «Carrito»;
 - «© <año> <nombre del website>».
 
-<!-- [tienda-layout-06] [x] -->
-Las páginas usan la clase común `.contenedor-tienda` (`comun/layout/layout_tienda.css`) para centrar su contenido con el ancho máximo `--tienda-ancho-max` y el margen lateral `--tienda-gutter`.
+<!-- [tienda-layout-06] [cambiada] -->
+`comun/layout/layout_tienda.css` tiene dos contenedores comunes:
+- `.contenedor-tienda-ancho`: todo el ancho de la ventana con margen lateral de 24 px (`--tienda-gutter` en pantallas de 860 px o menos), alineado con la cabecera. Lo usan la portada y el catálogo.
+- `.contenedor-tienda`: centrado con el ancho máximo `--tienda-ancho-max` y el margen lateral `--tienda-gutter`. Lo usan la ficha, el carrito, el checkout y la cuenta.
+<!-- antes: todas las páginas usaban `.contenedor-tienda` -->
 
 <!-- [tienda-layout-07] [x] -->
 `CabeceraTienda` mide su altura con un `ResizeObserver` y la publica en `--tienda-alto-cabecera` en `document.documentElement`. Los bloques fijos de la ficha, el carrito y el checkout la suman a su `top`.
 
 ### Avisos
 
-<!-- [tienda-avisos-01] [nueva] -->
-`comun/avisos_store.ts` es el almacén de avisos efímeros (`useSyncExternalStore`, solo notifica si algo cambia). `mostrarAviso({texto, tipo: "ok" | "error", accion?: {texto, onClick}})` añade un aviso con `id` y lo devuelve; `cerrarAviso(id)` lo quita; `useAvisos()` los lee; `reiniciarAvisos()` los vacía (para tests). `AvisosTienda` los pinta en un contenedor fijo con `role="status"` y `aria-live="polite"`, dentro de `LayoutTienda` (también en checkout): arriba a la derecha bajo la cabecera en escritorio y abajo a todo el ancho en pantallas de 860 px o menos. Cada aviso tiene un botón «×» con `aria-label` «Cerrar aviso» y, si tiene `accion`, un `BotonTienda` `enlace` que la ejecuta y cierra el aviso. El de error usa el color `error`. Con `prefers-reduced-motion` no hay animación.
+<!-- [tienda-avisos-01] [cambiada] -->
+`comun/avisos_store.ts` es el almacén de avisos efímeros (`useSyncExternalStore`, solo notifica si algo cambia). `mostrarAviso({texto, tipo: "ok" | "error", accion?: {texto, onClick}})` añade un aviso con `id` y lo devuelve; `cerrarAviso(id)` lo quita; `useAvisos()` los lee; `reiniciarAvisos()` los vacía (para tests). `AvisosTienda` los pinta en un contenedor con `role="status"` y `aria-live="polite"`. Fuera del checkout va dentro de la fila de la `CabeceraTienda`: en escritorio sale justo debajo del icono del carrito, alineado a la derecha y con una flecha que lo señala, y acompaña a la cabecera al hacer scroll. En el checkout lo monta `LayoutTienda`, fijo arriba a la derecha. En pantallas de 860 px o menos sale abajo a todo el ancho. Cada aviso tiene un botón «×» con `aria-label` «Cerrar aviso» y, si tiene `accion`, un `BotonTienda` `enlace` que la ejecuta y cierra el aviso. El de error usa el color `error`. Con `prefers-reduced-motion` no hay animación.
+<!-- antes: contenedor fijo dentro de `LayoutTienda`, arriba a la derecha bajo la cabecera en escritorio -->
 
-<!-- [tienda-avisos-02] [nueva] -->
+<!-- [tienda-avisos-02] [x] -->
 Cada aviso se cierra solo a los 3000 ms. `pausarAviso(id)` detiene la cuenta y `reanudarAviso(id)` la reinicia; `AvisosTienda` las llama al entrar y salir el ratón del aviso.
 
-<!-- [tienda-avisos-03] [nueva] -->
+<!-- [tienda-avisos-03] [x] -->
 Como mucho hay 3 avisos visibles: al mostrar uno más, sale el más antiguo.
 
 ### Cabecera
 
-<!-- [tienda-cabecera-01] [x] -->
-`CabeceraTienda` se queda fija arriba al hacer scroll. Tiene una fila con el logo, el buscador y las acciones, y debajo el menú de categorías.
+<!-- [tienda-cabecera-01] [cambiada] -->
+`CabeceraTienda` se queda fija arriba al hacer scroll y ocupa todo el ancho de la ventana, con margen lateral de 24 px (16 px en pantallas de 860 px o menos), sin limitarse a `--tienda-ancho-max`. Tiene una fila con el logo a la izquierda y, a la derecha, el botón de búsqueda y las acciones; debajo, el menú de categorías.
+<!-- antes: fila con el logo, el buscador y las acciones, centrada con el ancho máximo -->
 
 <!-- [tienda-cabecera-02] [x] -->
 `FactoryTiendaOnline` tiene los huecos `cabecera_logo`, `cabecera_buscador`, `cabecera_acciones`, `menu_categorias`, `layout_aviso` y `layout_pie`, todos `null` por defecto. Con `null` se usa el componente base, y una app cliente puede sustituir cualquiera sin rehacer la cabecera.
 
 <!-- [tienda-cabecera-03] [x] -->
 El logo base es el nombre del website del storeview activo, con la fuente de títulos, y enlaza a `/`.
+
+<!-- [tienda-cabecera-07] [nueva] -->
+La búsqueda empieza como un botón con el icono `buscar` y la etiqueta «Buscar» (`aria-expanded`). Al pulsarlo se abre una fila bajo la de la cabecera con el buscador (`cabecera_buscador`) y el foco en el campo; el botón pasa a icono `cerrar` con la etiqueta «Cerrar búsqueda». Se cierra con el botón, con Escape (el foco vuelve al botón) o al cambiar de ruta.
 
 <!-- [tienda-cabecera-04] [x] -->
 El buscador base es un campo de búsqueda con el texto de ayuda «Buscar productos» y la etiqueta accesible «Buscar productos».
@@ -226,10 +234,11 @@ El buscador base es un campo de búsqueda con el texto de ayuda «Buscar product
 <!-- [tienda-cabecera-05] [x] -->
 El menú de categorías base enlaza a `/categoria/<slug>` cada categoría de primer nivel del árbol (`getCategorias`), en una sola línea. Marca con `aria-current` la de la ruta actual. Mientras no haya mega menú, las subcategorías no se muestran.
 
-<!-- [tienda-cabecera-06] [x] -->
+<!-- [tienda-cabecera-06] [cambiada] -->
 En pantallas de 860 px de ancho o menos:
-- la primera fila lleva el botón de menú (icono `menu`, etiqueta «Abrir menú»), el logo y las acciones;
-- el buscador pasa a una segunda fila a todo el ancho;
+- la primera fila lleva el botón de menú (icono `menu`, etiqueta «Abrir menú»), el logo, el botón de búsqueda y las acciones;
+- el buscador solo aparece al pulsar el botón de búsqueda (`tienda-cabecera-07`);
+<!-- antes: el buscador pasaba a una segunda fila a todo el ancho, siempre visible -->
 - la barra de categorías se oculta.
 
 Mientras no haya cajón de menú, el botón de menú lleva a `/catalogo`.

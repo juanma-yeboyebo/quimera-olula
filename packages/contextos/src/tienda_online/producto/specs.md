@@ -70,8 +70,8 @@ El selector de cantidad empieza en 1 y no admite valores menores que 1. Si el pr
 La compra se hace con `SelectorCantidad` (mínimo 1 y, con control de stock, como máximo `cantidadDisponible`) y un `BotonTienda` `principal` «Añadir al carrito», en la misma fila. Si el producto no está disponible, el botón está deshabilitado y su texto es «Agotado».
 
 <!-- [producto-anadir-03] [cambiada] -->
-<!-- antes: [LISTO] añadir → AÑADIENDO → LISTO (asegura el carrito con `asegurarCarrito()`, que lo crea si no existe; envía `POST …/carrito/<token>/linea` con `{articulo_id: referencia, cantidad}`; llama a `recargarCarrito()` para actualizar el contador de la cabecera, abre el cajón del carrito y muestra «Añadido al carrito» con enlace a `/carrito`) -->
-[LISTO] añadir → AÑADIENDO → LISTO (asegura el carrito con `asegurarCarrito()`, que lo crea si no existe; envía `POST …/carrito/<token>/linea` con `{articulo_id: referencia, cantidad}`; llama a `recargarCarrito()` para actualizar el contador de la cabecera, NO abre el cajón y muestra el aviso efímero «<descripción> añadido al carrito» con la acción «Ver carrito», que abre el cajón; el mensaje «Añadido al carrito» de la ficha se mantiene)
+[LISTO] añadir → AÑADIENDO → LISTO (asegura el carrito con `asegurarCarrito()`, que lo crea si no existe; envía `POST …/carrito/<token>/linea` con `{articulo_id: referencia, cantidad}`; llama a `recargarCarrito()` para actualizar el contador de la cabecera, NO abre el cajón y muestra el aviso efímero «<descripción> añadido al carrito», sin acciones; el mensaje «Añadido al carrito» de la ficha se mantiene)
+<!-- antes: el aviso llevaba la acción «Ver carrito», que abría el cajón -->
 
 <!-- [producto-anadir-04] [x] -->
 [AÑADIENDO] error 400 → LISTO (muestra el texto del backend, p. ej. stock insuficiente con las unidades disponibles; la cantidad no cambia)

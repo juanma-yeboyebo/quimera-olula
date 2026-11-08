@@ -61,7 +61,7 @@ export const LayoutTienda = () => {
                 </main>
                 {!checkout && <Pie />}
                 {!checkout && <CajonCarrito />}
-                <AvisosTienda />
+                {checkout && <AvisosTienda />}
             </div>
             {error && <DialogoErrorTienda error={error} onCerrar={() => setError(null)} />}
         </ContextoError.Provider>

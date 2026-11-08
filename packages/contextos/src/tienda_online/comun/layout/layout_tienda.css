@@ -25,4 +25,12 @@
         margin-inline: auto;
         padding-inline: var(--tienda-gutter);
     }
+
+    .contenedor-tienda-ancho {
+        padding-inline: var(--tienda-gutter);
+
+        @media (min-width: 861px) {
+            padding-inline: 24px;
+        }
+    }
 }

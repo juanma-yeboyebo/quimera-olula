@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useLocation } from "react-router";
+import { AvisosTienda } from "../componentes/avisos_tienda.tsx";
 import { BotonIcono } from "../componentes/boton_icono.tsx";
 import { AccionesCabeceraTienda } from "../componentes/acciones_cabecera_tienda.tsx";
 import { ContextoMenuMovil } from "./contexto_menu_movil.ts";
@@ -22,6 +24,23 @@ export const CabeceraTienda = () => {
         botonMenu.current?.querySelector("button")?.focus();
     }, []);
     const cabecera = useRef<HTMLElement>(null);
+    const [buscando, setBuscando] = useState(false);
+    const busqueda = useRef<HTMLDivElement>(null);
+    const botonBuscar = useRef<HTMLDivElement>(null);
+    const { pathname, search } = useLocation();
+
+    useEffect(() => {
+        setBuscando(false);
+    }, [pathname, search]);
+
+    useEffect(() => {
+        if (buscando) busqueda.current?.querySelector("input")?.focus();
+    }, [buscando]);
+
+    const cerrarBusqueda = () => {
+        setBuscando(false);
+        botonBuscar.current?.querySelector("button")?.focus();
+    };
 
     useEffect(() => {
         const el = cabecera.current;
@@ -49,13 +68,30 @@ export const CabeceraTienda = () => {
                 <div className="cabecera-tienda-logo">
                     <Logo />
                 </div>
-                <div className="cabecera-tienda-buscador">
-                    <Buscador />
-                </div>
                 <div className="cabecera-tienda-acciones">
+                    <div ref={botonBuscar}>
+                        <BotonIcono
+                            icono={buscando ? "cerrar" : "buscar"}
+                            etiqueta={buscando ? "Cerrar búsqueda" : "Buscar"}
+                            expandido={buscando}
+                            onClick={() => (buscando ? cerrarBusqueda() : setBuscando(true))}
+                        />
+                    </div>
                     <Acciones />
                 </div>
+                <AvisosTienda />
             </div>
+            {buscando && (
+                <div
+                    className="cabecera-tienda-buscador"
+                    ref={busqueda}
+                    onKeyDown={(e) => {
+                        if (e.key === "Escape") cerrarBusqueda();
+                    }}
+                >
+                    <Buscador />
+                </div>
+            )}
             <div className="cabecera-tienda-categorias">
                 <div className="cabecera-tienda-contenedor">
                     <Menu />

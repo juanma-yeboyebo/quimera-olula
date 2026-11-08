@@ -122,7 +122,7 @@ const ContenidoInicio = () => {
     return (
         <div className="InicioTienda">
             <Portada />
-            <div className="inicio-contenedor contenedor-tienda">
+            <div className="inicio-contenedor contenedor-tienda-ancho">
                 <Categorias />
                 <Destacados />
             </div>
