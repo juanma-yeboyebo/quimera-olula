@@ -26,7 +26,7 @@ const ContenidoCarrito = () => {
     if (!carrito || estaVacio(carrito))
         return (
             <div className="CarritoTienda">
-                <div className="carrito-contenedor">
+                <div className="carrito-contenedor contenedor-tienda">
                     <h1>Carrito</h1>
                     {error}
                     <p>Tu carrito está vacío</p>
@@ -37,7 +37,7 @@ const ContenidoCarrito = () => {
 
     return (
         <div className="CarritoTienda">
-            <div className="carrito-contenedor">
+            <div className="carrito-contenedor contenedor-tienda">
                 <h1>Carrito</h1>
                 {hayPagoIniciado(carrito) && (
                     <p role="status" className="carrito-aviso">

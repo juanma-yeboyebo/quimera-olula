@@ -3,9 +3,8 @@
         display: grid;
         grid-template-columns: 220px minmax(0, 1fr);
         gap: var(--tienda-espacio-8);
-        max-width: var(--tienda-ancho-max);
-        margin: 0 auto;
-        padding: var(--tienda-espacio-6) 24px;
+        padding-block: var(--tienda-espacio-6);
+        padding-inline: 24px;
         font-family: var(--tienda-fuente-texto);
         color: var(--tienda-color-texto);
 

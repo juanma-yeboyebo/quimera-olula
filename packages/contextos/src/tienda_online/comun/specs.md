@@ -29,6 +29,9 @@ Si el storeview no existe (404), la tienda muestra «Tienda no disponible» y no
 <!-- [tienda-storeview-04] [x] -->
 Todas las llamadas REST de la tienda añaden la cabecera `X-Store-View` con el código del storeview activo. Las llamadas de catálogo y ficha añaden además `X-Carrito-Token` cuando hay un token guardado (así el backend aplica el precio del cliente asociado al carrito).
 
+<!-- [tienda-storeview-05] [nueva] -->
+El storeview se pide al servidor una sola vez por código: `cargarStoreView(codigo)` en `comun/usar_storeview.ts` guarda el resultado y comparte la petición en curso entre todos los componentes que lo piden a la vez. Si la petición falla no se guarda, y la siguiente vuelve a intentarlo. Un componente que se monta con el storeview ya cargado lo tiene desde el primer render, sin pasar por «Cargando...». `reiniciarStoreViews()` vacía la caché (para tests).
+
 ### Almacén del carrito
 
 <!-- [tienda-carrito_store-01] [x] -->
@@ -189,6 +192,12 @@ El pie base (`PieTienda`, hueco `layout_pie`) muestra:
 - enlaces a las categorías de primer nivel (6 como máximo);
 - enlaces a «Mi cuenta» y «Carrito»;
 - «© <año> <nombre del website>».
+
+<!-- [tienda-layout-06] [nueva] -->
+Las páginas usan la clase común `.contenedor-tienda` (`comun/layout/layout_tienda.css`) para centrar su contenido con el ancho máximo `--tienda-ancho-max` y el margen lateral `--tienda-gutter`.
+
+<!-- [tienda-layout-07] [nueva] -->
+`CabeceraTienda` mide su altura con un `ResizeObserver` y la publica en `--tienda-alto-cabecera` en `document.documentElement`. Los bloques fijos de la ficha, el carrito y el checkout la suman a su `top`.
 
 ### Cabecera
 

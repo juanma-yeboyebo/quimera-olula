@@ -7,9 +7,7 @@
             display: flex;
             flex-direction: column;
             gap: var(--tienda-espacio-4);
-            max-width: var(--tienda-ancho-max);
-            margin: 0 auto;
-            padding: 16px 16px var(--tienda-espacio-8);
+            padding-block: 16px var(--tienda-espacio-8);
         }
 
         h1 {
@@ -49,7 +47,7 @@
 
         .carrito-resumen {
             position: sticky;
-            top: var(--tienda-espacio-8);
+            top: calc(var(--tienda-alto-cabecera, 0px) + var(--tienda-espacio-8));
             display: flex;
             flex-direction: column;
             gap: var(--tienda-espacio-4);

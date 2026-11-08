@@ -52,7 +52,7 @@ const ContenidoOk = ({ codigo }: { codigo: string }) => {
 
     if (!token)
         return (
-            <div className="PagoOk">
+            <div className="PagoOk contenedor-tienda">
                 <div className="pago-tarjeta">
                     <h1>No hay ningún pago en curso</h1>
                     <BotonTienda a="/catalogo">Ir al catálogo</BotonTienda>
@@ -61,7 +61,7 @@ const ContenidoOk = ({ codigo }: { codigo: string }) => {
         );
 
     return (
-        <div className="PagoOk">
+        <div className="PagoOk contenedor-tienda">
             <div className="pago-tarjeta">
                 {consulta ? (
                     <Mensaje consulta={consulta} />

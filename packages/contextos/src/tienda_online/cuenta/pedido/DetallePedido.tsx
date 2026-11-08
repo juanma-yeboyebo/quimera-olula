@@ -20,7 +20,7 @@ const ContenidoPedido = ({ idioma }: { idioma: string }) => {
     if (estado === "CARGANDO")
         return (
             <div className="CuentaTienda">
-                <div className="cuenta-contenedor">
+                <div className="cuenta-contenedor contenedor-tienda">
                     <p>Cargando...</p>
                 </div>
             </div>
@@ -29,7 +29,7 @@ const ContenidoPedido = ({ idioma }: { idioma: string }) => {
     if (estado === "NO_ENCONTRADO")
         return (
             <div className="CuentaTienda">
-                <div className="cuenta-contenedor">
+                <div className="cuenta-contenedor contenedor-tienda">
                     <div className="cuenta-tarjeta">
                         <p>Pedido no encontrado</p>
                         <Link to="/mi-cuenta">Volver a mi cuenta</Link>
@@ -41,7 +41,7 @@ const ContenidoPedido = ({ idioma }: { idioma: string }) => {
     if (estado === "ERROR" || !pedido)
         return (
             <div className="CuentaTienda">
-                <div className="cuenta-contenedor">
+                <div className="cuenta-contenedor contenedor-tienda">
                     <div className="cuenta-tarjeta">
                         <p role="alert" className="cuenta-error">
                             No se ha podido cargar el pedido
@@ -56,7 +56,7 @@ const ContenidoPedido = ({ idioma }: { idioma: string }) => {
 
     return (
         <div className="CuentaTienda">
-            <div className="cuenta-contenedor">
+            <div className="cuenta-contenedor contenedor-tienda">
                 <Link to="/mi-cuenta" className="cuenta-volver">
                     Volver a mi cuenta
                 </Link>

@@ -84,7 +84,7 @@ const ContenidoCatalogo = () => {
     const cargando = estado === "CARGANDO";
 
     return (
-        <div className="CatalogoTienda">
+        <div className="CatalogoTienda contenedor-tienda">
             <aside aria-label="Categorías">
                 <h2>Categorías</h2>
                 <ul>

@@ -36,7 +36,7 @@ export const PaginaEstilos = () => {
     const [campo, setCampo] = useState("");
 
     return (
-        <div className="pagina-estilos">
+        <div className="pagina-estilos contenedor-tienda">
             <h1>Estilos</h1>
 
             <section>

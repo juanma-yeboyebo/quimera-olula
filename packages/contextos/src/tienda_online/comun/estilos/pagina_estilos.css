@@ -3,9 +3,7 @@
         display: flex;
         flex-direction: column;
         gap: var(--tienda-espacio-6);
-        max-width: var(--tienda-ancho-max);
-        margin: 0 auto;
-        padding: var(--tienda-espacio-6) 16px;
+        padding-block: var(--tienda-espacio-6);
         color: var(--tienda-color-texto);
 
         h1,

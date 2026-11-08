@@ -32,6 +32,7 @@
         --tienda-espacio-8: 2rem;
         --tienda-espacio-seccion: clamp(2.5rem, 6vw, 4.5rem);
         --tienda-ancho-max: 1240px;
+        --tienda-gutter: 16px;
 
         --tienda-radio-control: 6px;
         --tienda-radio-tarjeta: 4px;

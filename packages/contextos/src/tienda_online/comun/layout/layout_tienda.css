@@ -19,4 +19,10 @@
         font-size: var(--tienda-texto-xs);
         text-align: center;
     }
+
+    .contenedor-tienda {
+        max-width: var(--tienda-ancho-max);
+        margin-inline: auto;
+        padding-inline: var(--tienda-gutter);
+    }
 }

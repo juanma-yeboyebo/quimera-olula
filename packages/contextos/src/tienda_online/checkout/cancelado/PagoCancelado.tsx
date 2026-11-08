@@ -16,7 +16,7 @@ const ContenidoCancelado = ({ codigo }: { codigo: string }) => {
 
     if (resultado === null)
         return (
-            <div className="PagoCancelado">
+            <div className="PagoCancelado contenedor-tienda">
                 <div className="pago-tarjeta">
                     <p role="status">Cancelando el pago…</p>
                 </div>
@@ -24,7 +24,7 @@ const ContenidoCancelado = ({ codigo }: { codigo: string }) => {
         );
 
     return (
-        <div className="PagoCancelado">
+        <div className="PagoCancelado contenedor-tienda">
             <div className="pago-tarjeta">
                 {resultado ? (
                     <>

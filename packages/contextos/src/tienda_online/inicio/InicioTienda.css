@@ -55,10 +55,6 @@
         }
 
         .inicio-contenedor {
-            max-width: var(--tienda-ancho-max);
-            margin: 0 auto;
-            padding-inline: 16px;
-
             @media (min-width: 861px) {
                 padding-inline: 24px;
             }

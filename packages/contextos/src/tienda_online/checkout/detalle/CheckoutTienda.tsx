@@ -131,7 +131,7 @@ const FormularioCheckout = ({ idioma }: { idioma: string }) => {
     if (editando)
         return (
             <div className="CheckoutTienda">
-                <div className="checkout-contenedor">
+                <div className="checkout-contenedor contenedor-tienda">
                     <div className="checkout-rejilla">
                         <form
                             noValidate
@@ -224,7 +224,7 @@ const FormularioCheckout = ({ idioma }: { idioma: string }) => {
 
     return (
         <div className="CheckoutTienda">
-            <div className="checkout-contenedor">
+            <div className="checkout-contenedor contenedor-tienda">
                 <div className="checkout-rejilla">
                     <div className="checkout-revision">
                         <h1>Revisa tu pedido</h1>

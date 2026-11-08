@@ -28,7 +28,7 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
     if (estado === "CARGANDO")
         return (
             <div className="CuentaTienda">
-                <div className="cuenta-contenedor">
+                <div className="cuenta-contenedor contenedor-tienda">
                     <p>Cargando...</p>
                 </div>
             </div>
@@ -37,7 +37,7 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
     if (estado === "SIN_CUENTA")
         return (
             <div className="CuentaTienda">
-                <div className="cuenta-contenedor">
+                <div className="cuenta-contenedor contenedor-tienda">
                     <div className="cuenta-tarjeta">
                         <p>Tu usuario no tiene cuenta en esta tienda</p>
                         <div className="cuenta-botones">{cerrarSesion}</div>
@@ -49,7 +49,7 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
     if (estado === "ERROR" || !cuenta)
         return (
             <div className="CuentaTienda">
-                <div className="cuenta-contenedor">
+                <div className="cuenta-contenedor contenedor-tienda">
                     <div className="cuenta-tarjeta">
                         <p role="alert" className="cuenta-error">
                             No se ha podido cargar tu cuenta
@@ -67,7 +67,7 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
 
     return (
         <div className="CuentaTienda">
-            <div className="cuenta-contenedor">
+            <div className="cuenta-contenedor contenedor-tienda">
                 <h1>Mi cuenta</h1>
                 <section className="cuenta-tarjeta">
                     <h2>Datos</h2>

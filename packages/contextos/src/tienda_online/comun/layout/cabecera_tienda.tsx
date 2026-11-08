@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BotonIcono } from "../componentes/boton_icono.tsx";
 import { AccionesCabeceraTienda } from "../componentes/acciones_cabecera_tienda.tsx";
 import { ContextoMenuMovil } from "./contexto_menu_movil.ts";
@@ -21,11 +21,27 @@ export const CabeceraTienda = () => {
         setAbierto(false);
         botonMenu.current?.querySelector("button")?.focus();
     }, []);
+    const cabecera = useRef<HTMLElement>(null);
+
+    useEffect(() => {
+        const el = cabecera.current;
+        if (!el) return;
+        const raiz = document.documentElement;
+        const medir = () => raiz.style.setProperty("--tienda-alto-cabecera", `${el.offsetHeight}px`);
+        medir();
+        const observador = new ResizeObserver(medir);
+        observador.observe(el);
+        return () => {
+            observador.disconnect();
+            raiz.style.removeProperty("--tienda-alto-cabecera");
+        };
+    }, []);
+
     const menuMovil = useMemo(() => ({ abierto, abrir, cerrar }), [abierto, abrir, cerrar]);
 
     return (
         <ContextoMenuMovil.Provider value={menuMovil}>
-        <header className="cabecera-tienda">
+        <header className="cabecera-tienda" ref={cabecera}>
             <div className="cabecera-tienda-fila">
                 <div className="cabecera-tienda-menu" ref={botonMenu}>
                     <BotonIcono icono="menu" etiqueta="Abrir menú" onClick={abrir} />

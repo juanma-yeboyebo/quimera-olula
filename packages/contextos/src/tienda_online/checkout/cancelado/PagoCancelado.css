@@ -1,8 +1,6 @@
 @layer tienda.paginas {
     .PagoCancelado {
-        max-width: var(--tienda-ancho-max);
-        margin: 0 auto;
-        padding: var(--tienda-espacio-8) 16px;
+        padding-block: var(--tienda-espacio-8);
         font-family: var(--tienda-fuente-texto);
         color: var(--tienda-color-texto);
 

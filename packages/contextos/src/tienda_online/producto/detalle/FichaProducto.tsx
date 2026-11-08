@@ -144,7 +144,7 @@ const ContenidoFicha = () => {
 
     return (
         <div className="FichaProducto">
-            <div className="ficha-contenedor">
+            <div className="ficha-contenedor contenedor-tienda">
                 <Migas ficha={ficha} />
                 <div className="ficha-rejilla">
                     <Galeria key={ficha.referencia} ficha={ficha} />

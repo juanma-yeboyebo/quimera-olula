@@ -27,7 +27,7 @@ const FormularioLogin = () => {
 
     return (
         <div className="CuentaTienda">
-            <div className="cuenta-contenedor">
+            <div className="cuenta-contenedor contenedor-tienda">
                 <form
                     className="cuenta-tarjeta cuenta-estrecha"
                     noValidate
