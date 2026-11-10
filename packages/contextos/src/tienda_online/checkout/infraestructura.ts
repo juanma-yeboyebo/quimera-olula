@@ -26,6 +26,8 @@ export type DatosCheckoutApi = {
     telefono: string | null;
     direccion_facturacion: DireccionCheckoutApi;
     direccion_envio: DireccionCheckoutApi | null;
+    id_forma_pago: number | null;
+    id_forma_envio: number | null;
 };
 
 const direccionAApi = (d: DireccionCheckout): DireccionCheckoutApi => ({
@@ -47,6 +49,8 @@ export const datosCheckoutAApi = (d: DatosCheckout): DatosCheckoutApi => ({
     telefono: aNulo(d.telefono),
     direccion_facturacion: direccionAApi(d.direccionFacturacion),
     direccion_envio: d.envioDistinto ? direccionAApi(d.direccionEnvio) : null,
+    id_forma_pago: d.idFormaPago,
+    id_forma_envio: d.idFormaEnvio,
 });
 
 const cabeceras = () => cabecerasTienda(codigoStoreViewActivo() ?? "");
@@ -78,6 +82,15 @@ export const postCancelarPago = async (token: string): Promise<void> => {
         `${urls.CARRITO}/${token}/pago/cancelar`,
         {},
         "Error al cancelar el pago",
+        cabeceras(),
+    );
+};
+
+export const postConfirmarPedido = async (token: string): Promise<void> => {
+    await RestAPI.post(
+        `${urls.CARRITO}/${token}/confirmar`,
+        {},
+        "Error al confirmar el pedido",
         cabeceras(),
     );
 };

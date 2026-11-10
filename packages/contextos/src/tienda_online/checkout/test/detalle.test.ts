@@ -4,6 +4,7 @@ import { ContextoCheckout } from "#/tienda_online/checkout/detalle/diseño.ts";
 
 const patchDatosCheckout = vi.fn();
 const postIniciarPago = vi.fn();
+const postConfirmarPedido = vi.fn();
 const obtenerToken = vi.fn();
 const recargarCarrito = vi.fn();
 const olvidarCarrito = vi.fn();
@@ -14,6 +15,7 @@ vi.mock("#/tienda_online/checkout/infraestructura.ts", async (importOriginal) =>
     ...(await importOriginal<object>()),
     patchDatosCheckout: (token: string, body: unknown) => patchDatosCheckout(token, body),
     postIniciarPago: (token: string) => postIniciarPago(token),
+    postConfirmarPedido: (token: string) => postConfirmarPedido(token),
 }));
 
 vi.mock("#/tienda_online/comun/carrito_store.ts", () => ({
@@ -30,7 +32,7 @@ vi.mock("#/tienda_online/checkout/navegacion.ts", () => ({
     redirigirA: (url: string) => redirigirA(url),
 }));
 
-const { guardarDatos, iniciarPago } = await import("#/tienda_online/checkout/detalle/detalle.ts");
+const { guardarDatos, iniciarPago, confirmarPedido } = await import("#/tienda_online/checkout/detalle/detalle.ts");
 
 const direccion: DireccionCheckout = {
     nombreVia: "Mayor",
@@ -52,6 +54,8 @@ const datos: DatosCheckout = {
     direccionFacturacion: direccion,
     envioDistinto: false,
     direccionEnvio: { ...direccion, nombreVia: "", codPostal: "", ciudad: "", paisId: "" },
+    idFormaEnvio: 1,
+    idFormaPago: 11,
 };
 
 const contexto = (estado: ContextoCheckout["estado"], d: DatosCheckout = datos): ContextoCheckout => ({
@@ -73,6 +77,7 @@ const errorApi = (estado: number, descripcion = "texto del backend") => ({
 beforeEach(() => {
     patchDatosCheckout.mockReset();
     postIniciarPago.mockReset();
+    postConfirmarPedido.mockReset();
     obtenerToken.mockReset();
     recargarCarrito.mockReset();
     olvidarCarrito.mockReset();
@@ -232,6 +237,68 @@ describe("[checkout-maquina-06] [PAGANDO] otro error → REVISION", () => {
         postIniciarPago.mockRejectedValue(errorApi(estado));
 
         const r = ctxDe(await iniciarPago(contexto("PAGANDO")));
+
+        expect(olvidarCarrito).toHaveBeenCalledOnce();
+        expect(r.estado).toBe("REVISION");
+        expect(r.error).toBe(MENSAJE);
+    });
+});
+
+describe("[checkout-maquina-08] [REVISION] confirmar → CONFIRMANDO → CONFIRMADO_OK", () => {
+    test("checkout_maquina_08_envia_el_post_de_confirmar_con_el_token_del_almacen", async () => {
+        postConfirmarPedido.mockResolvedValue(undefined);
+
+        await confirmarPedido(contexto("CONFIRMANDO"));
+
+        expect(postConfirmarPedido).toHaveBeenCalledWith("tok-1");
+        expect(postIniciarPago).not.toHaveBeenCalled();
+    });
+
+    test("checkout_maquina_08_guarda_el_token_y_navega_a_checkout_ok", async () => {
+        postConfirmarPedido.mockResolvedValue(undefined);
+        let guardadoAlNavegar: string | null = null;
+        redirigirA.mockImplementation(() => {
+            guardadoAlNavegar = sessionStorage.getItem("tienda_online.pago_en_curso.sanhigia_es");
+        });
+
+        const r = ctxDe(await confirmarPedido(contexto("CONFIRMANDO")));
+
+        expect(guardadoAlNavegar).toBe("tok-1");
+        expect(redirigirA).toHaveBeenCalledExactlyOnceWith("/checkout/ok");
+        expect(r.estado).toBe("CONFIRMADO_OK");
+        expect(r.error).toBeNull();
+    });
+});
+
+describe("[checkout-maquina-09] [CONFIRMANDO] error 400 → DATOS y otro error → REVISION", () => {
+    const MENSAJE = "No se ha podido confirmar el pedido. Inténtalo de nuevo.";
+
+    test("checkout_maquina_09_400_vuelve_a_datos_con_el_texto_del_backend_y_recarga", async () => {
+        postConfirmarPedido.mockRejectedValue(errorApi(400, "Stock insuficiente: REF1"));
+
+        const r = ctxDe(await confirmarPedido(contexto("CONFIRMANDO")));
+
+        expect(r.estado).toBe("DATOS");
+        expect(r.error).toBe("Stock insuficiente: REF1");
+        expect(recargarCarrito).toHaveBeenCalledOnce();
+        expect(redirigirA).not.toHaveBeenCalled();
+        expect(sessionStorage.getItem("tienda_online.pago_en_curso.sanhigia_es")).toBeNull();
+    });
+
+    test("checkout_maquina_09_500_vuelve_a_revision_con_mensaje_generico", async () => {
+        postConfirmarPedido.mockRejectedValue(errorApi(500));
+
+        const r = ctxDe(await confirmarPedido(contexto("CONFIRMANDO")));
+
+        expect(r.estado).toBe("REVISION");
+        expect(r.error).toBe(MENSAJE);
+        expect(olvidarCarrito).not.toHaveBeenCalled();
+    });
+
+    test.each([404, 409])("checkout_maquina_09_%i_ademas_olvida_el_carrito", async (estado) => {
+        postConfirmarPedido.mockRejectedValue(errorApi(estado));
+
+        const r = ctxDe(await confirmarPedido(contexto("CONFIRMANDO")));
 
         expect(olvidarCarrito).toHaveBeenCalledOnce();
         expect(r.estado).toBe("REVISION");

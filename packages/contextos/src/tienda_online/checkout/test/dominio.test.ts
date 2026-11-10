@@ -1,9 +1,14 @@
 import { describe, expect, test } from "vitest";
-import { CarritoTienda } from "#/tienda_online/comun/diseño.ts";
+import {
+    CarritoTienda,
+    FormaEnvioTienda,
+    FormaPagoTienda,
+} from "#/tienda_online/comun/diseño.ts";
 import { DatosCheckout, DireccionCheckout } from "#/tienda_online/checkout/diseño.ts";
 import {
     clavePagoEnCurso,
     datosCheckoutIniciales,
+    elegirFormaEnvio,
     erroresCheckout,
     resultadoPago,
 } from "#/tienda_online/checkout/dominio.ts";
@@ -40,6 +45,8 @@ const datosValidos: DatosCheckout = {
     direccionFacturacion: direccionValida,
     envioDistinto: false,
     direccionEnvio: direccionVacia,
+    idFormaEnvio: null,
+    idFormaPago: null,
 };
 
 const carrito = (datosCheckout: Record<string, unknown> | null): CarritoTienda => ({
@@ -217,6 +224,7 @@ describe("[checkout-datos-03] Validación en el cliente con erroresCheckout", ()
 describe("[checkout-ok-02] resultadoPago traduce el estado del carrito", () => {
     test.each([
         ["PAGADO", "CONFIRMADO"],
+        ["CONFIRMADO", "CONFIRMADO"],
         ["CONVERTIDO", "CONFIRMADO"],
         ["ERROR_CONVERSION", "INCIDENCIA"],
         ["ABIERTO", "PENDIENTE"],
@@ -233,5 +241,80 @@ describe("[checkout-maquina-04] [checkout-ok-01] Clave de sessionStorage del pag
 
     test("checkout_ok_01_claves_distintas_por_storeview", () => {
         expect(clavePagoEnCurso("a")).not.toBe(clavePagoEnCurso("b"));
+    });
+});
+
+const formasEnvio: FormaEnvioTienda[] = [
+    { id: 1, codigo: "DOM", nombre: "A domicilio", descripcion: "24-48 h", tipo: "DOMICILIO" },
+    { id: 2, codigo: "REC", nombre: "Recogida en tienda", descripcion: null, tipo: "RECOGIDA" },
+];
+
+const formasPago: FormaPagoTienda[] = [
+    { id: 10, codigo: "TAR", nombre: "Tarjeta", descripcion: null, tipo: "PASARELA" },
+    { id: 11, codigo: "TRF", nombre: "Transferencia", descripcion: "ES00 0000", tipo: "SIN_PASARELA" },
+];
+
+describe("[checkout-datos-05] [checkout-datos-07] Empieza marcada la forma del carrito o la primera", () => {
+    test("checkout_datos_05_sin_forma_en_el_carrito_marca_la_primera", () => {
+        const d = datosCheckoutIniciales(carrito(null), formasEnvio, formasPago);
+
+        expect(d.idFormaEnvio).toBe(1);
+        expect(d.idFormaPago).toBe(10);
+    });
+
+    test("checkout_datos_05_marca_la_forma_del_carrito", () => {
+        const d = datosCheckoutIniciales(
+            {
+                ...carrito(null),
+                formaEnvio: { id: 2, nombre: "Recogida en tienda", tipo: "RECOGIDA" },
+                formaPago: { id: 11, nombre: "Transferencia", tipo: "SIN_PASARELA" },
+            },
+            formasEnvio,
+            formasPago,
+        );
+
+        expect(d.idFormaEnvio).toBe(2);
+        expect(d.idFormaPago).toBe(11);
+    });
+
+    test("checkout_datos_07_sin_formas_en_el_storeview_queda_a_null", () => {
+        const d = datosCheckoutIniciales(null);
+
+        expect(d.idFormaEnvio).toBeNull();
+        expect(d.idFormaPago).toBeNull();
+    });
+});
+
+describe("[checkout-datos-06] Con una forma de envío RECOGIDA no hay dirección de envío", () => {
+    test("checkout_datos_06_elegir_recogida_desmarca_el_envio_distinto", () => {
+        const d = elegirFormaEnvio({ ...datosValidos, envioDistinto: true }, formasEnvio[1]);
+
+        expect(d.idFormaEnvio).toBe(2);
+        expect(d.envioDistinto).toBe(false);
+    });
+
+    test("checkout_datos_06_elegir_domicilio_conserva_el_envio_distinto", () => {
+        const d = elegirFormaEnvio({ ...datosValidos, envioDistinto: true }, formasEnvio[0]);
+
+        expect(d.idFormaEnvio).toBe(1);
+        expect(d.envioDistinto).toBe(true);
+    });
+
+    test("checkout_datos_06_carrito_con_recogida_y_direccion_de_envio_empieza_desmarcado", () => {
+        const d = datosCheckoutIniciales(
+            {
+                ...carrito({
+                    email: "a@b.es",
+                    nombre: "A",
+                    direccion_facturacion: direccionApi,
+                    direccion_envio: direccionApi,
+                }),
+                formaEnvio: { id: 2, nombre: "Recogida en tienda", tipo: "RECOGIDA" },
+            },
+            formasEnvio,
+            formasPago,
+        );
+
+        expect(d.envioDistinto).toBe(false);
     });
 });

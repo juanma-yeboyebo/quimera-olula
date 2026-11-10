@@ -1,4 +1,9 @@
-import { CarritoTienda, EstadoCarrito } from "../comun/diseño.ts";
+import {
+    CarritoTienda,
+    EstadoCarrito,
+    FormaEnvioTienda,
+    FormaPagoTienda,
+} from "../comun/diseño.ts";
 import {
     DatosCheckout,
     DireccionCheckout,
@@ -39,8 +44,29 @@ const direccionDesdeDatos = (valor: unknown): DireccionCheckout => {
     };
 };
 
-export const datosCheckoutIniciales = (carrito: CarritoTienda | null): DatosCheckout => {
+const formaInicial = (idCarrito: number | undefined, formas: { id: number }[]): number | null =>
+    (formas.find((f) => f.id === idCarrito) ?? formas[0])?.id ?? null;
+
+export const esRecogida = (idFormaEnvio: number | null, formas: FormaEnvioTienda[]): boolean =>
+    formas.find((f) => f.id === idFormaEnvio)?.tipo === "RECOGIDA";
+
+export const elegirFormaEnvio = (
+    datos: DatosCheckout,
+    forma: FormaEnvioTienda,
+): DatosCheckout => ({
+    ...datos,
+    idFormaEnvio: forma.id,
+    envioDistinto: forma.tipo === "RECOGIDA" ? false : datos.envioDistinto,
+});
+
+export const datosCheckoutIniciales = (
+    carrito: CarritoTienda | null,
+    formasEnvio: FormaEnvioTienda[] = [],
+    formasPago: FormaPagoTienda[] = [],
+): DatosCheckout => {
     const datos = carrito?.datosCheckout;
+    const idFormaEnvio = formaInicial(carrito?.formaEnvio?.id, formasEnvio);
+    const idFormaPago = formaInicial(carrito?.formaPago?.id, formasPago);
     if (!datos)
         return {
             email: "",
@@ -50,6 +76,8 @@ export const datosCheckoutIniciales = (carrito: CarritoTienda | null): DatosChec
             direccionFacturacion: direccionVacia(),
             envioDistinto: false,
             direccionEnvio: direccionVacia(),
+            idFormaEnvio,
+            idFormaPago,
         };
 
     const envio = datos.direccion_envio;
@@ -59,8 +87,10 @@ export const datosCheckoutIniciales = (carrito: CarritoTienda | null): DatosChec
         idFiscal: textoONulo(datos.id_fiscal),
         telefono: textoONulo(datos.telefono),
         direccionFacturacion: direccionDesdeDatos(datos.direccion_facturacion),
-        envioDistinto: !!envio,
+        envioDistinto: !!envio && !esRecogida(idFormaEnvio, formasEnvio),
         direccionEnvio: envio ? direccionDesdeDatos(envio) : direccionVacia(),
+        idFormaEnvio,
+        idFormaPago,
     };
 };
 
@@ -87,7 +117,8 @@ export const erroresCheckout = (d: DatosCheckout): ErroresCheckout => ({
 });
 
 export const resultadoPago = (estado: EstadoCarrito): ResultadoPago => {
-    if (estado === "PAGADO" || estado === "CONVERTIDO") return "CONFIRMADO";
+    if (estado === "PAGADO" || estado === "CONFIRMADO" || estado === "CONVERTIDO")
+        return "CONFIRMADO";
     if (estado === "ERROR_CONVERSION") return "INCIDENCIA";
     return "PENDIENTE";
 };

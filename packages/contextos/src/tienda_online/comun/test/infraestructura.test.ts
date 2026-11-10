@@ -51,6 +51,8 @@ describe("[tienda-storeview-02] Se carga el storeview y se mapea a StoreView", (
             idioma: "es",
             urlBase: "https://tienda.example",
             website: { id: 1, codigo: "web", nombre: "Web", divisa: "EUR" },
+            formasPago: [],
+            formasEnvio: [],
         });
     });
 

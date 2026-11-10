@@ -18,6 +18,8 @@ export type DatosCheckout = {
     direccionFacturacion: DireccionCheckout;
     envioDistinto: boolean;
     direccionEnvio: DireccionCheckout;
+    idFormaEnvio: number | null;
+    idFormaPago: number | null;
 };
 
 export type ErroresCheckout = Record<string, string>;

@@ -1,13 +1,52 @@
 import { useEffect, useState } from "react";
 import { BotonTienda } from "../../comun/componentes/boton_tienda.tsx";
 import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
+import { FormaPagoTienda } from "../../comun/diseño.ts";
 import { clavePagoEnCurso } from "../dominio.ts";
 import { cerrarPago, consultarPago, ResultadoConsulta } from "./ok.ts";
 import "./PagoOk.css";
 
-const Mensaje = ({ consulta }: { consulta: ResultadoConsulta }) => {
+const MensajePedido = ({
+    consulta,
+    formasPago,
+}: {
+    consulta: ResultadoConsulta;
+    formasPago: FormaPagoTienda[];
+}) => {
+    const { resultado, carrito } = consulta;
+    const descripcion = formasPago.find((f) => f.id === carrito?.formaPago?.id)?.descripcion;
+
+    return (
+        <>
+            {resultado === "INCIDENCIA" ? (
+                <p>
+                    Hemos recibido tu pedido, pero hemos tenido un problema al registrarlo. Lo
+                    revisaremos y te contactaremos por email.
+                </p>
+            ) : carrito?.estado === "CONVERTIDO" ? (
+                <>
+                    <h1>¡Gracias por tu pedido!</h1>
+                    <p>Número de pedido: {String(carrito.documento?.codigo ?? "")}</p>
+                </>
+            ) : (
+                <p>Pedido recibido. Lo estamos preparando.</p>
+            )}
+            {descripcion && <p>{descripcion}</p>}
+        </>
+    );
+};
+
+const Mensaje = ({
+    consulta,
+    formasPago,
+}: {
+    consulta: ResultadoConsulta;
+    formasPago: FormaPagoTienda[];
+}) => {
     const { resultado, carrito } = consulta;
 
+    if (resultado !== "PENDIENTE" && carrito?.formaPago?.tipo === "SIN_PASARELA")
+        return <MensajePedido consulta={consulta} formasPago={formasPago} />;
     if (resultado === "INCIDENCIA")
         return (
             <p>
@@ -31,7 +70,13 @@ const Mensaje = ({ consulta }: { consulta: ResultadoConsulta }) => {
     );
 };
 
-const ContenidoOk = ({ codigo }: { codigo: string }) => {
+const ContenidoOk = ({
+    codigo,
+    formasPago,
+}: {
+    codigo: string;
+    formasPago: FormaPagoTienda[];
+}) => {
     const [token] = useState(() => sessionStorage.getItem(clavePagoEnCurso(codigo)));
     const [consulta, setConsulta] = useState<ResultadoConsulta | null>(null);
 
@@ -64,7 +109,7 @@ const ContenidoOk = ({ codigo }: { codigo: string }) => {
         <div className="PagoOk contenedor-tienda">
             <div className="pago-tarjeta">
                 {consulta ? (
-                    <Mensaje consulta={consulta} />
+                    <Mensaje consulta={consulta} formasPago={formasPago} />
                 ) : (
                     <p role="status">Comprobando tu pago…</p>
                 )}
@@ -79,5 +124,7 @@ const ContenidoOk = ({ codigo }: { codigo: string }) => {
 };
 
 export const PagoOk = () => (
-    <ConStoreView>{(sv) => <ContenidoOk codigo={sv.codigo} />}</ConStoreView>
+    <ConStoreView>
+        {(sv) => <ContenidoOk codigo={sv.codigo} formasPago={sv.formasPago} />}
+    </ConStoreView>
 );

@@ -2,9 +2,14 @@ import { RestAPI } from "@olula/lib/api/rest_api.ts";
 import {
     CarritoTienda,
     EstadoCarrito,
+    FormaCarritoTienda,
+    FormaEnvioTienda,
+    FormaPagoTienda,
     ImagenLineaCarrito,
     LineaCarritoTienda,
     StoreView,
+    TipoFormaEnvio,
+    TipoFormaPago,
     WebsiteTienda,
 } from "./diseño.ts";
 import { codigoStoreViewActivo } from "./storeview.ts";
@@ -18,6 +23,8 @@ export interface StoreViewApi {
     idioma: string;
     url_base: string;
     website: WebsiteTienda;
+    formas_pago?: FormaPagoTienda[];
+    formas_envio?: FormaEnvioTienda[];
 }
 
 export interface LineaCarritoApi {
@@ -45,6 +52,8 @@ export interface CarritoApi {
     datos_checkout: Record<string, unknown> | null;
     lineas: LineaCarritoApi[];
     documento: Record<string, unknown> | null;
+    forma_pago?: FormaCarritoTienda<TipoFormaPago> | null;
+    forma_envio?: FormaCarritoTienda<TipoFormaEnvio> | null;
 }
 
 export const cabecerasTienda = (
@@ -64,6 +73,8 @@ export const storeViewDesdeApi = (s: StoreViewApi): StoreView => ({
     idioma: s.idioma,
     urlBase: s.url_base,
     website: s.website,
+    formasPago: s.formas_pago ?? [],
+    formasEnvio: s.formas_envio ?? [],
 });
 
 const lineaDesdeApi = (l: LineaCarritoApi): LineaCarritoTienda => ({
@@ -91,6 +102,8 @@ export const carritoDesdeApi = (c: CarritoApi): CarritoTienda => ({
     datosCheckout: c.datos_checkout,
     lineas: c.lineas.map(lineaDesdeApi),
     documento: c.documento,
+    formaPago: c.forma_pago ?? null,
+    formaEnvio: c.forma_envio ?? null,
 });
 
 export const getStoreView = async (codigo: string): Promise<StoreView> => {

@@ -1,5 +1,11 @@
 import { Maquina } from "@olula/lib/diseño.ts";
-import { cambiarDatos, guardarDatos, iniciarPago, volverADatos } from "./detalle.ts";
+import {
+    cambiarDatos,
+    confirmarPedido,
+    guardarDatos,
+    iniciarPago,
+    volverADatos,
+} from "./detalle.ts";
 import { ContextoCheckout, EstadoCheckout } from "./diseño.ts";
 
 export const getMaquina: () => Maquina<EstadoCheckout, ContextoCheckout> = () => ({
@@ -11,7 +17,10 @@ export const getMaquina: () => Maquina<EstadoCheckout, ContextoCheckout> = () =>
     REVISION: {
         volver: [volverADatos],
         pagar: ["PAGANDO", iniciarPago],
+        confirmar: ["CONFIRMANDO", confirmarPedido],
     },
     PAGANDO: {},
     REDIRIGIENDO: {},
+    CONFIRMANDO: {},
+    CONFIRMADO_OK: {},
 });

@@ -13,6 +13,8 @@ const storeView = {
     idioma: "es-ES",
     urlBase: "https://tienda.test",
     website: { id: 1, codigo: "web", nombre: "Tienda", divisa: "EUR" },
+    formasPago: [],
+    formasEnvio: [],
 };
 
 const mockGet = vi.mocked(getStoreView);

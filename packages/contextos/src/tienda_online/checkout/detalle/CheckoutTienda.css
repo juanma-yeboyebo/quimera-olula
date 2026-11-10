@@ -72,6 +72,46 @@
             gap: var(--tienda-espacio-2);
         }
 
+        .checkout-forma {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: flex-start;
+            gap: var(--tienda-espacio-3);
+            padding: var(--tienda-espacio-4);
+            border: 1px solid var(--tienda-color-borde);
+            border-radius: var(--tienda-radio-control);
+            background-color: var(--tienda-color-superficie);
+
+            input {
+                margin: 0.2em 0 0;
+                accent-color: var(--tienda-color-accion);
+            }
+        }
+
+        label.checkout-forma {
+            cursor: pointer;
+        }
+
+        .checkout-forma-marcada {
+            border-color: var(--tienda-color-accion);
+        }
+
+        .checkout-forma-texto {
+            display: flex;
+            flex-direction: column;
+            gap: var(--tienda-espacio-1);
+
+            strong {
+                font-weight: 600;
+                color: var(--tienda-color-texto);
+            }
+        }
+
+        .checkout-forma-descripcion {
+            color: var(--tienda-color-texto-suave);
+            font-size: var(--tienda-texto-sm);
+        }
+
         .checkout-resumen {
             position: sticky;
             top: calc(var(--tienda-alto-cabecera, 0px) + var(--tienda-espacio-6));

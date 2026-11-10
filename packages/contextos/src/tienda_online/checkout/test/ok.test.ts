@@ -44,6 +44,7 @@ afterEach(() => {
 describe("[checkout-ok-02] La página lee el carrito hasta verlo PAGADO, CONVERTIDO o ERROR_CONVERSION", () => {
     test.each([
         ["PAGADO", "CONFIRMADO"],
+        ["CONFIRMADO", "CONFIRMADO"],
         ["CONVERTIDO", "CONFIRMADO"],
         ["ERROR_CONVERSION", "INCIDENCIA"],
         ["PAGO_PENDIENTE", "PENDIENTE"],

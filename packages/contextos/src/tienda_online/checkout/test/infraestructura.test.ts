@@ -18,7 +18,7 @@ vi.mock("#/tienda_online/comun/storeview.ts", () => ({
     codigoStoreViewActivo: () => codigoStoreViewActivo(),
 }));
 
-const { datosCheckoutAApi, patchDatosCheckout, postIniciarPago, postCancelarPago } = await import(
+const { datosCheckoutAApi, patchDatosCheckout, postIniciarPago, postCancelarPago, postConfirmarPedido } = await import(
     "#/tienda_online/checkout/infraestructura.ts"
 );
 
@@ -54,6 +54,8 @@ const datosValidos: DatosCheckout = {
     direccionFacturacion: direccionValida,
     envioDistinto: false,
     direccionEnvio: direccionVacia,
+    idFormaEnvio: 1,
+    idFormaPago: 10,
 };
 
 const direccionApi = {
@@ -166,6 +168,36 @@ describe("[checkout-maquina-01] Los datos se envían en snake_case", () => {
             telefono: "600",
             direccion_facturacion: direccionApi,
             direccion_envio: null,
+            id_forma_pago: 10,
+            id_forma_envio: 1,
         });
+    });
+});
+
+describe("[checkout-datos-08] PATCH …/checkout envía también id_forma_pago e id_forma_envio", () => {
+    test("checkout_datos_08_body_con_las_formas", () => {
+        const body = datosCheckoutAApi({ ...datosValidos, idFormaPago: 11, idFormaEnvio: 2 });
+
+        expect(body.id_forma_pago).toBe(11);
+        expect(body.id_forma_envio).toBe(2);
+    });
+});
+
+describe("[checkout-maquina-08] POST de confirmación con X-Store-View", () => {
+    test("checkout_maquina_08_post_a_la_ruta_de_confirmar", async () => {
+        post.mockResolvedValue({});
+
+        await postConfirmarPedido("tok-1");
+
+        expect(post).toHaveBeenCalledOnce();
+        expect(post.mock.calls[0][0]).toBe("/public/tienda_online/carrito/tok-1/confirmar");
+        expect(post.mock.calls[0][3]).toEqual({ "X-Store-View": "sanhigia_es" });
+    });
+
+    test("checkout_maquina_08_propaga_el_rechazo", async () => {
+        const error = { nombre: "Error", descripcion: "x", estado: 409 };
+        post.mockRejectedValue(error);
+
+        await expect(postConfirmarPedido("tok-1")).rejects.toEqual(error);
     });
 });

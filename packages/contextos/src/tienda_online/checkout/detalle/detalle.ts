@@ -3,7 +3,12 @@ import { obtenerToken, olvidarCarrito, recargarCarrito } from "../../comun/carri
 import { codigoStoreViewActivo } from "../../comun/storeview.ts";
 import { DatosCheckout } from "../diseño.ts";
 import { clavePagoEnCurso, erroresCheckout } from "../dominio.ts";
-import { datosCheckoutAApi, patchDatosCheckout, postIniciarPago } from "../infraestructura.ts";
+import {
+    datosCheckoutAApi,
+    patchDatosCheckout,
+    postConfirmarPedido,
+    postIniciarPago,
+} from "../infraestructura.ts";
 import { redirigirA } from "../navegacion.ts";
 import { ContextoCheckout, EstadoCheckout } from "./diseño.ts";
 
@@ -11,6 +16,7 @@ type ProcesarCheckout = ProcesarContexto<EstadoCheckout, ContextoCheckout>;
 
 const NO_DISPONIBLE = "Este carrito ya no está disponible";
 const PAGO_FALLIDO = "No se ha podido iniciar el pago. Inténtalo de nuevo.";
+const CONFIRMACION_FALLIDA = "No se ha podido confirmar el pedido. Inténtalo de nuevo.";
 
 const estadoDe = (e: unknown): number | undefined => (e as { estado?: number })?.estado;
 
@@ -80,4 +86,24 @@ export const iniciarPago: ProcesarCheckout = async (contexto) => {
     sessionStorage.setItem(clavePagoEnCurso(codigoStoreViewActivo() ?? ""), token);
     redirigirA(url);
     return { ...contexto, estado: "REDIRIGIENDO", error: null };
+};
+
+export const confirmarPedido: ProcesarCheckout = async (contexto) => {
+    const token = obtenerToken();
+    if (!token) return { ...contexto, estado: "REVISION", error: CONFIRMACION_FALLIDA };
+
+    try {
+        await postConfirmarPedido(token);
+    } catch (e) {
+        if (estadoDe(e) === 400) {
+            await recargarCarrito().catch(() => undefined);
+            return { ...contexto, estado: "DATOS", error: textoDe(e) };
+        }
+        if (carritoPerdido(e)) olvidarCarrito();
+        return { ...contexto, estado: "REVISION", error: CONFIRMACION_FALLIDA };
+    }
+
+    sessionStorage.setItem(clavePagoEnCurso(codigoStoreViewActivo() ?? ""), token);
+    redirigirA("/checkout/ok");
+    return { ...contexto, estado: "CONFIRMADO_OK", error: null };
 };
