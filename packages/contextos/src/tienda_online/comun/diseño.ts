@@ -77,4 +77,6 @@ export interface CarritoTienda {
     documento: Record<string, unknown> | null;
     formaPago?: FormaCarritoTienda<TipoFormaPago> | null;
     formaEnvio?: FormaCarritoTienda<TipoFormaEnvio> | null;
+    formasPagoDisponibles?: FormaPagoTienda[];
+    formasEnvioDisponibles?: FormaEnvioTienda[];
 }

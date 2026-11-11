@@ -169,12 +169,18 @@ const ResumenCarrito = ({ carrito, idioma }: { carrito: CarritoTienda; idioma: s
 );
 
 const FormularioCheckout = ({ storeView }: { storeView: StoreView }) => {
-    const { idioma, formasEnvio, formasPago } = storeView;
+    const { idioma } = storeView;
     const carrito = useCarritoTienda();
+    const formasEnvio = carrito?.formasEnvioDisponibles ?? [];
+    const formasPago = carrito?.formasPagoDisponibles ?? [];
     const { ctx, emitir } = useMaquina(
         getMaquina,
         contextoCheckoutInicial(
-            datosCheckoutIniciales(obtenerCarrito(), formasEnvio, formasPago),
+            datosCheckoutIniciales(
+                obtenerCarrito(),
+                obtenerCarrito()?.formasEnvioDisponibles,
+                obtenerCarrito()?.formasPagoDisponibles,
+            ),
         ),
     );
     const { estado, datos, errores, error } = ctx;

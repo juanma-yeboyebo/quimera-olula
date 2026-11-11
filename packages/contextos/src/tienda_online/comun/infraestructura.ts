@@ -54,6 +54,8 @@ export interface CarritoApi {
     documento: Record<string, unknown> | null;
     forma_pago?: FormaCarritoTienda<TipoFormaPago> | null;
     forma_envio?: FormaCarritoTienda<TipoFormaEnvio> | null;
+    formas_pago_disponibles?: FormaPagoTienda[];
+    formas_envio_disponibles?: FormaEnvioTienda[];
 }
 
 export const cabecerasTienda = (
@@ -104,6 +106,8 @@ export const carritoDesdeApi = (c: CarritoApi): CarritoTienda => ({
     documento: c.documento,
     formaPago: c.forma_pago ?? null,
     formaEnvio: c.forma_envio ?? null,
+    formasPagoDisponibles: c.formas_pago_disponibles ?? [],
+    formasEnvioDisponibles: c.formas_envio_disponibles ?? [],
 });
 
 export const getStoreView = async (codigo: string): Promise<StoreView> => {

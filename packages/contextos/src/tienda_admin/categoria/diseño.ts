@@ -42,10 +42,10 @@ export interface NodoPlano {
     profundidad: number;
 }
 
-export interface PadreCandidato {
+export type PadreCandidato = {
     valor: string;
     descripcion: string;
-}
+};
 
 export type GetArbolCategorias = (websiteId: number) => Promise<NodoCategoria[]>;
 export type PostCategoria = (

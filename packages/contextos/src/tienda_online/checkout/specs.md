@@ -15,6 +15,7 @@ API del backend (`olula_servidor`, app `tienda_online`). Todas las llamadas env�
 - Dirección: `{nombre_via, tipo_via, numero, otros, cod_postal, ciudad, provincia, pais_id, telefono}`. Para pagar son obligatorios email, nombre y, de la dirección de facturación, `nombre_via`, `cod_postal`, `ciudad` y `pais_id`.
 - Las formas de pago y envío disponibles vienen en el StoreView (`formas_pago` y `formas_envio`: id, código, nombre, descripción y tipo). Tipos de pago: `PASARELA` y `SIN_PASARELA`. Tipos de envío: `DOMICILIO` y `RECOGIDA`.
 - El carrito trae `forma_pago` y `forma_envio` (id, nombre y tipo) o nulo, y un estado nuevo, `CONFIRMADO`.
+- El carrito trae también `formas_pago_disponibles` y `formas_envio_disponibles` (mismos campos que las del StoreView): las que admite ese carrito, que una extensión puede haber filtrado.
 - La pasarela devuelve al comprador a `<url_base>/checkout/ok?sesion=…` o `<url_base>/checkout/cancelado`.
 
 ## Specs
@@ -34,19 +35,19 @@ Validación en el cliente (`MetaModelo` o función pura `erroresCheckout(datos)`
 Sin carrito o con el carrito vacío, `/checkout` redirige a `/carrito`.
 
 <!-- [checkout-datos-05] [nueva] -->
-Un `fieldset` «Envío» lista las formas de envío del StoreView como opciones de radio, con el nombre y, debajo, la descripción. Empieza marcada la del carrito o, si no tiene, la primera.
+Un `fieldset` «Envío» lista las formas de envío disponibles del carrito (`formas_envio_disponibles`) como opciones de radio, con el nombre y, debajo, la descripción. Empieza marcada la del carrito o, si no tiene, la primera.
 
 <!-- [checkout-datos-06] [nueva] -->
 Con una forma de envío de tipo `RECOGIDA` se ocultan la casilla «Enviar a otra dirección» y la dirección de envío, y `direccion_envio` se envía como `null`.
 
 <!-- [checkout-datos-07] [nueva] -->
-Un `fieldset` «Pago» lista las formas de pago del StoreView igual que el de envío. Empieza marcada la del carrito o, si no tiene, la primera.
+Un `fieldset` «Pago» lista las formas de pago disponibles del carrito (`formas_pago_disponibles`) igual que el de envío. Empieza marcada la del carrito o, si no tiene, la primera.
 
 <!-- [checkout-datos-08] [nueva] -->
 `PATCH …/checkout` envía también `id_forma_pago` e `id_forma_envio`.
 
 <!-- [checkout-datos-09] [nueva] -->
-Si el StoreView solo tiene una forma de envío o una de pago, su `fieldset` muestra esa forma como texto, sin radio.
+Si el carrito solo tiene disponible una forma de envío o una de pago, su `fieldset` muestra esa forma como texto, sin radio.
 
 ### Máquina
 

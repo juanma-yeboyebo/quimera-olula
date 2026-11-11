@@ -1,6 +1,6 @@
 import { Maquina } from "@olula/lib/diseño.ts";
 import { publicar } from "@olula/lib/dominio.ts";
-import { cargarContexto, refrescarArticulo, vaciarContexto } from "./detalle.ts";
+import { cargarContexto, refrescarArticulo } from "./detalle.ts";
 import { ContextoDetalleArticulo, EstadoDetalleArticulo } from "./diseño.ts";
 
 export const getMaquina: () => Maquina<EstadoDetalleArticulo, ContextoDetalleArticulo> = () => ({
