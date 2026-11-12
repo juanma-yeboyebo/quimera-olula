@@ -1,0 +1,45 @@
+@layer tienda.componentes {
+    .dialogo-otra-lista-fondo {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--tienda-espacio-4);
+        background-color: rgb(0 0 0 / 0.4);
+    }
+
+    .dialogo-otra-lista {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tienda-espacio-4);
+        width: min(100%, 440px);
+        padding: var(--tienda-espacio-6);
+        border-radius: var(--tienda-radio-tarjeta);
+        background-color: var(--tienda-color-superficie);
+        box-shadow: var(--tienda-sombra-elevada);
+        color: var(--tienda-color-texto);
+        font-family: var(--tienda-fuente-texto);
+
+        h2 {
+            margin: 0;
+            font-family: var(--tienda-fuente-titulos);
+            font-weight: var(--tienda-peso-titulos);
+            letter-spacing: var(--tienda-tracking-titulos);
+            font-size: var(--tienda-texto-lg);
+        }
+
+        p {
+            margin: 0;
+            color: var(--tienda-color-texto-suave);
+        }
+    }
+
+    .dialogo-otra-lista-acciones {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: var(--tienda-espacio-3);
+    }
+}

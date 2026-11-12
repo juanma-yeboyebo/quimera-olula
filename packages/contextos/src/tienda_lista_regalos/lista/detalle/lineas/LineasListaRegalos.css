@@ -1,0 +1,10 @@
+.LineasListaRegalos-acciones {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.LineasListaRegalos-motivo {
+    font-size: 0.85em;
+    opacity: 0.7;
+}

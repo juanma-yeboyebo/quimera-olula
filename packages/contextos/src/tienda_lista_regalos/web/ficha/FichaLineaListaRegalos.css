@@ -1,0 +1,14 @@
+@layer tienda.paginas {
+    .FichaLineaListaRegalos {
+        .ficha-lista-pendiente {
+            font-size: var(--tienda-texto-sm);
+            font-weight: 600;
+        }
+    }
+
+    @media (max-width: 860px) {
+        .FichaLineaListaRegalos:not(:has(.ficha-barra-movil)) {
+            padding-bottom: 0;
+        }
+    }
+}

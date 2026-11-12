@@ -1,0 +1,9 @@
+@layer tienda.componentes {
+    .tarjeta-linea-lista-regalada {
+        h3,
+        .precio-tienda,
+        .tarjeta-linea-lista-pendiente {
+            color: var(--tienda-color-texto-suave);
+        }
+    }
+}

@@ -1,0 +1,9 @@
+.ListaRegalos-filtros {
+    margin-bottom: 8px;
+}
+
+.ListaRegalos-tarjeta-pie {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
