@@ -12,6 +12,7 @@ import { rutaCategoria } from "../../catalogo/dominio.ts";
 import { FichaProducto as Ficha, ImagenProducto } from "../diseño.ts";
 import { estaDisponible, imagenInicial, metadatosFicha, textoDisponibilidad } from "../dominio.ts";
 import { contextoFichaInicial } from "./detalle.ts";
+import { useSeguirComprando } from "../../comun/seguir_comprando.ts";
 import "./FichaProducto.css";
 import { getMaquina } from "./maquina.ts";
 
@@ -77,6 +78,7 @@ const Migas = ({ ficha }: { ficha: Ficha }) => {
 
 const ContenidoFicha = () => {
     const { slug } = useParams();
+    const seguir = useSeguirComprando();
     const { app } = useContext(FactoryCtx);
     const Acciones = app.TiendaOnline?.ficha_acciones as
         | ComponentType<{ ficha: Ficha }>
@@ -124,7 +126,7 @@ const ContenidoFicha = () => {
         return (
             <div className="FichaProducto" role="alert">
                 <p>Este producto no está disponible</p>
-                <Link to="/catalogo">Volver al catálogo</Link>
+                <Link to={seguir.ruta}>Volver al catálogo</Link>
             </div>
         );
     if (estado === "ERROR" || !ficha)

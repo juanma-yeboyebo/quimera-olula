@@ -12,6 +12,7 @@ import { BotonTienda } from "../../comun/componentes/boton_tienda.tsx";
 import { DistintivoTienda } from "../../comun/componentes/distintivo_tienda.tsx";
 import { SinImagen } from "../../comun/componentes/sin_imagen.tsx";
 import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
+import { useSeguirComprando } from "../../comun/seguir_comprando.ts";
 import {
     CarritoTienda,
     FormaEnvioTienda,
@@ -171,6 +172,7 @@ const ResumenCarrito = ({ carrito, idioma }: { carrito: CarritoTienda; idioma: s
 const FormularioCheckout = ({ storeView }: { storeView: StoreView }) => {
     const { idioma } = storeView;
     const carrito = useCarritoTienda();
+    const seguir = useSeguirComprando();
     const formasEnvio = carrito?.formasEnvioDisponibles ?? [];
     const formasPago = carrito?.formasPagoDisponibles ?? [];
     const { ctx, emitir } = useMaquina(
@@ -218,7 +220,7 @@ const FormularioCheckout = ({ storeView }: { storeView: StoreView }) => {
             {error}
         </p>
     );
-    const sinCarrito = !carrito && <Link to="/catalogo">Ir al catálogo</Link>;
+    const sinCarrito = !carrito && <Link to={seguir.ruta}>{seguir.texto}</Link>;
 
     const resumen = carrito && <ResumenCarrito carrito={carrito} idioma={idioma} />;
 

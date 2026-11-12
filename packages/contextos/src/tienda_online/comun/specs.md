@@ -211,6 +211,13 @@ Cada aviso se cierra solo a los 3000 ms. `pausarAviso(id)` detiene la cuenta y `
 <!-- [tienda-avisos-03] [x] -->
 Como mucho hay 3 avisos visibles: al mostrar uno más, sale el más antiguo.
 
+### Seguir comprando
+
+<!-- [tienda-seguir_comprando-01] [x] -->
+`FactoryTiendaOnline` tiene los valores `ruta_seguir_comprando` (por defecto `/catalogo`) y `texto_seguir_comprando` (por defecto «Ir al catálogo»). Una tienda sin catálogo los cambia sin tocar las páginas.
+- **Usan la ruta y el texto:** el carrito vacío, el checkout sin carrito, `/checkout/ok` sin pago en curso, `/checkout/cancelado` y «Mis pedidos» sin pedidos.
+- **Usan solo la ruta y conservan su texto:** el cajón del carrito vacío («Ver la colección»), la ficha no disponible («Volver al catálogo») y «Seguir comprando» de `/checkout/ok`.
+
 ### Cabecera
 
 <!-- [tienda-cabecera-01] [cambiada] -->

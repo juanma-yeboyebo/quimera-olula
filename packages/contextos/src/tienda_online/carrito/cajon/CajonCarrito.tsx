@@ -8,6 +8,7 @@ import { LineasCarrito } from "../detalle/lineas/LineasCarrito.tsx";
 import { useEdicionCarrito } from "../detalle/usar_edicion_carrito.ts";
 import { estaVacio, hayPagoIniciado } from "../dominio.ts";
 import { EnvioGratis } from "../envio_gratis/EnvioGratis.tsx";
+import { useSeguirComprando } from "../../comun/seguir_comprando.ts";
 import "./CajonCarrito.css";
 
 export const CajonCarrito = () => {
@@ -15,6 +16,7 @@ export const CajonCarrito = () => {
     const carrito = useCarritoTienda();
     const { ctx, publicar, bloqueado } = useEdicionCarrito();
     const cajon = useRef<HTMLElement>(null);
+    const seguir = useSeguirComprando();
 
     useEffect(() => {
         if (!abierto) return;
@@ -60,7 +62,7 @@ export const CajonCarrito = () => {
                 {vacio ? (
                     <div className="cajon-carrito-vacio">
                         <p>Tu carrito está vacío.</p>
-                        <BotonTienda a="/catalogo" onClick={cerrarCajonCarrito}>
+                        <BotonTienda a={seguir.ruta} onClick={cerrarCajonCarrito}>
                             Ver la colección
                         </BotonTienda>
                     </div>

@@ -4,6 +4,7 @@ import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
 import { FormaPagoTienda } from "../../comun/diseño.ts";
 import { clavePagoEnCurso } from "../dominio.ts";
 import { cerrarPago, consultarPago, ResultadoConsulta } from "./ok.ts";
+import { useSeguirComprando } from "../../comun/seguir_comprando.ts";
 import "./PagoOk.css";
 
 const MensajePedido = ({
@@ -79,6 +80,7 @@ const ContenidoOk = ({
 }) => {
     const [token] = useState(() => sessionStorage.getItem(clavePagoEnCurso(codigo)));
     const [consulta, setConsulta] = useState<ResultadoConsulta | null>(null);
+    const seguir = useSeguirComprando();
 
     useEffect(() => {
         if (!token) return;
@@ -100,7 +102,7 @@ const ContenidoOk = ({
             <div className="PagoOk contenedor-tienda">
                 <div className="pago-tarjeta">
                     <h1>No hay ningún pago en curso</h1>
-                    <BotonTienda a="/catalogo">Ir al catálogo</BotonTienda>
+                    <BotonTienda a={seguir.ruta}>{seguir.texto}</BotonTienda>
                 </div>
             </div>
         );
@@ -114,7 +116,7 @@ const ContenidoOk = ({
                     <p role="status">Comprobando tu pago…</p>
                 )}
                 {consulta && (
-                    <BotonTienda variante="secundario" a="/catalogo">
+                    <BotonTienda variante="secundario" a={seguir.ruta}>
                         Seguir comprando
                     </BotonTienda>
                 )}

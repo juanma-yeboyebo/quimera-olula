@@ -5,6 +5,7 @@ import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
 import { PrecioTienda } from "../../comun/componentes/precio_tienda.tsx";
 import { estaVacio, hayPagoIniciado } from "../dominio.ts";
 import { EnvioGratis } from "../envio_gratis/EnvioGratis.tsx";
+import { useSeguirComprando } from "../../comun/seguir_comprando.ts";
 import "./CarritoTienda.css";
 import { LineasCarrito } from "./lineas/LineasCarrito.tsx";
 import { useEdicionCarrito } from "./usar_edicion_carrito.ts";
@@ -12,6 +13,7 @@ import { useEdicionCarrito } from "./usar_edicion_carrito.ts";
 const ContenidoCarrito = () => {
     const carrito = useCarritoTienda();
     const { ctx, publicar, bloqueado } = useEdicionCarrito();
+    const seguir = useSeguirComprando();
 
     useEffect(() => {
         recargarCarrito().catch(() => undefined);
@@ -30,7 +32,7 @@ const ContenidoCarrito = () => {
                     <h1>Carrito</h1>
                     {error}
                     <p>Tu carrito está vacío</p>
-                    <BotonTienda a="/catalogo">Ir al catálogo</BotonTienda>
+                    <BotonTienda a={seguir.ruta}>{seguir.texto}</BotonTienda>
                 </div>
             </div>
         );

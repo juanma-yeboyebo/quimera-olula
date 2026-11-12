@@ -5,6 +5,7 @@ import { BotonTienda } from "../../comun/componentes/boton_tienda.tsx";
 import { CampoFormulario } from "../../comun/componentes/campo_formulario.tsx";
 import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
 import { formatearPrecio, hayMas } from "../../comun/dominio.ts";
+import { useSeguirComprando } from "../../comun/seguir_comprando.ts";
 import "../CuentaTienda.css";
 import { CambioPassword, DatosCuenta, DireccionCuenta, DireccionRegistro } from "../diseño.ts";
 import {
@@ -37,6 +38,7 @@ const aFormularioDireccion = (d: DireccionCuenta): Formulario => ({
 
 const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
     const navigate = useNavigate();
+    const seguir = useSeguirComprando();
     const { ctx, emitir } = useMaquina(getMaquina, contextoCuentaInicial);
     const { estado, cuenta, pedidos, total, errorPedidos, errorEdicion, erroresEdicion } = ctx;
     const [formulario, setFormulario] = useState<Formulario | null>(null);
@@ -480,7 +482,7 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
                     {pedidos.length === 0 && !errorPedidos && (
                         <div>
                             <p>Todavía no has hecho ningún pedido</p>
-                            <Link to="/catalogo">Ir al catálogo</Link>
+                            <Link to={seguir.ruta}>{seguir.texto}</Link>
                         </div>
                     )}
                     {pedidos.length > 0 && (
