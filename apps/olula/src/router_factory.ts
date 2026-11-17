@@ -1,4 +1,5 @@
 import { RouterFactoryAlmacenOlula } from '#/almacen/router_factory.ts';
+import { RouterFactoryAnalisisOlula } from '#/analisis/router_factory.ts';
 import { RouterFactoryAuthOlula } from '#/auth/router_factory.ts';
 import { RouterFactoryComprasOlula } from '#/compras/router_factory.ts';
 import { RouterFactoryContabilidadOlula } from '#/contabilidad/router_factory.ts';
@@ -6,6 +7,7 @@ import { RouterFactoryComunOlula } from "#/comun/router_factory.ts";
 import { PaginaInicio } from "#/comun/dashboard/vistas/pagina/PaginaDashboard.tsx";
 import { RouterFactoryCrmOlula } from '#/crm/router_factory.ts';
 import { RouterFactoryEmpresaOlula } from '#/empresa/router_factory.ts';
+import { RouterFactoryFiscalOlula } from '#/fiscal/router_factory.ts';
 import { RouterFactoryPrediccionesOlula } from '#/predicciones/router_factory.ts';
 import { RouterFactoryProyectosOlula } from '#/proyectos/router_factory.ts';
 import { RouterFactoryRrhh } from '#/rrhh/router_factory.ts';
@@ -24,11 +26,13 @@ export class RouterFactoryOlula {
     Ventas = RouterFactoryVentasOlula;
     Compras = RouterFactoryComprasOlula;
     Contabilidad = RouterFactoryContabilidadOlula;
+    Fiscal = RouterFactoryFiscalOlula;
     Almacen = RouterFactoryAlmacenOlula;
     Crm = RouterFactoryCrmOlula;
     Empresa = RouterFactoryEmpresaOlula;
     Tpv = RouterFactoryTpvOlula;
     Predicciones = RouterFactoryPrediccionesOlula;
+    Analisis = RouterFactoryAnalisisOlula;
     Comun = RouterFactoryComunOlula;
     Rrhh = RouterFactoryRrhh;
     Proyectos = RouterFactoryProyectosOlula;

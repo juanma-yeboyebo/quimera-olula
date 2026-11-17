@@ -29,3 +29,5 @@ _tmp/
 apps/tienda_online/public/productos/
 apps/tienda_online/public/categorias/
 apps/tienda_online/public/inicio/
+doc/
+docs/*

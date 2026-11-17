@@ -57,6 +57,7 @@ interface PedidoApi {
     forma_pago_id: string;
     nombre_forma_pago: string;
     grupo_iva_negocio_id: string;
+    serie_id: string;
     por_comision: number;
     observaciones: string;
     servido: string;
@@ -94,6 +95,7 @@ export const pedidoDesdeAPI = (p: PedidoApi): Pedido => ({
     fecha_salida: p.fecha_salida ? new Date(Date.parse(p.fecha_salida)) : null,
     dtoPorcentual: p.por_descuento,
     netoSinDto: p.neto_sin_dto,
+    serie_id: p.serie_id ?? "",
     cliente: {
         cliente_id: p.cliente_id ?? null,
         nombre_cliente: p.nombre_cliente ?? "",
@@ -110,6 +112,20 @@ export const getPedido: GetPedido = async (id) => {
             return pedidoDesdeAPI(respuesta.datos);
         });
 }
+
+export interface OrdenAlmacenDePedido {
+    id: string;
+    tipo: string;
+    estado: string;
+}
+
+/** Órdenes de almacén (no terminadas) en las que se está preparando el pedido. */
+export const getOrdenesAlmacenDePedido = async (pedidoId: string): Promise<OrdenAlmacenDePedido[]> => {
+    const respuesta = await RestAPI.get<{ datos: OrdenAlmacenDePedido[] }>(
+        `/almacen/orden/de_pedido_venta/${pedidoId}`
+    );
+    return respuesta.datos;
+};
 
 export const getReportPedido: GetReportPedido = async (id) =>
     RestAPI.blob(`${baseUrl}/${id}/report`, "Error al obtener el report del pedido");
