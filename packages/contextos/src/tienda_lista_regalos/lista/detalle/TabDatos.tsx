@@ -1,5 +1,4 @@
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
-import { QCheckbox } from "@olula/componentes/atomos/qcheckbox.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { ContextoError } from "@olula/lib/contexto.ts";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
@@ -32,7 +31,6 @@ export const TabDatos = ({
                 <Cliente {...uiProps("clienteId", "clienteNombre")} />
                 <QInput label="Nombre" {...uiProps("nombre")} />
                 <QInput label="Descripción" {...uiProps("descripcion")} />
-                <QCheckbox label="Publicada" {...uiProps("publicada")} />
             </quimera-formulario>
             <div className="botones maestro-botones">
                 <QBoton onClick={guardar} deshabilitado={!valido || !modificado}>

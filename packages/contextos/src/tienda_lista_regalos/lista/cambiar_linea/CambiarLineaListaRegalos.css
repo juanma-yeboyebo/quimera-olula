@@ -1,0 +1,22 @@
+.CambiarLineaListaRegalos {
+    quimera-formulario {
+        max-width: 560px;
+    }
+
+    quimera-input[nombre="precio"] {
+        grid-column: 1 / span 4;
+    }
+
+    quimera-input[nombre="cantidad"],
+    quimera-input[nombre="cantidadVendida"] {
+        grid-column: span 4;
+    }
+
+    @media (max-width: 768px) {
+        quimera-input[nombre="precio"],
+        quimera-input[nombre="cantidad"],
+        quimera-input[nombre="cantidadVendida"] {
+            grid-column: 1 / -1;
+        }
+    }
+}

@@ -1,4 +1,5 @@
 import { FactoryAuthOlula } from '#/auth/factory.ts';
+import { FactoryTiendaListaRegalos } from '#/tienda_lista_regalos/factory.ts';
 import { OlulaWordmark } from '@olula/componentes/tema/Olula.jsx';
 import { FactoryTpvDulceBebe } from './contextos/tpv/factory.ts';
 
@@ -10,6 +11,7 @@ export class FactoryDulceBebe {
     Auth = FactoryAuthOlula;
     Componentes = FactoryComponentesDulceBebe;
     TPV = FactoryTpvDulceBebe;
+    TiendaListaRegalos = FactoryTiendaListaRegalos;
 }
 
 export default FactoryDulceBebe;

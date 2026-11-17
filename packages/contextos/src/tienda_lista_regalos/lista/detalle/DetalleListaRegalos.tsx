@@ -50,6 +50,15 @@ export const DetalleListaRegalos = ({
                 <div className="maestro-botones">
                     <QuimeraAcciones
                         acciones={[
+                            lista.publicada
+                                ? {
+                                      texto: "Ocultar lista",
+                                      onClick: () => emitir("ocultacion_solicitada"),
+                                  }
+                                : {
+                                      texto: "Publicar",
+                                      onClick: () => emitir("publicacion_solicitada"),
+                                  },
                             {
                                 icono: "eliminar",
                                 texto: "Borrar",
@@ -82,7 +91,7 @@ export const DetalleListaRegalos = ({
                         <Tab
                             key="tab-compartir"
                             label="Compartir"
-                            children={<TabCompartir lista={lista} />}
+                            children={<TabCompartir lista={lista} publicar={emitir} />}
                         />,
                     ]}
                 />

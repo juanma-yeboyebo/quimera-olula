@@ -1,0 +1,11 @@
+@import "@olula/ctx/tienda_online/comun/tema/capas.css";
+@import "@olula/componentes/tema/tema.css" layer(erp);
+@import "@olula/ctx/tienda_online/comun/tema/tokens.css";
+
+:root {
+    color-scheme: light;
+}
+
+#root {
+    scroll-behavior: smooth;
+}

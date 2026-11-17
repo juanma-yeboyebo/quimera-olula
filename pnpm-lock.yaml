@@ -446,6 +446,18 @@ importers:
         specifier: workspace:*
         version: link:../../packages/contextos/lib
 
+  apps/tienda_dulce_bebe:
+    dependencies:
+      '@olula/componentes':
+        specifier: workspace:*
+        version: link:../../packages/componentes
+      '@olula/ctx':
+        specifier: workspace:*
+        version: link:../../packages/contextos
+      '@olula/lib':
+        specifier: workspace:*
+        version: link:../../packages/contextos/lib
+
   apps/tienda_online:
     dependencies:
       '@olula/componentes':

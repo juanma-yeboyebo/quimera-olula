@@ -35,12 +35,12 @@ const metaTablaListaRegalos: MetaTabla<ItemListaRegalos> = [
 
 const TarjetaListaRegalos = (lista: ItemListaRegalos) => (
     <div className="ListaRegalos-tarjeta" key={lista.id}>
-        <div>
+        <div className="ListaRegalos-tarjeta-fila">
             <strong>{lista.nombre}</strong>
-        </div>
-        <div>{lista.cliente.nombre}</div>
-        <div className="ListaRegalos-tarjeta-pie">
             <Distintivo publicada={lista.publicada} />
+        </div>
+        <div className="ListaRegalos-tarjeta-fila">
+            <span>{lista.cliente.nombre}</span>
             <span>{textoVendidas(lista)}</span>
         </div>
     </div>

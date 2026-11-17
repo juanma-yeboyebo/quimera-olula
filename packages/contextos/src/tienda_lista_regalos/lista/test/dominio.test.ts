@@ -5,7 +5,6 @@ import {
     AVISO_NO_PUBLICADA,
     cambiosDeEdicion,
     cambiosDeLinea,
-    comoBooleano,
     criteriaListas,
     criteriaListasDefecto,
     distintivoPublicacion,
@@ -135,7 +134,7 @@ describe("[lista_regalos-crear-01] Alta de lista", () => {
 describe("[lista_regalos-datos-01] Pestaña Datos", () => {
     test("lista_regalos_datos_01_la_edicion_parte_de_la_lista", () => {
         expect(edicionDeLista(lista())).toEqual({
-            clienteId: "C1", clienteNombre: "Ana", nombre: "Boda", descripcion: "", publicada: false,
+            clienteId: "C1", clienteNombre: "Ana", nombre: "Boda", descripcion: "",
         });
     });
 
@@ -144,15 +143,8 @@ describe("[lista_regalos-datos-01] Pestaña Datos", () => {
     });
 
     test("lista_regalos_datos_01_solo_envia_lo_cambiado", () => {
-        const edicion = { ...edicionDeLista(lista()), nombre: " Bautizo ", publicada: true };
-        expect(cambiosDeEdicion(lista(), edicion)).toEqual({ nombre: "Bautizo", publicada: true });
-    });
-
-    test("lista_regalos_datos_01_publicada_en_texto_se_convierte_a_booleano", () => {
-        const edicion = { ...edicionDeLista(lista({ publicada: true })), publicada: "false" as unknown as boolean };
-        expect(cambiosDeEdicion(lista({ publicada: true }), edicion)).toEqual({ publicada: false });
-        expect(comoBooleano("true")).toBe(true);
-        expect(comoBooleano(false)).toBe(false);
+        const edicion = { ...edicionDeLista(lista()), nombre: " Bautizo " };
+        expect(cambiosDeEdicion(lista(), edicion)).toEqual({ nombre: "Bautizo" });
     });
 
     test("lista_regalos_datos_01_cambio_de_cliente", () => {

@@ -74,9 +74,6 @@ export const itemDeLista = (l: ListaRegalos): ItemListaRegalos => ({
     vendidas: l.lineas.reduce((suma, linea) => suma + linea.cantidadVendida, 0),
 });
 
-export const comoBooleano = (valor: unknown): boolean =>
-    valor === true || valor === "true" || valor === "1";
-
 export const nuevaListaRegalosVacia = (): NuevaListaRegalos => ({
     clienteId: "",
     clienteNombre: "",
@@ -97,7 +94,6 @@ export const edicionDeLista = (l: ListaRegalos): EdicionListaRegalos => ({
     clienteNombre: l.cliente.nombre,
     nombre: l.nombre,
     descripcion: l.descripcion,
-    publicada: l.publicada,
 });
 
 export const metaEdicionListaRegalos: MetaModelo<EdicionListaRegalos> = {
@@ -105,17 +101,14 @@ export const metaEdicionListaRegalos: MetaModelo<EdicionListaRegalos> = {
         clienteId: { requerido: true },
         nombre: { requerido: true, validacion: (m) => stringNoVacio(m.nombre.trim()) },
         descripcion: { requerido: false },
-        publicada: { tipo: "checkbox" },
     },
 };
 
 export const cambiosDeEdicion = (l: ListaRegalos, e: EdicionListaRegalos): CambiosListaRegalos => {
     const cambios: CambiosListaRegalos = {};
-    const publicada = comoBooleano(e.publicada);
     if (e.clienteId !== l.cliente.codigo) cambios.clienteId = e.clienteId;
     if (e.nombre.trim() !== l.nombre) cambios.nombre = e.nombre.trim();
     if ((e.descripcion ?? "") !== l.descripcion) cambios.descripcion = e.descripcion ?? "";
-    if (publicada !== l.publicada) cambios.publicada = publicada;
     return cambios;
 };
 

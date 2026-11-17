@@ -45,7 +45,7 @@ beforeEach(() => {
 describe("[lista_regalos-detalle-01] El detalle carga la lista y permite borrarla", () => {
     test("lista_regalos_detalle_01_cargar_abre_con_las_lineas", async () => {
         getListaRegalos.mockResolvedValue(lista());
-        const [r] = (await d.cargarContexto(d.contextoDetalleListaRegalosInicial, "7")) as [ContextoDetalleListaRegalos];
+        const [r] = (await d.cargarContexto(d.contextoDetalleListaRegalosInicial, "7")) as [ContextoDetalleListaRegalos, unknown[]];
         expect(getListaRegalos).toHaveBeenCalledWith("7");
         expect(r.estado).toBe("ABIERTO");
         expect(r.lineas.lista.map((l) => l.id)).toEqual(["1", "2", "3"]);
@@ -78,7 +78,7 @@ describe("[lista_regalos-datos-01] Guardar los datos", () => {
     test("lista_regalos_datos_01_sin_cambios_no_llama_al_servidor", async () => {
         const ctx = abierto();
         const guardado = await d.guardarDatos(ctx, {
-            clienteId: "C1", clienteNombre: "Ana", nombre: "Boda", descripcion: "", publicada: false,
+            clienteId: "C1", clienteNombre: "Ana", nombre: "Boda", descripcion: "",
         });
         expect(guardado).toBe(false);
         expect(patchListaRegalos).not.toHaveBeenCalled();
@@ -86,14 +86,36 @@ describe("[lista_regalos-datos-01] Guardar los datos", () => {
 
     test("lista_regalos_datos_01_con_cambios_llama_a_patch", async () => {
         const guardado = await d.guardarDatos(abierto(), {
-            clienteId: "C1", clienteNombre: "Ana", nombre: "Boda", descripcion: "Mesa", publicada: true,
+            clienteId: "C1", clienteNombre: "Ana", nombre: "Boda", descripcion: "Mesa",
         });
         expect(guardado).toBe(true);
-        expect(patchListaRegalos).toHaveBeenCalledWith("7", { descripcion: "Mesa", publicada: true });
+        expect(patchListaRegalos).toHaveBeenCalledWith("7", { descripcion: "Mesa" });
     });
 
     test("lista_regalos_datos_01_tras_guardar_se_refresca", () => {
         expect(getMaquina().ABIERTO.lista_guardada).toEqual([d.refrescarLista]);
+    });
+});
+
+describe("[lista_regalos-detalle-02] Publicar u ocultar la lista", () => {
+    test("lista_regalos_detalle_02_publicar_envia_publicada_y_refresca", async () => {
+        getListaRegalos.mockResolvedValue(lista({ publicada: true }));
+        const [r, eventos] = (await d.publicarLista(abierto())) as [ContextoDetalleListaRegalos, [string, { publicada: boolean }][]];
+        expect(patchListaRegalos).toHaveBeenCalledWith("7", { publicada: true });
+        expect(r.lista.publicada).toBe(true);
+        expect(eventos[0]).toEqual(["lista_cambiada", expect.objectContaining({ publicada: true })]);
+    });
+
+    test("lista_regalos_detalle_02_ocultar_envia_no_publicada_y_refresca", async () => {
+        getListaRegalos.mockResolvedValue(lista({ publicada: false }));
+        const [r] = (await d.ocultarLista(abierto())) as [ContextoDetalleListaRegalos, unknown[]];
+        expect(patchListaRegalos).toHaveBeenCalledWith("7", { publicada: false });
+        expect(r.lista.publicada).toBe(false);
+    });
+
+    test("lista_regalos_detalle_02_eventos_en_la_maquina", () => {
+        expect(getMaquina().ABIERTO.publicacion_solicitada).toEqual([d.publicarLista]);
+        expect(getMaquina().ABIERTO.ocultacion_solicitada).toEqual([d.ocultarLista]);
     });
 });
 
@@ -107,7 +129,7 @@ describe("[lista_regalos-productos-02] Añadir producto", () => {
 
     test("lista_regalos_productos_02_tras_crear_se_recarga_y_activa_la_nueva", async () => {
         getListaRegalos.mockResolvedValue(lista({ lineas: [linea("1", 1), linea("4", 2)] }));
-        const [r] = (await d.onLineaCreada(abierto(), "4")) as [ContextoDetalleListaRegalos];
+        const [r] = (await d.onLineaCreada(abierto(), "4")) as [ContextoDetalleListaRegalos, unknown[]];
         expect(r.lineas.lista.map((l) => l.id)).toEqual(["1", "4"]);
         expect(r.lineas.activo?.id).toBe("4");
     });
@@ -123,7 +145,7 @@ describe("[lista_regalos-productos-03] Al pulsar una línea se abre el modal de 
 
     test("lista_regalos_productos_03_tras_cambiar_se_recarga", async () => {
         getListaRegalos.mockResolvedValue(lista());
-        const [r] = (await d.onLineaCambiada(abierto(), linea("2", 2))) as [ContextoDetalleListaRegalos];
+        const [r] = (await d.onLineaCambiada(abierto(), linea("2", 2))) as [ContextoDetalleListaRegalos, unknown[]];
         expect(getListaRegalos).toHaveBeenCalledWith("7");
         expect(r.lineas.activo?.id).toBe("2");
     });
@@ -140,7 +162,7 @@ describe("[lista_regalos-productos-04] Borrar una línea con confirmación", () 
     test("lista_regalos_productos_04_tras_borrar_se_recarga_sin_linea_activa", async () => {
         getListaRegalos.mockResolvedValue(lista({ lineas: [linea("1", 1)] }));
         const ctx = abierto();
-        const [r] = (await d.onLineaBorrada({ ...ctx, lineas: { ...ctx.lineas, activo: ctx.lineas.lista[1] } })) as [ContextoDetalleListaRegalos];
+        const [r] = (await d.onLineaBorrada({ ...ctx, lineas: { ...ctx.lineas, activo: ctx.lineas.lista[1] } })) as [ContextoDetalleListaRegalos, unknown[]];
         expect(r.lineas.lista.map((l) => l.id)).toEqual(["1"]);
         expect(r.lineas.activo).toBeNull();
     });

@@ -6,7 +6,9 @@ import {
     Lineas,
     onLineaBorrada,
     onLineaCambiada,
+    ocultarLista,
     onLineaCreada,
+    publicarLista,
     refrescarLista,
     subirLinea,
 } from "./detalle.ts";
@@ -22,6 +24,8 @@ export const getMaquina: () => Maquina<EstadoDetalleListaRegalos, ContextoDetall
         lista_id_cambiado: [cargarContexto],
         lista_deseleccionada: [publicar("lista_deseleccionada", null)],
         lista_guardada: [refrescarLista],
+        publicacion_solicitada: [publicarLista],
+        ocultacion_solicitada: [ocultarLista],
         borrado_solicitado: "BORRANDO",
         alta_linea_solicitada: "CREANDO_LINEA",
         linea_seleccionada: [Lineas.activar, "CAMBIANDO_LINEA"],

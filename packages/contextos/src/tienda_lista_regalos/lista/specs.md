@@ -46,8 +46,11 @@ Filtro de texto por nombre de la lista o nombre del cliente.
 <!-- [lista_regalos-detalle-01] [x] -->
 El detalle muestra el nombre de la lista con su distintivo de publicación y tres pestañas: «Datos», «Productos» y «Compartir». «Borrar» pide confirmación; si el servidor responde 400 porque hay unidades vendidas, lo muestra en el diálogo de errores.
 
+<!-- [lista_regalos-detalle-02] [x] -->
+El menú de acciones del detalle (`QuimeraAcciones`, donde está «Borrar») añade, antes de «Borrar», «Publicar» si la lista no está publicada u «Ocultar lista» si lo está. Llaman a PATCH de la lista con `publicada: true` o `false`, sin confirmación, y recargan el detalle y el maestro, de modo que cambian el distintivo y la pestaña «Compartir».
+
 <!-- [lista_regalos-datos-01] [x] -->
-Pestaña «Datos»: cliente, nombre, descripción y el interruptor «Publicada». Guardar llama a PATCH de la lista.
+Pestaña «Datos»: cliente, nombre y descripción. Guardar llama a PATCH de la lista. La publicación no se cambia aquí (`lista_regalos-compartir-01`).
 
 <!-- [lista_regalos-productos-01] [x] -->
 Pestaña «Productos»: tabla con las líneas en su orden: referencia, descripción, precio con IVA, cantidad, vendidas y pendiente. Una línea sin pendiente se marca como «Vendido».
@@ -65,4 +68,7 @@ Cada línea tiene «Borrar» con confirmación. Si tiene unidades vendidas, el b
 Las flechas «Subir» y «Bajar» de cada línea cambian su `orden` intercambiándolo con el de la línea vecina (dos PATCH) y recargan la lista.
 
 <!-- [lista_regalos-compartir-01] [x] -->
-Pestaña «Compartir»: el enlace público de la lista (`url` del detalle) en un campo de solo lectura, con «Copiar enlace» (portapapeles y aviso «Enlace copiado») y «Abrir» en una pestaña nueva. Si la lista no está publicada, avisa: «La lista no está publicada: el enlace no funcionará hasta que la publiques».
+Pestaña «Compartir» de una lista publicada: el enlace público de la lista (`url` del detalle) en un campo de solo lectura, con «Copiar enlace» (portapapeles y aviso «Enlace copiado») y «Abrir» en una pestaña nueva.
+
+<!-- [lista_regalos-compartir-02] [x] -->
+Pestaña «Compartir» de una lista sin publicar: solo el aviso «La lista no está publicada: el enlace no funcionará hasta que la publiques» y el botón «Publicar». No muestra el enlace, «Copiar enlace» ni «Abrir». «Publicar» llama a PATCH de la lista con `publicada: true` y recarga el detalle, que pasa a mostrar el enlace (`lista_regalos-compartir-01`) y el distintivo «Publicada».

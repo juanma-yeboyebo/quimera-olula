@@ -54,6 +54,15 @@ export const guardarDatos = async (
     return true;
 };
 
+const cambiarPublicacion = (publicada: boolean): ProcesarDetalle => async (contexto) => {
+    await patchListaRegalos(contexto.lista.id, { publicada });
+    return refrescarLista(contexto);
+};
+
+export const publicarLista: ProcesarDetalle = cambiarPublicacion(true);
+
+export const ocultarLista: ProcesarDetalle = cambiarPublicacion(false);
+
 const activarLineaPorId = (id: string) => async (contexto: ContextoDetalleListaRegalos) => ({
     ...contexto,
     lineas: { ...contexto.lineas, activo: contexto.lineas.lista.find((l) => l.id === id) ?? null },

@@ -6,6 +6,11 @@ export const useHueco = <P extends object = object>(
     base: ComponentType<P>,
 ): ComponentType<P> => {
     const { app } = useContext(FactoryCtx);
-    const hueco = app.TiendaOnline?.[nombre] as ComponentType<P> | null | undefined;
-    return hueco ?? base;
+    const hueco = app.TiendaOnline?.[nombre] as ComponentType<P> | false | null | undefined;
+    return hueco || base;
+};
+
+export const useHuecoDesactivado = (nombre: string): boolean => {
+    const { app } = useContext(FactoryCtx);
+    return app.TiendaOnline?.[nombre] === false;
 };

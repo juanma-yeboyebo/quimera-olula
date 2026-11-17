@@ -1,2 +1,20 @@
 .DetalleListaRegalos {
+    .TabDatos,
+    .TabCompartir,
+    .LineasListaRegalos {
+        display: flex;
+        flex-direction: column;
+        gap: var(--espaciado-m);
+        padding-top: var(--espaciado-m);
+    }
+
+    .TabDatos {
+        quimera-autocompletar[nombre="clienteId"] {
+            grid-column: 1 / span 6;
+        }
+
+        quimera-input[nombre="nombre"] {
+            grid-column: span 6;
+        }
+    }
 }

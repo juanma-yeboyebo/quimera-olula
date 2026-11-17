@@ -227,6 +227,13 @@ Como mucho hay 3 avisos visibles: al mostrar uno más, sale el más antiguo.
 <!-- [tienda-cabecera-02] [x] -->
 `FactoryTiendaOnline` tiene los huecos `cabecera_logo`, `cabecera_buscador`, `cabecera_acciones`, `menu_categorias`, `layout_aviso` y `layout_pie`, todos `null` por defecto. Con `null` se usa el componente base, y una app cliente puede sustituir cualquiera sin rehacer la cabecera.
 
+<!-- [tienda-cabecera-08] [x] -->
+Una tienda sin catálogo puede poner `cabecera_buscador` o `menu_categorias` a `false`:
+- con `cabecera_buscador: false` no hay botón de búsqueda ni fila del buscador;
+- con `menu_categorias: false` no hay fila de categorías, ni botón «Abrir menú», ni cajón del móvil.
+
+Las acciones (cuenta y carrito) siguen en la cabecera. Con `null` o un componente, todo sigue como hasta ahora.
+
 <!-- [tienda-cabecera-03] [x] -->
 El logo base es el nombre del website del storeview activo, con la fuente de títulos, y enlaza a `/`.
 

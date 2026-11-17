@@ -6,9 +6,9 @@ export class FactoryTiendaOnline {
     static tarjeta_producto_acciones: ComponentType<{ producto: ProductoCatalogo }> | null = null;
     static ficha_acciones: ComponentType<{ ficha: FichaProducto }> | null = null;
     static cabecera_logo: ComponentType | null = null;
-    static cabecera_buscador: ComponentType | null = null;
+    static cabecera_buscador: ComponentType | false | null = null;
     static cabecera_acciones: ComponentType | null = null;
-    static menu_categorias: ComponentType | null = null;
+    static menu_categorias: ComponentType | false | null = null;
     static menu_max_en_barra = 8;
     static menu_en_barra_con_todas = 6;
     static ruta_imagenes_categoria = "/categorias";

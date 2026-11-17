@@ -21,7 +21,7 @@ export const LineasListaRegalos = ({
     publicar: EmitirEvento;
 }) => {
     return (
-        <>
+        <div className="LineasListaRegalos">
             <div className="botones maestro-botones">
                 <QBoton onClick={() => publicar("alta_linea_solicitada")}>
                     Añadir producto
@@ -49,6 +49,6 @@ export const LineasListaRegalos = ({
                     publicar={publicar}
                 />
             )}
-        </>
+        </div>
     );
 };

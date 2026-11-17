@@ -9,6 +9,7 @@ import { LineaListaRegalos, ListaRegalos } from "../diseño.ts";
 import { cambiosDeLinea, edicionDeLinea, metaEdicionLineaListaRegalos } from "../dominio.ts";
 import { ejecutarConError400 } from "../errores.ts";
 import { patchLineaListaRegalos } from "../infraestructura.ts";
+import "./CambiarLineaListaRegalos.css";
 
 export const CambiarLineaListaRegalos = ({
     lista,
@@ -40,23 +41,31 @@ export const CambiarLineaListaRegalos = ({
         <QModal
             abierto={true}
             nombre="cambiarLineaListaRegalos"
-            titulo={`${linea.referencia} · ${linea.descripcion}`}
+            titulo="Cambiar producto"
             onCerrar={cancelar}
         >
-            <quimera-formulario>
-                <QInput label="Precio con IVA" {...uiProps("precio")} />
-                <QInput label="Cantidad" {...uiProps("cantidad")} />
-                <QInput label="Vendidas" {...uiProps("cantidadVendida")} />
-            </quimera-formulario>
-            {error && (
-                <p role="alert" className="CambiarLineaListaRegalos-error">
-                    {error}
-                </p>
-            )}
-            <div className="botones maestro-botones">
-                <QBoton onClick={cambiar} deshabilitado={!valido}>
-                    Guardar
-                </QBoton>
+            <div className="CambiarLineaListaRegalos">
+                <quimera-formulario>
+                    <QInput
+                        label="Artículo"
+                        nombre="articulo"
+                        valor={`${linea.referencia} · ${linea.descripcion}`}
+                        soloLectura
+                    />
+                    <QInput label="Precio con IVA" {...uiProps("precio")} />
+                    <QInput label="Cantidad" {...uiProps("cantidad")} />
+                    <QInput label="Vendidas" {...uiProps("cantidadVendida")} />
+                </quimera-formulario>
+                {error && (
+                    <p role="alert" className="CambiarLineaListaRegalos-error">
+                        {error}
+                    </p>
+                )}
+                <div className="botones maestro-botones">
+                    <QBoton onClick={cambiar} deshabilitado={!valido}>
+                        Guardar
+                    </QBoton>
+                </div>
             </div>
         </QModal>
     );

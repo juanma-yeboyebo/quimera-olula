@@ -2,8 +2,15 @@
     margin-bottom: 8px;
 }
 
-.ListaRegalos-tarjeta-pie {
+.ListaRegalos-tarjeta {
     display: flex;
-    gap: 8px;
+    flex-direction: column;
+    gap: var(--espaciado-xs);
+}
+
+.ListaRegalos-tarjeta-fila {
+    display: flex;
+    gap: var(--espaciado-s);
     align-items: center;
+    justify-content: space-between;
 }

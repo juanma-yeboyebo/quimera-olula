@@ -4,7 +4,7 @@ import { AvisosTienda } from "../componentes/avisos_tienda.tsx";
 import { BotonIcono } from "../componentes/boton_icono.tsx";
 import { AccionesCabeceraTienda } from "../componentes/acciones_cabecera_tienda.tsx";
 import { ContextoMenuMovil } from "./contexto_menu_movil.ts";
-import { useHueco } from "./usar_hueco.ts";
+import { useHueco, useHuecoDesactivado } from "./usar_hueco.ts";
 import { BuscadorTienda } from "./buscador_tienda.tsx";
 import { LogoTienda } from "./logo_tienda.tsx";
 import { MenuCategoriasTienda } from "./menu_categorias_tienda.tsx";
@@ -15,6 +15,8 @@ export const CabeceraTienda = () => {
     const Buscador = useHueco("cabecera_buscador", BuscadorTienda);
     const Acciones = useHueco("cabecera_acciones", AccionesCabeceraTienda);
     const Menu = useHueco("menu_categorias", MenuCategoriasTienda);
+    const sinBuscador = useHuecoDesactivado("cabecera_buscador");
+    const sinMenu = useHuecoDesactivado("menu_categorias");
 
     const [abierto, setAbierto] = useState(false);
     const botonMenu = useRef<HTMLDivElement>(null);
@@ -62,26 +64,30 @@ export const CabeceraTienda = () => {
         <ContextoMenuMovil.Provider value={menuMovil}>
         <header className="cabecera-tienda" ref={cabecera}>
             <div className="cabecera-tienda-fila">
-                <div className="cabecera-tienda-menu" ref={botonMenu}>
-                    <BotonIcono icono="menu" etiqueta="Abrir menú" onClick={abrir} />
-                </div>
+                {!sinMenu && (
+                    <div className="cabecera-tienda-menu" ref={botonMenu}>
+                        <BotonIcono icono="menu" etiqueta="Abrir menú" onClick={abrir} />
+                    </div>
+                )}
                 <div className="cabecera-tienda-logo">
                     <Logo />
                 </div>
                 <div className="cabecera-tienda-acciones">
-                    <div ref={botonBuscar}>
-                        <BotonIcono
-                            icono={buscando ? "cerrar" : "buscar"}
-                            etiqueta={buscando ? "Cerrar búsqueda" : "Buscar"}
-                            expandido={buscando}
-                            onClick={() => (buscando ? cerrarBusqueda() : setBuscando(true))}
-                        />
-                    </div>
+                    {!sinBuscador && (
+                        <div ref={botonBuscar}>
+                            <BotonIcono
+                                icono={buscando ? "cerrar" : "buscar"}
+                                etiqueta={buscando ? "Cerrar búsqueda" : "Buscar"}
+                                expandido={buscando}
+                                onClick={() => (buscando ? cerrarBusqueda() : setBuscando(true))}
+                            />
+                        </div>
+                    )}
                     <Acciones />
                 </div>
                 <AvisosTienda />
             </div>
-            {buscando && (
+            {buscando && !sinBuscador && (
                 <div
                     className="cabecera-tienda-buscador"
                     ref={busqueda}
@@ -92,11 +98,13 @@ export const CabeceraTienda = () => {
                     <Buscador />
                 </div>
             )}
-            <div className="cabecera-tienda-categorias">
-                <div className="cabecera-tienda-contenedor">
-                    <Menu />
+            {!sinMenu && (
+                <div className="cabecera-tienda-categorias">
+                    <div className="cabecera-tienda-contenedor">
+                        <Menu />
+                    </div>
                 </div>
-            </div>
+            )}
         </header>
         </ContextoMenuMovil.Provider>
     );

@@ -32,6 +32,7 @@ export const LineasLista = ({
             criteriaInicial={criteriaDefecto}
             onCriteriaChanged={() => null}
             modo="tabla"
+            modosDisponibles={["tabla"]}
         />
     );
 };

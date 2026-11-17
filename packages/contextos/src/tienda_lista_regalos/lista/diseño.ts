@@ -53,7 +53,6 @@ export interface EdicionListaRegalos extends Modelo {
     clienteNombre: string;
     nombre: string;
     descripcion: string;
-    publicada: boolean;
 }
 
 export interface NuevaLineaListaRegalos extends Modelo {
@@ -74,7 +73,7 @@ export interface FiltrosListaRegalos {
     texto: string;
 }
 
-export type CambiosListaRegalos = Partial<Pick<EdicionListaRegalos, "clienteId" | "nombre" | "descripcion" | "publicada">>;
+export type CambiosListaRegalos = Partial<Pick<EdicionListaRegalos, "clienteId" | "nombre" | "descripcion"> & { publicada: boolean }>;
 
 export type CambiosLineaListaRegalos = {
     precio?: number;

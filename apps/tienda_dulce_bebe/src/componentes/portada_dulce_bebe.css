@@ -1,0 +1,25 @@
+@layer tienda.paginas {
+    .PortadaDulceBebe {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--tienda-espacio-4);
+        padding-block: var(--tienda-espacio-8);
+        font-family: var(--tienda-fuente-texto);
+        color: var(--tienda-color-texto);
+        text-align: center;
+
+        h1 {
+            margin: 0;
+            font-family: var(--tienda-fuente-titulos);
+            font-weight: var(--tienda-peso-titulos);
+            letter-spacing: var(--tienda-tracking-titulos);
+            font-size: var(--tienda-texto-xl);
+        }
+
+        p {
+            margin: 0;
+            color: var(--tienda-color-texto-suave);
+        }
+    }
+}
