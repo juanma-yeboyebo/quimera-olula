@@ -1,4 +1,5 @@
 import { Criteria, Entidad, Modelo, RespuestaLista } from "@olula/lib/diseño.ts";
+import { WebsiteAdmin } from "../comun/diseño.ts";
 
 export type EstadoPublicacionFiltro = "publicado" | "no_publicado" | "todos";
 
@@ -41,16 +42,15 @@ export interface ArticuloWebDetalle extends Entidad {
     referencia: string;
     descripcion: string;
     precio: number;
-    descripcionCorta: string;
-    descripcionLarga: string;
-    metaTitulo: string;
-    metaDescripcion: string;
+    textos: Record<string, TextosArticulo>;
+    idiomas: string[];
     publicaciones: PublicacionArticulo[];
     imagenes: ImagenArticulo[];
     categorias: CategoriaArticulo[];
 }
 
 export interface TextosArticulo extends Modelo {
+    nombre: string;
     descripcionCorta: string;
     descripcionLarga: string;
     metaTitulo: string;
@@ -63,6 +63,14 @@ export interface CambiosPublicacion extends Modelo {
     destacado: boolean;
     slug: string;
     orden: number;
+}
+
+export type EstadoPublicacionWebsite = "Sin publicar" | "En pausa" | "Oculto en catálogo" | "Publicado";
+
+export interface FilaPublicacion {
+    website: WebsiteAdmin;
+    publicacion: PublicacionArticulo | undefined;
+    estado: EstadoPublicacionWebsite;
 }
 
 export interface FiltrosArticulo {
@@ -80,5 +88,15 @@ export type PatchPublicacion = (
     cambios: CambiosPublicacion,
 ) => Promise<void>;
 export type DeletePublicacion = (referencia: string, websiteId: number) => Promise<void>;
-export type PatchTextos = (referencia: string, textos: TextosArticulo) => Promise<void>;
+export type PatchTextos = (referencia: string, idioma: string, textos: TextosArticulo) => Promise<void>;
 export type PatchCategoriasArticulo = (referencia: string, ids: string[]) => Promise<void>;
+export type PostImagenArticulo = (referencia: string, fichero: File) => Promise<void>;
+export type DeleteImagenArticulo = (referencia: string, id: number) => Promise<void>;
+export type PatchOrdenImagenes = (referencia: string, ids: number[]) => Promise<void>;
+export type PatchImagenPrincipal = (referencia: string, id: number) => Promise<void>;
+export type LadoSoltarFoto = "antes" | "despues";
+
+export interface FotoNoSubida {
+    nombre: string;
+    motivo: string;
+}

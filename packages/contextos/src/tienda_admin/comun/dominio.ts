@@ -14,6 +14,16 @@ export const errorSlug = (slug: string): string | null => {
 
 export const slugValido = (slug: string): boolean => errorSlug(slug) === null;
 
+export const slugDesdeTexto = (texto: string): string =>
+    texto
+        .normalize("NFKD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .slice(0, SLUG_MAXIMO)
+        .replace(/-+$/g, "");
+
 export const errorLongitud = (valor: string, maximo: number): string | null =>
     valor.length > maximo ? `Máximo ${maximo} caracteres` : null;
 

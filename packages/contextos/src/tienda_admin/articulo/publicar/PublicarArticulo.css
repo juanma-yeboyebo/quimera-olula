@@ -1,0 +1,15 @@
+.PublicarArticulo {
+    quimera-checkbox[nombre="publicado"],
+    quimera-checkbox[nombre="visible"],
+    quimera-checkbox[nombre="destacado"] {
+        grid-column: span 4;
+    }
+
+    quimera-input[nombre="slug"] {
+        grid-column: span 9;
+    }
+
+    quimera-input[nombre="orden"] {
+        grid-column: span 3;
+    }
+}

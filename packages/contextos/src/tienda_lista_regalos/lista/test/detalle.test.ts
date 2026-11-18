@@ -22,7 +22,7 @@ const linea = (id: string, orden: number, extra: Partial<LineaListaRegalos> = {}
 
 const lista = (extra: Partial<ListaRegalos> = {}): ListaRegalos => ({
     id: "7", websiteId: 1, cliente: { codigo: "C1", nombre: "Ana" }, nombre: "Boda",
-    descripcion: "", token: "tok", url: "https://tienda/lista/tok", publicada: false,
+    descripcion: "", token: "tok", slug: "boda", codigo: "abc123", url: "https://tienda/lista/tok", publicada: false,
     creada: "2026-11-01", lineas: [linea("1", 1), linea("2", 2), linea("3", 3)], ...extra,
 });
 
@@ -78,7 +78,7 @@ describe("[lista_regalos-datos-01] Guardar los datos", () => {
     test("lista_regalos_datos_01_sin_cambios_no_llama_al_servidor", async () => {
         const ctx = abierto();
         const guardado = await d.guardarDatos(ctx, {
-            clienteId: "C1", clienteNombre: "Ana", nombre: "Boda", descripcion: "",
+            clienteId: "C1", clienteNombre: "Ana", nombre: "Boda", direccion: "boda", descripcion: "",
         });
         expect(guardado).toBe(false);
         expect(patchListaRegalos).not.toHaveBeenCalled();
@@ -86,7 +86,7 @@ describe("[lista_regalos-datos-01] Guardar los datos", () => {
 
     test("lista_regalos_datos_01_con_cambios_llama_a_patch", async () => {
         const guardado = await d.guardarDatos(abierto(), {
-            clienteId: "C1", clienteNombre: "Ana", nombre: "Boda", descripcion: "Mesa",
+            clienteId: "C1", clienteNombre: "Ana", nombre: "Boda", direccion: "boda", descripcion: "Mesa",
         });
         expect(guardado).toBe(true);
         expect(patchListaRegalos).toHaveBeenCalledWith("7", { descripcion: "Mesa" });

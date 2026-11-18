@@ -6,7 +6,12 @@ import { useForm } from "@olula/lib/useForm.ts";
 import { useModelo } from "@olula/lib/useModelo.ts";
 import { useCallback, useMemo } from "react";
 import { Cliente } from "#/ventas/comun/componentes/cliente.tsx";
-import { metaNuevaListaRegalos, nuevaListaRegalosVacia } from "../dominio.ts";
+import {
+    metaNuevaListaRegalos,
+    nuevaListaRegalosVacia,
+    TEXTO_CODIGO_DIRECCION,
+    vistaPreviaNuevaDireccion,
+} from "../dominio.ts";
 import { postListaRegalos } from "../infraestructura.ts";
 
 export const CrearListaRegalos = ({
@@ -44,10 +49,16 @@ export const CrearListaRegalos = ({
         >
             <div className="CrearListaRegalos">
                 <quimera-formulario>
-                    <Cliente {...uiProps("clienteId", "clienteNombre")} />
                     <QInput label="Nombre" {...uiProps("nombre")} />
+                    <QInput label="Dirección" {...uiProps("direccion")} />
+                    <Cliente {...uiProps("clienteId", "clienteNombre")} />
                     <QInput label="Descripción (opcional)" {...uiProps("descripcion")} />
                 </quimera-formulario>
+                <p className="CrearListaRegalos-direccion">
+                    {vistaPreviaNuevaDireccion(modelo.direccion)}
+                    <br />
+                    {TEXTO_CODIGO_DIRECCION}
+                </p>
                 <div className="botones maestro-botones">
                     <QBoton onClick={crear} deshabilitado={!valido}>
                         Crear

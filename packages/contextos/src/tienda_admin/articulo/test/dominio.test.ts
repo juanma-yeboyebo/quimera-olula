@@ -7,15 +7,25 @@ import {
     criteriaArticulos,
     distintivosArticulo,
     enlaceArticuloErp,
+    errorFotosNoSubidas,
+    estadoPublicacion,
+    filasPublicacion,
     filtroArticulos,
     filtrosArticuloIniciales,
+    fotosEnOrden,
+    idsTrasMoverFoto,
+    idsTrasSoltarFoto,
+    ladoDeSoltado,
     idsCategoriasEnOrden,
+    motivoError,
     metaPublicacion,
     metaTextos,
     mismasCategorias,
     opcionesFiltroCategoria,
+    opcionesIdioma,
     publicacionDeWebsite,
     resumenDeArticulo,
+    sugerenciasTextos,
     textoBotonPublicacion,
     textoQuitarPublicacion,
     textosDeArticulo,
@@ -37,10 +47,10 @@ const detalle = (extra: Partial<ArticuloWebDetalle> = {}): ArticuloWebDetalle =>
     referencia: "A1",
     descripcion: "Camiseta",
     precio: 10,
-    descripcionCorta: "corta",
-    descripcionLarga: "larga",
-    metaTitulo: "titulo",
-    metaDescripcion: "desc",
+    textos: {
+        "*": { nombre: "", descripcionCorta: "corta", descripcionLarga: "larga", metaTitulo: "titulo", metaDescripcion: "desc" },
+    },
+    idiomas: ["es", "en"],
     publicaciones: [
         {
             websiteId: 1, publicado: true, visible: false, destacado: true,
@@ -172,6 +182,33 @@ describe("[tienda_admin-articulo-publicacion-01] Publicación del website activo
     });
 });
 
+describe("[tienda_admin-articulo-publicacion-01] Estado de la publicación por website", () => {
+    const pub = (publicado: boolean, visible: boolean) => ({
+        websiteId: 1, publicado, visible, destacado: false, slug: "", orden: 0, fechaPublicacion: null,
+    });
+
+    test("tienda_admin_articulo_publicacion_01_los_cuatro_estados", () => {
+        expect(estadoPublicacion(undefined)).toBe("Sin publicar");
+        expect(estadoPublicacion(pub(false, true))).toBe("En pausa");
+        expect(estadoPublicacion(pub(false, false))).toBe("En pausa");
+        expect(estadoPublicacion(pub(true, false))).toBe("Oculto en catálogo");
+        expect(estadoPublicacion(pub(true, true))).toBe("Publicado");
+    });
+
+    test("tienda_admin_articulo_publicacion_01_una_fila_por_website_activo", () => {
+        const websites = [
+            { id: 1, codigo: "es", nombre: "España", activo: true },
+            { id: 2, codigo: "pt", nombre: "Portugal", activo: true },
+            { id: 3, codigo: "fr", nombre: "Francia", activo: false },
+        ];
+        const filas = filasPublicacion(detalle(), websites);
+        expect(filas.map((f) => [f.website.id, f.estado, f.publicacion?.slug])).toEqual([
+            [1, "Oculto en catálogo", "camiseta"],
+            [2, "Sin publicar", undefined],
+        ]);
+    });
+});
+
 describe("[tienda_admin-articulo-publicacion-02] El slug de la publicación se valida", () => {
     const valida = modeloEsValido(metaPublicacion);
     const base = cambiosDePublicacion(undefined);
@@ -199,10 +236,15 @@ describe("[tienda_admin-articulo-publicacion-02] El slug de la publicación se v
 
 describe("[tienda_admin-articulo-textos-01] Longitudes máximas de los textos", () => {
     const valida = modeloEsValido(metaTextos);
-    const base = textosDeArticulo(detalle());
+    const base = textosDeArticulo(detalle(), "*");
 
     test("tienda_admin_articulo_textos_01_los_textos_actuales_son_validos", () => {
         expect(valida(base)).toBe(true);
+    });
+
+    test("tienda_admin_articulo_textos_01_nombre_100_si_101_no", () => {
+        expect(valida({ ...base, nombre: "a".repeat(100) })).toBe(true);
+        expect(valida({ ...base, nombre: "a".repeat(101) })).toBe(false);
     });
 
     test("tienda_admin_articulo_textos_01_descripcion_corta_255_si_256_no", () => {
@@ -225,6 +267,41 @@ describe("[tienda_admin-articulo-textos-01] Longitudes máximas de los textos", 
     });
 });
 
+describe("[tienda_admin-articulo-textos-01] Textos por idioma", () => {
+    test("tienda_admin_articulo_textos_01_el_selector_tiene_por_defecto_y_los_idiomas", () => {
+        expect(opcionesIdioma(["es", "en"]).map((o) => o.valor)).toEqual(["*", "es", "en"]);
+        expect(opcionesIdioma([])[0].descripcion).toBe("Por defecto");
+    });
+
+    test("tienda_admin_articulo_textos_01_idioma_sin_fila_da_textos_vacios", () => {
+        expect(textosDeArticulo(detalle(), "*").descripcionCorta).toBe("corta");
+        expect(textosDeArticulo(detalle(), "en")).toEqual({
+            nombre: "", descripcionCorta: "", descripcionLarga: "", metaTitulo: "", metaDescripcion: "",
+        });
+    });
+});
+
+describe("[tienda_admin-articulo-textos-02] Sugerencias de los campos vacíos", () => {
+    test("tienda_admin_articulo_textos_02_por_defecto_sugiere_la_descripcion_del_erp_como_nombre", () => {
+        expect(sugerenciasTextos(detalle(), "*")).toEqual({
+            nombre: "Camiseta", descripcionCorta: "", descripcionLarga: "", metaTitulo: "", metaDescripcion: "",
+        });
+    });
+
+    test("tienda_admin_articulo_textos_02_otro_idioma_sugiere_el_texto_por_defecto", () => {
+        const a = detalle();
+        a.textos["*"].nombre = "Camiseta de algodón";
+        expect(sugerenciasTextos(a, "en")).toEqual({
+            nombre: "Camiseta de algodón", descripcionCorta: "corta", descripcionLarga: "larga",
+            metaTitulo: "titulo", metaDescripcion: "desc",
+        });
+    });
+
+    test("tienda_admin_articulo_textos_02_sin_nombre_por_defecto_sugiere_la_descripcion_del_erp", () => {
+        expect(sugerenciasTextos(detalle(), "en").nombre).toBe("Camiseta");
+    });
+});
+
 describe("[tienda_admin-articulo-categorias-01] Las categorías se guardan en el orden del árbol", () => {
     const arbol = [nodo("1", [nodo("2"), nodo("3")]), nodo("4")];
 
@@ -244,5 +321,51 @@ describe("[tienda_admin-articulo-categorias-01] Las categorías se guardan en el
         expect(mismasCategorias(["1", "2"], ["2", "1"])).toBe(true);
         expect(mismasCategorias(["1"], ["1", "2"])).toBe(false);
         expect(mismasCategorias(["1", "3"], ["1", "2"])).toBe(false);
+    });
+});
+
+describe("[tienda_admin-articulo-fotos-02] Errores de subida", () => {
+    test("tienda_admin_articulo_fotos_02_lista_cada_fichero_con_su_motivo", () => {
+        expect(errorFotosNoSubidas([
+            { nombre: "a.gif", motivo: "no es una imagen JPEG, PNG o WebP" },
+            { nombre: "b.jpg", motivo: "supera los 10 MB" },
+        ])).toEqual({
+            nombre: "No se han podido subir 2 fotos",
+            descripcion: "a.gif: no es una imagen JPEG, PNG o WebP\nb.jpg: supera los 10 MB",
+        });
+        expect(errorFotosNoSubidas([{ nombre: "a.gif", motivo: "x" }]).nombre).toBe("No se ha podido subir 1 foto");
+    });
+
+    test("tienda_admin_articulo_fotos_02_motivo_desde_error_de_api_o_js", () => {
+        expect(motivoError({ nombre: "Error al subir la foto", descripcion: "supera los 10 MB" })).toBe("supera los 10 MB");
+        expect(motivoError(new Error("sin red"))).toBe("sin red");
+    });
+});
+
+describe("[tienda_admin-articulo-fotos-04] Nuevo orden de las fotos", () => {
+    const foto = (id: number, orden: number) => ({ id, url: "u", alt: "", orden, principal: false });
+    const fotos = [foto(6, 2), foto(5, 1), foto(7, 3)];
+
+    test("tienda_admin_articulo_fotos_04_las_fotos_salen_por_orden", () => {
+        expect(fotosEnOrden(fotos).map((f) => f.id)).toEqual([5, 6, 7]);
+    });
+
+    test("tienda_admin_articulo_fotos_04_mover_con_las_flechas", () => {
+        expect(idsTrasMoverFoto(fotos, 6, -1)).toEqual([6, 5, 7]);
+        expect(idsTrasMoverFoto(fotos, 6, 1)).toEqual([5, 7, 6]);
+        expect(idsTrasMoverFoto(fotos, 5, -1)).toBeNull();
+        expect(idsTrasMoverFoto(fotos, 7, 1)).toBeNull();
+    });
+
+    test("tienda_admin_articulo_fotos_04_soltar_delante_o_detras", () => {
+        expect(idsTrasSoltarFoto(fotos, 7, 5, "antes")).toEqual([7, 5, 6]);
+        expect(idsTrasSoltarFoto(fotos, 5, 7, "despues")).toEqual([6, 7, 5]);
+        expect(idsTrasSoltarFoto(fotos, 5, 6, "antes")).toBeNull();
+        expect(idsTrasSoltarFoto(fotos, 5, 5, "despues")).toBeNull();
+    });
+
+    test("tienda_admin_articulo_fotos_04_el_lado_depende_de_la_mitad", () => {
+        expect(ladoDeSoltado(10, 100)).toBe("antes");
+        expect(ladoDeSoltado(60, 100)).toBe("despues");
     });
 });

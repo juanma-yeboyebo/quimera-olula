@@ -8,10 +8,12 @@ export interface ClienteListaRegalos {
 export interface ListaRegalos extends Entidad {
     id: string;
     websiteId: number;
-    cliente: ClienteListaRegalos;
+    cliente: ClienteListaRegalos | null;
     nombre: string;
     descripcion: string;
     token: string;
+    slug: string;
+    codigo: string;
     url: string | null;
     publicada: boolean;
     creada: string;
@@ -32,7 +34,7 @@ export interface LineaListaRegalos extends Entidad {
 export interface ItemListaRegalos extends Entidad {
     id: string;
     websiteId: number;
-    cliente: ClienteListaRegalos;
+    cliente: ClienteListaRegalos | null;
     nombre: string;
     publicada: boolean;
     creada: string;
@@ -45,6 +47,7 @@ export interface NuevaListaRegalos extends Modelo {
     clienteId: string;
     clienteNombre: string;
     nombre: string;
+    direccion: string;
     descripcion: string;
 }
 
@@ -52,6 +55,7 @@ export interface EdicionListaRegalos extends Modelo {
     clienteId: string;
     clienteNombre: string;
     nombre: string;
+    direccion: string;
     descripcion: string;
 }
 
@@ -73,7 +77,13 @@ export interface FiltrosListaRegalos {
     texto: string;
 }
 
-export type CambiosListaRegalos = Partial<Pick<EdicionListaRegalos, "clienteId" | "nombre" | "descripcion"> & { publicada: boolean }>;
+export type CambiosListaRegalos = {
+    clienteId?: string | null;
+    nombre?: string;
+    descripcion?: string;
+    publicada?: boolean;
+    slug?: string;
+};
 
 export type CambiosLineaListaRegalos = {
     precio?: number;

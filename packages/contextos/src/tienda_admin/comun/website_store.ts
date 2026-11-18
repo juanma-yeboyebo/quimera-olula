@@ -19,6 +19,8 @@ export const obtenerWebsiteActivo = (): number | null => estado.activo;
 export const obtenerNombreWebsiteActivo = (): string | null =>
     nombreDeWebsite(estado.websites, estado.activo);
 
+export const obtenerWebsites = (): WebsiteAdmin[] => estado.websites;
+
 export const fijarWebsiteActivo = (id: number | null) => {
     if (id === estado.activo) return;
     cambiar({ ...estado, activo: id });
@@ -45,3 +47,6 @@ export const useWebsiteActivo = (): number | null =>
 
 export const useNombreWebsiteActivo = (): string | null =>
     useSyncExternalStore(suscribirWebsiteActivo, obtenerNombreWebsiteActivo, obtenerNombreWebsiteActivo);
+
+export const useWebsites = (): WebsiteAdmin[] =>
+    useSyncExternalStore(suscribirWebsiteActivo, obtenerWebsites, obtenerWebsites);

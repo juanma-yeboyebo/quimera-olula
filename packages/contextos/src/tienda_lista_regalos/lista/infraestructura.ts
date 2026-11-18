@@ -28,7 +28,7 @@ export interface ClienteListaApi {
 export interface ItemListaApi {
     id: number;
     website_id: number;
-    cliente: ClienteListaApi;
+    cliente: ClienteListaApi | null;
     nombre: string;
     publicada: boolean;
     creada: string;
@@ -51,20 +51,20 @@ export interface LineaListaApi {
 export interface ListaApi {
     id: number;
     website_id: number;
-    cliente: ClienteListaApi;
+    cliente: ClienteListaApi | null;
     nombre: string;
     descripcion: string | null;
     token: string;
+    slug: string;
+    codigo: string;
     url: string | null;
     publicada: boolean;
     creada: string;
     lineas: LineaListaApi[];
 }
 
-const clienteDesdeApi = (c: ClienteListaApi) => ({
-    codigo: c.codigo,
-    nombre: c.nombre ?? "",
-});
+const clienteDesdeApi = (c: ClienteListaApi | null) =>
+    c ? { codigo: c.codigo, nombre: c.nombre ?? "" } : null;
 
 export const itemListaDesdeApi = (i: ItemListaApi): ItemListaRegalos => ({
     id: String(i.id),
@@ -96,6 +96,8 @@ export const listaDesdeApi = (l: ListaApi): ListaRegalos => ({
     nombre: l.nombre,
     descripcion: l.descripcion ?? "",
     token: l.token,
+    slug: l.slug,
+    codigo: l.codigo,
     url: l.url ?? null,
     publicada: l.publicada,
     creada: l.creada,
@@ -104,17 +106,19 @@ export const listaDesdeApi = (l: ListaApi): ListaRegalos => ({
 
 export const nuevaListaAApi = (websiteId: number, n: NuevaListaRegalos) => ({
     id_website: websiteId,
-    cliente_id: n.clienteId,
+    cliente_id: n.clienteId || null,
     nombre: n.nombre.trim(),
     descripcion: n.descripcion ? n.descripcion : null,
+    slug: n.direccion || null,
 });
 
 export const cambiosListaAApi = (c: CambiosListaRegalos) => {
-    const cambios: { nombre?: string; descripcion?: string; cliente_id?: string; publicada?: boolean } = {};
+    const cambios: { nombre?: string; descripcion?: string; cliente_id?: string | null; publicada?: boolean; slug?: string } = {};
     if (c.nombre !== undefined) cambios.nombre = c.nombre;
     if (c.descripcion !== undefined) cambios.descripcion = c.descripcion;
     if (c.clienteId !== undefined) cambios.cliente_id = c.clienteId;
     if (c.publicada !== undefined) cambios.publicada = c.publicada;
+    if (c.slug !== undefined) cambios.slug = c.slug;
     return cambios;
 };
 

@@ -1,20 +1,15 @@
-.TabPublicacion {
-    quimera-checkbox[nombre="publicado"],
-    quimera-checkbox[nombre="visible"],
-    quimera-checkbox[nombre="destacado"] {
-        grid-column: span 4;
+.TabPublicacion-tabla {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+        padding: 6px 8px;
+        text-align: left;
+        border-bottom: 1px solid var(--color-borde, rgba(0, 0, 0, 0.12));
     }
 
-    quimera-input[nombre="slug"] {
-        grid-column: span 9;
+    td:last-child {
+        text-align: right;
     }
-
-    quimera-input[nombre="orden"] {
-        grid-column: span 3;
-    }
-}
-
-.TabPublicacion-fecha {
-    margin: 8px 0;
-    opacity: 0.8;
 }

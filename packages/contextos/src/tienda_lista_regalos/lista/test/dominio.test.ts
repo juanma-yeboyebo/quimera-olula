@@ -25,8 +25,14 @@ import {
     nuevaLineaListaRegalosVacia,
     nuevaListaRegalosVacia,
     TEXTO_AYUDA_PRECIO,
+    TEXTO_CODIGO_DIRECCION,
+    TEXTO_DIRECCION_PUBLICADA,
+    textoCliente,
     textoVendidas,
+    urlConDireccion,
+    vistaPreviaNuevaDireccion,
 } from "#/tienda_lista_regalos/lista/dominio.ts";
+import { slugDesdeTexto } from "#/tienda_admin/comun/dominio.ts";
 
 const linea = (id: string, extra: Partial<LineaListaRegalos> = {}): LineaListaRegalos => ({
     id,
@@ -46,8 +52,10 @@ const lista = (extra: Partial<ListaRegalos> = {}): ListaRegalos => ({
     cliente: { codigo: "C1", nombre: "Ana" },
     nombre: "Boda",
     descripcion: "",
-    token: "tok",
-    url: "https://tienda/lista/tok",
+    token: "boda-abc123",
+    slug: "boda",
+    codigo: "abc123",
+    url: "https://tienda/lista/boda-abc123",
     publicada: false,
     creada: "2026-11-01T10:00:00",
     lineas: [linea("1"), linea("2", { cantidad: 3, cantidadVendida: 1, pendiente: 2 })],
@@ -122,8 +130,8 @@ describe("[lista_regalos-crear-01] Alta de lista", () => {
         expect(valida(nuevaListaRegalosVacia())).toBe(false);
     });
 
-    test("lista_regalos_crear_01_cliente_y_nombre_bastan", () => {
-        expect(valida({ ...nuevaListaRegalosVacia(), clienteId: "C1", clienteNombre: "Ana", nombre: "Boda" })).toBe(true);
+    test("lista_regalos_crear_01_nombre_y_direccion_bastan_sin_cliente", () => {
+        expect(valida({ ...nuevaListaRegalosVacia(), nombre: "Boda", direccion: "boda" })).toBe(true);
     });
 
     test("lista_regalos_crear_01_nombre_de_solo_espacios_no_es_valido", () => {
@@ -134,7 +142,7 @@ describe("[lista_regalos-crear-01] Alta de lista", () => {
 describe("[lista_regalos-datos-01] Pestaña Datos", () => {
     test("lista_regalos_datos_01_la_edicion_parte_de_la_lista", () => {
         expect(edicionDeLista(lista())).toEqual({
-            clienteId: "C1", clienteNombre: "Ana", nombre: "Boda", descripcion: "",
+            clienteId: "C1", clienteNombre: "Ana", nombre: "Boda", direccion: "boda", descripcion: "",
         });
     });
 
@@ -168,7 +176,8 @@ describe("[lista_regalos-productos-02] Añadir producto", () => {
     });
 
     test("lista_regalos_productos_02_texto_de_ayuda_del_precio", () => {
-        expect(TEXTO_AYUDA_PRECIO).toBe("Si lo dejas vacío se usa el precio de la tarifa del cliente");
+        expect(TEXTO_AYUDA_PRECIO).toBe(
+            "Si lo dejas vacío se usa el precio de la tarifa del cliente o, si la lista no tiene cliente, el de la tienda");
     });
 
     test("lista_regalos_productos_02_hace_falta_articulo", () => {
@@ -239,5 +248,64 @@ describe("[lista_regalos-productos-05] Subir y bajar líneas", () => {
 describe("[lista_regalos-compartir-01] Aviso de lista sin publicar", () => {
     test("lista_regalos_compartir_01_texto_del_aviso", () => {
         expect(AVISO_NO_PUBLICADA).toBe("La lista no está publicada: el enlace no funcionará hasta que la publiques");
+    });
+});
+
+describe("[lista_regalos-maestro-01] Cliente opcional", () => {
+    test("lista_regalos_maestro_01_sin_cliente", () => {
+        expect(textoCliente({ cliente: null })).toBe("Sin cliente");
+        expect(textoCliente({ cliente: { codigo: "C1", nombre: "Ana" } })).toBe("Ana");
+    });
+
+    test("lista_regalos_datos_01_quitar_el_cliente_envia_nulo", () => {
+        const edicion = { ...edicionDeLista(lista()), clienteId: "", clienteNombre: "" };
+        expect(cambiosDeEdicion(lista(), edicion)).toEqual({ clienteId: null });
+    });
+
+    test("lista_regalos_datos_01_lista_sin_cliente_se_edita_vacia", () => {
+        expect(edicionDeLista(lista({ cliente: null }))).toMatchObject({ clienteId: "", clienteNombre: "" });
+    });
+});
+
+describe("[lista_regalos-direccion-01] Dirección al crear", () => {
+    const valida = modeloEsValido(metaNuevaListaRegalos);
+    test("lista_regalos_direccion_01_slug_con_las_reglas_del_servidor", () => {
+        expect(slugDesdeTexto("Boda de Ana & Pedro ¡2026!")).toBe("boda-de-ana-pedro-2026");
+        expect(slugDesdeTexto("  Bautizo   Niño ")).toBe("bautizo-nino");
+    });
+
+    test("lista_regalos_direccion_01_sigue_al_nombre_mientras_no_se_toca", () => {
+        const onChange = metaNuevaListaRegalos.onChange!;
+        const conNombre = onChange({ ...nuevaListaRegalosVacia(), nombre: "Boda Ana" }, "nombre", "");
+        expect(conNombre.direccion).toBe("boda-ana");
+        const tocada = { ...conNombre, direccion: "mi-boda" };
+        expect(onChange({ ...tocada, nombre: "Boda Ana y Pedro" }, "nombre", "Boda Ana").direccion).toBe("mi-boda");
+    });
+
+    test("lista_regalos_direccion_01_direccion_no_valida", () => {
+        expect(valida({ ...nuevaListaRegalosVacia(), nombre: "Boda", direccion: "Con Espacios" })).toBe(false);
+    });
+
+    test("lista_regalos_direccion_01_vista_previa_y_aviso_del_codigo", () => {
+        expect(vistaPreviaNuevaDireccion("boda-ana")).toBe("…/lista/boda-ana-······");
+        expect(TEXTO_CODIGO_DIRECCION).toBe("Al final se añade un código para que nadie pueda adivinar la dirección");
+    });
+});
+
+describe("[lista_regalos-direccion-02] Dirección en Datos", () => {
+    test("lista_regalos_direccion_02_url_completa_con_el_codigo", () => {
+        expect(urlConDireccion(lista(), "bautizo")).toBe("https://tienda/lista/bautizo-abc123");
+    });
+
+    test("lista_regalos_direccion_02_sin_publicar_se_envia", () => {
+        const edicion = { ...edicionDeLista(lista()), direccion: "bautizo" };
+        expect(cambiosDeEdicion(lista(), edicion)).toEqual({ slug: "bautizo" });
+    });
+
+    test("lista_regalos_direccion_02_publicada_no_se_envia", () => {
+        const publicada = lista({ publicada: true });
+        const edicion = { ...edicionDeLista(publicada), direccion: "bautizo" };
+        expect(cambiosDeEdicion(publicada, edicion)).toEqual({});
+        expect(TEXTO_DIRECCION_PUBLICADA).toBe("La dirección no se puede cambiar una vez publicada");
     });
 });

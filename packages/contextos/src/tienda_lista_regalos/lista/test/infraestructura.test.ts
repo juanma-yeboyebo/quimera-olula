@@ -25,6 +25,8 @@ const listaApi = {
     nombre: "Boda",
     descripcion: null,
     token: "tok",
+    slug: "boda",
+    codigo: "abc123",
     url: "https://tienda/lista/tok",
     publicada: true,
     creada: "2026-11-01T10:00:00",
@@ -82,7 +84,7 @@ describe("[lista_regalos-detalle-01] Lectura y borrado de la lista", () => {
         const l = infra.listaDesdeApi(listaApi);
         expect(l).toMatchObject({
             id: "7", websiteId: 1, cliente: { codigo: "C1", nombre: "" }, nombre: "Boda",
-            descripcion: "", token: "tok", url: "https://tienda/lista/tok", publicada: true,
+            descripcion: "", token: "tok", slug: "boda", codigo: "abc123", url: "https://tienda/lista/tok", publicada: true,
         });
         expect(l.lineas[0]).toEqual({
             id: "11", referencia: "R1", descripcion: "", precio: 12.5,
@@ -113,10 +115,16 @@ describe("[lista_regalos-crear-01] Alta de lista", () => {
 
     test("lista_regalos_crear_01_el_cuerpo_lleva_el_website_activo", async () => {
         post.mockResolvedValue({ id: 9 });
-        const id = await infra.postListaRegalos(2, { clienteId: "C1", clienteNombre: "Ana", nombre: " Boda ", descripcion: "" });
+        const id = await infra.postListaRegalos(2, { clienteId: "C1", clienteNombre: "Ana", nombre: " Boda ", direccion: "boda", descripcion: "" });
         expect(id).toBe("9");
         expect(post.mock.calls[0][0]).toBe("/tienda_lista_regalos/lista");
-        expect(post.mock.calls[0][1]).toEqual({ id_website: 2, cliente_id: "C1", nombre: "Boda", descripcion: null });
+        expect(post.mock.calls[0][1]).toEqual({ id_website: 2, cliente_id: "C1", nombre: "Boda", descripcion: null, slug: "boda" });
+    });
+
+    test("lista_regalos_crear_01_sin_cliente_va_nulo", async () => {
+        post.mockResolvedValue({ id: 9 });
+        await infra.postListaRegalos(2, { clienteId: "", clienteNombre: "", nombre: "Boda", direccion: "boda", descripcion: "" });
+        expect(post.mock.calls[0][1]).toMatchObject({ cliente_id: null });
     });
 });
 
@@ -189,5 +197,15 @@ describe("[lista_regalos-productos-04] Borrar una línea", () => {
 describe("[lista_regalos-productos-05] Cambiar el orden", () => {
     test("lista_regalos_productos_05_el_cuerpo_solo_lleva_el_orden", () => {
         expect(infra.cambiosLineaAApi({ orden: 3 })).toEqual({ orden: 3 });
+    });
+});
+
+describe("[lista_regalos-direccion-02] Dirección y cliente en la API", () => {
+    test("lista_regalos_direccion_02_lista_sin_cliente", () => {
+        expect(infra.listaDesdeApi({ ...listaApi, cliente: null }).cliente).toBeNull();
+    });
+
+    test("lista_regalos_direccion_02_cambios_de_direccion_y_quitar_cliente", () => {
+        expect(infra.cambiosListaAApi({ slug: "bautizo", clienteId: null })).toEqual({ slug: "bautizo", cliente_id: null });
     });
 });

@@ -4,12 +4,16 @@ import {
     ArticuloWeb,
     ArticuloWebDetalle,
     CambiosPublicacion,
+    DeleteImagenArticulo,
     DeletePublicacion,
     GetArticulo,
     GetArticulos,
     PatchCategoriasArticulo,
+    PatchImagenPrincipal,
+    PatchOrdenImagenes,
     PatchPublicacion,
     PatchTextos,
+    PostImagenArticulo,
     PublicacionArticulo,
     TextosArticulo,
 } from "./diseño.ts";
@@ -36,14 +40,20 @@ export interface PublicacionApi {
     fecha_publicacion: string | null;
 }
 
-export interface ArticuloWebDetalleApi {
-    referencia: string;
-    descripcion: string;
-    precio: number;
+export interface TextosApi {
+    nombre: string | null;
     descripcion_corta: string | null;
     descripcion_larga: string | null;
     meta_titulo: string | null;
     meta_descripcion: string | null;
+}
+
+export interface ArticuloWebDetalleApi {
+    referencia: string;
+    descripcion: string;
+    precio: number;
+    textos: Record<string, TextosApi>;
+    idiomas: string[];
     publicaciones: PublicacionApi[];
     imagenes: { id: number; url: string; alt: string | null; orden: number; principal: boolean }[];
     categorias: { id: number | string; nombre: string; ruta: string | string[] }[];
@@ -69,15 +79,21 @@ export const publicacionDesdeApi = (p: PublicacionApi): PublicacionArticulo => (
     fechaPublicacion: p.fecha_publicacion ?? null,
 });
 
+export const textosDesdeApi = (t: TextosApi): TextosArticulo => ({
+    nombre: t.nombre ?? "",
+    descripcionCorta: t.descripcion_corta ?? "",
+    descripcionLarga: t.descripcion_larga ?? "",
+    metaTitulo: t.meta_titulo ?? "",
+    metaDescripcion: t.meta_descripcion ?? "",
+});
+
 export const articuloDetalleDesdeApi = (a: ArticuloWebDetalleApi): ArticuloWebDetalle => ({
     id: a.referencia,
     referencia: a.referencia,
     descripcion: a.descripcion,
     precio: a.precio,
-    descripcionCorta: a.descripcion_corta ?? "",
-    descripcionLarga: a.descripcion_larga ?? "",
-    metaTitulo: a.meta_titulo ?? "",
-    metaDescripcion: a.meta_descripcion ?? "",
+    textos: Object.fromEntries(Object.entries(a.textos ?? {}).map(([idioma, t]) => [idioma, textosDesdeApi(t)])),
+    idiomas: a.idiomas ?? [],
     publicaciones: a.publicaciones.map(publicacionDesdeApi),
     imagenes: a.imagenes.map((i) => ({
         id: i.id,
@@ -101,7 +117,9 @@ export const publicacionAApi = (c: CambiosPublicacion) => ({
     orden: Number(c.orden) || 0,
 });
 
-export const textosAApi = (t: TextosArticulo) => ({
+export const textosAApi = (idioma: string, t: TextosArticulo) => ({
+    idioma,
+    nombre: t.nombre,
     descripcion_corta: t.descripcionCorta,
     descripcion_larga: t.descripcionLarga,
     meta_titulo: t.metaTitulo,
@@ -144,8 +162,12 @@ export const deletePublicacion: DeletePublicacion = async (referencia, websiteId
     );
 };
 
-export const patchTextos: PatchTextos = async (referencia, textos) => {
-    await RestAPI.patch(`${urlArticulo(referencia)}/textos`, textosAApi(textos), "Error al guardar los textos");
+export const patchTextos: PatchTextos = async (referencia, idioma, textos) => {
+    await RestAPI.patch(
+        `${urlArticulo(referencia)}/textos`,
+        textosAApi(idioma, textos),
+        "Error al guardar los textos",
+    );
 };
 
 export const patchCategoriasArticulo: PatchCategoriasArticulo = async (referencia, ids) => {
@@ -153,5 +175,31 @@ export const patchCategoriasArticulo: PatchCategoriasArticulo = async (referenci
         `${urlArticulo(referencia)}/categorias`,
         categoriasAApi(ids),
         "Error al guardar las categorías",
+    );
+};
+
+export const postImagenArticulo: PostImagenArticulo = async (referencia, fichero) => {
+    const formData = new FormData();
+    formData.append("fichero", fichero);
+    await RestAPI.query<FormData, { id: number }>(
+        `${urlArticulo(referencia)}/imagen`,
+        formData,
+        "Error al subir la foto",
+    );
+};
+
+export const deleteImagenArticulo: DeleteImagenArticulo = async (referencia, id) => {
+    await RestAPI.delete(`${urlArticulo(referencia)}/imagen/${id}`, "Error al borrar la foto");
+};
+
+export const patchOrdenImagenes: PatchOrdenImagenes = async (referencia, ids) => {
+    await RestAPI.patch(`${urlArticulo(referencia)}/imagen/ordenar`, { ids }, "Error al ordenar las fotos");
+};
+
+export const patchImagenPrincipal: PatchImagenPrincipal = async (referencia, id) => {
+    await RestAPI.patch(
+        `${urlArticulo(referencia)}/imagen/${id}/principal`,
+        {},
+        "Error al marcar la foto principal",
     );
 };

@@ -2,24 +2,23 @@ import { QModalConfirmacion } from "@olula/componentes/moleculas/qmodalconfirmac
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useForm } from "@olula/lib/useForm.ts";
 import { useCallback } from "react";
+import { WebsiteAdmin } from "../../comun/diseño.ts";
 import { ArticuloWebDetalle } from "../diseño.ts";
 import { deletePublicacion } from "../infraestructura.ts";
 
 export const BorrarPublicacionArticulo = ({
     publicar,
     articulo,
-    websiteId,
-    nombreWebsite,
+    website,
 }: {
     articulo: ArticuloWebDetalle;
-    websiteId: number;
-    nombreWebsite: string | null;
+    website: WebsiteAdmin;
     publicar: EmitirEvento;
 }) => {
     const borrar_ = useCallback(async () => {
-        await deletePublicacion(articulo.referencia, websiteId);
+        await deletePublicacion(articulo.referencia, website.id);
         publicar("publicacion_quitada");
-    }, [publicar, articulo.referencia, websiteId]);
+    }, [publicar, articulo.referencia, website.id]);
 
     const cancelar_ = useCallback(() => publicar("quitar_cancelado"), [publicar]);
 
@@ -29,8 +28,8 @@ export const BorrarPublicacionArticulo = ({
         <QModalConfirmacion
             nombre="quitarPublicacionArticulo"
             abierto={true}
-            titulo="Quitar de la tienda"
-            mensaje={`¿Seguro que desea quitar ${articulo.referencia} de ${nombreWebsite ?? "la tienda"}?`}
+            titulo={`Quitar de ${website.nombre}`}
+            mensaje={`¿Seguro que desea quitar ${articulo.referencia} de ${website.nombre}?`}
             onCerrar={cancelar}
             onAceptar={borrar}
         />

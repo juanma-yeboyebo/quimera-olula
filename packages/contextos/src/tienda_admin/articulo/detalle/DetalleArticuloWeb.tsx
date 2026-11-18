@@ -5,10 +5,12 @@ import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { formatearMoneda } from "@olula/lib/dominio.ts";
 import { useEffect } from "react";
-import { useNombreWebsiteActivo } from "../../comun/website_store.ts";
+import { useWebsites } from "../../comun/website_store.ts";
 import { BorrarPublicacionArticulo } from "../borrar/BorrarPublicacionArticulo.tsx";
+import { BorrarFotoArticulo } from "../borrar_foto/BorrarFotoArticulo.tsx";
 import { ArticuloWebDetalle } from "../diseño.ts";
 import { enlaceArticuloErp } from "../dominio.ts";
+import { PublicarArticulo } from "../publicar/PublicarArticulo.tsx";
 import { contextoDetalleArticuloInicial } from "./detalle.ts";
 import "./DetalleArticuloWeb.css";
 import { getMaquina } from "./maquina.ts";
@@ -27,7 +29,7 @@ export const DetalleArticuloWeb = ({
     publicar?: EmitirEvento;
 }) => {
     const { ctx, emitir } = useMaquina(getMaquina, contextoDetalleArticuloInicial, publicar);
-    const nombreWebsite = useNombreWebsiteActivo();
+    const websites = useWebsites();
 
     useEffect(() => {
         emitir("articulo_id_cambiado", { id, websiteId }, true);
@@ -37,6 +39,7 @@ export const DetalleArticuloWeb = ({
     if (!ctx.articulo.id) return null;
 
     const { articulo } = ctx;
+    const websitePublicacion = websites.find((w) => w.id === ctx.websitePublicacion);
 
     return (
         <Detalle
@@ -66,12 +69,7 @@ export const DetalleArticuloWeb = ({
                             label="Publicación"
                             key="tab-publicacion"
                             children={
-                                <TabPublicacion
-                                    articulo={articulo}
-                                    websiteId={ctx.websiteId}
-                                    nombreWebsite={nombreWebsite}
-                                    publicar={emitir}
-                                />
+                                <TabPublicacion articulo={articulo} websites={websites} publicar={emitir} />
                             }
                         />,
                         <Tab
@@ -93,18 +91,19 @@ export const DetalleArticuloWeb = ({
                         <Tab
                             label="Fotos"
                             key="tab-fotos"
-                            children={<TabFotos articulo={articulo} />}
+                            children={<TabFotos articulo={articulo} publicar={emitir} />}
                         />,
                     ]}
                 />
             </div>
-            {ctx.estado === "QUITANDO" && ctx.websiteId !== null && (
-                <BorrarPublicacionArticulo
-                    articulo={articulo}
-                    websiteId={ctx.websiteId}
-                    nombreWebsite={nombreWebsite}
-                    publicar={emitir}
-                />
+            {ctx.estado === "PUBLICANDO" && websitePublicacion && (
+                <PublicarArticulo articulo={articulo} website={websitePublicacion} publicar={emitir} />
+            )}
+            {ctx.estado === "QUITANDO" && websitePublicacion && (
+                <BorrarPublicacionArticulo articulo={articulo} website={websitePublicacion} publicar={emitir} />
+            )}
+            {ctx.estado === "BORRANDO_FOTO" && ctx.fotoActiva && (
+                <BorrarFotoArticulo articulo={articulo} foto={ctx.fotoActiva} publicar={emitir} />
             )}
         </Detalle>
     );

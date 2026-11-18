@@ -26,3 +26,25 @@
 .TabFotos-aviso {
     opacity: 0.7;
 }
+
+.TabFotos-foto[draggable="true"] {
+    cursor: grab;
+}
+
+.TabFotos-foto.arrastrando {
+    opacity: 0.4;
+}
+
+.TabFotos-foto.objetivo-antes {
+    box-shadow: -4px 0 0 0 currentColor;
+}
+
+.TabFotos-foto.objetivo-despues {
+    box-shadow: 4px 0 0 0 currentColor;
+}
+
+.TabFotos-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}

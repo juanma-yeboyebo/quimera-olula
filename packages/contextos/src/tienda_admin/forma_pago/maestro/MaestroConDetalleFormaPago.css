@@ -1,0 +1,17 @@
+.FormaPago-tarjeta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaciado-xs);
+}
+
+.FormaPago-tarjeta-fila {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--espaciado-s);
+}
+
+.FormaPago-distintivos {
+    display: inline-flex;
+    gap: var(--espaciado-xs);
+}

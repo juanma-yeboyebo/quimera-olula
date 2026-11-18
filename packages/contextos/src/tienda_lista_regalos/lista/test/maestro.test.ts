@@ -98,7 +98,7 @@ describe("[lista_regalos-crear-01] Nueva lista", () => {
     test("lista_regalos_crear_01_la_lista_creada_se_incluye_y_se_abre", async () => {
         const creada: ListaRegalos = {
             id: "9", websiteId: 1, cliente: { codigo: "C1", nombre: "Ana" }, nombre: "Boda",
-            descripcion: "", token: "t", url: null, publicada: false, creada: "2026-11-02", lineas: [],
+            descripcion: "", token: "t", slug: "t", codigo: "abc123", url: null, publicada: false, creada: "2026-11-02", lineas: [],
         };
         getListaRegalos.mockResolvedValue(creada);
         const base = ctx();

@@ -39,4 +39,11 @@ La ruta `/` muestra el nombre del website como título y el texto «Para ver una
 ### ERP `dulce_bebe`
 
 <!-- [dulce_bebe-erp-01] [x] -->
-La factory de `apps/dulce_bebe` añade `TiendaListaRegalos = FactoryTiendaListaRegalos`, así que el menú gana «Tienda online › Listas de regalo». Su router añade `TiendaListaRegalos = RouterFactoryTiendaListaRegalos`. No añade el resto de `tienda_admin` (artículos web, categorías, pedidos y configuración).
+<!-- antes: La factory de `apps/dulce_bebe` añade `TiendaListaRegalos = FactoryTiendaListaRegalos`, así que el menú gana «Tienda online › Listas de regalo». Su router añade `TiendaListaRegalos = RouterFactoryTiendaListaRegalos`. No añade el resto de `tienda_admin` (artículos web, categorías, pedidos y configuración). -->
+La factory de `apps/dulce_bebe` añade `TiendaAdmin` y `TiendaListaRegalos = FactoryTiendaListaRegalos`, así que el menú gana «Tienda online › Artículos web», «Categorías» y «Listas de regalo». `TiendaAdmin` es una clase de la app con solo las entradas «Artículos web» y «Categorías» de `menuTiendaAdmin`. Su router añade `tienda_admin/articulo`, `tienda_admin/categoria` y `TiendaListaRegalos = RouterFactoryTiendaListaRegalos`. No añade los pedidos ni la configuración de `tienda_admin`.
+
+<!-- [dulce_bebe-erp-02] [x] -->
+El menú de `apps/dulce_bebe` gana también «Tienda online › Formas de pago» (`tienda_admin-forma_pago-menu-01`) y «Administración › Credenciales», solo esa pantalla de `comun`, como hace `apps/crema_cafe` (`FactoryComunCremaCafe` y `RouterFactoryComunCremaCafe`), para que el cliente dé de alta su cuenta de Stripe.
+
+<!-- [dulce_bebe-erp-03] [x] -->
+El menú de `apps/dulce_bebe` gana «Ventas › Artículos» (la entrada de `menuVentas`, regla `ventas.articulo`) y su router la ruta `ventas/articulo` con `MaestroConDetalleArticulo`, solo esa pantalla de ventas. Así funciona el enlace al artículo del ERP del detalle de artículo web.

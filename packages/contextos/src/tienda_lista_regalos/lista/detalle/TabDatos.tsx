@@ -5,7 +5,12 @@ import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { useModelo } from "@olula/lib/useModelo.ts";
 import { useContext, useMemo } from "react";
 import { Cliente } from "#/ventas/comun/componentes/cliente.tsx";
-import { edicionDeLista, metaEdicionListaRegalos } from "../dominio.ts";
+import {
+    edicionDeLista,
+    metaEdicionListaRegalos,
+    TEXTO_DIRECCION_PUBLICADA,
+    urlConDireccion,
+} from "../dominio.ts";
 import { guardarDatos } from "./detalle.ts";
 import { ContextoDetalleListaRegalos } from "./diseño.ts";
 
@@ -28,10 +33,20 @@ export const TabDatos = ({
     return (
         <div className="TabDatos">
             <quimera-formulario>
-                <Cliente {...uiProps("clienteId", "clienteNombre")} />
                 <QInput label="Nombre" {...uiProps("nombre")} />
+                <QInput label="Dirección" {...uiProps("direccion")} soloLectura={contexto.lista.publicada} />
+                <Cliente {...uiProps("clienteId", "clienteNombre")} />
                 <QInput label="Descripción" {...uiProps("descripcion")} />
             </quimera-formulario>
+            <p className="TabDatos-direccion">
+                {urlConDireccion(contexto.lista, modelo.direccion)}
+                {contexto.lista.publicada && (
+                    <>
+                        <br />
+                        {TEXTO_DIRECCION_PUBLICADA}
+                    </>
+                )}
+            </p>
             <div className="botones maestro-botones">
                 <QBoton onClick={guardar} deshabilitado={!valido || !modificado}>
                     Guardar

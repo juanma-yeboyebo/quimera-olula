@@ -6,10 +6,10 @@ Backend: extensión `tienda_lista_regalos` de `olula_servidor`, montada en la ap
 
 | Método | Ruta | Respuesta |
 |---|---|---|
-| GET | `/tienda_lista_regalos/lista?q=…` | `{datos: [{id, website_id, cliente: {codigo, nombre}, nombre, publicada, creada, lineas, unidades, vendidas}], total}` |
-| GET | `/tienda_lista_regalos/lista/<id>` | `{datos: {id, website_id, cliente: {codigo, nombre}, nombre, descripcion, token, url, publicada, creada, lineas: [{id, referencia, descripcion, precio, cantidad, cantidad_vendida, pendiente, orden}]}}`; 404 |
-| POST | `/tienda_lista_regalos/lista` | body `{id_website, cliente_id, nombre, descripcion}` → `{id}` |
-| PATCH | `/tienda_lista_regalos/lista/<id>` | body `{nombre, descripcion, cliente_id, publicada}` |
+| GET | `/tienda_lista_regalos/lista?q=…` | `{datos: [{id, website_id, cliente: {codigo, nombre} \| null, nombre, publicada, creada, lineas, unidades, vendidas}], total}` |
+| GET | `/tienda_lista_regalos/lista/<id>` | `{datos: {id, website_id, cliente: {codigo, nombre} \| null, nombre, descripcion, token, slug, codigo, url, publicada, creada, lineas: [{id, referencia, descripcion, precio, cantidad, cantidad_vendida, pendiente, orden}]}}`; 404 |
+| POST | `/tienda_lista_regalos/lista` | body `{id_website, cliente_id?, nombre, descripcion, slug?}` → `{id}`; 400 slug no válido |
+| PATCH | `/tienda_lista_regalos/lista/<id>` | body `{nombre, descripcion, cliente_id, publicada, slug}`; 400 slug no válido o lista publicada |
 | DELETE | `/tienda_lista_regalos/lista/<id>` | 400 si tiene unidades vendidas |
 | POST | `/tienda_lista_regalos/lista/<id>/linea` | body `{referencia, cantidad, precio?}` → `{id}`; 400 artículo repetido, 404 artículo inexistente |
 | PATCH | `/tienda_lista_regalos/lista/<id>/linea/<idlinea>` | body `{precio, cantidad, cantidad_vendida, orden}`; 400 cantidades no válidas |
@@ -33,13 +33,18 @@ Backend: extensión `tienda_lista_regalos` de `olula_servidor`, montada en la ap
 ### Maestro
 
 <!-- [lista_regalos-maestro-01] [x] -->
-Listado paginado de las listas del website activo (el selector de website de `tienda_admin`) con nombre, cliente, distintivo «Publicada» o «Sin publicar» y «<vendidas> de <unidades> vendidas». Por defecto, de la más reciente a la más antigua.
+<!-- antes: ... con nombre, cliente, distintivo ... -->
+Listado paginado de las listas del website activo (el selector de website de `tienda_admin`) con nombre, cliente («Sin cliente» si no tiene), distintivo «Publicada» o «Sin publicar» y «<vendidas> de <unidades> vendidas». Por defecto, de la más reciente a la más antigua.
 
 <!-- [lista_regalos-maestro-02] [x] -->
 Filtro de texto por nombre de la lista o nombre del cliente.
 
 <!-- [lista_regalos-crear-01] [x] -->
-«Nueva lista» abre un modal con cliente (selector de cliente de `ventas/comun/componentes`), nombre y descripción opcional. Crea la lista en el website activo y la abre en el detalle.
+<!-- antes: «Nueva lista» abre un modal con cliente (selector de cliente de `ventas/comun/componentes`), nombre y descripción opcional. Crea la lista en el website activo y la abre en el detalle. -->
+«Nueva lista» abre un modal con nombre, «Dirección», cliente opcional (selector de cliente de `ventas/comun/componentes`) y descripción opcional. Crea la lista en el website activo y la abre en el detalle.
+
+<!-- [lista_regalos-direccion-01] [x] -->
+La «Dirección» es el slug de la URL de la lista. Se rellena sola a partir del nombre mientras no se toque a mano, con las reglas del servidor: minúsculas, sin acentos, guiones en lugar de espacios y signos, máximo 150. Se valida con `errorSlug` de `tienda_admin/comun`. Debajo se ve la vista previa `…/lista/<dirección>-······` y el texto «Al final se añade un código para que nadie pueda adivinar la dirección».
 
 ### Detalle
 
@@ -50,13 +55,18 @@ El detalle muestra el nombre de la lista con su distintivo de publicación y tre
 El menú de acciones del detalle (`QuimeraAcciones`, donde está «Borrar») añade, antes de «Borrar», «Publicar» si la lista no está publicada u «Ocultar lista» si lo está. Llaman a PATCH de la lista con `publicada: true` o `false`, sin confirmación, y recargan el detalle y el maestro, de modo que cambian el distintivo y la pestaña «Compartir».
 
 <!-- [lista_regalos-datos-01] [x] -->
-Pestaña «Datos»: cliente, nombre y descripción. Guardar llama a PATCH de la lista. La publicación no se cambia aquí (`lista_regalos-compartir-01`).
+<!-- antes: Pestaña «Datos»: cliente, nombre y descripción. Guardar llama a PATCH de la lista. La publicación no se cambia aquí (`lista_regalos-compartir-01`). -->
+Pestaña «Datos»: nombre, «Dirección», cliente opcional (se puede vaciar) y descripción. Guardar llama a PATCH de la lista. La publicación no se cambia aquí (`lista_regalos-compartir-01`).
+
+<!-- [lista_regalos-direccion-02] [x] -->
+En la pestaña «Datos», mientras la lista no está publicada, la «Dirección» se edita con las mismas reglas que al crearla. Debajo se ve la URL completa con el código de la lista (`…/lista/<dirección>-<código>`). Cambiar el nombre no cambia la dirección. Si la lista está publicada, la dirección es de solo lectura, con el texto «La dirección no se puede cambiar una vez publicada».
 
 <!-- [lista_regalos-productos-01] [x] -->
 Pestaña «Productos»: tabla con las líneas en su orden: referencia, descripción, precio con IVA, cantidad, vendidas y pendiente. Una línea sin pendiente se marca como «Vendido».
 
 <!-- [lista_regalos-productos-02] [x] -->
-«Añadir producto» abre un modal con el artículo (selector de artículo de `ventas/comun/componentes`), la cantidad (por defecto 1) y el precio con IVA opcional, con el texto de ayuda «Si lo dejas vacío se usa el precio de la tarifa del cliente». El 400 de artículo repetido se muestra en el campo artículo.
+<!-- antes: texto de ayuda «Si lo dejas vacío se usa el precio de la tarifa del cliente» -->
+«Añadir producto» abre un modal con el artículo (selector de artículo de `ventas/comun/componentes`), la cantidad (por defecto 1) y el precio con IVA opcional, con el texto de ayuda «Si lo dejas vacío se usa el precio de la tarifa del cliente o, si la lista no tiene cliente, el de la tienda». El 400 de artículo repetido se muestra en el campo artículo.
 
 <!-- [lista_regalos-productos-03] [x] -->
 Al pulsar una línea se abre un modal para cambiar el precio, la cantidad y las vendidas. El 400 de cantidades no válidas se muestra en el modal.

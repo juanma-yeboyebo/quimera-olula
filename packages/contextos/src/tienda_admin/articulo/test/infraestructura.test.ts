@@ -65,22 +65,21 @@ describe("[tienda_admin-articulo-detalle-01] Lectura del detalle", () => {
             referencia: "A1",
             descripcion: "Camiseta",
             precio: 12.5,
-            descripcion_corta: null,
-            descripcion_larga: "larga",
-            meta_titulo: "t",
-            meta_descripcion: null,
+            textos: {
+                "*": { nombre: "Camiseta web", descripcion_corta: null, descripcion_larga: "larga", meta_titulo: "t", meta_descripcion: null },
+                en: { nombre: null, descripcion_corta: "short", descripcion_larga: null, meta_titulo: null, meta_descripcion: null },
+            },
+            idiomas: ["es", "en"],
             publicaciones: [
                 { website_id: 1, publicado: true, visible: true, destacado: false, slug: "camiseta", orden: 0, fecha_publicacion: "2026-01-01" },
             ],
             imagenes: [{ id: 5, url: "/a.jpg", alt: null, orden: 1, principal: true }],
             categorias: [{ id: 3, nombre: "Ropa", ruta: ["Moda", "Ropa"] }],
         });
-        expect(d).toMatchObject({
-            id: "A1",
-            descripcionCorta: "",
-            descripcionLarga: "larga",
-            metaTitulo: "t",
-            metaDescripcion: "",
+        expect(d).toMatchObject({ id: "A1", idiomas: ["es", "en"] });
+        expect(d.textos).toEqual({
+            "*": { nombre: "Camiseta web", descripcionCorta: "", descripcionLarga: "larga", metaTitulo: "t", metaDescripcion: "" },
+            en: { nombre: "", descripcionCorta: "short", descripcionLarga: "", metaTitulo: "", metaDescripcion: "" },
         });
         expect(d.publicaciones[0]).toEqual({
             websiteId: 1, publicado: true, visible: true, destacado: false,
@@ -93,7 +92,7 @@ describe("[tienda_admin-articulo-detalle-01] Lectura del detalle", () => {
     test("tienda_admin_articulo_detalle_01_la_ruta_de_categoria_en_texto_se_respeta", () => {
         const d = infra.articuloDetalleDesdeApi({
             referencia: "A1", descripcion: "", precio: 0,
-            descripcion_corta: "", descripcion_larga: "", meta_titulo: "", meta_descripcion: "",
+            textos: {}, idiomas: [],
             publicaciones: [], imagenes: [],
             categorias: [{ id: "7", nombre: "X", ruta: "A > X" }],
         });
@@ -148,15 +147,16 @@ describe("[tienda_admin-articulo-textos-01] Cuerpo de textos", () => {
         patch.mockReset();
     });
 
-    test("tienda_admin_articulo_textos_01_el_cuerpo_va_en_snake_case", () => {
+    test("tienda_admin_articulo_textos_01_el_cuerpo_va_en_snake_case_con_idioma", () => {
         expect(
-            infra.textosAApi({ descripcionCorta: "a", descripcionLarga: "b", metaTitulo: "c", metaDescripcion: "d" }),
-        ).toEqual({ descripcion_corta: "a", descripcion_larga: "b", meta_titulo: "c", meta_descripcion: "d" });
+            infra.textosAApi("en", { nombre: "n", descripcionCorta: "a", descripcionLarga: "b", metaTitulo: "c", metaDescripcion: "d" }),
+        ).toEqual({ idioma: "en", nombre: "n", descripcion_corta: "a", descripcion_larga: "b", meta_titulo: "c", meta_descripcion: "d" });
     });
 
-    test("tienda_admin_articulo_textos_01_patch_a_la_ruta_de_textos", async () => {
-        await infra.patchTextos("A1", { descripcionCorta: "", descripcionLarga: "", metaTitulo: "", metaDescripcion: "" });
+    test("tienda_admin_articulo_textos_01_patch_a_la_ruta_de_textos_con_el_idioma", async () => {
+        await infra.patchTextos("A1", "*", { nombre: "", descripcionCorta: "", descripcionLarga: "", metaTitulo: "", metaDescripcion: "" });
         expect(patch.mock.calls[0][0]).toBe("/tienda_admin/articulo/A1/textos");
+        expect(patch.mock.calls[0][1]).toMatchObject({ idioma: "*" });
     });
 });
 
@@ -173,5 +173,22 @@ describe("[tienda_admin-articulo-categorias-01] Cuerpo de categorías", () => {
         await infra.patchCategoriasArticulo("A1", ["1"]);
         expect(patch.mock.calls[0][0]).toBe("/tienda_admin/articulo/A1/categorias");
         expect(patch.mock.calls[0][1]).toEqual({ categorias: [1] });
+    });
+});
+
+describe("[tienda_admin-articulo-fotos-04] Rutas de ordenar y principal", () => {
+    beforeEach(() => {
+        patch.mockReset();
+    });
+
+    test("tienda_admin_articulo_fotos_04_ordenar_envia_los_ids", async () => {
+        await infra.patchOrdenImagenes("A 1", [3, 1, 2]);
+        expect(patch.mock.calls[0][0]).toBe("/tienda_admin/articulo/A%201/imagen/ordenar");
+        expect(patch.mock.calls[0][1]).toEqual({ ids: [3, 1, 2] });
+    });
+
+    test("tienda_admin_articulo_fotos_05_principal_usa_la_ruta_de_la_foto", async () => {
+        await infra.patchImagenPrincipal("A1", 7);
+        expect(patch.mock.calls[0][0]).toBe("/tienda_admin/articulo/A1/imagen/7/principal");
     });
 });

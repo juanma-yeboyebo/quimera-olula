@@ -17,6 +17,7 @@ import {
     criteriaListasDefecto,
     distintivoPublicacion,
     filtrosListaRegalosIniciales,
+    textoCliente,
     textoVendidas,
 } from "../dominio.ts";
 import "./MaestroConDetalleListaRegalos.css";
@@ -28,7 +29,7 @@ const Distintivo = ({ publicada }: { publicada: boolean }) => (
 
 const metaTablaListaRegalos: MetaTabla<ItemListaRegalos> = [
     { id: "nombre", cabecera: "Nombre", estilo: "destacado" },
-    { id: "cliente_nombre", cabecera: "Cliente", render: (l: ItemListaRegalos) => l.cliente.nombre },
+    { id: "cliente_nombre", cabecera: "Cliente", render: (l: ItemListaRegalos) => textoCliente(l) },
     { id: "publicada", cabecera: "Estado", render: (l: ItemListaRegalos) => <Distintivo publicada={l.publicada} /> },
     { id: "vendidas", cabecera: "Vendidas", render: (l: ItemListaRegalos) => textoVendidas(l) },
 ];
@@ -40,7 +41,7 @@ const TarjetaListaRegalos = (lista: ItemListaRegalos) => (
             <Distintivo publicada={lista.publicada} />
         </div>
         <div className="ListaRegalos-tarjeta-fila">
-            <span>{lista.cliente.nombre}</span>
+            <span>{textoCliente(lista)}</span>
             <span>{textoVendidas(lista)}</span>
         </div>
     </div>

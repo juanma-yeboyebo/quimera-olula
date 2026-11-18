@@ -1,5 +1,6 @@
 import { Criteria, Filtro } from "@olula/lib/diseño.ts";
 import { criteriaDefecto, MetaModelo, stringNoVacio } from "@olula/lib/dominio.ts";
+import { errorSlug, slugDesdeTexto } from "#/tienda_admin/comun/dominio.ts";
 import {
     CambioOrdenLinea,
     CambiosLineaListaRegalos,
@@ -14,7 +15,12 @@ import {
     NuevaListaRegalos,
 } from "./diseño.ts";
 
-export const TEXTO_AYUDA_PRECIO = "Si lo dejas vacío se usa el precio de la tarifa del cliente";
+export const TEXTO_AYUDA_PRECIO =
+    "Si lo dejas vacío se usa el precio de la tarifa del cliente o, si la lista no tiene cliente, el de la tienda";
+export const TEXTO_SIN_CLIENTE = "Sin cliente";
+export const TEXTO_CODIGO_DIRECCION = "Al final se añade un código para que nadie pueda adivinar la dirección";
+export const TEXTO_DIRECCION_PUBLICADA = "La dirección no se puede cambiar una vez publicada";
+const MARCA_CODIGO = "······";
 export const MOTIVO_LINEA_CON_VENTAS = "Tiene unidades vendidas";
 export const AVISO_NO_PUBLICADA = "La lista no está publicada: el enlace no funcionará hasta que la publiques";
 
@@ -29,6 +35,8 @@ export const listaRegalosVacia = (): ListaRegalos => ({
     nombre: "",
     descripcion: "",
     token: "",
+    slug: "",
+    codigo: "",
     url: null,
     publicada: false,
     creada: "",
@@ -74,41 +82,62 @@ export const itemDeLista = (l: ListaRegalos): ItemListaRegalos => ({
     vendidas: l.lineas.reduce((suma, linea) => suma + linea.cantidadVendida, 0),
 });
 
+export const textoCliente = (item: Pick<ItemListaRegalos, "cliente">): string =>
+    item.cliente?.nombre || item.cliente?.codigo || TEXTO_SIN_CLIENTE;
+
+export const vistaPreviaNuevaDireccion = (direccion: string): string => `…/lista/${direccion}-${MARCA_CODIGO}`;
+
+export const urlConDireccion = (l: Pick<ListaRegalos, "url" | "codigo">, direccion: string): string => {
+    const final = `${direccion}-${l.codigo}`;
+    return l.url ? l.url.replace(/[^/]+$/, final) : `…/lista/${final}`;
+};
+
 export const nuevaListaRegalosVacia = (): NuevaListaRegalos => ({
     clienteId: "",
     clienteNombre: "",
     nombre: "",
+    direccion: "",
     descripcion: "",
 });
 
+const validarDireccion = (direccion: string): string | boolean => errorSlug(direccion) ?? true;
+
 export const metaNuevaListaRegalos: MetaModelo<NuevaListaRegalos> = {
     campos: {
-        clienteId: { requerido: true },
+        clienteId: { requerido: false },
         nombre: { requerido: true, validacion: (m) => stringNoVacio(m.nombre.trim()) },
+        direccion: { requerido: true, validacion: (m) => validarDireccion(m.direccion) },
         descripcion: { requerido: false },
     },
+    onChange: (m, campo, valorAnterior) =>
+        campo === "nombre" && m.direccion === slugDesdeTexto(String(valorAnterior ?? ""))
+            ? { ...m, direccion: slugDesdeTexto(m.nombre) }
+            : m,
 };
 
 export const edicionDeLista = (l: ListaRegalos): EdicionListaRegalos => ({
-    clienteId: l.cliente.codigo,
-    clienteNombre: l.cliente.nombre,
+    clienteId: l.cliente?.codigo ?? "",
+    clienteNombre: l.cliente?.nombre ?? "",
     nombre: l.nombre,
+    direccion: l.slug,
     descripcion: l.descripcion,
 });
 
 export const metaEdicionListaRegalos: MetaModelo<EdicionListaRegalos> = {
     campos: {
-        clienteId: { requerido: true },
+        clienteId: { requerido: false },
         nombre: { requerido: true, validacion: (m) => stringNoVacio(m.nombre.trim()) },
+        direccion: { requerido: true, validacion: (m) => validarDireccion(m.direccion) },
         descripcion: { requerido: false },
     },
 };
 
 export const cambiosDeEdicion = (l: ListaRegalos, e: EdicionListaRegalos): CambiosListaRegalos => {
     const cambios: CambiosListaRegalos = {};
-    if (e.clienteId !== l.cliente.codigo) cambios.clienteId = e.clienteId;
+    if ((e.clienteId || "") !== (l.cliente?.codigo ?? "")) cambios.clienteId = e.clienteId || null;
     if (e.nombre.trim() !== l.nombre) cambios.nombre = e.nombre.trim();
     if ((e.descripcion ?? "") !== l.descripcion) cambios.descripcion = e.descripcion ?? "";
+    if (!l.publicada && e.direccion && e.direccion !== l.slug) cambios.slug = e.direccion;
     return cambios;
 };
 
