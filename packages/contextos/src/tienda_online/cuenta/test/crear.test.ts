@@ -14,7 +14,7 @@ vi.mock("#/tienda_online/cuenta/sesion.ts", () => ({
     iniciarSesion: (email: string, password: string) => iniciarSesion(email, password),
 }));
 
-const { registrar } = await import("#/tienda_online/cuenta/crear/crear.ts");
+const { cambiarDatos, registrar, tocarCampo } = await import("#/tienda_online/cuenta/crear/crear.ts");
 const { getMaquina } = await import("#/tienda_online/cuenta/crear/maquina.ts");
 
 const datos: DatosRegistro = {
@@ -38,6 +38,7 @@ const contexto = (d: DatosRegistro = datos): ContextoRegistro => ({
     estado: "REGISTRANDO",
     datos: d,
     errores: {},
+    tocados: [],
     error: null,
     emailRepetido: false,
 });
@@ -131,5 +132,47 @@ describe("[cuenta-registro-07] Registro correcto con login fallido", () => {
         const r = ctxDe(await registrar(contexto()));
 
         expect(r.estado).toBe("REGISTRADO_SIN_SESION");
+    });
+});
+
+describe("[cuenta-registro-08] Validación al salir de cada campo", () => {
+    const editando = (d: DatosRegistro, tocados: string[] = []): ContextoRegistro => ({
+        ...contexto(d),
+        estado: "EDITANDO",
+        tocados,
+    });
+
+    test("cuenta_registro_08_la_maquina_atiende_campo_tocado", () => {
+        expect(getMaquina().EDITANDO.campo_tocado).toEqual([tocarCampo]);
+    });
+
+    test("cuenta_registro_08_al_salir_solo_muestra_el_error_de_ese_campo", async () => {
+        const r = ctxDe(await tocarCampo(editando({ ...datos, email: "x", nombre: "" }), "email"));
+
+        expect(r.tocados).toEqual(["email"]);
+        expect(r.errores).toEqual({ email: "Introduce un email válido" });
+    });
+
+    test("cuenta_registro_08_al_escribir_en_un_campo_tocado_el_error_se_va_y_los_demas_siguen", async () => {
+        const previo = editando({ ...datos, email: "x", nombre: "" }, ["email", "nombre"]);
+
+        const r = ctxDe(await cambiarDatos(previo, { ...previo.datos, email: "ana@example.com" }));
+
+        expect(r.errores).toEqual({ nombre: "El nombre es obligatorio" });
+    });
+
+    test("cuenta_registro_08_cambiar_la_contraseña_revalida_la_repeticion", async () => {
+        const previo = editando(datos, ["password", "repetirPassword"]);
+
+        const r = ctxDe(await cambiarDatos(previo, { ...datos, password: "otra-clave-1" }));
+
+        expect(r.errores.repetirPassword).toBe("Las contraseñas no coinciden");
+    });
+
+    test("cuenta_registro_08_al_crear_quedan_tocados_todos_los_obligatorios", async () => {
+        const r = ctxDe(await registrar(contexto({ ...datos, email: "" })));
+
+        expect(r.tocados).toContain("email");
+        expect(r.tocados).toContain("direccion.paisId");
     });
 });

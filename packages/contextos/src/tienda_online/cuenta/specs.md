@@ -62,7 +62,8 @@ La ruta `/logout` de la tienda llama a `logout()` de auth, después a `olvidarCa
 ### Registro
 
 <!-- [cuenta-registro-01] [x] -->
-La página `/registro` muestra email, contraseña, repetir contraseña, nombre, NIF/CIF, teléfono (opcional) y la dirección (vía, número, código postal, ciudad, provincia y país, con `ES` por defecto), el botón «Crear cuenta» y el enlace «Ya tengo cuenta» a `/login`.
+<!-- antes: La página `/registro` muestra email, contraseña, repetir contraseña, nombre, NIF/CIF, teléfono (opcional) y la dirección (vía, número, código postal, ciudad, provincia y país, con `ES` por defecto), el botón «Crear cuenta» y el enlace «Ya tengo cuenta» a `/login`. -->
+La página `/registro` muestra email, contraseña, repetir contraseña, nombre, NIF/CIF, teléfono y la dirección (vía, número, código postal, ciudad, provincia y país, con `ES` por defecto), el botón «Crear cuenta» y el enlace «Ya tengo cuenta» a `/login`. Los campos obligatorios (email, las dos contraseñas, nombre, NIF/CIF, vía, código postal, ciudad y país) llevan un asterisco tras la etiqueta y `aria-required`, mediante la nueva prop `obligatorio` de `CampoFormulario`. Bajo el título aparece «Los campos con * son obligatorios». Teléfono pierde el «(opcional)».
 
 <!-- [cuenta-registro-02] [x] -->
 Validación en el cliente con una función pura `erroresRegistro(datos)`: email con formato válido; contraseña de al menos 8 caracteres; las dos contraseñas iguales («Las contraseñas no coinciden»); nombre, NIF/CIF, vía, código postal, ciudad y país obligatorios. Con errores no se envía y cada campo muestra el suyo.
@@ -81,6 +82,12 @@ Una función pura `registroAApi(datos)` construye el body en snake_case, sin la 
 
 <!-- [cuenta-registro-07] [x] -->
 Si el registro va bien pero el login posterior falla, se navega a `/login`.
+
+<!-- [cuenta-registro-08] [x] -->
+Cada campo obligatorio se valida al salir de él, con la regla de `erroresRegistro` que le toca. A partir de ese momento se vuelve a validar mientras se escribe: el error aparece o desaparece al momento, y cambiar un campo ya no borra los errores de los demás. «Repetir contraseña» se vuelve a validar también cuando cambia la contraseña. Al pulsar «Crear cuenta» se dan por visitados todos los campos. Los campos visitados se guardan en el contexto de la máquina (`tocados`).
+
+<!-- [cuenta-registro-09] [x] -->
+Un campo obligatorio ya visitado que cumple su regla se marca como correcto: borde con `--tienda-color-exito` y un ✓ a la derecha del input, decorativo (`aria-hidden`). `CampoFormulario` lo recibe con la nueva prop opcional `valido`. Los campos opcionales no se marcan.
 
 ### Mi cuenta
 

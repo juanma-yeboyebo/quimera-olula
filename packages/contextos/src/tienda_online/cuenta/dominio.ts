@@ -86,6 +86,24 @@ export const erroresRegistro = (d: DatosRegistro): ErroresRegistro => {
     return errores;
 };
 
+export const CAMPOS_OBLIGATORIOS_REGISTRO = [
+    "email",
+    "password",
+    "repetirPassword",
+    "nombre",
+    "idFiscal",
+    "direccion.nombreVia",
+    "direccion.codPostal",
+    "direccion.ciudad",
+    "direccion.paisId",
+];
+
+export const erroresVisiblesRegistro = (d: DatosRegistro, tocados: string[]): ErroresRegistro =>
+    Object.fromEntries(Object.entries(erroresRegistro(d)).filter(([campo]) => tocados.includes(campo)));
+
+export const campoRegistroValido = (campo: string, tocados: string[], errores: ErroresRegistro): boolean =>
+    CAMPOS_OBLIGATORIOS_REGISTRO.includes(campo) && tocados.includes(campo) && !errores[campo];
+
 export const criteriaPedidos = (pagina: number): Criteria => {
     const filtro: ClausulaFiltro[] = [];
     return {

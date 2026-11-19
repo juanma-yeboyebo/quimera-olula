@@ -6,6 +6,7 @@ export type ContextoRegistro = {
     estado: EstadoRegistro;
     datos: DatosRegistro;
     errores: ErroresRegistro;
+    tocados: string[];
     error: string | null;
     emailRepetido: boolean;
 };

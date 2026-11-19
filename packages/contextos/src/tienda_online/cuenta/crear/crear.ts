@@ -1,6 +1,6 @@
 import { ProcesarContexto } from "@olula/lib/diseño.ts";
 import { DatosRegistro } from "../diseño.ts";
-import { erroresRegistro } from "../dominio.ts";
+import { CAMPOS_OBLIGATORIOS_REGISTRO, erroresRegistro, erroresVisiblesRegistro } from "../dominio.ts";
 import { postRegistro, registroAApi } from "../infraestructura.ts";
 import { iniciarSesion } from "../sesion.ts";
 import { ContextoRegistro, EstadoRegistro } from "./diseño.ts";
@@ -15,22 +15,33 @@ export const contextoRegistroInicial = (datos: DatosRegistro): ContextoRegistro 
     estado: "EDITANDO",
     datos,
     errores: {},
+    tocados: [],
     error: null,
     emailRepetido: false,
 });
 
-export const cambiarDatos: ProcesarRegistro = async (contexto, payload) => ({
-    ...contexto,
-    datos: payload as DatosRegistro,
-    errores: {},
-    error: null,
-    emailRepetido: false,
-});
+export const cambiarDatos: ProcesarRegistro = async (contexto, payload) => {
+    const datos = payload as DatosRegistro;
+    return {
+        ...contexto,
+        datos,
+        errores: erroresVisiblesRegistro(datos, contexto.tocados),
+        error: null,
+        emailRepetido: false,
+    };
+};
+
+export const tocarCampo: ProcesarRegistro = async (contexto, payload) => {
+    const campo = payload as string;
+    const tocados = contexto.tocados.includes(campo) ? contexto.tocados : [...contexto.tocados, campo];
+    return { ...contexto, tocados, errores: erroresVisiblesRegistro(contexto.datos, tocados) };
+};
 
 export const registrar: ProcesarRegistro = async (contexto) => {
     const errores = erroresRegistro(contexto.datos);
+    const tocados = CAMPOS_OBLIGATORIOS_REGISTRO;
     if (Object.keys(errores).length > 0)
-        return { ...contexto, estado: "EDITANDO", errores, error: null, emailRepetido: false };
+        return { ...contexto, estado: "EDITANDO", errores, tocados, error: null, emailRepetido: false };
 
     try {
         await postRegistro(registroAApi(contexto.datos));

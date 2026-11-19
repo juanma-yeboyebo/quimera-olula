@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { DatosRegistro } from "#/tienda_online/cuenta/diseño.ts";
 import {
+    campoRegistroValido,
     añadirPedidos,
     criteriaPedidos,
     datosRegistroIniciales,
@@ -157,5 +158,16 @@ describe("[cuenta-direcciones-03] Validación de dirección", () => {
     test("cuenta_direcciones_03_el_registro_reutiliza_los_errores_de_direccion", () => {
         const direccion = { ...validos.direccion, ciudad: "" };
         expect(erroresRegistro({ ...validos, direccion })).toEqual(erroresDireccion(direccion));
+    });
+});
+
+describe("[cuenta-registro-09] Campos correctos", () => {
+    test("cuenta_registro_09_solo_es_valido_un_obligatorio_tocado_y_sin_error", () => {
+        const errores = { nombre: "El nombre es obligatorio" };
+
+        expect(campoRegistroValido("email", ["email"], errores)).toBe(true);
+        expect(campoRegistroValido("email", [], errores)).toBe(false);
+        expect(campoRegistroValido("nombre", ["nombre"], errores)).toBe(false);
+        expect(campoRegistroValido("telefono", ["telefono"], {})).toBe(false);
     });
 });

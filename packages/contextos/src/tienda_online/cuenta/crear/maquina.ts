@@ -1,10 +1,11 @@
 import { Maquina } from "@olula/lib/diseño.ts";
-import { cambiarDatos, registrar } from "./crear.ts";
+import { cambiarDatos, registrar, tocarCampo } from "./crear.ts";
 import { ContextoRegistro, EstadoRegistro } from "./diseño.ts";
 
 export const getMaquina: () => Maquina<EstadoRegistro, ContextoRegistro> = () => ({
     EDITANDO: {
         datos_cambiados: [cambiarDatos],
+        campo_tocado: [tocarCampo],
         crear: ["REGISTRANDO", registrar],
     },
     REGISTRANDO: {},

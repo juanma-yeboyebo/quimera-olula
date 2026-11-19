@@ -30,6 +30,31 @@
         input[aria-invalid="true"] {
             border-color: var(--tienda-color-error);
         }
+
+        &[data-valido] input {
+            border-color: var(--tienda-color-exito);
+            padding-right: calc(var(--tienda-espacio-3) * 2 + 1em);
+        }
+    }
+
+    .campo-formulario-control {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .campo-formulario-obligatorio {
+        color: var(--tienda-color-error);
+    }
+
+    .campo-formulario-ok {
+        position: absolute;
+        top: 50%;
+        right: var(--tienda-espacio-3);
+        transform: translateY(-50%);
+        color: var(--tienda-color-exito);
+        font-weight: 700;
+        pointer-events: none;
     }
 
     .campo-formulario-error {

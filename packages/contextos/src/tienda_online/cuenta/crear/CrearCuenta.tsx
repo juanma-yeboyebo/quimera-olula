@@ -6,7 +6,7 @@ import { CampoFormulario } from "../../comun/componentes/campo_formulario.tsx";
 import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
 import "../CuentaTienda.css";
 import { DatosRegistro, DireccionRegistro } from "../diseño.ts";
-import { datosRegistroIniciales } from "../dominio.ts";
+import { campoRegistroValido, datosRegistroIniciales } from "../dominio.ts";
 import { contextoRegistroInicial } from "./crear.ts";
 import { getMaquina } from "./maquina.ts";
 
@@ -16,7 +16,7 @@ const FormularioRegistro = () => {
         getMaquina,
         contextoRegistroInicial(datosRegistroIniciales()),
     );
-    const { estado, datos, errores, error, emailRepetido } = ctx;
+    const { estado, datos, errores, tocados, error, emailRepetido } = ctx;
     const enCurso = useRef(false);
     const [bloqueado, setBloqueado] = useState(false);
     const ocupado = bloqueado || estado !== "EDITANDO";
@@ -41,6 +41,13 @@ const FormularioRegistro = () => {
     const cambiar = (cambio: Partial<DatosRegistro>) =>
         emitir("datos_cambiados", { ...datos, ...cambio });
 
+    const obligatorio = (campo: string) => ({
+        obligatorio: true,
+        error: errores[campo],
+        valido: campoRegistroValido(campo, tocados, errores),
+        onSalir: () => emitir("campo_tocado", campo),
+    });
+
     const cambiarDireccion = (cambio: Partial<DireccionRegistro>) =>
         cambiar({ direccion: { ...datos.direccion, ...cambio } });
 
@@ -56,6 +63,7 @@ const FormularioRegistro = () => {
                     }}
                 >
                     <h1>Crear cuenta</h1>
+                    <p className="cuenta-nota">Los campos con * son obligatorios</p>
                     {emailRepetido && (
                         <p role="alert" className="cuenta-error">
                             Ya existe una cuenta con ese email. <Link to="/login">Iniciar sesión</Link>
@@ -74,7 +82,7 @@ const FormularioRegistro = () => {
                                 tipo="email"
                                 autocompletar="email"
                                 valor={datos.email}
-                                error={errores.email}
+                                {...obligatorio("email")}
                                 deshabilitado={ocupado}
                                 onCambiar={(email) => cambiar({ email })}
                             />
@@ -84,7 +92,7 @@ const FormularioRegistro = () => {
                             tipo="password"
                             autocompletar="new-password"
                             valor={datos.password}
-                            error={errores.password}
+                            {...obligatorio("password")}
                             deshabilitado={ocupado}
                             onCambiar={(password) => cambiar({ password })}
                         />
@@ -93,7 +101,7 @@ const FormularioRegistro = () => {
                             tipo="password"
                             autocompletar="new-password"
                             valor={datos.repetirPassword}
-                            error={errores.repetirPassword}
+                            {...obligatorio("repetirPassword")}
                             deshabilitado={ocupado}
                             onCambiar={(repetirPassword) => cambiar({ repetirPassword })}
                         />
@@ -102,7 +110,7 @@ const FormularioRegistro = () => {
                                 etiqueta="Nombre"
                                 autocompletar="name"
                                 valor={datos.nombre}
-                                error={errores.nombre}
+                                {...obligatorio("nombre")}
                                 deshabilitado={ocupado}
                                 onCambiar={(nombre) => cambiar({ nombre })}
                             />
@@ -110,12 +118,12 @@ const FormularioRegistro = () => {
                         <CampoFormulario
                             etiqueta="NIF/CIF"
                             valor={datos.idFiscal}
-                            error={errores.idFiscal}
+                            {...obligatorio("idFiscal")}
                             deshabilitado={ocupado}
                             onCambiar={(idFiscal) => cambiar({ idFiscal })}
                         />
                         <CampoFormulario
-                            etiqueta="Teléfono (opcional)"
+                            etiqueta="Teléfono"
                             tipo="tel"
                             autocompletar="tel"
                             valor={datos.telefono}
@@ -130,7 +138,7 @@ const FormularioRegistro = () => {
                                 etiqueta="Vía"
                                 autocompletar="address-line1"
                                 valor={datos.direccion.nombreVia}
-                                error={errores["direccion.nombreVia"]}
+                                {...obligatorio("direccion.nombreVia")}
                                 deshabilitado={ocupado}
                                 onCambiar={(nombreVia) => cambiarDireccion({ nombreVia })}
                             />
@@ -145,7 +153,7 @@ const FormularioRegistro = () => {
                             etiqueta="Código postal"
                             autocompletar="postal-code"
                             valor={datos.direccion.codPostal}
-                            error={errores["direccion.codPostal"]}
+                            {...obligatorio("direccion.codPostal")}
                             deshabilitado={ocupado}
                             onCambiar={(codPostal) => cambiarDireccion({ codPostal })}
                         />
@@ -153,7 +161,7 @@ const FormularioRegistro = () => {
                             etiqueta="Ciudad"
                             autocompletar="address-level2"
                             valor={datos.direccion.ciudad}
-                            error={errores["direccion.ciudad"]}
+                            {...obligatorio("direccion.ciudad")}
                             deshabilitado={ocupado}
                             onCambiar={(ciudad) => cambiarDireccion({ ciudad })}
                         />
@@ -168,7 +176,7 @@ const FormularioRegistro = () => {
                             etiqueta="País"
                             autocompletar="country"
                             valor={datos.direccion.paisId}
-                            error={errores["direccion.paisId"]}
+                            {...obligatorio("direccion.paisId")}
                             deshabilitado={ocupado}
                             onCambiar={(paisId) => cambiarDireccion({ paisId })}
                         />
