@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { obtenerAvisos, reiniciarAvisos } from "#/tienda_online/comun/avisos_store.ts";
+import { origenCarrito } from "#/tienda_online/comun/origen_carrito.ts";
+import { fijarStoreViewActivo } from "#/tienda_online/comun/storeview.ts";
 
 const postLineaCarrito = vi.fn();
 const postLigarCarrito = vi.fn();
@@ -186,5 +188,20 @@ describe("[lista_regalos-web-anadir-03] Los demás errores van al aviso de error
         expect(olvidarCarrito).not.toHaveBeenCalled();
         expect(postLigarCarrito).toHaveBeenCalledOnce();
         expect(obtenerAvisos()[0].texto).toBe("fallo");
+    });
+});
+
+describe("[lista_regalos-web-anadir-04] Al añadir se guarda la lista como origen del carrito", () => {
+    test("lista_regalos_web_anadir_04_el_carrito_vuelve_a_la_lista", async () => {
+        fijarStoreViewActivo("es");
+        localStorage.clear();
+        asegurarCarrito.mockResolvedValueOnce("car-viejo").mockResolvedValueOnce("car-nuevo");
+        postLigarCarrito.mockRejectedValueOnce({ estado: 404 });
+
+        await anadirLineaDeLista("tk", "REF1", 1);
+
+        expect(origenCarrito("car-nuevo")).toEqual({ ruta: "/lista/tk", texto: "Volver a la lista" });
+        expect(origenCarrito("car-viejo")).toBeNull();
+        fijarStoreViewActivo(null);
     });
 });

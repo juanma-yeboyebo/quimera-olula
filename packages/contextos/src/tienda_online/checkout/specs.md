@@ -140,6 +140,9 @@ Al llegar a `CONFIRMADO` o `INCIDENCIA` se llama a `olvidarCarrito()` y se borra
 <!-- [checkout-ok-06] [x] -->
 Si pasan los 60 segundos sin confirmación, se deja de consultar y se muestra «Estamos confirmando tu pago. Si se completa, recibirás tu pedido; puedes volver a esta página más tarde.» No se olvida el carrito.
 
+<!-- [checkout-ok-08] [nueva] -->
+El botón de `/checkout/ok` usa el origen del carrito pagado (`useSeguirComprando` con el token del pago en curso). Si el carrito venía de una lista, muestra «Volver a la lista» y lleva a la lista; si no, sigue siendo «Seguir comprando» con la ruta de la tienda.
+
 ### Vuelta: pago cancelado
 
 <!-- [checkout-cancelado-01] [x] -->

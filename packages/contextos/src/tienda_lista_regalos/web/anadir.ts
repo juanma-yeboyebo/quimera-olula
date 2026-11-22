@@ -1,7 +1,9 @@
 import { asegurarCarrito, olvidarCarrito, recargarCarrito } from "#/tienda_online/comun/carrito_store.ts";
+import { recordarOrigenCarrito } from "#/tienda_online/comun/origen_carrito.ts";
 import { avisarAnadido, avisarErrorAnadir } from "#/tienda_online/producto/anadir.ts";
 import { postLineaCarrito } from "#/tienda_online/producto/infraestructura.ts";
 import { ResultadoAnadirLista } from "./diseño.ts";
+import { rutaLista } from "./dominio.ts";
 import { postLigarCarrito } from "./infraestructura.ts";
 
 export class ErrorCarritoDeOtraLista extends Error {
@@ -29,19 +31,23 @@ export const anadirLineaDeLista = async (
     referencia: string,
     cantidad: number,
 ): Promise<void> => {
-    const enviar = async () => {
+    const enviar = async (): Promise<string> => {
         const tokenCarrito = await asegurarCarrito();
         await ligar(token, tokenCarrito);
         await postLineaCarrito(tokenCarrito, referencia, cantidad);
+        return tokenCarrito;
     };
 
+    let tokenCarrito: string;
     try {
-        await enviar();
+        tokenCarrito = await enviar();
     } catch (e) {
         if (estadoDe(e) !== 404 && estadoDe(e) !== 409) throw e;
         olvidarCarrito();
-        await enviar();
+        tokenCarrito = await enviar();
     }
+
+    recordarOrigenCarrito(tokenCarrito, { ruta: rutaLista(token), texto: "Volver a la lista" });
 
     await recargarCarrito().catch(() => undefined);
 };

@@ -7,6 +7,9 @@ export const codigoStoreViewDesdeEnv = (valor: string | undefined): string | nul
 export const claveCarrito = (codigoStoreView: string): string =>
     `tienda_online.carrito.${codigoStoreView}`;
 
+export const claveOrigenCarrito = (codigoStoreView: string): string =>
+    `tienda_online.origen_carrito.${codigoStoreView}`;
+
 export const debeDescartarToken = (estado: EstadoCarrito): boolean =>
     estado === "PAGADO" || estado === "CONVERTIDO" || estado === "ERROR_CONVERSION";
 

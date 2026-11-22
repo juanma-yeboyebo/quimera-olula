@@ -4,6 +4,7 @@ import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
 import { FormaPagoTienda } from "../../comun/diseño.ts";
 import { clavePagoEnCurso } from "../dominio.ts";
 import { cerrarPago, consultarPago, ResultadoConsulta } from "./ok.ts";
+import { origenCarrito } from "../../comun/origen_carrito.ts";
 import { useSeguirComprando } from "../../comun/seguir_comprando.ts";
 import "./PagoOk.css";
 
@@ -80,7 +81,8 @@ const ContenidoOk = ({
 }) => {
     const [token] = useState(() => sessionStorage.getItem(clavePagoEnCurso(codigo)));
     const [consulta, setConsulta] = useState<ResultadoConsulta | null>(null);
-    const seguir = useSeguirComprando();
+    const seguir = useSeguirComprando(token);
+    const origen = origenCarrito(token);
 
     useEffect(() => {
         if (!token) return;
@@ -117,7 +119,7 @@ const ContenidoOk = ({
                 )}
                 {consulta && (
                     <BotonTienda variante="secundario" a={seguir.ruta}>
-                        Seguir comprando
+                        {origen?.texto ?? "Seguir comprando"}
                     </BotonTienda>
                 )}
             </div>

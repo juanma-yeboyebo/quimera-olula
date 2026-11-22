@@ -64,3 +64,6 @@ Si ligar responde 400 porque el carrito tiene productos de otra lista o de fuera
 
 <!-- [lista_regalos-web-anadir-03] [x] -->
 Los demás errores de añadir se muestran con el aviso de error de la tienda, con el texto del servidor si lo trae.
+
+<!-- [lista_regalos-web-anadir-04] [nueva] -->
+Al añadir una línea de la lista con éxito, `anadirLineaDeLista` guarda el origen del carrito (`tienda-seguir_comprando-02`): la ruta de la lista (`rutaLista(token)`) y el texto «Volver a la lista».

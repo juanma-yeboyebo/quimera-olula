@@ -231,6 +231,12 @@ Como mucho hay 3 avisos visibles: al mostrar uno más, sale el más antiguo.
 - **Usan la ruta y el texto:** el carrito vacío, el checkout sin carrito, `/checkout/ok` sin pago en curso, `/checkout/cancelado` y «Mis pedidos» sin pedidos.
 - **Usan solo la ruta y conservan su texto:** el cajón del carrito vacío («Ver la colección»), la ficha no disponible («Volver al catálogo») y «Seguir comprando» de `/checkout/ok`.
 
+<!-- [tienda-seguir_comprando-02] [nueva] -->
+Un carrito puede tener un origen: la ruta y el texto a los que debe volver «Seguir comprando». `comun/origen_carrito.ts` tiene `recordarOrigenCarrito(tokenCarrito, {ruta, texto})`, que lo guarda en `localStorage` con una clave por storeview (función pura en `comun/dominio.ts`), y `origenCarrito(tokenCarrito)`, que lo devuelve solo si el token coincide con el guardado. Así, un carrito nuevo de la tienda no hereda el origen de otro anterior.
+
+<!-- [tienda-seguir_comprando-03] [nueva] -->
+`useSeguirComprando(tokenCarrito?)` usa por defecto el token del carrito actual. Si ese carrito tiene origen, devuelve su ruta y su texto; si no, los de `FactoryTiendaOnline` como hasta ahora.
+
 ### Cabecera
 
 <!-- [tienda-cabecera-01] [cambiada] -->
