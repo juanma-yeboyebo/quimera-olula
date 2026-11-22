@@ -42,7 +42,7 @@ const rutas = createBrowserRouter([
 
 // eslint-disable-next-line react-refresh/only-export-components
 const App = () => {
-    useTimerRefresco({ rutasPublicas: RUTAS_PUBLICAS_REGISTRO });
+    useTimerRefresco({ rutas_publicas: RUTAS_PUBLICAS_REGISTRO });
     usePersonalizacionTenant();
 
     useEffect(() => {
