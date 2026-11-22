@@ -1,6 +1,10 @@
+import { QIcono } from "@olula/componentes/atomos/qicono.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
-import { useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { Link, Navigate } from "react-router";
+import { BorrarLineaCarrito } from "../../carrito/borrar_linea/BorrarLineaCarrito.tsx";
+import { CambiarCantidadLinea } from "../../carrito/cambiar_linea/CambiarCantidadLinea.tsx";
+import { useEdicionCarrito } from "../../carrito/detalle/usar_edicion_carrito.ts";
 import { estaVacio } from "../../carrito/dominio.ts";
 import {
     obtenerCarrito,
@@ -20,18 +24,67 @@ import {
     StoreView,
 } from "../../comun/diseño.ts";
 import { formatearPrecio } from "../../comun/dominio.ts";
-import { datosCheckoutIniciales, elegirFormaEnvio, esRecogida } from "../dominio.ts";
+import { CuentaTienda, PaisTienda } from "../../cuenta/diseño.ts";
+import { DatosCheckout, ErroresCheckout } from "../diseño.ts";
+import {
+    ajustarFormas,
+    datosCheckoutIniciales,
+    direccionInicialCuenta,
+    elegirFormaEnvio,
+    esRecogida,
+    lineasDireccionCuenta,
+    TipoDireccionCheckout,
+} from "../dominio.ts";
 import { CamposDireccion } from "./campos_direccion.tsx";
 import "./CheckoutTienda.css";
 import { contextoCheckoutInicial } from "./detalle.ts";
-import { ContextoCheckout } from "./diseño.ts";
+import { ContextoCheckout, EstadoCheckout } from "./diseño.ts";
 import { getMaquina } from "./maquina.ts";
+
+const ID_FORMULARIO = "checkout-formulario";
 
 type Forma = FormaPagoTienda | FormaEnvioTienda;
 
+const Leyenda = ({ icono, texto }: { icono: string; texto: string }) => (
+    <legend>
+        <span className="checkout-leyenda-icono">
+            <QIcono nombre={icono} tamaño="sm" />
+        </span>
+        <span className="checkout-leyenda-texto">{texto}</span>
+    </legend>
+);
+
+const PASOS = ["Datos", "Revisión", "Pago"];
+
+const pasoDe = (estado: EstadoCheckout): number =>
+    estado === "DATOS" || estado === "GUARDANDO" ? 1 : estado === "REVISION" ? 2 : 3;
+
+const PasosCheckout = ({ estado }: { estado: EstadoCheckout }) => {
+    const actual = pasoDe(estado);
+    return (
+        <ol className="checkout-pasos">
+            {PASOS.map((texto, i) => {
+                const paso = i + 1;
+                const clase = paso === actual ? "checkout-paso-activo" : paso < actual ? "checkout-paso-hecho" : "";
+                return (
+                    <li key={texto} className={clase} aria-current={paso === actual ? "step" : undefined}>
+                        <span className="checkout-paso-numero">
+                            {paso < actual ? <QIcono nombre="check" tamaño="sm" /> : paso}
+                        </span>
+                        {texto}
+                    </li>
+                );
+            })}
+        </ol>
+    );
+};
+
 const TextoForma = ({ forma }: { forma: Forma }) => (
     <span className="checkout-forma-texto">
-        <strong>{forma.nombre}</strong>
+        <span className="checkout-forma-nombre">
+            <strong>{forma.nombre}</strong>
+            {forma.tipo === "RECOGIDA" && <span className="checkout-forma-coste">Sin coste</span>}
+        </span>
         {forma.descripcion && (
             <span className="checkout-forma-descripcion">{forma.descripcion}</span>
         )}
@@ -40,23 +93,27 @@ const TextoForma = ({ forma }: { forma: Forma }) => (
 
 const SelectorForma = <F extends Forma>({
     titulo,
+    icono,
     nombre,
     formas,
     seleccionada,
     deshabilitado,
     onElegir,
+    children,
 }: {
     titulo: string;
+    icono: string;
     nombre: string;
     formas: F[];
     seleccionada: number | null;
     deshabilitado: boolean;
     onElegir: (forma: F) => void;
+    children?: ReactNode;
 }) => {
     if (formas.length === 0) return null;
     return (
         <fieldset>
-            <legend>{titulo}</legend>
+            <Leyenda icono={icono} texto={titulo} />
             {formas.length === 1 ? (
                 <div className="checkout-forma">
                     <TextoForma forma={formas[0]} />
@@ -78,7 +135,84 @@ const SelectorForma = <F extends Forma>({
                     </label>
                 ))
             )}
+            {children}
         </fieldset>
+    );
+};
+
+const SelectorDireccion = ({
+    tipo,
+    cuenta,
+    idElegida,
+    direccion,
+    paises,
+    errores,
+    deshabilitado,
+    emitir,
+    onCambiar,
+}: {
+    tipo: TipoDireccionCheckout;
+    cuenta: CuentaTienda | null;
+    idElegida: string | null;
+    direccion: DatosCheckout["direccionFacturacion"];
+    paises: PaisTienda[];
+    errores: ErroresCheckout;
+    deshabilitado: boolean;
+    emitir: (evento: string, payload?: unknown) => void;
+    onCambiar: (direccion: DatosCheckout["direccionFacturacion"]) => void;
+}) => {
+    const prefijo = tipo === "envio" ? "direccionEnvio" : "direccionFacturacion";
+    const campos = (
+        <CamposDireccion
+            prefijo={prefijo}
+            direccion={direccion}
+            paises={paises}
+            errores={errores}
+            deshabilitado={deshabilitado}
+            onCambiar={onCambiar}
+        />
+    );
+    if (!cuenta || cuenta.direcciones.length === 0) return campos;
+
+    const usandoOtra = idElegida === null;
+    const elegir = (id: string | null) => emitir("direccion_elegida", { tipo, id });
+
+    return (
+        <>
+            {!usandoOtra && (
+                <div className="ancho checkout-direcciones">
+                    {cuenta.direcciones.map((d) => (
+                        <label
+                            key={d.id}
+                            className={`checkout-forma${d.id === idElegida ? " checkout-forma-marcada" : ""}`}
+                        >
+                            <input
+                                type="radio"
+                                name={`direccion_${tipo}`}
+                                checked={d.id === idElegida}
+                                disabled={deshabilitado}
+                                onChange={() => elegir(d.id)}
+                            />
+                            <span className="checkout-forma-texto checkout-direccion-texto">
+                                {lineasDireccionCuenta(d, paises).map((linea, i) =>
+                                    i === 0 ? <strong key={i}>{linea}</strong> : <span key={i}>{linea}</span>,
+                                )}
+                            </span>
+                        </label>
+                    ))}
+                </div>
+            )}
+            <div className="ancho">
+                <BotonTienda
+                    variante="enlace"
+                    deshabilitado={deshabilitado}
+                    onClick={() => elegir(usandoOtra ? (direccionInicialCuenta(cuenta, tipo)?.id ?? null) : null)}
+                >
+                    {usandoOtra ? "Elegir una de mis direcciones" : "Usar otra dirección"}
+                </BotonTienda>
+            </div>
+            {usandoOtra && campos}
+        </>
     );
 };
 
@@ -135,9 +269,31 @@ const ResumenDatos = ({
     );
 };
 
-const ResumenCarrito = ({ carrito, idioma }: { carrito: CarritoTienda; idioma: string }) => (
+interface EdicionResumen {
+    publicar: (evento: string, payload?: unknown) => void | Promise<void>;
+    deshabilitado: boolean;
+    error: string | null;
+    seguir: { ruta: string; texto: string };
+}
+
+const ResumenCarrito = ({
+    carrito,
+    idioma,
+    acciones,
+    edicion,
+}: {
+    carrito: CarritoTienda;
+    idioma: string;
+    acciones?: ReactNode;
+    edicion?: EdicionResumen;
+}) => (
     <aside className="checkout-resumen">
         <h2>Resumen</h2>
+        {edicion?.error && (
+            <p role="alert" className="checkout-error">
+                {edicion.error}
+            </p>
+        )}
         <ul className="checkout-resumen-lineas">
             {carrito.lineas.map((l) => (
                 <li key={l.id}>
@@ -151,21 +307,44 @@ const ResumenCarrito = ({ carrito, idioma }: { carrito: CarritoTienda; idioma: s
                             <DistintivoTienda>{l.cantidad}</DistintivoTienda>
                         </span>
                     </div>
-                    <span className="checkout-linea-descripcion">{l.descripcion}</span>
+                    <div className="checkout-linea-datos">
+                        <span className="checkout-linea-descripcion">{l.descripcion}</span>
+                        {edicion && (
+                            <div className="checkout-linea-acciones">
+                                <CambiarCantidadLinea
+                                    linea={l}
+                                    deshabilitado={edicion.deshabilitado}
+                                    onCambiar={(cantidad) =>
+                                        edicion.publicar("cantidad_cambiada", { lineaId: l.id, cantidad })
+                                    }
+                                />
+                                <BorrarLineaCarrito
+                                    linea={l}
+                                    deshabilitado={edicion.deshabilitado}
+                                    onBorrar={() => edicion.publicar("linea_borrada", { lineaId: l.id })}
+                                />
+                            </div>
+                        )}
+                    </div>
                     <span>{formatearPrecio(l.importe, carrito.divisa, idioma)}</span>
                 </li>
             ))}
         </ul>
+        {edicion && (
+            <Link className="checkout-seguir" to={edicion.seguir.ruta}>
+                {edicion.seguir.texto}
+            </Link>
+        )}
         <dl className="checkout-totales">
-            <dt>Base imponible</dt>
-            <dd>{formatearPrecio(carrito.neto, carrito.divisa, idioma)}</dd>
-            <dt>IVA</dt>
-            <dd>{formatearPrecio(carrito.totalIva, carrito.divisa, idioma)}</dd>
             <dt className="checkout-total">Total</dt>
             <dd className="checkout-total">
                 {formatearPrecio(carrito.total, carrito.divisa, idioma)}
             </dd>
+            <dd className="checkout-iva-incluido">
+                IVA incluido ({formatearPrecio(carrito.totalIva, carrito.divisa, idioma)})
+            </dd>
         </dl>
+        {acciones && <div className="checkout-acciones checkout-acciones-resumen">{acciones}</div>}
     </aside>
 );
 
@@ -185,7 +364,13 @@ const FormularioCheckout = ({ storeView }: { storeView: StoreView }) => {
             ),
         ),
     );
-    const { estado, datos, errores, error } = ctx;
+    const { estado, datos, errores, error, cuenta, paises, cuentaCargada } = ctx;
+    const edicionCarrito = useEdicionCarrito();
+
+    useEffect(() => {
+        emitir("cargar_cuenta");
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const enCurso = useRef(false);
     const [bloqueado, setBloqueado] = useState(false);
     const ocupado =
@@ -208,6 +393,13 @@ const FormularioCheckout = ({ storeView }: { storeView: StoreView }) => {
         }
     };
     const editando = estado === "DATOS" || estado === "GUARDANDO";
+
+    useEffect(() => {
+        if (!carrito || estado !== "DATOS") return;
+        const ajustados = ajustarFormas(datos, formasEnvio, formasPago);
+        if (ajustados !== datos) emitir("datos_cambiados", ajustados);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [carrito]);
     const recogida = esRecogida(datos.idFormaEnvio, formasEnvio);
     const formaEnvio = formasEnvio.find((f) => f.id === datos.idFormaEnvio);
     const formaPago = formasPago.find((f) => f.id === datos.idFormaPago);
@@ -222,7 +414,53 @@ const FormularioCheckout = ({ storeView }: { storeView: StoreView }) => {
     );
     const sinCarrito = !carrito && <Link to={seguir.ruta}>{seguir.texto}</Link>;
 
-    const resumen = carrito && <ResumenCarrito carrito={carrito} idioma={idioma} />;
+    const editandoCarrito = edicionCarrito.bloqueado || edicionCarrito.ctx.estado === "ACTUALIZANDO";
+
+    const resumen = (acciones: ReactNode, editable = false) =>
+        carrito && (
+            <ResumenCarrito
+                carrito={carrito}
+                idioma={idioma}
+                acciones={acciones}
+                edicion={
+                    editable
+                        ? {
+                              publicar: edicionCarrito.publicar,
+                              deshabilitado: ocupado || editandoCarrito,
+                              error: edicionCarrito.ctx.error,
+                              seguir,
+                          }
+                        : undefined
+                }
+            />
+        );
+
+    const botonContinuar = (
+        <BotonTienda tipo="submit" formulario={ID_FORMULARIO} ancho deshabilitado={ocupado || editandoCarrito || !cuentaCargada}>
+            Revisar pedido
+        </BotonTienda>
+    );
+
+    const botonTerminar = sinPasarela ? (
+        <BotonTienda ancho deshabilitado={ocupado || !carrito} onClick={() => lanzar("confirmar")}>
+            Confirmar pedido
+        </BotonTienda>
+    ) : (
+        <BotonTienda ancho deshabilitado={ocupado || !carrito} onClick={() => lanzar("pagar")}>
+            {carrito ? `Pagar ${formatearPrecio(carrito.total, carrito.divisa, idioma)}` : "Pagar"}
+        </BotonTienda>
+    );
+
+    if (carrito && estaVacio(carrito)) return <Navigate to="/carrito" replace />;
+
+    if (editando && !cuentaCargada)
+        return (
+            <div className="CheckoutTienda">
+                <div className="checkout-contenedor contenedor-tienda">
+                    <p role="status">Cargando…</p>
+                </div>
+            </div>
+        );
 
     if (editando)
         return (
@@ -230,6 +468,7 @@ const FormularioCheckout = ({ storeView }: { storeView: StoreView }) => {
                 <div className="checkout-contenedor contenedor-tienda">
                     <div className="checkout-rejilla">
                         <form
+                            id={ID_FORMULARIO}
                             noValidate
                             onSubmit={(e) => {
                                 e.preventDefault();
@@ -237,20 +476,28 @@ const FormularioCheckout = ({ storeView }: { storeView: StoreView }) => {
                             }}
                         >
                             <h1>Datos del pedido</h1>
+                            <PasosCheckout estado={estado} />
                             {mensajeError}
                             {sinCarrito}
                             <fieldset>
-                                <legend>Contacto</legend>
+                                <Leyenda icono="usuario" texto="Contacto" />
                                 <div className="ancho">
-                                    <CampoFormulario
-                                        etiqueta="Email"
-                                        tipo="email"
-                                        autocompletar="email"
-                                        valor={datos.email}
-                                        error={errores.email}
-                                        deshabilitado={ocupado}
-                                        onCambiar={(email) => cambiar({ email })}
-                                    />
+                                    {cuenta ? (
+                                        <p className="checkout-email-cuenta">
+                                            <span>Email</span> {datos.email}
+                                        </p>
+                                    ) : (
+                                        <CampoFormulario
+                                            etiqueta="Email"
+                                            tipo="email"
+                                            autocompletar="email"
+                                            valor={datos.email}
+                                            obligatorio
+                                            error={errores.email}
+                                            deshabilitado={ocupado}
+                                            onCambiar={(email) => cambiar({ email })}
+                                        />
+                                    )}
                                 </div>
                                 <CampoFormulario
                                     etiqueta="Teléfono (opcional)"
@@ -262,11 +509,12 @@ const FormularioCheckout = ({ storeView }: { storeView: StoreView }) => {
                                 />
                             </fieldset>
                             <fieldset>
-                                <legend>Facturación</legend>
+                                <Leyenda icono="menu_fiscalidad" texto="Facturación" />
                                 <CampoFormulario
                                     etiqueta="Nombre"
                                     autocompletar="name"
                                     valor={datos.nombre}
+                                    obligatorio
                                     error={errores.nombre}
                                     deshabilitado={ocupado}
                                     onCambiar={(nombre) => cambiar({ nombre })}
@@ -277,11 +525,15 @@ const FormularioCheckout = ({ storeView }: { storeView: StoreView }) => {
                                     deshabilitado={ocupado}
                                     onCambiar={(idFiscal) => cambiar({ idFiscal })}
                                 />
-                                <CamposDireccion
-                                    prefijo="direccionFacturacion"
+                                <SelectorDireccion
+                                    tipo="facturacion"
+                                    cuenta={cuenta}
+                                    idElegida={ctx.idDireccionFacturacion}
                                     direccion={datos.direccionFacturacion}
+                                    paises={paises}
                                     errores={errores}
                                     deshabilitado={ocupado}
+                                    emitir={emitir}
                                     onCambiar={(direccionFacturacion) =>
                                         cambiar({ direccionFacturacion })
                                     }
@@ -289,6 +541,7 @@ const FormularioCheckout = ({ storeView }: { storeView: StoreView }) => {
                             </fieldset>
                             <SelectorForma
                                 titulo="Envío"
+                                icono="menu_compras"
                                 nombre="forma_envio"
                                 formas={formasEnvio}
                                 seleccionada={datos.idFormaEnvio}
@@ -296,43 +549,47 @@ const FormularioCheckout = ({ storeView }: { storeView: StoreView }) => {
                                 onElegir={(forma) =>
                                     emitir("datos_cambiados", elegirFormaEnvio(datos, forma))
                                 }
-                            />
-                            {!recogida && (
-                                <label className="checkout-envio-distinto">
-                                    <input
-                                        type="checkbox"
-                                        checked={datos.envioDistinto}
-                                        disabled={ocupado}
-                                        onChange={(e) => cambiar({ envioDistinto: e.target.checked })}
-                                    />
-                                    Enviar a otra dirección
-                                </label>
-                            )}
+                            >
+                                {!recogida && (
+                                    <label className="checkout-envio-distinto">
+                                        <input
+                                            type="checkbox"
+                                            checked={datos.envioDistinto}
+                                            disabled={ocupado}
+                                            onChange={(e) => cambiar({ envioDistinto: e.target.checked })}
+                                        />
+                                        Enviar a otra dirección
+                                    </label>
+                                )}
+                            </SelectorForma>
                             {!recogida && datos.envioDistinto && (
                                 <fieldset>
-                                    <legend>Dirección de envío</legend>
-                                    <CamposDireccion
-                                        prefijo="direccionEnvio"
+                                    <Leyenda icono="casa" texto="Dirección de envío" />
+                                    <SelectorDireccion
+                                        tipo="envio"
+                                        cuenta={cuenta}
+                                        idElegida={ctx.idDireccionEnvio}
                                         direccion={datos.direccionEnvio}
+                                        paises={paises}
                                         errores={errores}
                                         deshabilitado={ocupado}
+                                        emitir={emitir}
                                         onCambiar={(direccionEnvio) => cambiar({ direccionEnvio })}
                                     />
                                 </fieldset>
                             )}
                             <SelectorForma
                                 titulo="Pago"
+                                icono="tarjeta"
                                 nombre="forma_pago"
                                 formas={formasPago}
                                 seleccionada={datos.idFormaPago}
                                 deshabilitado={ocupado}
                                 onElegir={(forma) => cambiar({ idFormaPago: forma.id })}
                             />
-                            <BotonTienda tipo="submit" ancho deshabilitado={ocupado}>
-                                Continuar
-                            </BotonTienda>
+                            <div className="checkout-acciones checkout-acciones-movil">{botonContinuar}</div>
                         </form>
-                        {resumen}
+                        {resumen(botonContinuar, estado === "DATOS")}
                     </div>
                 </div>
             </div>
@@ -344,6 +601,7 @@ const FormularioCheckout = ({ storeView }: { storeView: StoreView }) => {
                 <div className="checkout-rejilla">
                     <div className="checkout-revision">
                         <h1>Revisa tu pedido</h1>
+                        <PasosCheckout estado={estado} />
                         {mensajeError}
                         {sinCarrito}
                         <ResumenDatos ctx={ctx} formaEnvio={formaEnvio} />
@@ -373,28 +631,10 @@ const FormularioCheckout = ({ storeView }: { storeView: StoreView }) => {
                             >
                                 Modificar datos
                             </BotonTienda>
-                            {sinPasarela ? (
-                                <BotonTienda
-                                    ancho
-                                    deshabilitado={ocupado || !carrito}
-                                    onClick={() => lanzar("confirmar")}
-                                >
-                                    Confirmar pedido
-                                </BotonTienda>
-                            ) : (
-                                <BotonTienda
-                                    ancho
-                                    deshabilitado={ocupado || !carrito}
-                                    onClick={() => lanzar("pagar")}
-                                >
-                                    {carrito
-                                        ? `Pagar ${formatearPrecio(carrito.total, carrito.divisa, idioma)}`
-                                        : "Pagar"}
-                                </BotonTienda>
-                            )}
+                            <div className="checkout-acciones checkout-acciones-movil">{botonTerminar}</div>
                         </div>
                     </div>
-                    {resumen}
+                    {resumen(botonTerminar)}
                 </div>
             </div>
         </div>

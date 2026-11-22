@@ -7,7 +7,7 @@ import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
 import { formatearPrecio, hayMas } from "../../comun/dominio.ts";
 import { useSeguirComprando } from "../../comun/seguir_comprando.ts";
 import "../CuentaTienda.css";
-import { CambioPassword, DatosCuenta, DireccionCuenta, DireccionRegistro } from "../diseño.ts";
+import { CambioPassword, DatosCuenta, DireccionCuenta, DireccionRegistro, PaisTienda } from "../diseño.ts";
 import {
     direccionNuevaInicial,
     etiquetasDireccion,
@@ -40,7 +40,7 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
     const navigate = useNavigate();
     const seguir = useSeguirComprando();
     const { ctx, emitir } = useMaquina(getMaquina, contextoCuentaInicial);
-    const { estado, cuenta, pedidos, total, errorPedidos, errorEdicion, erroresEdicion } = ctx;
+    const { estado, cuenta, paises, pedidos, total, errorPedidos, errorEdicion, erroresEdicion } = ctx;
     const [formulario, setFormulario] = useState<Formulario | null>(null);
     const [borrando, setBorrando] = useState<string | null>(null);
     const [guardando, setGuardando] = useState(false);
@@ -185,6 +185,7 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
                                     tipo="tel"
                                     autocompletar="tel"
                                     valor={formularioDatos.datos.telefono}
+                                    error={erroresEdicion.telefono}
                                     deshabilitado={guardando}
                                     onCambiar={(telefono) =>
                                         setFormulario({
@@ -331,6 +332,7 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
                                 {formularioDireccion?.id === d.id && (
                                     <FormularioDireccion
                                         formulario={formularioDireccion}
+                                        paises={paises}
                                         errores={erroresEdicion}
                                         error={errorEdicion}
                                         guardando={guardando}
@@ -350,6 +352,7 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
                     {formularioDireccion && formularioDireccion.id === null ? (
                         <FormularioDireccion
                             formulario={formularioDireccion}
+                            paises={paises}
                             errores={erroresEdicion}
                             error={errorEdicion}
                             guardando={guardando}
@@ -528,6 +531,7 @@ const ContenidoMiCuenta = ({ idioma }: { idioma: string }) => {
 
 const FormularioDireccion = ({
     formulario,
+    paises,
     errores,
     error,
     guardando,
@@ -536,6 +540,7 @@ const FormularioDireccion = ({
     onCancelar,
 }: {
     formulario: Extract<Formulario, { tipo: "direccion" }>;
+    paises: PaisTienda[];
     errores: Record<string, string>;
     error: string | null;
     guardando: boolean;
@@ -559,6 +564,7 @@ const FormularioDireccion = ({
         <fieldset>
             <CamposDireccionCuenta
                 direccion={formulario.direccion}
+                paises={paises}
                 errores={errores}
                 deshabilitado={guardando}
                 onCambiar={(direccion) => onCambiar({ ...formulario, direccion })}

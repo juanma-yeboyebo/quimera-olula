@@ -1,12 +1,13 @@
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { AutocompletarTienda } from "../../comun/componentes/autocompletar_tienda.tsx";
 import { BotonTienda } from "../../comun/componentes/boton_tienda.tsx";
 import { CampoFormulario } from "../../comun/componentes/campo_formulario.tsx";
 import { ConStoreView } from "../../comun/componentes/con_storeview.tsx";
 import "../CuentaTienda.css";
 import { DatosRegistro, DireccionRegistro } from "../diseño.ts";
-import { campoRegistroValido, datosRegistroIniciales } from "../dominio.ts";
+import { campoRegistroValido, datosRegistroIniciales, opcionesPais } from "../dominio.ts";
 import { contextoRegistroInicial } from "./crear.ts";
 import { getMaquina } from "./maquina.ts";
 
@@ -16,7 +17,7 @@ const FormularioRegistro = () => {
         getMaquina,
         contextoRegistroInicial(datosRegistroIniciales()),
     );
-    const { estado, datos, errores, tocados, error, emailRepetido } = ctx;
+    const { estado, datos, errores, tocados, paises, error, emailRepetido } = ctx;
     const enCurso = useRef(false);
     const [bloqueado, setBloqueado] = useState(false);
     const ocupado = bloqueado || estado !== "EDITANDO";
@@ -32,6 +33,11 @@ const FormularioRegistro = () => {
             setBloqueado(false);
         }
     };
+
+    useEffect(() => {
+        emitir("cargar_paises");
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         if (estado === "REGISTRADO") navigate("/mi-cuenta", { replace: true });
@@ -127,6 +133,8 @@ const FormularioRegistro = () => {
                             tipo="tel"
                             autocompletar="tel"
                             valor={datos.telefono}
+                            error={errores.telefono}
+                            onSalir={() => emitir("campo_tocado", "telefono")}
                             deshabilitado={ocupado}
                             onCambiar={(telefono) => cambiar({ telefono })}
                         />
@@ -172,10 +180,13 @@ const FormularioRegistro = () => {
                             deshabilitado={ocupado}
                             onCambiar={(provincia) => cambiarDireccion({ provincia })}
                         />
-                        <CampoFormulario
+                        <AutocompletarTienda
                             etiqueta="País"
-                            autocompletar="country"
                             valor={datos.direccion.paisId}
+                            opciones={opcionesPais(paises, datos.direccion.paisId).map((p) => ({
+                                valor: p.id,
+                                texto: p.nombre,
+                            }))}
                             {...obligatorio("direccion.paisId")}
                             deshabilitado={ocupado}
                             onCambiar={(paisId) => cambiarDireccion({ paisId })}

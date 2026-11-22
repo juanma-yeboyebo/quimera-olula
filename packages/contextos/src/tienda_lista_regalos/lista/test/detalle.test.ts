@@ -17,7 +17,7 @@ const { getMaquina } = await import("#/tienda_lista_regalos/lista/detalle/maquin
 
 const linea = (id: string, orden: number, extra: Partial<LineaListaRegalos> = {}): LineaListaRegalos => ({
     id, referencia: `R${id}`, descripcion: "", precio: 10, cantidad: 2,
-    cantidadVendida: 0, pendiente: 2, orden, ...extra,
+    cantidadVendida: 0, pendiente: 2, orden, sinControlStock: false, stock: 5, ...extra,
 });
 
 const lista = (extra: Partial<ListaRegalos> = {}): ListaRegalos => ({

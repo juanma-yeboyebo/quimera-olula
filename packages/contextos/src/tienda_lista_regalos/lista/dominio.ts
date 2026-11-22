@@ -180,6 +180,11 @@ export const cambiosDeLinea = (e: EdicionLineaListaRegalos): CambiosLineaListaRe
 
 export const lineaVendida = (l: LineaListaRegalos): boolean => l.pendiente <= 0;
 
+export const textoStockLinea = (l: LineaListaRegalos): string => (l.sinControlStock ? "Sin control" : String(l.stock));
+
+export const faltaStockLinea = (l: LineaListaRegalos): boolean =>
+    !l.sinControlStock && !lineaVendida(l) && l.stock < l.pendiente;
+
 export const motivoNoBorrableLinea = (l: LineaListaRegalos): string | null =>
     l.cantidadVendida > 0 ? MOTIVO_LINEA_CON_VENTAS : null;
 

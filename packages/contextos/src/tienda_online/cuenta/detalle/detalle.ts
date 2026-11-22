@@ -1,9 +1,16 @@
 import { ProcesarContexto } from "@olula/lib/diseño.ts";
 import { CambioPassword, DatosCuenta, DireccionRegistro } from "../diseño.ts";
-import { añadirPedidos, erroresCambioPassword, erroresDatosCuenta, erroresDireccion } from "../dominio.ts";
+import {
+    añadirPedidos,
+    erroresCambioPassword,
+    erroresDatosCuenta,
+    erroresDireccion,
+    paisFacturacion,
+} from "../dominio.ts";
 import {
     deleteDireccion,
     getCuenta,
+    getPaises,
     getPedidos,
     patchCuenta,
     patchDireccion,
@@ -19,6 +26,7 @@ type ProcesarCuenta = ProcesarContexto<EstadoCuenta, ContextoCuenta>;
 export const contextoCuentaInicial: ContextoCuenta = {
     estado: "CARGANDO",
     cuenta: null,
+    paises: [],
     pedidos: [],
     total: 0,
     pagina: 1,
@@ -37,11 +45,13 @@ export const cargarCuenta: ProcesarCuenta = async (contexto) => {
         return { ...contexto, estado: "ERROR", cuenta: null };
     }
 
+    const paises = contexto.paises.length > 0 ? contexto.paises : await getPaises().catch(() => []);
+
     try {
         const { pedidos, total } = await getPedidos(1);
-        return { ...contexto, estado: "LISTA", cuenta, pedidos, total, pagina: 1, errorPedidos: false };
+        return { ...contexto, estado: "LISTA", cuenta, paises, pedidos, total, pagina: 1, errorPedidos: false };
     } catch {
-        return { ...contexto, estado: "LISTA", cuenta, pedidos: [], total: 0, pagina: 1, errorPedidos: true };
+        return { ...contexto, estado: "LISTA", cuenta, paises, pedidos: [], total: 0, pagina: 1, errorPedidos: true };
     }
 };
 
@@ -89,7 +99,7 @@ export const cerrarFormulario: ProcesarCuenta = async (contexto) => ({
 
 export const guardarDatos: ProcesarCuenta = async (contexto, payload) => {
     const datos = payload as DatosCuenta;
-    const errores = erroresDatosCuenta(datos);
+    const errores = erroresDatosCuenta(datos, paisFacturacion(contexto.cuenta));
     if (Object.keys(errores).length > 0)
         return { ...contexto, estado: "LISTA", errorEdicion: null, erroresEdicion: errores };
     return ejecutarEdicion(contexto, () => patchCuenta(datos));

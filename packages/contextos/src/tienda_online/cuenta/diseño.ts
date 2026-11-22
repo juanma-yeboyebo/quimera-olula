@@ -43,6 +43,11 @@ export type DireccionCuenta = {
     facturacion: boolean;
 };
 
+export type PaisTienda = {
+    id: string;
+    nombre: string;
+};
+
 export type CuentaTienda = {
     email: string;
     nombre: string;

@@ -1,7 +1,7 @@
 import { ProcesarContexto } from "@olula/lib/diseño.ts";
 import { DatosRegistro } from "../diseño.ts";
-import { CAMPOS_OBLIGATORIOS_REGISTRO, erroresRegistro, erroresVisiblesRegistro } from "../dominio.ts";
-import { postRegistro, registroAApi } from "../infraestructura.ts";
+import { CAMPOS_VALIDADOS_REGISTRO, erroresRegistro, erroresVisiblesRegistro } from "../dominio.ts";
+import { getPaises, postRegistro, registroAApi } from "../infraestructura.ts";
 import { iniciarSesion } from "../sesion.ts";
 import { ContextoRegistro, EstadoRegistro } from "./diseño.ts";
 
@@ -16,6 +16,7 @@ export const contextoRegistroInicial = (datos: DatosRegistro): ContextoRegistro 
     datos,
     errores: {},
     tocados: [],
+    paises: [],
     error: null,
     emailRepetido: false,
 });
@@ -31,6 +32,14 @@ export const cambiarDatos: ProcesarRegistro = async (contexto, payload) => {
     };
 };
 
+export const cargarPaises: ProcesarRegistro = async (contexto) => {
+    try {
+        return { ...contexto, paises: await getPaises() };
+    } catch {
+        return contexto;
+    }
+};
+
 export const tocarCampo: ProcesarRegistro = async (contexto, payload) => {
     const campo = payload as string;
     const tocados = contexto.tocados.includes(campo) ? contexto.tocados : [...contexto.tocados, campo];
@@ -39,7 +48,7 @@ export const tocarCampo: ProcesarRegistro = async (contexto, payload) => {
 
 export const registrar: ProcesarRegistro = async (contexto) => {
     const errores = erroresRegistro(contexto.datos);
-    const tocados = CAMPOS_OBLIGATORIOS_REGISTRO;
+    const tocados = CAMPOS_VALIDADOS_REGISTRO;
     if (Object.keys(errores).length > 0)
         return { ...contexto, estado: "EDITANDO", errores, tocados, error: null, emailRepetido: false };
 

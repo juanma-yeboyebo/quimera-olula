@@ -20,6 +20,7 @@ export const TabPublicacion = ({
                 <tr>
                     <th>Website</th>
                     <th>Estado</th>
+                    <th>Stock</th>
                     <th>Slug</th>
                     <th>Orden</th>
                     <th>Fecha de publicación</th>
@@ -27,10 +28,11 @@ export const TabPublicacion = ({
                 </tr>
             </thead>
             <tbody>
-                {filasPublicacion(articulo, websites).map(({ website, publicacion, estado }) => (
+                {filasPublicacion(articulo, websites).map(({ website, publicacion, estado, stock }) => (
                     <tr key={website.id}>
                         <td>{website.nombre}</td>
                         <td>{estado}</td>
+                        <td>{stock}</td>
                         <td>{publicacion?.slug ?? ""}</td>
                         <td>{publicacion?.orden ?? ""}</td>
                         <td>

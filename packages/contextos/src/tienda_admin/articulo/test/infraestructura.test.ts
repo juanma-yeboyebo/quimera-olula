@@ -45,6 +45,7 @@ describe("[tienda_admin-articulo-maestro-01] Lectura del listado", () => {
         ).toEqual({
             id: "A1", referencia: "A1", descripcion: "X", imagen: null,
             publicado: true, visible: false, destacado: true,
+            sinControlStock: false, stock: 0,
         });
     });
 });
@@ -87,6 +88,24 @@ describe("[tienda_admin-articulo-detalle-01] Lectura del detalle", () => {
         });
         expect(d.imagenes[0]).toEqual({ id: 5, url: "/a.jpg", alt: "", orden: 1, principal: true });
         expect(d.categorias[0]).toEqual({ id: "3", nombre: "Ropa", ruta: "Moda › Ropa" });
+        expect(d).toMatchObject({ sinControlStock: false, stocks: [] });
+    });
+
+    test("tienda_admin_articulo_publicacion_04_convierte_el_stock_por_website", () => {
+        const d = infra.articuloDetalleDesdeApi({
+            referencia: "A1", descripcion: "", precio: 0, textos: {}, idiomas: [],
+            publicaciones: [], imagenes: [], categorias: [],
+            sin_control_stock: true, stocks: [{ website_id: 2, stock: 7 }],
+        });
+        expect(d).toMatchObject({ sinControlStock: true, stocks: [{ websiteId: 2, stock: 7 }] });
+    });
+
+    test("tienda_admin_articulo_maestro_03_convierte_el_stock_del_item", () => {
+        const a = infra.articuloDesdeApi({
+            referencia: "A1", descripcion: "", imagen: null, publicado: true, visible: true, destacado: false,
+            sin_control_stock: false, stock: 3,
+        });
+        expect(a).toMatchObject({ sinControlStock: false, stock: 3 });
     });
 
     test("tienda_admin_articulo_detalle_01_la_ruta_de_categoria_en_texto_se_respeta", () => {

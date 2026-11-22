@@ -22,6 +22,8 @@ export const articuloVacio: ArticuloWebDetalle = {
     publicaciones: [],
     imagenes: [],
     categorias: [],
+    sinControlStock: false,
+    stocks: [],
 };
 
 export const contextoDetalleArticuloInicial: ContextoDetalleArticulo = {

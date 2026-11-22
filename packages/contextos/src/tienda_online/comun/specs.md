@@ -166,6 +166,19 @@ Sus props y su comportamiento no cambian.
 - **Foto:** con `object-fit: cover` y `loading="lazy"`, salvo si es prioritaria.
 - **Sin foto:** si no hay imagen o falla la carga (`onError`), muestra `SinImagen`.
 
+<!-- [tienda-primitivos-10] [x] -->
+`AutocompletarTienda` es un campo de texto con sugerencias para elegir un valor de una lista, como `PaisSelector` del ERP pero con el aspecto de `CampoFormulario`.
+- **Props:** `etiqueta`, `valor` (el id elegido), `opciones: {valor, texto}[]`, `obligatorio`, `valido`, `error`, `deshabilitado`, `onCambiar(valor)` y `onSalir`. Etiqueta, asterisco, ✓ y error se pintan igual que en `CampoFormulario`.
+- **Texto mostrado:** el `texto` de la opción cuyo `valor` es `valor`; si no está en la lista, el propio `valor`.
+- **Búsqueda:** al enfocar o escribir se abre bajo el campo una lista con las opciones que contienen lo escrito en el texto o en el valor, sin distinguir mayúsculas ni acentos, con un máximo de 8. Lo hace una función pura `filtrarOpciones(opciones, texto, limite)` en `comun/dominio.ts`; con el texto vacío devuelve las primeras. Sin coincidencias, la lista muestra «Sin resultados».
+- **Elegir:** con clic, o con ↑/↓ e Intro. Al elegir se llama a `onCambiar` con el valor, el campo muestra su texto y la lista se cierra. Escape cierra la lista y vuelve a mostrar el texto del valor actual.
+- **Al salir:** si lo escrito coincide exactamente, sin mayúsculas ni acentos, con el texto o el valor de una opción, se elige esa; si no, el campo vuelve al texto del valor actual sin llamar a `onCambiar`. Después llama a `onSalir`.
+- **Accesibilidad:** patrón combobox: el input con `role="combobox"`, `aria-expanded`, `aria-controls` y `aria-activedescendant`, y la lista con `role="listbox"` y opciones `role="option"` con `aria-selected`.
+- Aparece en la ruta `/estilos` (`tienda-primitivos-09`).
+
+<!-- [tienda-primitivos-11] [x] -->
+Los `input` de `CampoFormulario` y `AutocompletarTienda` tienen fondo `--tienda-color-fondo` (gris muy claro) en vez de `superficie`, y pasan a `superficie` al recibir el foco. Afecta a todos los formularios de la tienda (registro, Mi cuenta y checkout).
+
 <!-- [tienda-primitivos-09] [x] -->
 Solo en desarrollo (`import.meta.env.DEV`) existe la ruta `/estilos`, con muestras de los tokens activos y de todos los primitivos, para revisar una identidad nueva. En producción no se registra.
 

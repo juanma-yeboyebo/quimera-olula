@@ -3,18 +3,20 @@ import { ContextoRegistro } from "#/tienda_online/cuenta/crear/diseño.ts";
 import { DatosRegistro } from "#/tienda_online/cuenta/diseño.ts";
 
 const postRegistro = vi.fn();
+const getPaises = vi.fn();
 const iniciarSesion = vi.fn();
 
 vi.mock("#/tienda_online/cuenta/infraestructura.ts", async (importOriginal) => ({
     ...(await importOriginal<object>()),
     postRegistro: (body: unknown) => postRegistro(body),
+    getPaises: () => getPaises(),
 }));
 
 vi.mock("#/tienda_online/cuenta/sesion.ts", () => ({
     iniciarSesion: (email: string, password: string) => iniciarSesion(email, password),
 }));
 
-const { cambiarDatos, registrar, tocarCampo } = await import("#/tienda_online/cuenta/crear/crear.ts");
+const { cambiarDatos, cargarPaises, registrar, tocarCampo } = await import("#/tienda_online/cuenta/crear/crear.ts");
 const { getMaquina } = await import("#/tienda_online/cuenta/crear/maquina.ts");
 
 const datos: DatosRegistro = {
@@ -22,7 +24,7 @@ const datos: DatosRegistro = {
     password: "12345678",
     repetirPassword: "12345678",
     nombre: "Ana",
-    idFiscal: "B12345678",
+    idFiscal: "B12345674",
     telefono: null,
     direccion: {
         nombreVia: "Mayor",
@@ -39,6 +41,7 @@ const contexto = (d: DatosRegistro = datos): ContextoRegistro => ({
     datos: d,
     errores: {},
     tocados: [],
+    paises: [],
     error: null,
     emailRepetido: false,
 });
@@ -83,7 +86,7 @@ describe("[cuenta-registro-04] [EDITANDO] crear → REGISTRANDO → login", () =
         const r = ctxDe(await registrar(contexto()));
 
         expect(postRegistro).toHaveBeenCalledOnce();
-        expect(postRegistro.mock.calls[0][0].id_fiscal).toBe("B12345678");
+        expect(postRegistro.mock.calls[0][0].id_fiscal).toBe("B12345674");
         expect(postRegistro.mock.calls[0][0]).not.toHaveProperty("repetirPassword");
         expect(iniciarSesion).toHaveBeenCalledWith("ana@example.com", "12345678");
         expect(r.estado).toBe("REGISTRADO");
@@ -174,5 +177,36 @@ describe("[cuenta-registro-08] Validación al salir de cada campo", () => {
 
         expect(r.tocados).toContain("email");
         expect(r.tocados).toContain("direccion.paisId");
+        expect(r.tocados).toContain("telefono");
+    });
+
+    test("cuenta_registro_02_al_salir_del_telefono_muestra_su_error", async () => {
+        const r = ctxDe(await tocarCampo(editando({ ...datos, telefono: "123" }), "telefono"));
+
+        expect(r.errores).toEqual({ telefono: "El teléfono no es válido" });
+    });
+});
+
+describe("[cuenta-registro-01] Países del selector", () => {
+    const paises = [{ id: "ES", nombre: "España" }];
+
+    test("cuenta_registro_01_la_maquina_atiende_cargar_paises", () => {
+        expect(getMaquina().EDITANDO.cargar_paises).toEqual([cargarPaises]);
+    });
+
+    test("cuenta_registro_01_carga_los_paises", async () => {
+        getPaises.mockResolvedValue(paises);
+
+        const r = ctxDe(await cargarPaises({ ...contexto(), estado: "EDITANDO" }));
+
+        expect(r.paises).toEqual(paises);
+    });
+
+    test("cuenta_registro_01_si_fallan_los_paises_sigue_sin_lista", async () => {
+        getPaises.mockRejectedValue(new Error("x"));
+
+        const r = ctxDe(await cargarPaises({ ...contexto(), estado: "EDITANDO" }));
+
+        expect(r.paises).toEqual([]);
     });
 });

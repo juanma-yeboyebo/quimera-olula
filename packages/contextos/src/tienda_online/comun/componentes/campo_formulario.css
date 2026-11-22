@@ -15,13 +15,14 @@
             padding: 0 var(--tienda-espacio-3);
             border: 1px solid var(--tienda-color-borde-fuerte);
             border-radius: var(--tienda-radio-control);
-            background-color: var(--tienda-color-superficie);
+            background-color: var(--tienda-color-fondo);
             color: var(--tienda-color-texto);
             font-family: var(--tienda-fuente-texto);
             font-size: var(--tienda-texto-md);
 
             &:focus {
                 outline: none;
+                background-color: var(--tienda-color-superficie);
                 border-color: var(--tienda-color-accion);
                 box-shadow: 0 0 0 3px color-mix(in srgb, var(--tienda-color-accion) 20%, transparent);
             }

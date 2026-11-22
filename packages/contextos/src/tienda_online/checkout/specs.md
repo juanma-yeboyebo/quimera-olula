@@ -11,6 +11,8 @@ API del backend (`olula_servidor`, app `tienda_online`). Todas las llamadas env�
 | POST | `/public/tienda_online/carrito/<token>/confirmar` | `{}`; para formas de pago sin pasarela. Mismos 400, 404 y 409 que `…/pago` |
 | POST | `/public/tienda_online/carrito/<token>/pago/cancelar` | `{}`; si ya estaba `ABIERTO` no hace nada |
 | GET | `/public/tienda_online/carrito/<token>` | `{datos: CarritoPublico}` con `estado` y `documento {tipo, id, codigo}` |
+| GET | `/tienda_online/cuenta/yo` (con login) | la cuenta del comprador con sus direcciones (`tienda_online/cuenta`); 401 sin sesión, 404 sin cuenta en la tienda |
+| GET | `/public/tienda_online/pais` | `{datos: [{id, nombre}]}` (`cuenta-paises-01`) |
 
 - Dirección: `{nombre_via, tipo_via, numero, otros, cod_postal, ciudad, provincia, pais_id, telefono}`. Para pagar son obligatorios email, nombre y, de la dirección de facturación, `nombre_via`, `cod_postal`, `ciudad` y `pais_id`.
 - Las formas de pago y envío disponibles vienen en el StoreView (`formas_pago` y `formas_envio`: id, código, nombre, descripción y tipo). Tipos de pago: `PASARELA` y `SIN_PASARELA`. Tipos de envío: `DOMICILIO` y `RECOGIDA`.
@@ -48,6 +50,23 @@ Un `fieldset` «Pago» lista las formas de pago disponibles del carrito (`formas
 
 <!-- [checkout-datos-09] [nueva] -->
 Si el carrito solo tiene disponible una forma de envío o una de pago, su `fieldset` muestra esa forma como texto, sin radio.
+
+### Comprador con cuenta
+
+<!-- [checkout-cuenta-01] [x] -->
+Al cargar, el checkout pide la cuenta (`getCuenta` de `tienda_online/cuenta`). Si responde, el comprador tiene cuenta y el contexto guarda la cuenta. Si falla (sin sesión, 404 u otro error), el checkout es el de invitado de siempre. Mientras carga no se muestra el formulario.
+
+<!-- [checkout-cuenta-02] [x] -->
+Con cuenta, «Contacto» muestra el email como texto, no editable, y el teléfono; «Facturación» trae nombre y NIF. Si el carrito no trae nombre ni vía de facturación (aunque tenga `datosCheckout`, por ejemplo solo con la forma de envío), email, nombre, NIF, teléfono y dirección de facturación empiezan con los de la cuenta.
+
+<!-- [checkout-cuenta-03] [x] -->
+Con cuenta, la dirección de facturación se elige entre las direcciones de la cuenta, como tarjetas de radio con `textoDireccion` (las mismas que las formas de envío y pago, `checkout-diseño-07`). Empieza marcada la de facturación de la cuenta. Debajo, «Usar otra dirección» muestra el formulario de dirección vacío y se convierte en «Elegir una de mis direcciones», que lo oculta y vuelve a la tarjeta marcada. La dirección elegida se copia en `direccion_facturacion`; la otra dirección se usa solo en este pedido y no se guarda en la cuenta. Si la cuenta no tiene direcciones, se muestra directamente el formulario.
+
+<!-- [checkout-cuenta-04] [x] -->
+Con cuenta y una forma de envío `DOMICILIO`, la casilla «Enviar a otra dirección» muestra el mismo selector para la dirección de envío, con la de envío de la cuenta marcada y su propio «Usar otra dirección».
+
+<!-- [checkout-cuenta-05] [x] -->
+Las funciones que pasan una dirección de la cuenta a `DireccionCheckout` y que eligen la dirección inicial (facturación o envío) son puras y están en `checkout/dominio.ts`.
 
 ### Máquina
 
@@ -129,13 +148,30 @@ La página `/checkout/cancelado` envía `POST …/pago/cancelar` con el token gu
 <!-- [checkout-cancelado-02] [x] -->
 Si la cancelación falla (404 o 409), muestra «Has cancelado el pago.» sin la frase del carrito ni enlace al carrito y llama a `olvidarCarrito()`.
 
+### Editar el carrito
+
+<!-- [checkout-carrito-01] [x] -->
+En `DATOS`, cada línea del resumen tiene bajo la descripción el selector de cantidad (`CambiarCantidadLinea`, con «−» y «+») y «Quitar» (`BorrarLineaCarrito`), los mismos de la página del carrito y del cajón. Usan su máquina de edición (`useEdicionCarrito`), así que se comportan igual: el cambio se envía al momento, el carrito se recarga y los errores 400, 404 y 409 se tratan como en `carrito-lineas-03` a `-07`. El resumen y el total se actualizan solos con el carrito recargado. En `REVISION` y después, el resumen es solo de lectura; para cambiar el carrito hay que pulsar «Modificar datos».
+
+<!-- [checkout-carrito-02] [x] -->
+Mientras una edición está en curso, los controles de las líneas y «Revisar pedido» están deshabilitados. El error de la edición se muestra dentro de la tarjeta del resumen, encima de las líneas.
+
+<!-- [checkout-carrito-03] [x] -->
+Si al quitar la última línea el carrito queda vacío, el checkout navega a `/carrito`, que muestra «Tu carrito está vacío».
+
+<!-- [checkout-carrito-04] [x] -->
+Si tras recargar el carrito la forma de envío o de pago marcada ya no está entre las disponibles (por ejemplo, al quitar las líneas de una lista de regalos), se marca la primera disponible, con la regla de recogida de `checkout-datos-06`. La función que lo decide es pura y está en `checkout/dominio.ts`.
+
+<!-- [checkout-carrito-05] [x] -->
+Debajo de las líneas del resumen, en `DATOS`, hay un enlace «Seguir comprando» (`useSeguirComprando`) para añadir otros artículos. El carrito conserva sus líneas; los datos del formulario solo se conservan si ya se habían guardado con «Revisar pedido».
+
 ### Diseño
 
 <!-- [checkout-diseño-01] [x] -->
 `/checkout` tiene dos columnas: el formulario (o la revisión) a la izquierda y, a la derecha, un resumen del pedido fijo al hacer scroll, visible en `DATOS` y en `REVISION`. En 860 px o menos, una columna con el resumen arriba. Usa el contenedor centrado de las demás páginas.
 
 <!-- [checkout-diseño-02] [x] -->
-El resumen tiene el título «Resumen» y una línea por artículo con la imagen pequeña (o `SinImagen`), un distintivo con la cantidad sobre la imagen, la descripción y el importe; debajo, base imponible, IVA y el total destacado.
+El resumen tiene el título «Resumen» y una línea por artículo con la imagen de 72 px (o `SinImagen`), un distintivo con la cantidad sobre la imagen, la descripción y el importe. Debajo, solo el total destacado y, bajo él en texto pequeño y color secundario, «IVA incluido (X)» con el importe del IVA. Desaparecen las líneas de base imponible e IVA.
 
 <!-- [checkout-diseño-03] [x] -->
 El formulario se agrupa en `fieldset` sin borde con la leyenda en la fuente de títulos: «Contacto» (email y teléfono), «Facturación» (nombre, NIF y dirección) y, si está marcada la casilla, «Dirección de envío». Los campos van en dos columnas; email, vía y la casilla ocupan el ancho completo. En 480 px o menos, una columna.
@@ -148,6 +184,30 @@ Las páginas `/checkout/ok` y `/checkout/cancelado` muestran su contenido centra
 
 <!-- [checkout-diseño-07] [nueva] -->
 Las opciones de envío y de pago son tarjetas a lo ancho con el radio a la izquierda, el nombre en negrita y la descripción debajo en color secundario; la marcada lleva el borde del color principal de la tienda.
+
+<!-- [checkout-diseño-08] [x] -->
+Cada `fieldset` del formulario («Contacto», «Facturación», «Dirección de envío», «Envío» y «Pago») es una tarjeta como la del resumen: fondo `superficie`, borde, `--tienda-radio-tarjeta` y relleno `--tienda-espacio-6`. La leyenda va dentro de la tarjeta, numerada («1. Contacto», «2. Facturación»…). Entre tarjetas hay `--tienda-espacio-4`.
+
+<!-- [checkout-diseño-09] [x] -->
+El formulario de dirección se ordena en filas: tipo de vía (un tercio) y vía (dos tercios); número y otros; código postal y ciudad; provincia y país. El campo «Teléfono de contacto» de la dirección desaparece: la dirección se envía con el teléfono de «Contacto». En 480 px o menos, una columna.
+
+<!-- [checkout-diseño-10] [x] -->
+El país es un `AutocompletarTienda` (`tienda-primitivos-10`) con los países de `GET /public/tienda_online/pais`, cargados al abrir el checkout; si fallan, solo ofrece `ES`. En el checkout los obligatorios no llevan asterisco ni aparece «Los campos con * son obligatorios»: solo los opcionales llevan «(opcional)» en la etiqueta (Teléfono, NIF, Tipo de vía, Número, Otros y Provincia). Los errores de obligatorio siguen saliendo al continuar.
+
+<!-- [checkout-diseño-11] [x] -->
+En `DATOS`, el botón «Revisar pedido» va dentro de la tarjeta del resumen, debajo del total, a lo ancho y fijo con él al hacer scroll. En `REVISION`, el de terminar («Pagar X» o «Confirmar pedido») va en el mismo sitio; «Modificar datos» sigue en la columna izquierda. En 860 px o menos, con el resumen arriba, los botones van al final de la columna del formulario. El botón envía el formulario (`form` asociado por id), así que Intro en un campo también continúa.
+
+<!-- [checkout-diseño-12] [x] -->
+Las tarjetas de dirección de la cuenta (`checkout-cuenta-03`) llevan el radio a la izquierda, separado, y a la derecha el texto en líneas: vía y número en negrita; código postal y ciudad; provincia y nombre del país (de la lista de países, o el código si no está). La función que da esas líneas es pura y está en `checkout/dominio.ts`.
+
+<!-- [checkout-diseño-13] [x] -->
+Cada leyenda de tarjeta lleva un icono `QIcono` de tamaño `sm` delante del número: «Contacto» `usuario`, «Facturación» `menu_fiscalidad`, «Dirección de envío» `casa`, «Envío» `menu_compras` y «Pago» `tarjeta`.
+
+<!-- [checkout-diseño-14] [x] -->
+Bajo el título «Datos del pedido» (y «Revisa tu pedido» en `REVISION`) hay una barra de pasos: «1 Datos», «2 Revisión» y «3 Pago», unidos por una línea. En `DATOS` está activo el 1; en `REVISION`, el 1 aparece completado y activo el 2; el 3 se activa al pagar o confirmar. El paso activo va en el color principal de la tienda y en negrita; los completados, con `IconCheck`.
+
+<!-- [checkout-diseño-15] [x] -->
+En la tarjeta «Envío», una forma `RECOGIDA` muestra «Sin coste» junto al nombre. La descripción de la forma (dónde y en qué horario se recoge) sale debajo, como ya hace `checkout-diseño-07`; su texto se edita en la forma de envío de la tienda.
 
 <!-- [checkout-diseño-06] [x] -->
 `CheckoutTienda.css`, `PagoOk.css` y `PagoCancelado.css` usan solo tokens `--tienda-*` y van en `@layer tienda.paginas`.

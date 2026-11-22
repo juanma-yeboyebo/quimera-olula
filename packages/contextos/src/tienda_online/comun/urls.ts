@@ -5,6 +5,7 @@ class TiendaOnline_Urls {
     readonly CATALOGO = `/public/tienda_online/catalogo`;
     readonly CATEGORIA = `/public/tienda_online/categoria`;
     readonly PRODUCTO = `/public/tienda_online/producto`;
+    readonly PAIS = `/public/tienda_online/pais`;
     readonly REGISTRO = `/public/tienda_online/cuenta/registro`;
     readonly CUENTA = `/tienda_online/cuenta/yo`;
     readonly PASSWORD = `/tienda_online/cuenta/password`;

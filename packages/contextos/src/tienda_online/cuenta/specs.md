@@ -11,6 +11,7 @@ API del backend (`olula_servidor`, app `tienda_online`). Todas las llamadas env�
 | POST | `/tienda_online/carrito/<token>/asociar` (con login) | `{}`; absorbe los otros carritos abiertos del comprador en el del token; 404, 409 |
 | GET | `/tienda_online/carrito` (con login) | `{datos: CarritoPublico}` del carrito abierto del usuario; 404 si no tiene |
 | GET | `/tienda_online/cuenta/yo` (con login) | `{datos: {email, nombre, id_fiscal, telefono, cliente_id, direcciones: [{id, nombre_via, numero, cod_postal, ciudad, provincia, pais_id, envio, facturacion}]}}`; 404 sin cuenta en la tienda |
+| GET | `/public/tienda_online/pais` | `{datos: [{id, nombre}]}` ordenados por nombre; 404 storeview |
 | PATCH | `/tienda_online/cuenta/yo` (con login) | body `{nombre, id_fiscal, telefono}`; `{}`; 400 datos no válidos, 404 sin cuenta |
 | POST | `/tienda_online/cuenta/direccion` (con login) | body `{nombre_via, numero, cod_postal, ciudad, provincia, pais_id}`; `{id}`; 400 |
 | PATCH | `/tienda_online/cuenta/direccion/<id>` (con login) | mismo body; `{}`; 400, 404 |
@@ -62,11 +63,12 @@ La ruta `/logout` de la tienda llama a `logout()` de auth, después a `olvidarCa
 ### Registro
 
 <!-- [cuenta-registro-01] [x] -->
-<!-- antes: La página `/registro` muestra email, contraseña, repetir contraseña, nombre, NIF/CIF, teléfono (opcional) y la dirección (vía, número, código postal, ciudad, provincia y país, con `ES` por defecto), el botón «Crear cuenta» y el enlace «Ya tengo cuenta» a `/login`. -->
-La página `/registro` muestra email, contraseña, repetir contraseña, nombre, NIF/CIF, teléfono y la dirección (vía, número, código postal, ciudad, provincia y país, con `ES` por defecto), el botón «Crear cuenta» y el enlace «Ya tengo cuenta» a `/login`. Los campos obligatorios (email, las dos contraseñas, nombre, NIF/CIF, vía, código postal, ciudad y país) llevan un asterisco tras la etiqueta y `aria-required`, mediante la nueva prop `obligatorio` de `CampoFormulario`. Bajo el título aparece «Los campos con * son obligatorios». Teléfono pierde el «(opcional)».
+<!-- antes: La página `/registro` muestra email, contraseña, repetir contraseña, nombre, NIF/CIF, teléfono y la dirección (vía, número, código postal, ciudad, provincia y país, con `ES` por defecto), el botón «Crear cuenta» y el enlace «Ya tengo cuenta» a `/login`. El país es un selector con los países de `GET /public/tienda_online/pais` (`cuenta-paises-01`), que se cargan al abrir la página; mientras no llegan, o si fallan, el selector muestra solo `ES`. Los campos obligatorios (email, las dos contraseñas, nombre, NIF/CIF, vía, código postal, ciudad y país) llevan un asterisco tras la etiqueta y `aria-required`, mediante la nueva prop `obligatorio` de `CampoFormulario`. Bajo el título aparece «Los campos con * son obligatorios». Teléfono pierde el «(opcional)». -->
+La página `/registro` muestra email, contraseña, repetir contraseña, nombre, NIF/CIF, teléfono y la dirección (vía, número, código postal, ciudad, provincia y país, con `ES` por defecto), el botón «Crear cuenta» y el enlace «Ya tengo cuenta» a `/login`. El país es un `AutocompletarTienda` (`tienda-primitivos-10`) con los países de `GET /public/tienda_online/pais` (`cuenta-paises-01`), que se cargan al abrir la página; mientras no llegan, o si fallan, solo ofrece `ES`. `CampoFormulario` deja de tener la prop `opciones`. Los campos obligatorios (email, las dos contraseñas, nombre, NIF/CIF, vía, código postal, ciudad y país) llevan un asterisco tras la etiqueta y `aria-required`, mediante la nueva prop `obligatorio` de `CampoFormulario`. Bajo el título aparece «Los campos con * son obligatorios». Teléfono pierde el «(opcional)».
 
 <!-- [cuenta-registro-02] [x] -->
-Validación en el cliente con una función pura `erroresRegistro(datos)`: email con formato válido; contraseña de al menos 8 caracteres; las dos contraseñas iguales («Las contraseñas no coinciden»); nombre, NIF/CIF, vía, código postal, ciudad y país obligatorios. Con errores no se envía y cada campo muestra el suyo.
+<!-- antes: Validación en el cliente con una función pura `erroresRegistro(datos)`: email con formato válido; contraseña de al menos 8 caracteres; las dos contraseñas iguales («Las contraseñas no coinciden»); nombre, NIF/CIF, vía, código postal, ciudad y país obligatorios. Con errores no se envía y cada campo muestra el suyo. -->
+Validación en el cliente con una función pura `erroresRegistro(datos)`: email con formato válido; contraseña de al menos 8 caracteres; las dos contraseñas iguales («Las contraseñas no coinciden»); nombre, NIF/CIF, vía, código postal, ciudad y país obligatorios; NIF/CIF con formato válido para el país elegido y teléfono con formato válido si se rellena, con las reglas y los textos del servidor (`cuenta-registrar-09` y `-10`), en funciones puras `idFiscalValido(idFiscal, paisId)` y `telefonoValido(telefono)` de `cuenta/dominio.ts`. Con errores no se envía y cada campo muestra el suyo. El teléfono se valida al salir de él como los obligatorios (`cuenta-registro-08`), pero no se marca como correcto.
 
 <!-- [cuenta-registro-03] [x] -->
 Una función pura `registroAApi(datos)` construye el body en snake_case, sin la repetición de la contraseña y con los opcionales vacíos como `null`.
@@ -106,7 +108,8 @@ La página tiene el botón «Cerrar sesión», que navega a `/logout`.
 La tarjeta «Datos» de `/mi-cuenta` tiene un `BotonTienda` `enlace` «Editar» que la cambia por un formulario con nombre, NIF/CIF y teléfono (`CampoFormulario`), con los valores actuales, y los botones «Guardar» (`principal`) y «Cancelar» (`secundario`). El email se muestra como texto, no editable.
 
 <!-- [cuenta-editar_datos-02] [x] -->
-Validación en el cliente con una función pura `erroresDatosCuenta(datos)` en `cuenta/dominio.ts`: nombre y NIF/CIF obligatorios, con los mismos textos que el registro. Con errores no se envía y cada campo muestra el suyo.
+<!-- antes: Validación en el cliente con una función pura `erroresDatosCuenta(datos)` en `cuenta/dominio.ts`: nombre y NIF/CIF obligatorios, con los mismos textos que el registro. Con errores no se envía y cada campo muestra el suyo. -->
+Validación en el cliente con una función pura `erroresDatosCuenta(datos, paisId)` en `cuenta/dominio.ts`: nombre y NIF/CIF obligatorios, NIF/CIF válido para `paisId` (el país de la dirección de facturación de la cuenta) y teléfono válido si se rellena, con las mismas funciones y textos que el registro. Con errores no se envía y cada campo muestra el suyo.
 
 <!-- [cuenta-editar_datos-03] [x] -->
 [LISTA] guardar_datos → GUARDANDO → LISTA (envía `PATCH /tienda_online/cuenta/yo` con `{nombre, id_fiscal, telefono}`, vuelve a cargar la cuenta y cierra el formulario)
@@ -134,7 +137,8 @@ Tras guardar con éxito se muestra bajo el título «Contraseña» un aviso `rol
 La tarjeta «Direcciones» tiene un `BotonTienda` `secundario` «Añadir dirección» y, en cada dirección, «Editar», «Usar para envío» (si no lo es), «Usar para facturación» (si no lo es) y «Borrar» (no aparece en la de facturación), como `BotonTienda` `enlace`.
 
 <!-- [cuenta-direcciones-02] [x] -->
-«Añadir dirección» y «Editar» abren dentro de la tarjeta un formulario con vía, número, código postal, ciudad, provincia y país (`ES` por defecto al añadir), con «Guardar» y «Cancelar». Solo hay un formulario de dirección abierto a la vez.
+<!-- antes: «Añadir dirección» y «Editar» abren dentro de la tarjeta un formulario con vía, número, código postal, ciudad, provincia y país (`ES` por defecto al añadir), con «Guardar» y «Cancelar». Solo hay un formulario de dirección abierto a la vez. El país es el mismo selector que en el registro (`cuenta-registro-01`); los países se cargan una vez con la cuenta. -->
+«Añadir dirección» y «Editar» abren dentro de la tarjeta un formulario con vía, número, código postal, ciudad, provincia y país (`ES` por defecto al añadir), con «Guardar» y «Cancelar». Solo hay un formulario de dirección abierto a la vez. El país es el mismo `AutocompletarTienda` que en el registro (`cuenta-registro-01`); los países se cargan una vez con la cuenta.
 
 <!-- [cuenta-direcciones-03] [x] -->
 Validación en el cliente con una función pura `erroresDireccion(direccion)` en `cuenta/dominio.ts`: vía, código postal, ciudad y país obligatorios, con los mismos textos que el registro. `erroresRegistro` la reutiliza para su dirección.

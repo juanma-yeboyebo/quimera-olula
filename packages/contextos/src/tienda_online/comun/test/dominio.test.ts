@@ -9,13 +9,16 @@ import {
     debeDescartarToken,
     formatearPrecio,
     esRutaCheckout,
+    filtrarOpciones,
     hayMas,
     limitarCantidad,
     nodoDeRuta,
+    opcionExacta,
     repartirMenu,
     rutaBusqueda,
     textoAriaCarrito,
     textoContador,
+    textoDeOpcion,
 } from "#/tienda_online/comun/dominio.ts";
 
 describe("[tienda-storeview-01] El código del storeview activo sale de VITE_STORE_VIEW", () => {
@@ -337,5 +340,41 @@ describe("[tienda-menu-10] categoriasEnMenu descarta las categorías fuera del m
         const arbol = [cat("a", [fuera("a1")])];
         categoriasEnMenu(arbol);
         expect(arbol[0].hijas).toHaveLength(1);
+    });
+});
+
+describe("[tienda-primitivos-10] Autocompletar", () => {
+    const opciones = [
+        { valor: "DE", texto: "Alemania" },
+        { valor: "AT", texto: "Austria" },
+        { valor: "ES", texto: "España" },
+        { valor: "FR", texto: "Francia" },
+    ];
+
+    test("tienda_primitivos_10_filtra_por_texto_sin_mayusculas_ni_acentos", () => {
+        expect(filtrarOpciones(opciones, "ESPAN", 8)).toEqual([{ valor: "ES", texto: "España" }]);
+        expect(filtrarOpciones(opciones, "ia", 8).map((o) => o.valor)).toEqual(["DE", "AT", "FR"]);
+    });
+
+    test("tienda_primitivos_10_filtra_tambien_por_valor", () => {
+        expect(filtrarOpciones(opciones, "fr", 8)).toEqual([{ valor: "FR", texto: "Francia" }]);
+    });
+
+    test("tienda_primitivos_10_respeta_el_limite_y_sin_texto_da_las_primeras", () => {
+        expect(filtrarOpciones(opciones, "", 2).map((o) => o.valor)).toEqual(["DE", "AT"]);
+        expect(filtrarOpciones(opciones, "zz", 8)).toEqual([]);
+    });
+
+    test("tienda_primitivos_10_coincidencia_exacta_al_salir", () => {
+        expect(opcionExacta(opciones, " espana ")).toEqual({ valor: "ES", texto: "España" });
+        expect(opcionExacta(opciones, "es")).toEqual({ valor: "ES", texto: "España" });
+        expect(opcionExacta(opciones, "Espa")).toBeNull();
+        expect(opcionExacta(opciones, "")).toBeNull();
+    });
+
+    test("tienda_primitivos_10_texto_mostrado", () => {
+        expect(textoDeOpcion(opciones, "ES")).toBe("España");
+        expect(textoDeOpcion(opciones, "PT")).toBe("PT");
+        expect(textoDeOpcion(opciones, null)).toBe("");
     });
 });

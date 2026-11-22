@@ -28,6 +28,8 @@ export interface ArticuloWebApi {
     publicado: boolean;
     visible: boolean;
     destacado: boolean;
+    sin_control_stock?: boolean;
+    stock?: number;
 }
 
 export interface PublicacionApi {
@@ -57,6 +59,8 @@ export interface ArticuloWebDetalleApi {
     publicaciones: PublicacionApi[];
     imagenes: { id: number; url: string; alt: string | null; orden: number; principal: boolean }[];
     categorias: { id: number | string; nombre: string; ruta: string | string[] }[];
+    sin_control_stock?: boolean;
+    stocks?: { website_id: number; stock: number }[];
 }
 
 export const articuloDesdeApi = (a: ArticuloWebApi): ArticuloWeb => ({
@@ -67,6 +71,8 @@ export const articuloDesdeApi = (a: ArticuloWebApi): ArticuloWeb => ({
     publicado: a.publicado,
     visible: a.visible,
     destacado: a.destacado,
+    sinControlStock: a.sin_control_stock ?? false,
+    stock: a.stock ?? 0,
 });
 
 export const publicacionDesdeApi = (p: PublicacionApi): PublicacionArticulo => ({
@@ -107,6 +113,8 @@ export const articuloDetalleDesdeApi = (a: ArticuloWebDetalleApi): ArticuloWebDe
         nombre: c.nombre,
         ruta: Array.isArray(c.ruta) ? c.ruta.join(" › ") : c.ruta,
     })),
+    sinControlStock: a.sin_control_stock ?? false,
+    stocks: (a.stocks ?? []).map((s) => ({ websiteId: s.website_id, stock: s.stock })),
 });
 
 export const publicacionAApi = (c: CambiosPublicacion) => ({

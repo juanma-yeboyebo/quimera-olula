@@ -6,8 +6,13 @@ import {
 } from "#/tienda_online/comun/diseño.ts";
 import { DatosCheckout, DireccionCheckout } from "#/tienda_online/checkout/diseño.ts";
 import {
+    ajustarFormas,
     clavePagoEnCurso,
     datosCheckoutIniciales,
+    direccionDesdeCuenta,
+    direccionInicialCuenta,
+    idDireccionCuentaDe,
+    lineasDireccionCuenta,
     elegirFormaEnvio,
     erroresCheckout,
     resultadoPago,
@@ -316,5 +321,73 @@ describe("[checkout-datos-06] Con una forma de envío RECOGIDA no hay dirección
         );
 
         expect(d.envioDistinto).toBe(false);
+    });
+});
+
+describe("[checkout-cuenta-05] Direcciones de la cuenta", () => {
+    const dc = (id: string, extra: object = {}) => ({
+        id, nombreVia: `Calle ${id}`, numero: null, codPostal: "28001", ciudad: "Madrid",
+        provincia: "Madrid", paisId: "ES", envio: false, facturacion: false, ...extra,
+    });
+    const cuenta = (direcciones: ReturnType<typeof dc>[]) => ({
+        email: "a@b.es", nombre: "A", idFiscal: null, telefono: null, clienteId: "C1", direcciones,
+    });
+
+    test("checkout_cuenta_05_pasa_la_direccion_de_la_cuenta_al_checkout", () => {
+        expect(direccionDesdeCuenta(dc("1"))).toEqual({
+            nombreVia: "Calle 1", tipoVia: null, numero: null, otros: null, codPostal: "28001",
+            ciudad: "Madrid", provincia: "Madrid", paisId: "ES", telefono: null,
+        });
+    });
+
+    test("checkout_cuenta_05_direccion_inicial_por_tipo_o_la_primera", () => {
+        const c = cuenta([dc("1"), dc("2", { facturacion: true }), dc("3", { envio: true })]);
+        expect(direccionInicialCuenta(c, "facturacion")?.id).toBe("2");
+        expect(direccionInicialCuenta(c, "envio")?.id).toBe("3");
+        expect(direccionInicialCuenta(cuenta([dc("7")]), "envio")?.id).toBe("7");
+        expect(direccionInicialCuenta(cuenta([]), "envio")).toBeNull();
+    });
+
+    test("checkout_cuenta_05_reconoce_una_direccion_de_la_cuenta", () => {
+        const c = cuenta([dc("1"), dc("2")]);
+        expect(idDireccionCuentaDe(c, direccionDesdeCuenta(dc("2")))).toBe("2");
+        expect(idDireccionCuentaDe(c, { ...direccionDesdeCuenta(dc("2")), ciudad: "Sevilla" })).toBeNull();
+    });
+});
+
+describe("[checkout-diseño-12] Líneas de una dirección de la cuenta", () => {
+    const d = {
+        id: "1", nombreVia: "Mayor", numero: "5", codPostal: "30400", ciudad: "Alicante",
+        provincia: "Alicante", paisId: "ES", envio: false, facturacion: true,
+    };
+
+    test("checkout_diseño_12_via_y_numero_cp_y_ciudad_provincia_y_nombre_del_pais", () => {
+        expect(lineasDireccionCuenta(d, [{ id: "ES", nombre: "España" }])).toEqual([
+            "Mayor, 5", "30400 Alicante", "Alicante, España",
+        ]);
+    });
+
+    test("checkout_diseño_12_sin_pais_en_la_lista_usa_el_codigo_y_omite_lo_vacio", () => {
+        expect(lineasDireccionCuenta({ ...d, numero: null, provincia: null }, [])).toEqual([
+            "Mayor", "30400 Alicante", "ES",
+        ]);
+    });
+});
+
+describe("[checkout-carrito-04] Formas que dejan de estar disponibles", () => {
+    test("checkout_carrito_04_si_siguen_disponibles_devuelve_los_mismos_datos", () => {
+        const d = { ...datosValidos, idFormaEnvio: 1, idFormaPago: 11 };
+        expect(ajustarFormas(d, formasEnvio, formasPago)).toBe(d);
+    });
+
+    test("checkout_carrito_04_marca_la_primera_disponible_con_la_regla_de_recogida", () => {
+        const d = { ...datosValidos, envioDistinto: true, idFormaEnvio: 1, idFormaPago: 11 };
+        const r = ajustarFormas(d, [formasEnvio[1]], [formasPago[0]]);
+        expect(r).toMatchObject({ idFormaEnvio: 2, envioDistinto: false, idFormaPago: 10 });
+    });
+
+    test("checkout_carrito_04_sin_formas_disponibles_queda_sin_marcar", () => {
+        const d = { ...datosValidos, idFormaEnvio: 1, idFormaPago: 10 };
+        expect(ajustarFormas(d, [], [])).toMatchObject({ idFormaEnvio: null, idFormaPago: null });
     });
 });

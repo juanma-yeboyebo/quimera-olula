@@ -15,7 +15,10 @@ export interface LineaListaRegalos {
     cantidad: number;
     vendida: number;
     pendiente: number;
+    disponible: boolean;
 }
+
+export type EstadoLineaLista = "REGALADA" | "SIN_STOCK" | "DISPONIBLE";
 
 export interface ListaRegalosPublica {
     nombre: string;

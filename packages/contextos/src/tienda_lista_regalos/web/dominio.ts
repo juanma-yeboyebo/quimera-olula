@@ -1,7 +1,13 @@
 import { limitarCantidad } from "#/tienda_online/comun/dominio.ts";
-import { FichaLineaLista, LineaListaRegalos } from "./diseño.ts";
+import { EstadoLineaLista, FichaLineaLista, LineaListaRegalos } from "./diseño.ts";
 
 export const estaRegalada = (linea: LineaListaRegalos): boolean => linea.pendiente <= 0;
+
+export const estadoLinea = (linea: LineaListaRegalos): EstadoLineaLista =>
+    estaRegalada(linea) ? "REGALADA" : linea.disponible ? "DISPONIBLE" : "SIN_STOCK";
+
+export const textoDistintivoLinea = (estado: EstadoLineaLista): string | null =>
+    estado === "REGALADA" ? "Regalado" : estado === "SIN_STOCK" ? "Sin stock" : null;
 
 export const textoPendiente = (linea: LineaListaRegalos): string =>
     `Quedan ${linea.pendiente} de ${linea.cantidad}`;

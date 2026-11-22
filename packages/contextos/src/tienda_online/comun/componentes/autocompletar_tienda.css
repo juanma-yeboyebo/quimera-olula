@@ -1,0 +1,43 @@
+@layer tienda.primitivos {
+    .autocompletar-tienda-lista {
+        position: absolute;
+        top: calc(100% + var(--tienda-espacio-1));
+        left: 0;
+        right: 0;
+        z-index: 20;
+        max-height: 18rem;
+        overflow-y: auto;
+        margin: 0;
+        padding: var(--tienda-espacio-1) 0;
+        list-style: none;
+        border: 1px solid var(--tienda-color-borde);
+        border-radius: var(--tienda-radio-control);
+        background-color: var(--tienda-color-superficie);
+        box-shadow: var(--tienda-sombra-elevada);
+
+        &[hidden] {
+            display: none;
+        }
+
+        li {
+            padding: var(--tienda-espacio-2) var(--tienda-espacio-3);
+            color: var(--tienda-color-texto);
+            font-size: var(--tienda-texto-md);
+            cursor: pointer;
+        }
+
+        li[role="option"]:hover,
+        li[aria-selected="true"] {
+            background-color: var(--tienda-color-superficie-hundida);
+        }
+
+        li[aria-selected="true"] {
+            color: var(--tienda-color-accion);
+        }
+
+        .autocompletar-tienda-vacio {
+            color: var(--tienda-color-texto-suave);
+            cursor: default;
+        }
+    }
+}

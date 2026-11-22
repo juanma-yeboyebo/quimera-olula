@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AutocompletarTienda } from "../componentes/autocompletar_tienda.tsx";
 import { BotonIcono } from "../componentes/boton_icono.tsx";
 import { BotonTienda } from "../componentes/boton_tienda.tsx";
 import { CampoFormulario } from "../componentes/campo_formulario.tsx";
@@ -34,6 +35,7 @@ const textos = ["xs", "sm", "md", "lg", "xl", "xxl"];
 export const PaginaEstilos = () => {
     const [cantidad, setCantidad] = useState(1);
     const [campo, setCampo] = useState("");
+    const [pais, setPais] = useState("ES");
 
     return (
         <div className="pagina-estilos contenedor-tienda">
@@ -95,6 +97,18 @@ export const PaginaEstilos = () => {
                     <SelectorCantidad valor={cantidad} maximo={5} onCambiar={setCantidad} />
                 </div>
                 <CampoFormulario etiqueta="Campo" valor={campo} deshabilitado={false} onCambiar={setCampo} />
+                <AutocompletarTienda
+                    etiqueta="Autocompletar"
+                    valor={pais}
+                    opciones={[
+                        { valor: "DE", texto: "Alemania" },
+                        { valor: "ES", texto: "España" },
+                        { valor: "FR", texto: "Francia" },
+                        { valor: "PT", texto: "Portugal" },
+                    ]}
+                    deshabilitado={false}
+                    onCambiar={setPais}
+                />
                 <CampoFormulario
                     etiqueta="Campo con error"
                     valor=""

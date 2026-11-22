@@ -11,6 +11,13 @@ export interface ArticuloWeb extends Entidad {
     publicado: boolean;
     visible: boolean;
     destacado: boolean;
+    sinControlStock: boolean;
+    stock: number;
+}
+
+export interface StockWebsite {
+    websiteId: number;
+    stock: number;
 }
 
 export interface PublicacionArticulo {
@@ -47,6 +54,8 @@ export interface ArticuloWebDetalle extends Entidad {
     publicaciones: PublicacionArticulo[];
     imagenes: ImagenArticulo[];
     categorias: CategoriaArticulo[];
+    sinControlStock: boolean;
+    stocks: StockWebsite[];
 }
 
 export interface TextosArticulo extends Modelo {
@@ -71,6 +80,7 @@ export interface FilaPublicacion {
     website: WebsiteAdmin;
     publicacion: PublicacionArticulo | undefined;
     estado: EstadoPublicacionWebsite;
+    stock: string;
 }
 
 export interface FiltrosArticulo {

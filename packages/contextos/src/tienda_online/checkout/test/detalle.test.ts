@@ -10,6 +10,8 @@ const recargarCarrito = vi.fn();
 const olvidarCarrito = vi.fn();
 const codigoStoreViewActivo = vi.fn();
 const redirigirA = vi.fn();
+const getCuenta = vi.fn();
+const getPaises = vi.fn();
 
 vi.mock("#/tienda_online/checkout/infraestructura.ts", async (importOriginal) => ({
     ...(await importOriginal<object>()),
@@ -28,11 +30,19 @@ vi.mock("#/tienda_online/comun/storeview.ts", () => ({
     codigoStoreViewActivo: () => codigoStoreViewActivo(),
 }));
 
+vi.mock("#/tienda_online/cuenta/infraestructura.ts", () => ({
+    getCuenta: () => getCuenta(),
+    getPaises: () => getPaises(),
+}));
+
 vi.mock("#/tienda_online/checkout/navegacion.ts", () => ({
     redirigirA: (url: string) => redirigirA(url),
 }));
 
-const { guardarDatos, iniciarPago, confirmarPedido } = await import("#/tienda_online/checkout/detalle/detalle.ts");
+const { cargarCuenta, confirmarPedido, elegirDireccion, guardarDatos, iniciarPago } = await import(
+    "#/tienda_online/checkout/detalle/detalle.ts"
+);
+const { getMaquina } = await import("#/tienda_online/checkout/detalle/maquina.ts");
 
 const direccion: DireccionCheckout = {
     nombreVia: "Mayor",
@@ -63,6 +73,11 @@ const contexto = (estado: ContextoCheckout["estado"], d: DatosCheckout = datos):
     datos: d,
     errores: {},
     error: null,
+    cuentaCargada: true,
+    cuenta: null,
+    paises: [],
+    idDireccionFacturacion: null,
+    idDireccionEnvio: null,
 });
 
 type Resultado = ContextoCheckout | [ContextoCheckout, unknown[]];
@@ -303,5 +318,112 @@ describe("[checkout-maquina-09] [CONFIRMANDO] error 400 → DATOS y otro error �
         expect(olvidarCarrito).toHaveBeenCalledOnce();
         expect(r.estado).toBe("REVISION");
         expect(r.error).toBe(MENSAJE);
+    });
+});
+
+const direccionCuenta = (id: string, extra: object = {}) => ({
+    id, nombreVia: `Calle ${id}`, numero: "1", codPostal: "28001", ciudad: "Madrid",
+    provincia: null, paisId: "ES", envio: false, facturacion: false, ...extra,
+});
+
+const cuenta = {
+    email: "cuenta@example.com",
+    nombre: "Cuenta",
+    idFiscal: "12345678Z",
+    telefono: "600123456",
+    clienteId: "C1",
+    direcciones: [
+        direccionCuenta("1", { facturacion: true }),
+        direccionCuenta("2", { envio: true }),
+    ],
+};
+
+const vacios: DatosCheckout = {
+    ...datos,
+    email: "",
+    nombre: "",
+    direccionFacturacion: { ...direccion, nombreVia: "", codPostal: "", ciudad: "" },
+};
+
+describe("[checkout-cuenta-01] Carga de la cuenta", () => {
+    beforeEach(() => {
+        getCuenta.mockReset();
+        getPaises.mockReset();
+        getPaises.mockResolvedValue([{ id: "ES", nombre: "España" }]);
+    });
+
+    test("checkout_cuenta_01_la_maquina_atiende_cargar_cuenta_y_direccion_elegida", () => {
+        expect(getMaquina().DATOS.cargar_cuenta).toEqual([cargarCuenta]);
+        expect(getMaquina().DATOS.direccion_elegida).toEqual([elegirDireccion]);
+    });
+
+    test("checkout_cuenta_01_sin_sesion_queda_el_checkout_de_invitado", async () => {
+        getCuenta.mockRejectedValue(errorApi(401));
+
+        const r = ctxDe(await cargarCuenta({ ...contexto("DATOS", vacios), cuentaCargada: false }));
+
+        expect(r.cuentaCargada).toBe(true);
+        expect(r.cuenta).toBeNull();
+        expect(r.datos).toEqual(vacios);
+        expect(r.paises).toEqual([{ id: "ES", nombre: "España" }]);
+    });
+
+    test("checkout_cuenta_02_con_cuenta_rellena_los_datos_y_elige_sus_direcciones", async () => {
+        getCuenta.mockResolvedValue(cuenta);
+
+        const r = ctxDe(await cargarCuenta({ ...contexto("DATOS", vacios), cuentaCargada: false }));
+
+        expect(r.cuenta).toEqual(cuenta);
+        expect(r.datos).toMatchObject({ email: "cuenta@example.com", nombre: "Cuenta", idFiscal: "12345678Z", telefono: "600123456" });
+        expect(r.datos.direccionFacturacion.nombreVia).toBe("Calle 1");
+        expect(r.idDireccionFacturacion).toBe("1");
+        expect(r.idDireccionEnvio).toBe("2");
+    });
+
+    test("checkout_cuenta_02_si_el_carrito_ya_tenia_datos_no_los_pisa_salvo_el_email", async () => {
+        getCuenta.mockResolvedValue(cuenta);
+
+        const r = ctxDe(await cargarCuenta(contexto("DATOS")));
+
+        expect(r.datos.nombre).toBe("Ana");
+        expect(r.datos.email).toBe("cuenta@example.com");
+        expect(r.idDireccionFacturacion).toBeNull();
+    });
+
+    test("checkout_cuenta_01_si_fallan_los_paises_sigue_sin_lista", async () => {
+        getCuenta.mockRejectedValue(errorApi(404));
+        getPaises.mockRejectedValue(errorApi(500));
+
+        const r = ctxDe(await cargarCuenta({ ...contexto("DATOS"), cuentaCargada: false }));
+
+        expect(r.paises).toEqual([]);
+        expect(r.cuentaCargada).toBe(true);
+    });
+});
+
+describe("[checkout-cuenta-03] Elegir dirección", () => {
+    const conCuenta = (): ContextoCheckout => ({ ...contexto("DATOS"), cuenta, idDireccionFacturacion: "1" });
+
+    test("checkout_cuenta_03_copia_la_direccion_elegida", async () => {
+        const r = ctxDe(await elegirDireccion(conCuenta(), { tipo: "facturacion", id: "2" }));
+
+        expect(r.idDireccionFacturacion).toBe("2");
+        expect(r.datos.direccionFacturacion.nombreVia).toBe("Calle 2");
+    });
+
+    test("checkout_cuenta_03_usar_otra_direccion_deja_el_formulario_vacio", async () => {
+        const r = ctxDe(await elegirDireccion(conCuenta(), { tipo: "facturacion", id: null }));
+
+        expect(r.idDireccionFacturacion).toBeNull();
+        expect(r.datos.direccionFacturacion.nombreVia).toBe("");
+        expect(r.datos.direccionFacturacion.paisId).toBe("ES");
+    });
+
+    test("checkout_cuenta_04_la_de_envio_va_aparte", async () => {
+        const r = ctxDe(await elegirDireccion(conCuenta(), { tipo: "envio", id: "1" }));
+
+        expect(r.idDireccionEnvio).toBe("1");
+        expect(r.idDireccionFacturacion).toBe("1");
+        expect(r.datos.direccionEnvio.nombreVia).toBe("Calle 1");
     });
 });

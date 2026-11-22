@@ -4,6 +4,7 @@ import { CuentaTienda, PedidoResumen } from "#/tienda_online/cuenta/diseño.ts";
 
 const getCuenta = vi.fn();
 const getPedidos = vi.fn();
+const getPaises = vi.fn();
 const patchCuenta = vi.fn();
 const patchPassword = vi.fn();
 const postDireccion = vi.fn();
@@ -15,6 +16,7 @@ const patchDireccionFacturacion = vi.fn();
 vi.mock("#/tienda_online/cuenta/infraestructura.ts", () => ({
     getCuenta: () => getCuenta(),
     getPedidos: (pagina: number) => getPedidos(pagina),
+    getPaises: () => getPaises(),
     patchCuenta: (d: unknown) => patchCuenta(d),
     patchPassword: (c: unknown) => patchPassword(c),
     postDireccion: (d: unknown) => postDireccion(d),
@@ -65,6 +67,8 @@ const errorApi = (estado: number) => ({ nombre: "Error", descripcion: "x", estad
 beforeEach(() => {
     getCuenta.mockReset();
     getPedidos.mockReset();
+    getPaises.mockReset();
+    getPaises.mockResolvedValue([]);
     patchCuenta.mockReset();
     postDireccion.mockReset();
     patchDireccion.mockReset();
@@ -189,6 +193,54 @@ describe("[cuenta-editar_datos-03] Guardar datos", () => {
         expect(r.cuenta).toEqual(cuentaNueva);
         expect(r.errorEdicion).toBeNull();
         expect(r.pedidos).toEqual(enLista.pedidos);
+    });
+});
+
+describe("[cuenta-direcciones-02] Países de los formularios de dirección", () => {
+    const paises = [{ id: "ES", nombre: "España" }];
+
+    test("cuenta_direcciones_02_se_cargan_con_la_cuenta", async () => {
+        getCuenta.mockResolvedValue(cuenta);
+        getPedidos.mockResolvedValue({ pedidos: [], total: 0 });
+        getPaises.mockResolvedValue(paises);
+
+        const r = ctxDe(await cargarCuenta(contextoCuentaInicial));
+
+        expect(r.paises).toEqual(paises);
+    });
+
+    test("cuenta_direcciones_02_si_fallan_la_cuenta_carga_igual", async () => {
+        getCuenta.mockResolvedValue(cuenta);
+        getPedidos.mockResolvedValue({ pedidos: [], total: 0 });
+        getPaises.mockRejectedValue(new Error("x"));
+
+        const r = ctxDe(await cargarCuenta(contextoCuentaInicial));
+
+        expect(r.estado).toBe("LISTA");
+        expect(r.paises).toEqual([]);
+    });
+
+    test("cuenta_direcciones_02_no_se_vuelven_a_pedir_si_ya_estan", async () => {
+        getCuenta.mockResolvedValue(cuenta);
+        getPedidos.mockResolvedValue({ pedidos: [], total: 0 });
+
+        await cargarCuenta({ ...contextoCuentaInicial, paises });
+
+        expect(getPaises).not.toHaveBeenCalled();
+    });
+});
+
+describe("[cuenta-editar_datos-02] NIF según el país de facturación", () => {
+    test("cuenta_editar_datos_02_con_facturacion_en_espana_valida_el_nif", async () => {
+        const conDireccion = {
+            ...enLista,
+            cuenta: { ...cuenta, direcciones: [{ ...direccion, id: "1", envio: true, facturacion: true }] },
+        };
+
+        const r = ctxDe(await guardarDatos(conDireccion, { nombre: "Ana", idFiscal: "12345678A", telefono: null }));
+
+        expect(patchCuenta).not.toHaveBeenCalled();
+        expect(r.erroresEdicion.idFiscal).toBe("El NIF/CIF no es válido");
     });
 });
 

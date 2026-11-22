@@ -29,6 +29,8 @@ export interface LineaListaRegalos extends Entidad {
     cantidadVendida: number;
     pendiente: number;
     orden: number;
+    sinControlStock: boolean;
+    stock: number;
 }
 
 export interface ItemListaRegalos extends Entidad {

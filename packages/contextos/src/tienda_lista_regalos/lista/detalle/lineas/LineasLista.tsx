@@ -6,7 +6,7 @@ import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
 import { MouseEvent } from "react";
 import { LineaListaRegalos } from "../../diseño.ts";
-import { lineaVendida, motivoNoBorrableLinea } from "../../dominio.ts";
+import { faltaStockLinea, lineaVendida, motivoNoBorrableLinea, textoStockLinea } from "../../dominio.ts";
 
 export const LineasLista = ({
     lineas,
@@ -100,6 +100,16 @@ const getMetaTablaLineas = (
         cabecera: "Pendiente",
         render: (l: LineaListaRegalos) =>
             lineaVendida(l) ? <QEtiqueta variante="exito">Vendido</QEtiqueta> : String(l.pendiente),
+    },
+    {
+        id: "stock",
+        cabecera: "Stock",
+        render: (l: LineaListaRegalos) =>
+            faltaStockLinea(l) ? (
+                <QEtiqueta variante="advertencia">{textoStockLinea(l)}</QEtiqueta>
+            ) : (
+                textoStockLinea(l)
+            ),
     },
     {
         id: "acciones",

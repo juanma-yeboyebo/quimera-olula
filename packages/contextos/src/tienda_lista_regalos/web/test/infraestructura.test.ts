@@ -30,6 +30,7 @@ const lineaApi = {
     cantidad: 3,
     vendida: 1,
     pendiente: 2,
+    disponible: false,
 };
 
 const fichaApi = {
@@ -82,7 +83,18 @@ describe("[lista_regalos-web-lista-01] /lista/:token carga la lista con X-Store-
             cantidad: 3,
             vendida: 1,
             pendiente: 2,
+            disponible: false,
         });
+    });
+
+    test("lista_regalos_web_lista_04_sin_el_campo_se_da_por_disponible", async () => {
+        get.mockResolvedValue({
+            datos: { nombre: "L", descripcion: null, lineas: [{ ...lineaApi, disponible: undefined }] },
+        });
+
+        const lista = await getListaRegalos("tk");
+
+        expect(lista.lineas[0].disponible).toBe(true);
     });
 
     test("lista_regalos_web_lista_01_sin_descripcion_usa_la_referencia", async () => {

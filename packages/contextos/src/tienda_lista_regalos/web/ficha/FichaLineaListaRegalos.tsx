@@ -12,7 +12,7 @@ import { imagenInicial } from "#/tienda_online/producto/dominio.ts";
 import "#/tienda_online/producto/detalle/FichaProducto.css";
 import { DialogoCarritoOtraLista } from "../dialogo_otra_lista/dialogo_otra_lista.tsx";
 import { FichaLineaLista } from "../diseño.ts";
-import { estaRegalada, metadatosFichaLinea, rutaLista, textoPendiente } from "../dominio.ts";
+import { estadoLinea, metadatosFichaLinea, rutaLista, textoDistintivoLinea, textoPendiente } from "../dominio.ts";
 import { contextoFichaLineaInicial } from "./ficha.ts";
 import "./FichaLineaListaRegalos.css";
 import { getMaquina } from "./maquina.ts";
@@ -115,7 +115,8 @@ const ContenidoFicha = () => {
             </div>
         );
 
-    const regalada = estaRegalada(ficha);
+    const distintivo = textoDistintivoLinea(estadoLinea(ficha));
+    const noDisponible = distintivo !== null;
     const deshabilitado = bloqueado || estado === "AÑADIENDO";
 
     return (
@@ -136,9 +137,9 @@ const ContenidoFicha = () => {
                         </div>
                         {ficha.descripcionCorta && <p className="ficha-corta">{ficha.descripcionCorta}</p>}
                         <p className="ficha-lista-pendiente">{textoPendiente(ficha)}</p>
-                        {regalada ? (
+                        {noDisponible ? (
                             <div>
-                                <DistintivoTienda variante="agotado">Regalado</DistintivoTienda>
+                                <DistintivoTienda variante="agotado">{distintivo}</DistintivoTienda>
                             </div>
                         ) : (
                             <div className="ficha-compra">
@@ -168,7 +169,7 @@ const ContenidoFicha = () => {
                     </div>
                 </div>
             </div>
-            {!regalada && (
+            {!noDisponible && (
                 <div className="ficha-barra-movil">
                     <PrecioTienda importe={ficha.precio} divisa={ficha.divisa} grande />
                     <BotonTienda

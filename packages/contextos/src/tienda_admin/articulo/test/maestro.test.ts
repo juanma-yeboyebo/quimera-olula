@@ -19,6 +19,7 @@ const m = await import("#/tienda_admin/articulo/maestro/maestro.ts");
 
 const art = (id: string): ArticuloWeb => ({
     id, referencia: id, descripcion: id, imagen: null, publicado: true, visible: true, destacado: false,
+    sinControlStock: false, stock: 0,
 });
 
 const ctx = (extra: Partial<ContextoMaestroArticulo> = {}): ContextoMaestroArticulo => ({

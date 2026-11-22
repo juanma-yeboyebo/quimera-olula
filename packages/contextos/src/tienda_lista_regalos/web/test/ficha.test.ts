@@ -31,6 +31,7 @@ const ficha: FichaLineaLista = {
     cantidad: 5,
     vendida: 2,
     pendiente: 3,
+    disponible: true,
     descripcionCorta: null,
     descripcionLarga: null,
     metaTitulo: null,

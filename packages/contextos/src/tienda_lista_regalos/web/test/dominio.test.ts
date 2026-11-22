@@ -1,9 +1,11 @@
 import { describe, expect, test } from "vitest";
 import {
+    estadoLinea,
     estaRegalada,
     limitarCantidadLinea,
     metadatosFichaLinea,
     rutaLineaLista,
+    textoDistintivoLinea,
     textoPendiente,
 } from "#/tienda_lista_regalos/web/dominio.ts";
 import { FichaLineaLista, LineaListaRegalos } from "#/tienda_lista_regalos/web/diseño.ts";
@@ -18,6 +20,7 @@ const linea = (parcial: Partial<LineaListaRegalos> = {}): LineaListaRegalos => (
     cantidad: 3,
     vendida: 1,
     pendiente: 2,
+    disponible: true,
     ...parcial,
 });
 
@@ -76,5 +79,19 @@ describe("[lista_regalos-web-ficha-02] El selector de cantidad va de 1 a lo pend
 
     test("lista_regalos_web_ficha_02_dentro_del_rango_se_respeta", () => {
         expect(limitarCantidadLinea(2, linea({ cantidad: 5, pendiente: 4 }))).toBe(2);
+    });
+});
+
+describe("[lista_regalos-web-lista-04] Líneas sin stock", () => {
+    test("lista_regalos_web_lista_04_estado_de_la_linea", () => {
+        expect(estadoLinea(linea())).toBe("DISPONIBLE");
+        expect(estadoLinea(linea({ disponible: false }))).toBe("SIN_STOCK");
+        expect(estadoLinea(linea({ pendiente: 0, disponible: false }))).toBe("REGALADA");
+    });
+
+    test("lista_regalos_web_lista_04_texto_del_distintivo", () => {
+        expect(textoDistintivoLinea("REGALADA")).toBe("Regalado");
+        expect(textoDistintivoLinea("SIN_STOCK")).toBe("Sin stock");
+        expect(textoDistintivoLinea("DISPONIBLE")).toBeNull();
     });
 });

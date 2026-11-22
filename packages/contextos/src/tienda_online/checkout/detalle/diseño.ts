@@ -1,3 +1,4 @@
+import { CuentaTienda, PaisTienda } from "../../cuenta/diseño.ts";
 import { DatosCheckout, ErroresCheckout } from "../diseño.ts";
 
 export type EstadoCheckout =
@@ -14,4 +15,9 @@ export type ContextoCheckout = {
     datos: DatosCheckout;
     errores: ErroresCheckout;
     error: string | null;
+    cuentaCargada: boolean;
+    cuenta: CuentaTienda | null;
+    paises: PaisTienda[];
+    idDireccionFacturacion: string | null;
+    idDireccionEnvio: string | null;
 };

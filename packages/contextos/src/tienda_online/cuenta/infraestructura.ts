@@ -9,7 +9,7 @@ import {
     CuentaTienda,
     DatosCuenta,
     DatosRegistro,
-    DireccionRegistro, PedidoDetalle,
+    DireccionRegistro, PaisTienda, PedidoDetalle,
     PedidoResumen,
 } from "./diseño.ts";
 import { aNulo, criteriaPedidos } from "./dominio.ts";
@@ -162,6 +162,15 @@ export const getCarritoUsuario = async (): Promise<CarritoTienda | null> => {
         if ((e as { estado?: number })?.estado === 404) return null;
         throw e;
     }
+};
+
+export const getPaises = async (): Promise<PaisTienda[]> => {
+    const respuesta = await RestAPI.get<{ datos: PaisTienda[] }>(
+        urls.PAIS,
+        "Error al cargar los países",
+        cabeceras(),
+    );
+    return respuesta.datos.map((p) => ({ id: p.id, nombre: p.nombre }));
 };
 
 export const getCuenta = async (): Promise<CuentaTienda> => {

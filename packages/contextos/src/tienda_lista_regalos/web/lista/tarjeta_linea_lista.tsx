@@ -8,7 +8,7 @@ import "#/tienda_online/catalogo/maestro/tarjeta_producto.css";
 import { anadirDeLista, anadirEnCarritoNuevo } from "../anadir.ts";
 import { LineaListaRegalos } from "../diseño.ts";
 import { DialogoCarritoOtraLista } from "../dialogo_otra_lista/dialogo_otra_lista.tsx";
-import { estaRegalada, rutaLineaLista, textoPendiente } from "../dominio.ts";
+import { estadoLinea, rutaLineaLista, textoDistintivoLinea, textoPendiente } from "../dominio.ts";
 import "./tarjeta_linea_lista.css";
 
 const BotonRapidoLista = ({ token, linea }: { token: string; linea: LineaListaRegalos }) => {
@@ -50,12 +50,14 @@ const BotonRapidoLista = ({ token, linea }: { token: string; linea: LineaListaRe
 };
 
 export const TarjetaLineaLista = ({ token, linea }: { token: string; linea: LineaListaRegalos }) => {
-    const regalada = estaRegalada(linea);
+    const estado = estadoLinea(linea);
+    const noDisponible = estado !== "DISPONIBLE";
+    const distintivo = textoDistintivoLinea(estado);
 
     return (
-        <article className={`tarjeta-producto tarjeta-linea-lista${regalada ? " tarjeta-linea-lista-regalada" : ""}`}>
+        <article className={`tarjeta-producto tarjeta-linea-lista${noDisponible ? " tarjeta-linea-lista-regalada" : ""}`}>
             <Link to={rutaLineaLista(token, linea.id)} className="tarjeta-producto-enlace">
-                <div className={`tarjeta-producto-foto${regalada ? " tarjeta-producto-agotada" : ""}`}>
+                <div className={`tarjeta-producto-foto${noDisponible ? " tarjeta-producto-agotada" : ""}`}>
                     <ImagenProducto
                         imagen={
                             linea.imagen
@@ -63,9 +65,9 @@ export const TarjetaLineaLista = ({ token, linea }: { token: string; linea: Line
                                 : null
                         }
                     />
-                    {regalada && (
+                    {distintivo && (
                         <div className="tarjeta-producto-distintivos">
-                            <DistintivoTienda variante="agotado">Regalado</DistintivoTienda>
+                            <DistintivoTienda variante="agotado">{distintivo}</DistintivoTienda>
                         </div>
                     )}
                 </div>
@@ -73,7 +75,7 @@ export const TarjetaLineaLista = ({ token, linea }: { token: string; linea: Line
                 <p className="tarjeta-producto-corta tarjeta-linea-lista-pendiente">{textoPendiente(linea)}</p>
                 <PrecioTienda importe={linea.precio} divisa={linea.divisa} />
             </Link>
-            {!regalada && <BotonRapidoLista token={token} linea={linea} />}
+            {!noDisponible && <BotonRapidoLista token={token} linea={linea} />}
         </article>
     );
 };

@@ -4,6 +4,7 @@ import {
     FormaEnvioTienda,
     FormaPagoTienda,
 } from "../comun/diseño.ts";
+import { CuentaTienda, DireccionCuenta, PaisTienda } from "../cuenta/diseño.ts";
 import {
     DatosCheckout,
     DireccionCheckout,
@@ -59,6 +60,22 @@ export const elegirFormaEnvio = (
     envioDistinto: forma.tipo === "RECOGIDA" ? false : datos.envioDistinto,
 });
 
+export const ajustarFormas = (
+    datos: DatosCheckout,
+    formasEnvio: FormaEnvioTienda[],
+    formasPago: FormaPagoTienda[],
+): DatosCheckout => {
+    const envioValido = formasEnvio.some((f) => f.id === datos.idFormaEnvio);
+    const pagoValido = formasPago.some((f) => f.id === datos.idFormaPago);
+    if (envioValido && pagoValido) return datos;
+    const conEnvio = envioValido
+        ? datos
+        : formasEnvio[0]
+          ? elegirFormaEnvio(datos, formasEnvio[0])
+          : { ...datos, idFormaEnvio: null };
+    return pagoValido ? conEnvio : { ...conEnvio, idFormaPago: formasPago[0]?.id ?? null };
+};
+
 export const datosCheckoutIniciales = (
     carrito: CarritoTienda | null,
     formasEnvio: FormaEnvioTienda[] = [],
@@ -91,6 +108,84 @@ export const datosCheckoutIniciales = (
         direccionEnvio: envio ? direccionDesdeDatos(envio) : direccionVacia(),
         idFormaEnvio,
         idFormaPago,
+    };
+};
+
+export type TipoDireccionCheckout = "facturacion" | "envio";
+
+export const direccionDesdeCuenta = (d: DireccionCuenta): DireccionCheckout => ({
+    nombreVia: d.nombreVia,
+    tipoVia: null,
+    numero: d.numero,
+    otros: null,
+    codPostal: d.codPostal,
+    ciudad: d.ciudad,
+    provincia: d.provincia,
+    paisId: d.paisId || PAIS_POR_DEFECTO,
+    telefono: null,
+});
+
+export const direccionInicialCuenta = (
+    cuenta: CuentaTienda,
+    tipo: TipoDireccionCheckout,
+): DireccionCuenta | null =>
+    cuenta.direcciones.find((d) => (tipo === "envio" ? d.envio : d.facturacion)) ??
+    cuenta.direcciones[0] ??
+    null;
+
+export const lineasDireccionCuenta = (d: DireccionCuenta, paises: PaisTienda[]): string[] => {
+    const unir = (partes: (string | null)[], separador: string) =>
+        partes.filter((p) => p && p.trim() !== "").join(separador);
+    const pais = paises.find((p) => p.id === d.paisId)?.nombre ?? d.paisId;
+    return [
+        unir([d.nombreVia, d.numero], ", "),
+        unir([d.codPostal, d.ciudad], " "),
+        unir([d.provincia, pais], ", "),
+    ].filter((l) => l !== "");
+};
+
+export const aplicarDireccionCuenta = (
+    datos: DatosCheckout,
+    cuenta: CuentaTienda,
+    tipo: TipoDireccionCheckout,
+    id: string | null,
+): DatosCheckout => {
+    const elegida = cuenta.direcciones.find((d) => d.id === id);
+    const direccion = elegida ? direccionDesdeCuenta(elegida) : direccionVacia();
+    return tipo === "envio" ? { ...datos, direccionEnvio: direccion } : { ...datos, direccionFacturacion: direccion };
+};
+
+export const idDireccionCuentaDe = (cuenta: CuentaTienda, direccion: DireccionCheckout): string | null =>
+    cuenta.direcciones.find(
+        (d) =>
+            d.nombreVia === direccion.nombreVia &&
+            (d.numero ?? "") === (direccion.numero ?? "") &&
+            d.codPostal === direccion.codPostal &&
+            d.ciudad === direccion.ciudad &&
+            d.paisId === direccion.paisId,
+    )?.id ?? null;
+
+export const datosConCuenta = (
+    datos: DatosCheckout,
+    cuenta: CuentaTienda,
+): DatosCheckout => {
+    const carritoConDatos = !vacio(datos.nombre) || !vacio(datos.direccionFacturacion.nombreVia);
+    const facturacion = direccionInicialCuenta(cuenta, "facturacion");
+    const envio = direccionInicialCuenta(cuenta, "envio");
+    const base = carritoConDatos
+        ? datos
+        : {
+              ...datos,
+              email: cuenta.email,
+              nombre: cuenta.nombre,
+              idFiscal: cuenta.idFiscal,
+              telefono: cuenta.telefono,
+              direccionFacturacion: facturacion ? direccionDesdeCuenta(facturacion) : datos.direccionFacturacion,
+          };
+    return {
+        ...base,
+        email: cuenta.email,
+        direccionEnvio: envio && !base.envioDistinto ? direccionDesdeCuenta(envio) : base.direccionEnvio,
     };
 };
 

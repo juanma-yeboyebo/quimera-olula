@@ -1,13 +1,17 @@
+import { AutocompletarTienda } from "../../comun/componentes/autocompletar_tienda.tsx";
 import { CampoFormulario } from "../../comun/componentes/campo_formulario.tsx";
-import { DireccionRegistro, ErroresRegistro } from "../diseño.ts";
+import { DireccionRegistro, ErroresRegistro, PaisTienda } from "../diseño.ts";
+import { opcionesPais } from "../dominio.ts";
 
 export const CamposDireccionCuenta = ({
     direccion,
+    paises,
     errores,
     deshabilitado,
     onCambiar,
 }: {
     direccion: DireccionRegistro;
+    paises: PaisTienda[];
     errores: ErroresRegistro;
     deshabilitado: boolean;
     onCambiar: (direccion: DireccionRegistro) => void;
@@ -30,7 +34,14 @@ export const CamposDireccionCuenta = ({
             {campo("codPostal", "Código postal", "postal-code")}
             {campo("ciudad", "Ciudad", "address-level2")}
             {campo("provincia", "Provincia", "address-level1")}
-            {campo("paisId", "País", "country")}
+            <AutocompletarTienda
+                etiqueta="País"
+                valor={direccion.paisId}
+                opciones={opcionesPais(paises, direccion.paisId).map((p) => ({ valor: p.id, texto: p.nombre }))}
+                error={errores["direccion.paisId"]}
+                deshabilitado={deshabilitado}
+                onCambiar={(paisId) => onCambiar({ ...direccion, paisId })}
+            />
         </>
     );
 };

@@ -30,7 +30,7 @@ export type DatosCheckoutApi = {
     id_forma_envio: number | null;
 };
 
-const direccionAApi = (d: DireccionCheckout): DireccionCheckoutApi => ({
+const direccionAApi = (d: DireccionCheckout, telefono: string | null): DireccionCheckoutApi => ({
     nombre_via: d.nombreVia,
     tipo_via: aNulo(d.tipoVia),
     numero: aNulo(d.numero),
@@ -39,7 +39,7 @@ const direccionAApi = (d: DireccionCheckout): DireccionCheckoutApi => ({
     ciudad: d.ciudad,
     provincia: aNulo(d.provincia),
     pais_id: d.paisId,
-    telefono: aNulo(d.telefono),
+    telefono: aNulo(telefono),
 });
 
 export const datosCheckoutAApi = (d: DatosCheckout): DatosCheckoutApi => ({
@@ -47,8 +47,8 @@ export const datosCheckoutAApi = (d: DatosCheckout): DatosCheckoutApi => ({
     nombre: d.nombre,
     id_fiscal: aNulo(d.idFiscal),
     telefono: aNulo(d.telefono),
-    direccion_facturacion: direccionAApi(d.direccionFacturacion),
-    direccion_envio: d.envioDistinto ? direccionAApi(d.direccionEnvio) : null,
+    direccion_facturacion: direccionAApi(d.direccionFacturacion, d.telefono),
+    direccion_envio: d.envioDistinto ? direccionAApi(d.direccionEnvio, d.telefono) : null,
     id_forma_pago: d.idFormaPago,
     id_forma_envio: d.idFormaEnvio,
 });

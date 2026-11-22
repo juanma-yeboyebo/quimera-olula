@@ -29,6 +29,8 @@ import {
     textoBotonPublicacion,
     textoQuitarPublicacion,
     textosDeArticulo,
+    avisoStockArticulo,
+    textoStock,
 } from "#/tienda_admin/articulo/dominio.ts";
 
 const articulo = (extra: Partial<ArticuloWeb> = {}): ArticuloWeb => ({
@@ -39,6 +41,8 @@ const articulo = (extra: Partial<ArticuloWeb> = {}): ArticuloWeb => ({
     publicado: true,
     visible: true,
     destacado: false,
+    sinControlStock: false,
+    stock: 4,
     ...extra,
 });
 
@@ -62,6 +66,8 @@ const detalle = (extra: Partial<ArticuloWebDetalle> = {}): ArticuloWebDetalle =>
         { id: 2, url: "/b.jpg", alt: "", orden: 1, principal: true },
     ],
     categorias: [],
+    sinControlStock: false,
+    stocks: [{ websiteId: 1, stock: 4 }],
     ...extra,
 });
 
@@ -367,5 +373,37 @@ describe("[tienda_admin-articulo-fotos-04] Nuevo orden de las fotos", () => {
     test("tienda_admin_articulo_fotos_04_el_lado_depende_de_la_mitad", () => {
         expect(ladoDeSoltado(10, 100)).toBe("antes");
         expect(ladoDeSoltado(60, 100)).toBe("despues");
+    });
+});
+
+describe("[tienda_admin-articulo-maestro-03] Stock en el maestro", () => {
+    test("tienda_admin_articulo_maestro_03_texto_del_stock", () => {
+        expect(textoStock(false, 4)).toBe("4");
+        expect(textoStock(true, 0)).toBe("Sin control");
+    });
+
+    test("tienda_admin_articulo_maestro_03_aviso_si_esta_publicado_y_sin_stock", () => {
+        expect(avisoStockArticulo(articulo({ stock: 0 }))).toBe(true);
+        expect(avisoStockArticulo(articulo({ stock: -1 }))).toBe(true);
+        expect(avisoStockArticulo(articulo({ stock: 2 }))).toBe(false);
+        expect(avisoStockArticulo(articulo({ stock: 0, publicado: false }))).toBe(false);
+        expect(avisoStockArticulo(articulo({ stock: 0, sinControlStock: true }))).toBe(false);
+    });
+});
+
+describe("[tienda_admin-articulo-publicacion-04] Stock por website", () => {
+    const websites = [
+        { id: 1, codigo: "a", nombre: "A", activo: true },
+        { id: 2, codigo: "b", nombre: "B", activo: true },
+    ];
+
+    test("tienda_admin_articulo_publicacion_04_cada_fila_lleva_el_stock_de_su_website", () => {
+        const filas = filasPublicacion(detalle({ stocks: [{ websiteId: 1, stock: 4 }] }), websites);
+        expect(filas.map((f) => f.stock)).toEqual(["4", "0"]);
+    });
+
+    test("tienda_admin_articulo_publicacion_04_sin_control", () => {
+        const filas = filasPublicacion(detalle({ sinControlStock: true }), websites);
+        expect(filas.map((f) => f.stock)).toEqual(["Sin control", "Sin control"]);
     });
 });

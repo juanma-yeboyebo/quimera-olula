@@ -20,6 +20,7 @@ vi.mock("#/tienda_online/comun/storeview.ts", () => ({
 const {
     getCarritoUsuario,
     getCuenta,
+    getPaises,
     getPedido,
     getPedidos,
     postAsociarCarrito,
@@ -265,5 +266,18 @@ describe("[cuenta-registro-03] registroAApi", () => {
         expect(body.telefono).toBeNull();
         expect(body.direccion.numero).toBeNull();
         expect(body.direccion.provincia).toBeNull();
+    });
+});
+
+describe("[cuenta-registro-01] Países", () => {
+    test("cuenta_registro_01_get_paises_pide_la_ruta_publica_con_el_storeview", async () => {
+        codigoStoreViewActivo.mockReturnValue("es");
+        get.mockResolvedValue({ datos: [{ id: "ES", nombre: "España" }] });
+
+        const paises = await getPaises();
+
+        expect(get.mock.calls.at(-1)?.[0]).toBe("/public/tienda_online/pais");
+        expect(get.mock.calls.at(-1)?.[2]).toMatchObject({ "X-Store-View": "es" });
+        expect(paises).toEqual([{ id: "ES", nombre: "España" }]);
     });
 });

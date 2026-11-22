@@ -89,7 +89,16 @@ describe("[lista_regalos-detalle-01] Lectura y borrado de la lista", () => {
         expect(l.lineas[0]).toEqual({
             id: "11", referencia: "R1", descripcion: "", precio: 12.5,
             cantidad: 2, cantidadVendida: 2, pendiente: 0, orden: 1,
+            sinControlStock: false, stock: 0,
         });
+    });
+
+    test("lista_regalos_productos_01_convierte_el_stock_de_la_linea", () => {
+        const l = infra.listaDesdeApi({
+            ...listaApi,
+            lineas: [{ ...listaApi.lineas[0], sin_control_stock: true, stock: 3 }],
+        });
+        expect(l.lineas[0]).toMatchObject({ sinControlStock: true, stock: 3 });
     });
 
     test("lista_regalos_detalle_01_el_orden_del_servidor_manda_y_si_falta_se_usa_la_posicion", () => {

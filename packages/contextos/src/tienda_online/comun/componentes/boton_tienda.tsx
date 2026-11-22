@@ -10,6 +10,7 @@ export const BotonTienda = ({
     ancho,
     a,
     tipo = "button",
+    formulario,
     deshabilitado,
     etiqueta,
     onClick,
@@ -19,6 +20,7 @@ export const BotonTienda = ({
     ancho?: boolean;
     a?: string;
     tipo?: "button" | "submit";
+    formulario?: string;
     deshabilitado?: boolean;
     etiqueta?: string;
     onClick?: MouseEventHandler<HTMLElement>;
@@ -36,6 +38,7 @@ export const BotonTienda = ({
     return (
         <button
             type={tipo}
+            form={formulario}
             className={clase}
             aria-label={etiqueta}
             disabled={deshabilitado}

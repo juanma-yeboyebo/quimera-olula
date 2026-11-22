@@ -1,8 +1,16 @@
 import { ProcesarContexto } from "@olula/lib/diseño.ts";
 import { obtenerToken, olvidarCarrito, recargarCarrito } from "../../comun/carrito_store.ts";
 import { codigoStoreViewActivo } from "../../comun/storeview.ts";
+import { getCuenta, getPaises } from "../../cuenta/infraestructura.ts";
 import { DatosCheckout } from "../diseño.ts";
-import { clavePagoEnCurso, erroresCheckout } from "../dominio.ts";
+import {
+    aplicarDireccionCuenta,
+    clavePagoEnCurso,
+    datosConCuenta,
+    erroresCheckout,
+    idDireccionCuentaDe,
+    TipoDireccionCheckout,
+} from "../dominio.ts";
 import {
     datosCheckoutAApi,
     patchDatosCheckout,
@@ -30,7 +38,43 @@ export const contextoCheckoutInicial = (datos: DatosCheckout): ContextoCheckout 
     datos,
     errores: {},
     error: null,
+    cuentaCargada: false,
+    cuenta: null,
+    paises: [],
+    idDireccionFacturacion: null,
+    idDireccionEnvio: null,
 });
+
+export const cargarCuenta: ProcesarCheckout = async (contexto) => {
+    const [cuenta, paises] = await Promise.all([
+        getCuenta().catch(() => null),
+        getPaises().catch(() => []),
+    ]);
+    if (!cuenta) return { ...contexto, cuentaCargada: true, paises };
+
+    const datos = datosConCuenta(contexto.datos, cuenta);
+    return {
+        ...contexto,
+        cuentaCargada: true,
+        cuenta,
+        paises,
+        datos,
+        idDireccionFacturacion: idDireccionCuentaDe(cuenta, datos.direccionFacturacion),
+        idDireccionEnvio: idDireccionCuentaDe(cuenta, datos.direccionEnvio),
+    };
+};
+
+export const elegirDireccion: ProcesarCheckout = async (contexto, payload) => {
+    const { tipo, id } = payload as { tipo: TipoDireccionCheckout; id: string | null };
+    if (!contexto.cuenta) return contexto;
+    return {
+        ...contexto,
+        datos: aplicarDireccionCuenta(contexto.datos, contexto.cuenta, tipo, id),
+        errores: {},
+        idDireccionFacturacion: tipo === "facturacion" ? id : contexto.idDireccionFacturacion,
+        idDireccionEnvio: tipo === "envio" ? id : contexto.idDireccionEnvio,
+    };
+};
 
 export const cambiarDatos: ProcesarCheckout = async (contexto, payload) => ({
     ...contexto,

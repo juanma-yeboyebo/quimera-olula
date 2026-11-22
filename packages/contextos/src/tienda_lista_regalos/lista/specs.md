@@ -62,7 +62,8 @@ Pestaña «Datos»: nombre, «Dirección», cliente opcional (se puede vaciar) y
 En la pestaña «Datos», mientras la lista no está publicada, la «Dirección» se edita con las mismas reglas que al crearla. Debajo se ve la URL completa con el código de la lista (`…/lista/<dirección>-<código>`). Cambiar el nombre no cambia la dirección. Si la lista está publicada, la dirección es de solo lectura, con el texto «La dirección no se puede cambiar una vez publicada».
 
 <!-- [lista_regalos-productos-01] [x] -->
-Pestaña «Productos»: tabla con las líneas en su orden: referencia, descripción, precio con IVA, cantidad, vendidas y pendiente. Una línea sin pendiente se marca como «Vendido».
+<!-- antes: Pestaña «Productos»: tabla con las líneas en su orden: referencia, descripción, precio con IVA, cantidad, vendidas y pendiente. Una línea sin pendiente se marca como «Vendido». -->
+Pestaña «Productos»: tabla con las líneas en su orden: referencia, descripción, precio con IVA, cantidad, vendidas, pendiente y stock. Una línea sin pendiente se marca como «Vendido». La columna «Stock» muestra el disponible en el almacén de la tienda de la lista (`lista-consulta-07`), o «Sin control» si el artículo no controla stock. Si la línea tiene pendiente y el stock no lo cubre, el número va en una `QEtiqueta` `advertencia`. La función que decide si falta stock es pura y está en `dominio.ts`.
 
 <!-- [lista_regalos-productos-02] [x] -->
 <!-- antes: texto de ayuda «Si lo dejas vacío se usa el precio de la tarifa del cliente» -->

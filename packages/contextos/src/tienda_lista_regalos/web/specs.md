@@ -1,6 +1,6 @@
 # Listas de regalo — web
 
-Páginas públicas de una lista de regalo, para quien recibe el enlace: la lista como catálogo, la ficha de cada producto y la selección de unidades. El carrito, el checkout y la confirmación son los de `tienda_online`; la extensión del servidor liga el carrito a la lista, pone el precio de la lista y deja solo pago y recogida en tienda.
+Páginas públicas de una lista de regalo, para quien recibe el enlace: la lista como catálogo, la ficha de cada producto y la selección de unidades. El carrito, el checkout y la confirmación son los de `tienda_online`; la extensión del servidor liga el carrito a la lista, pone el precio de la lista y deja solo la recogida en tienda; el pago puede ser en tienda o con pasarela.
 
 Usa los primitivos, los tokens `--tienda-*` y el layout de `tienda_online`, igual que sus páginas.
 
@@ -12,7 +12,7 @@ API del backend (`olula_servidor`, extensión `tienda_lista_regalos`). Todas las
 | GET | `/public/tienda_lista_regalos/lista/<token>/linea/<idlinea>` | `{datos: LineaListaPublica + {descripcion_corta, descripcion_larga, meta_titulo, meta_descripcion, imagenes: [{url, alt, principal}]}}`; 404 |
 | POST | `/public/tienda_lista_regalos/lista/<token>/carrito/<token_carrito>` | `{}`; 400 carrito de otra lista o con artículos de fuera, 404 lista o carrito inexistente, 409 carrito no modificable |
 
-- `LineaListaPublica`: `{id, referencia, descripcion, imagen: {url, alt} | null, precio, divisa, cantidad, vendida, pendiente}`.
+- `LineaListaPublica`: `{id, referencia, descripcion, imagen: {url, alt} | null, precio, divisa, cantidad, vendida, pendiente, disponible}`.
 
 ## Ficheros afectados
 
@@ -40,6 +40,9 @@ Cada tarjeta muestra la imagen principal, la descripción, el precio con IVA y �
 <!-- [lista_regalos-web-lista-03] [x] -->
 Las tarjetas con pendiente llevan el botón rápido de carrito, que añade una unidad (`lista_regalos-web-anadir-01`).
 
+<!-- [lista_regalos-web-lista-04] [x] -->
+Una tarjeta con pendiente y sin stock (`disponible` falso, `lista-consulta-08`) se ve atenuada como la regalada, con el distintivo «Sin stock» y sin botón rápido de carrito. Si está regalada manda «Regalado». La función que da el estado de la línea (regalada, sin stock o disponible) es pura y está en `dominio.ts`.
+
 ### Ficha
 
 <!-- [lista_regalos-web-ficha-01] [x] -->
@@ -47,6 +50,9 @@ Las tarjetas con pendiente llevan el botón rápido de carrito, que añade una u
 
 <!-- [lista_regalos-web-ficha-02] [x] -->
 El selector de cantidad va de 1 a lo pendiente. «Añadir al carrito» añade esa cantidad (`lista_regalos-web-anadir-01`). Con pendiente 0 no hay selector ni botón, solo el distintivo «Regalado».
+
+<!-- [lista_regalos-web-ficha-03] [x] -->
+En la ficha de una línea con pendiente y sin stock no hay selector de cantidad ni botón «Añadir al carrito», tampoco en la barra móvil: solo el distintivo «Sin stock».
 
 ### Añadir al carrito
 

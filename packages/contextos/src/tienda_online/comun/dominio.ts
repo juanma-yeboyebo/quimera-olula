@@ -85,3 +85,35 @@ export const categoriasEnMenu = (categorias: CategoriaTienda[]): CategoriaTienda
     categorias
         .filter((c) => c.enMenu)
         .map((c) => ({ ...c, hijas: categoriasEnMenu(c.hijas) }));
+
+export type OpcionAutocompletar = { valor: string; texto: string };
+
+const normalizarBusqueda = (texto: string): string =>
+    texto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+
+export const filtrarOpciones = (
+    opciones: OpcionAutocompletar[],
+    texto: string,
+    limite: number,
+): OpcionAutocompletar[] => {
+    const buscado = normalizarBusqueda(texto);
+    return opciones
+        .filter(
+            (o) =>
+                normalizarBusqueda(o.texto).includes(buscado) || normalizarBusqueda(o.valor).includes(buscado),
+        )
+        .slice(0, limite);
+};
+
+export const opcionExacta = (opciones: OpcionAutocompletar[], texto: string): OpcionAutocompletar | null => {
+    const buscado = normalizarBusqueda(texto);
+    if (buscado === "") return null;
+    return (
+        opciones.find(
+            (o) => normalizarBusqueda(o.texto) === buscado || normalizarBusqueda(o.valor) === buscado,
+        ) ?? null
+    );
+};
+
+export const textoDeOpcion = (opciones: OpcionAutocompletar[], valor: string | null): string =>
+    opciones.find((o) => o.valor === valor)?.texto ?? valor ?? "";

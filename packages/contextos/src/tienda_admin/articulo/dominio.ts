@@ -77,12 +77,23 @@ export const estadoPublicacion = (p: PublicacionArticulo | undefined): EstadoPub
     return "Publicado";
 };
 
+export const textoStock = (sinControlStock: boolean, stock: number): string =>
+    sinControlStock ? "Sin control" : String(stock);
+
+export const avisoStockArticulo = (a: ArticuloWeb): boolean => a.publicado && !a.sinControlStock && a.stock <= 0;
+
 export const filasPublicacion = (a: ArticuloWebDetalle, websites: WebsiteAdmin[]): FilaPublicacion[] =>
     websites
         .filter((w) => w.activo)
         .map((website) => {
             const publicacion = publicacionDeWebsite(a, website.id);
-            return { website, publicacion, estado: estadoPublicacion(publicacion) };
+            const stock = a.stocks.find((s) => s.websiteId === website.id)?.stock ?? 0;
+            return {
+                website,
+                publicacion,
+                estado: estadoPublicacion(publicacion),
+                stock: textoStock(a.sinControlStock, stock),
+            };
         });
 
 export const textoBotonPublicacion = (

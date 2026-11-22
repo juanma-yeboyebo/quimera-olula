@@ -18,6 +18,9 @@
 <!-- [tienda_admin-articulo-maestro-01] [nueva] -->
 Listado paginado de artículos del website activo con miniatura, referencia, descripción y distintivos «Publicado» / «No publicado», «Oculto» (publicado pero no visible) y «Destacado».
 
+<!-- [tienda_admin-articulo-maestro-03] [x] -->
+El maestro tiene la columna «Stock» con el disponible en el almacén del website activo (`articulo_web-lista-03`), o «Sin control» si el artículo no controla stock. Si el artículo está publicado y su stock es 0 o menos, el número va en una `QEtiqueta` `advertencia`.
+
 <!-- [tienda_admin-articulo-maestro-02] [nueva] -->
 Filtros: texto (referencia o descripción), estado (Publicados, No publicados, Todos; por defecto Todos) y categoría.
 
@@ -29,6 +32,9 @@ El detalle muestra referencia, descripción y precio del ERP (solo lectura, con 
 <!-- [tienda_admin-articulo-publicacion-01] [x] -->
 <!-- antes: Pestaña «Publicación» del website activo: interruptores Publicado, Visible y Destacado, slug y orden. Guardar llama a PATCH de publicación; si el artículo no está publicado en el website, el botón dice «Publicar en <website>». «Quitar de <website>» (con confirmación) llama a DELETE. Muestra la fecha de publicación si existe. -->
 Pestaña «Publicación»: tabla con una fila por website activo, sin depender del website elegido arriba, con website, estado, slug, orden y fecha de publicación. El estado es «Sin publicar» (no tiene publicación en ese website), «En pausa» (no publicado), «Oculto en catálogo» (publicado y no visible) o «Publicado». Cada fila tiene «Publicar», si está sin publicar, o «Editar», que abren el modal de `tienda_admin-articulo-publicacion-03`. La función que da el estado es pura y está en `dominio.ts`.
+
+<!-- [tienda_admin-articulo-publicacion-04] [x] -->
+La tabla de la pestaña «Publicación» tiene la columna «Stock», tras «Estado», con el disponible en el almacén de cada website (`articulo_web-detalle-02`), o «Sin control» si el artículo no controla stock. El texto de la celda lo da una función pura de `dominio.ts`, la misma que usa el maestro.
 
 <!-- [tienda_admin-articulo-publicacion-03] [x] -->
 Modal de publicación de un website: casillas «En venta» (el campo `publicado`), «Visible en el catálogo» y «Destacado», slug y orden. Aceptar llama a PATCH de publicación y recarga el detalle y el maestro. Si el artículo ya está publicado en ese website, el modal tiene además «Quitar de <website>», que pide confirmación y llama a DELETE. Al publicar por primera vez, «En venta» y «Visible en el catálogo» vienen marcadas.

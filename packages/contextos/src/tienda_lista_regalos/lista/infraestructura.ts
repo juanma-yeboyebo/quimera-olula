@@ -46,6 +46,8 @@ export interface LineaListaApi {
     cantidad_vendida: number;
     pendiente: number;
     orden?: number;
+    sin_control_stock?: boolean;
+    stock?: number;
 }
 
 export interface ListaApi {
@@ -87,6 +89,8 @@ export const lineaListaDesdeApi = (l: LineaListaApi, indice: number): LineaLista
     cantidadVendida: l.cantidad_vendida,
     pendiente: l.pendiente,
     orden: l.orden ?? indice + 1,
+    sinControlStock: l.sin_control_stock ?? false,
+    stock: l.stock ?? 0,
 });
 
 export const listaDesdeApi = (l: ListaApi): ListaRegalos => ({

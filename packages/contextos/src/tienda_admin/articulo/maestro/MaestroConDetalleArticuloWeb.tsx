@@ -1,3 +1,4 @@
+import { QEtiqueta } from "@olula/componentes/atomos/qetiqueta.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
@@ -12,7 +13,13 @@ import { SelectorWebsite } from "../../comun/componentes/SelectorWebsite.tsx";
 import { useWebsiteActivo } from "../../comun/website_store.ts";
 import { DetalleArticuloWeb } from "../detalle/DetalleArticuloWeb.tsx";
 import { ArticuloWeb, EstadoPublicacionFiltro } from "../diseño.ts";
-import { distintivosArticulo, filtrosArticuloIniciales, opcionesEstadoFiltro } from "../dominio.ts";
+import {
+    avisoStockArticulo,
+    distintivosArticulo,
+    filtrosArticuloIniciales,
+    opcionesEstadoFiltro,
+    textoStock,
+} from "../dominio.ts";
 import { getMaquina } from "./maquina.ts";
 import "./MaestroConDetalleArticuloWeb.css";
 
@@ -34,6 +41,16 @@ const metaTablaArticuloWeb: MetaTabla<ArticuloWeb> = [
     { id: "referencia", cabecera: "Referencia" },
     { id: "descripcion", cabecera: "Descripción" },
     { id: "estado", cabecera: "Estado", render: (a: ArticuloWeb) => <Distintivos articulo={a} /> },
+    {
+        id: "stock",
+        cabecera: "Stock",
+        render: (a: ArticuloWeb) =>
+            avisoStockArticulo(a) ? (
+                <QEtiqueta variante="advertencia">{textoStock(a.sinControlStock, a.stock)}</QEtiqueta>
+            ) : (
+                textoStock(a.sinControlStock, a.stock)
+            ),
+    },
 ];
 
 const TarjetaArticuloWeb = (articulo: ArticuloWeb) => (

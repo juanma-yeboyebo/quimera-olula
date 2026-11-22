@@ -21,6 +21,7 @@ export interface LineaListaApi {
     cantidad: number;
     vendida: number;
     pendiente: number;
+    disponible?: boolean;
 }
 
 export interface ListaApi {
@@ -49,6 +50,7 @@ export const lineaDesdeApi = (l: LineaListaApi): LineaListaRegalos => ({
     cantidad: l.cantidad,
     vendida: l.vendida,
     pendiente: l.pendiente,
+    disponible: l.disponible ?? true,
 });
 
 export const listaDesdeApi = (l: ListaApi): ListaRegalosPublica => ({

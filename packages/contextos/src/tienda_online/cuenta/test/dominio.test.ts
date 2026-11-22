@@ -9,7 +9,11 @@ import {
     erroresDatosCuenta,
     erroresDireccion,
     erroresRegistro,
+    idFiscalValido,
+    opcionesPais,
+    paisFacturacion,
     PEDIDOS_POR_PAGINA,
+    telefonoValido,
 } from "#/tienda_online/cuenta/dominio.ts";
 
 const validos: DatosRegistro = {
@@ -17,7 +21,7 @@ const validos: DatosRegistro = {
     password: "12345678",
     repetirPassword: "12345678",
     nombre: "Ana",
-    idFiscal: "B12345678",
+    idFiscal: "B12345674",
     telefono: null,
     direccion: {
         nombreVia: "Mayor",
@@ -110,13 +114,42 @@ describe("[cuenta-pedidos-02] añadirPedidos", () => {
 
 describe("[cuenta-editar_datos-02] Validación de datos de cuenta", () => {
     test("cuenta_editar_datos_02_datos_validos_no_dan_errores", () => {
-        expect(erroresDatosCuenta({ nombre: "Ana", idFiscal: "B1", telefono: null })).toEqual({});
+        expect(erroresDatosCuenta({ nombre: "Ana", idFiscal: "B1", telefono: null }, null)).toEqual({});
     });
 
     test("cuenta_editar_datos_02_nombre_e_id_fiscal_son_obligatorios", () => {
-        const e = erroresDatosCuenta({ nombre: " ", idFiscal: "", telefono: null });
+        const e = erroresDatosCuenta({ nombre: " ", idFiscal: "", telefono: null }, null);
         expect(e.nombre).toBe("El nombre es obligatorio");
         expect(e.idFiscal).toBe("El NIF/CIF es obligatorio");
+    });
+});
+
+describe("[cuenta-editar_datos-02] NIF y teléfono al editar datos", () => {
+    test("cuenta_editar_datos_02_el_nif_se_valida_con_el_pais_dado", () => {
+        const datos = { nombre: "Ana", idFiscal: "12345678A", telefono: null };
+
+        expect(erroresDatosCuenta(datos, "ES").idFiscal).toBe("El NIF/CIF no es válido");
+        expect(erroresDatosCuenta(datos, "FR")).toEqual({});
+    });
+
+    test("cuenta_editar_datos_02_telefono_no_valido", () => {
+        const e = erroresDatosCuenta({ nombre: "Ana", idFiscal: "B1", telefono: "60012345" }, null);
+
+        expect(e.telefono).toBe("El teléfono no es válido");
+    });
+
+    test("cuenta_editar_datos_02_pais_de_la_direccion_de_facturacion", () => {
+        const direccion = { id: "1", nombreVia: "Mayor", numero: null, codPostal: "1", ciudad: "M", provincia: null };
+        const cuenta = {
+            email: "a@b.es", nombre: "Ana", idFiscal: "B1", telefono: null, clienteId: "C1",
+            direcciones: [
+                { ...direccion, paisId: "FR", envio: true, facturacion: false },
+                { ...direccion, id: "2", paisId: "ES", envio: false, facturacion: true },
+            ],
+        };
+
+        expect(paisFacturacion(cuenta)).toBe("ES");
+        expect(paisFacturacion(null)).toBeNull();
     });
 });
 
@@ -169,5 +202,54 @@ describe("[cuenta-registro-09] Campos correctos", () => {
         expect(campoRegistroValido("email", [], errores)).toBe(false);
         expect(campoRegistroValido("nombre", ["nombre"], errores)).toBe(false);
         expect(campoRegistroValido("telefono", ["telefono"], {})).toBe(false);
+    });
+});
+
+describe("[cuenta-registro-02] Formato de NIF/CIF y teléfono", () => {
+    test("cuenta_registro_02_nif_valido_en_espana", () => {
+        for (const valor of ["12345678Z", "12345678-z", "X1234567L", "y1234567x", "Z1234567R", "B12345674", "P1234567D", "A58818501"])
+            expect(idFiscalValido(valor, "ES"), valor).toBe(true);
+    });
+
+    test("cuenta_registro_02_nif_no_valido_en_espana", () => {
+        for (const valor of ["12345678A", "1234567Z", "X1234567A", "B12345675", "I12345674", "HOLA", "", "   "])
+            expect(idFiscalValido(valor, "ES"), valor).toBe(false);
+    });
+
+    test("cuenta_registro_02_fuera_de_espana_basta_con_que_no_este_vacio", () => {
+        expect(idFiscalValido("FR12345678901", "FR")).toBe(true);
+        expect(idFiscalValido("12345678A", null)).toBe(true);
+        expect(idFiscalValido("  ", "FR")).toBe(false);
+    });
+
+    test("cuenta_registro_02_telefono", () => {
+        for (const valor of [null, "", "600123456", "+34 600 123 456", "91-123-45-67", "+442071234567"])
+            expect(telefonoValido(valor), String(valor)).toBe(true);
+        for (const valor of ["60012345", "1234567890123456", "600 12a 456", "34+600123456", "(91) 1234567"])
+            expect(telefonoValido(valor), valor).toBe(false);
+    });
+
+    test("cuenta_registro_02_errores_con_los_textos_del_servidor", () => {
+        const e = erroresRegistro({ ...validos, idFiscal: "12345678A", telefono: "123" });
+
+        expect(e.idFiscal).toBe("El NIF/CIF no es válido");
+        expect(e.telefono).toBe("El teléfono no es válido");
+        expect(erroresRegistro({ ...validos, idFiscal: "12345678A", direccion: { ...validos.direccion, paisId: "FR" } })).toEqual({});
+    });
+});
+
+describe("[cuenta-registro-01] Opciones del selector de país", () => {
+    const paises = [{ id: "DE", nombre: "Alemania" }, { id: "ES", nombre: "España" }];
+
+    test("cuenta_registro_01_usa_los_paises_cargados", () => {
+        expect(opcionesPais(paises, "ES")).toEqual(paises);
+    });
+
+    test("cuenta_registro_01_sin_paises_solo_muestra_es", () => {
+        expect(opcionesPais([], "ES")).toEqual([{ id: "ES", nombre: "ES" }]);
+    });
+
+    test("cuenta_registro_01_conserva_un_pais_actual_que_no_esta_en_la_lista", () => {
+        expect(opcionesPais(paises, "PT")).toEqual([...paises, { id: "PT", nombre: "PT" }]);
     });
 });

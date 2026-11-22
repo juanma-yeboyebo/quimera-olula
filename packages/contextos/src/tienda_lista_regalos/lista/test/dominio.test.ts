@@ -31,6 +31,8 @@ import {
     textoVendidas,
     urlConDireccion,
     vistaPreviaNuevaDireccion,
+    faltaStockLinea,
+    textoStockLinea,
 } from "#/tienda_lista_regalos/lista/dominio.ts";
 import { slugDesdeTexto } from "#/tienda_admin/comun/dominio.ts";
 
@@ -43,6 +45,8 @@ const linea = (id: string, extra: Partial<LineaListaRegalos> = {}): LineaListaRe
     cantidadVendida: 0,
     pendiente: 2,
     orden: Number(id),
+    sinControlStock: false,
+    stock: 5,
     ...extra,
 });
 
@@ -307,5 +311,19 @@ describe("[lista_regalos-direccion-02] Dirección en Datos", () => {
         const edicion = { ...edicionDeLista(publicada), direccion: "bautizo" };
         expect(cambiosDeEdicion(publicada, edicion)).toEqual({});
         expect(TEXTO_DIRECCION_PUBLICADA).toBe("La dirección no se puede cambiar una vez publicada");
+    });
+});
+
+describe("[lista_regalos-productos-01] Stock de las líneas", () => {
+    test("lista_regalos_productos_01_texto_del_stock", () => {
+        expect(textoStockLinea(linea("1", { stock: 3 }))).toBe("3");
+        expect(textoStockLinea(linea("1", { sinControlStock: true, stock: 0 }))).toBe("Sin control");
+    });
+
+    test("lista_regalos_productos_01_falta_stock_si_no_cubre_lo_pendiente", () => {
+        expect(faltaStockLinea(linea("1", { pendiente: 2, stock: 1 }))).toBe(true);
+        expect(faltaStockLinea(linea("1", { pendiente: 2, stock: 2 }))).toBe(false);
+        expect(faltaStockLinea(linea("1", { pendiente: 2, stock: 0, sinControlStock: true }))).toBe(false);
+        expect(faltaStockLinea(linea("1", { pendiente: 0, cantidadVendida: 2, stock: 0 }))).toBe(false);
     });
 });

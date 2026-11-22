@@ -166,11 +166,26 @@ describe("[checkout-maquina-01] Los datos se envían en snake_case", () => {
             nombre: "Ana",
             id_fiscal: "12345678Z",
             telefono: "600",
-            direccion_facturacion: direccionApi,
+            direccion_facturacion: { ...direccionApi, telefono: "600" },
             direccion_envio: null,
             id_forma_pago: 10,
             id_forma_envio: 1,
         });
+    });
+});
+
+describe("[checkout-diseño-09] La dirección lleva el teléfono de contacto", () => {
+    test("checkout_diseño_09_las_dos_direcciones_con_el_telefono_de_contacto", () => {
+        const body = datosCheckoutAApi({
+            ...datosValidos,
+            telefono: "600",
+            envioDistinto: true,
+            direccionFacturacion: { ...direccionValida, telefono: "999" },
+            direccionEnvio: { ...direccionValida, telefono: null },
+        });
+
+        expect(body.direccion_facturacion.telefono).toBe("600");
+        expect(body.direccion_envio?.telefono).toBe("600");
     });
 });
 
