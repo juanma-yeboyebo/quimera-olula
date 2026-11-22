@@ -228,3 +228,48 @@ export type GetAgenciasEnvio = () => Promise<AgenciaEnvio[]>;
 export type PostEnvioAgencia = (ordenId: string, envio: NuevoEnvioAgencia) => Promise<EnvioAgenciaGenerado>;
 /** PDF con las etiquetas del envío de un albarán. */
 export type GetEtiquetaEnvio = (albaranId: string) => Promise<Blob>;
+
+export interface LineaParadaRecorrido {
+    lineaId: string;
+    sku: string;
+    pendiente: number;
+}
+
+/** En una parada se recoge (origen) o se deja (destino). */
+export type AccionParada = "RECOGER" | "DEJAR";
+
+export interface ParadaRecorrido {
+    secuencia: number;
+    ubicacionId: string;
+    ubicacion: string;
+    zona: string | null;
+    pasillo: string | null;
+    modulo: number | null;
+    nivel: number | null;
+    hueco: number | null;
+    accion: AccionParada;
+    lineas: LineaParadaRecorrido[];
+}
+
+/** Por qué el recorrido no se ordena por la distancia real (doc sga_recorrido_real.md). */
+export type MotivoRecorridoFormula = "SIN_PLANTA" | "PARADAS_SIN_POSICION" | "SIN_CAMINO";
+
+export interface RecorridoOrden {
+    ordenId: string;
+    /** Estado de la orden: terminada, sin paradas. */
+    estado: string;
+    /** DISTANCIA: ordenado por la distancia a pie sobre la planta; FORMULA: la S estimada. */
+    calculo: "DISTANCIA" | "FORMULA";
+    motivo: MotivoRecorridoFormula | null;
+    /** Metros a pie del inicio al fin (solo con DISTANCIA). */
+    metros: number | null;
+    /** Ubicación del punto de inicio y de fin (muelle de salida o de recepción). */
+    inicioUbicacionId: string | null;
+    finUbicacionId: string | null;
+    modulosRecorridos: number;
+    pasillosCruzados: number;
+    paradas: ParadaRecorrido[];
+}
+
+/** Recorrido estimado para preparar (o colocar) la orden. */
+export type GetRecorridoOrden = (id: string) => Promise<RecorridoOrden>;

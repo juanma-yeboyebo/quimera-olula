@@ -12,6 +12,10 @@ import {
     GetDiferenciasPedidoOrden,
     GetOrden,
     GetOrdenes,
+    AccionParada,
+    GetRecorridoOrden,
+    MotivoRecorridoFormula,
+    RecorridoOrden,
     ItemOrdenAlmacen,
     LecturaCajaOrden,
     LecturaLineaOrden,
@@ -683,3 +687,60 @@ export const postEnvioAgencia: PostEnvioAgencia = async (ordenId, envio) => {
 
 export const getEtiquetaEnvio: GetEtiquetaEnvio = async (albaranId) =>
     RestAPI.blob(`${urlEnvioAgencia}/${albaranId}/etiqueta`, "Error al obtener la etiqueta del envío");
+
+export interface RecorridoOrdenApi {
+    orden_id: string;
+    estado?: string;
+    calculo?: "DISTANCIA" | "FORMULA";
+    motivo?: MotivoRecorridoFormula | null;
+    metros?: number | null;
+    inicio_ubicacion_id?: string | null;
+    fin_ubicacion_id?: string | null;
+    modulos_recorridos: number;
+    pasillos_cruzados: number;
+    paradas: {
+        secuencia: number;
+        ubicacion_id: string;
+        ubicacion: string;
+        zona?: string | null;
+        pasillo?: string | null;
+        modulo?: number | null;
+        nivel?: number | null;
+        hueco?: number | null;
+        accion?: AccionParada;
+        lineas: { linea_id: string; sku: string; pendiente: number }[];
+    }[];
+}
+
+export const recorridoOrdenDesdeApi = (r: RecorridoOrdenApi): RecorridoOrden => ({
+    ordenId: r.orden_id,
+    estado: r.estado ?? "",
+    calculo: r.calculo ?? "FORMULA",
+    motivo: r.motivo ?? null,
+    metros: r.metros ?? null,
+    inicioUbicacionId: r.inicio_ubicacion_id ?? null,
+    finUbicacionId: r.fin_ubicacion_id ?? null,
+    modulosRecorridos: r.modulos_recorridos,
+    pasillosCruzados: r.pasillos_cruzados,
+    paradas: r.paradas.map((p) => ({
+        secuencia: p.secuencia,
+        ubicacionId: p.ubicacion_id,
+        ubicacion: p.ubicacion,
+        zona: p.zona ?? null,
+        pasillo: p.pasillo ?? null,
+        modulo: p.modulo ?? null,
+        nivel: p.nivel ?? null,
+        hueco: p.hueco ?? null,
+        accion: p.accion ?? "RECOGER",
+        lineas: p.lineas.map((l) => ({
+            lineaId: String(l.linea_id),
+            sku: l.sku,
+            pendiente: l.pendiente,
+        })),
+    })),
+});
+
+export const getRecorridoOrden: GetRecorridoOrden = async (id) => {
+    const respuesta = await RestAPI.get<{ datos: RecorridoOrdenApi }>(`${baseUrl}/${id}/recorrido`);
+    return recorridoOrdenDesdeApi(respuesta.datos);
+};
