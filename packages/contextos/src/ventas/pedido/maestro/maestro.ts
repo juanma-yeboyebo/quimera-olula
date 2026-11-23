@@ -1,8 +1,9 @@
 import { EstadoEtiqueta } from "#/comun/diseño.ts";
 import { EstadoDocumento } from "#/ventas/comun/componentes/TarjetaDocumentoVenta.tsx";
-import { pedidoEsEditable } from "#/ventas/pedido/dominio.ts";
-import { postAlbaranarPedidos } from "#/ventas/pedido/infraestructura.ts";
+import { pedidoEsEditable, pedidoPendiente } from "#/ventas/pedido/dominio.ts";
+import { patchFacturarPedido, postAlbaranarPedidos } from "#/ventas/pedido/infraestructura.ts";
 import { Criteria, ProcesarContexto } from "@olula/lib/diseño.js";
+import { plugin } from "@olula/lib/dominio.ts";
 import { accionesListaActivaEntidades, ProcesarListaActivaEntidades } from "@olula/lib/ListaActivaEntidades.js";
 import { Pedido } from "../diseño.ts";
 import { getPedidos } from "../infraestructura.ts";
@@ -101,6 +102,46 @@ export const albaranarPedidos: ProcesarPedidos = async (contexto) => {
         estado: "ALBARANES_CREADOS" as EstadoMaestroPedido,
         seleccionados: [],
         albaranesCreados,
+        fallidos,
+    };
+}
+
+export const puedeFacturarse = (pedido: Pedido): boolean =>
+    plugin("facturacion_pedido") === "activo" && pedidoPendiente(pedido);
+
+export const todosPuedenFacturarse = (ids: string[], pedidos: Pedido[]): boolean => {
+    if (ids.length === 0) return false;
+    return ids.every(id => {
+        const pedido = pedidos.find(p => p.id === id);
+        return pedido !== undefined && puedeFacturarse(pedido);
+    });
+}
+
+export const facturarPedidos: ProcesarPedidos = async (contexto) => {
+    const pedidos = contexto.seleccionados
+        .map(id => contexto.pedidos.lista.find(p => p.id === id))
+        .filter((pedido): pedido is Pedido => pedido !== undefined);
+
+    const facturasCreadas: ContextoMaestroPedido["facturasCreadas"] = [];
+    const fallidos: string[] = [];
+    for (const pedido of pedidos) {
+        try {
+            const factura = await patchFacturarPedido(pedido.id);
+            facturasCreadas.push({ ...factura, etiqueta: pedido.codigo });
+        } catch (error) {
+            fallidos.push(`${pedido.codigo}: ${mensajeDeError(error)}`);
+        }
+    }
+
+    const { filtro, orden, paginacion } = contexto.pedidos.criteria;
+    const lista = await getPedidos(filtro, orden, paginacion);
+    const recargado = await Pedidos.recargar(contexto, lista) as ContextoMaestroPedido;
+
+    return {
+        ...recargado,
+        estado: "FACTURAS_CREADAS" as EstadoMaestroPedido,
+        seleccionados: [],
+        facturasCreadas,
         fallidos,
     };
 }

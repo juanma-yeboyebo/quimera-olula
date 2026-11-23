@@ -78,6 +78,7 @@ export const MaestroConDetallePedidoNrj = () => {
     pedidos: listaActivaEntidadesInicial<PedidoNrj>(id, criteriaBase),
     seleccionados: [],
     albaranesCreados: [],
+    facturasCreadas: [],
     fallidos: [],
   });
 

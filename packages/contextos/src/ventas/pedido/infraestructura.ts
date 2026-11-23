@@ -322,4 +322,17 @@ export const postAlbaranarPedidos = async (pedidoIds: string[]): Promise<{ id: s
     return { id, codigo: String(datos.codigo ?? id) };
 };
 
+export const patchFacturarPedido = async (id: string): Promise<{ id: string; codigo: string }> => {
+    const respuesta = (await RestAPI.patch(
+        `${baseUrl}/${id}/facturar`,
+        {},
+        "Error al facturar el pedido"
+    )) as unknown as
+        | { datos: { factura_id: string; codigo?: string } }
+        | { factura_id: string; codigo?: string };
+    const datos = "datos" in respuesta ? respuesta.datos : respuesta;
+    const facturaId = String(datos.factura_id ?? "");
+    return { id: facturaId, codigo: String(datos.codigo ?? facturaId) };
+};
+
 export const getTrazaPedido = (id: string): Promise<unknown> => getTraza(`${baseUrl}/${id}`);

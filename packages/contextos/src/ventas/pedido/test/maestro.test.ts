@@ -1,7 +1,7 @@
-import { describe, expect, test } from "vitest";
+import { afterEach, describe, expect, test } from "vitest";
 import { Pedido } from "../diseño.ts";
 import { pedidoVacio } from "../detalle/detalle.ts";
-import { agruparPorCliente, estadoServidoPedido, puedeAlbaranarse, todosPuedenAlbaranarse } from "../maestro/maestro.ts";
+import { agruparPorCliente, estadoServidoPedido, puedeAlbaranarse, todosPuedenAlbaranarse, todosPuedenFacturarse } from "../maestro/maestro.ts";
 
 const pedido = (
     id: string,
@@ -125,5 +125,38 @@ describe("estadoServidoPedido pinta el punto de la lista", () => {
     test("un estado desconocido no se da por servido", () => {
         expect(estadoServidoPedido(pedido("1", ""))).toBe("pendiente");
         expect(estadoServidoPedido({})).toBe("pendiente");
+    });
+});
+
+describe("todosPuedenFacturarse", () => {
+    const lista = [
+        pedido("1", "No"),
+        pedido("2", "PENDIENTE"),
+        pedido("3", "Parcial"),
+    ];
+
+    const conPlugin = (estado: string) =>
+        localStorage.setItem("whoami", JSON.stringify({ plugins: { facturacion_pedido: estado } }));
+
+    afterEach(() => localStorage.removeItem("whoami"));
+
+    test("con el plugin activo se pueden facturar los pedidos sin nada servido", () => {
+        conPlugin("activo");
+        expect(todosPuedenFacturarse(["1", "2"], lista)).toBe(true);
+    });
+
+    test("es falso si alguno tiene algo servido", () => {
+        conPlugin("activo");
+        expect(todosPuedenFacturarse(["1", "3"], lista)).toBe(false);
+    });
+
+    test("es falso si no hay ninguno seleccionado", () => {
+        conPlugin("activo");
+        expect(todosPuedenFacturarse([], lista)).toBe(false);
+    });
+
+    test("sin el plugin activo no se puede facturar", () => {
+        conPlugin("inactivo");
+        expect(todosPuedenFacturarse(["1"], lista)).toBe(false);
     });
 });

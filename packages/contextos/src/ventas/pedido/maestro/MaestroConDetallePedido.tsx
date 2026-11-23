@@ -24,6 +24,7 @@ import { CrearPedido } from "../crear/CrearPedido.tsx";
 import { DetallePedido } from "../detalle/DetallePedido.tsx";
 import { Pedido } from "../diseño.ts";
 import { AlbaranarPedidos } from "./AlbaranarPedidos.tsx";
+import { FacturarPedidos } from "./FacturarPedidos.tsx";
 import "./MaestroConDetallePedido.css";
 import { TarjetaDocumentoVenta } from "#/ventas/comun/componentes/TarjetaDocumentoVenta.tsx";
 import {
@@ -31,10 +32,12 @@ import {
   estadoServidoPedido,
   etiquetaEstadoPedido,
   todosPuedenAlbaranarse,
+  todosPuedenFacturarse,
 } from "./maestro.ts";
 import { getMaquina } from "./maquina.ts";
 import { getMetaTablaPedido } from "./metatabla_pedido.tsx";
 import { ResultadoAlbaranado } from "./ResultadoAlbaranado.tsx";
+import { ResultadoFacturado } from "./ResultadoFacturado.tsx";
 
 const SERVIDO_NO = "No";
 const SERVIDO_PARCIAL = "Parcial";
@@ -74,6 +77,7 @@ export const MaestroConDetallePedido = () => {
     pedidos: listaActivaEntidadesInicial<Pedido>(id, criteriaInicial),
     seleccionados: [],
     albaranesCreados: [],
+    facturasCreadas: [],
     fallidos: [],
   });
 
@@ -139,6 +143,11 @@ export const MaestroConDetallePedido = () => {
                       Albaranar ({ctx.seleccionados.length})
                     </QBoton>
                   )}
+                  {todosPuedenFacturarse(ctx.seleccionados, ctx.pedidos.lista) && (
+                    <QBoton onClick={() => emitir("facturado_multiple_solicitado")}>
+                      Facturar ({ctx.seleccionados.length})
+                    </QBoton>
+                  )}
                 </div>
               )}
               onSeleccion={(payload) => emitir("pedido_seleccionado", payload)}
@@ -169,6 +178,21 @@ export const MaestroConDetallePedido = () => {
           publicar={emitir}
           pedidos={ctx.seleccionados.length}
           grupos={agruparPorCliente(ctx.seleccionados, ctx.pedidos.lista)}
+        />
+      )}
+
+      {ctx.estado === "FACTURANDO_PEDIDOS" && (
+        <FacturarPedidos
+          publicar={emitir}
+          pedidos={ctx.seleccionados.length}
+        />
+      )}
+
+      {ctx.estado === "FACTURAS_CREADAS" && (
+        <ResultadoFacturado
+          publicar={emitir}
+          creadas={ctx.facturasCreadas}
+          fallidos={ctx.fallidos}
         />
       )}
 

@@ -92,6 +92,7 @@ export type EstadoPedido = (
 
 export type EstadoMaestroPedido = (
     'INICIAL' | 'CREANDO_PEDIDO' | 'ALBARANANDO_PEDIDOS' | 'ALBARANES_CREADOS'
+    | 'FACTURANDO_PEDIDOS' | 'FACTURAS_CREADAS'
 );
 
 export type ContextoPedido<T extends Pedido = Pedido> = {
@@ -105,10 +106,17 @@ export type AlbaranGenerado = AlbaranCreado & {
     etiqueta: string;
 };
 
+export type FacturaGenerada = {
+    id: string;
+    codigo: string;
+    etiqueta: string;
+};
+
 export type ContextoMaestroPedido = {
     estado: EstadoMaestroPedido;
     pedidos: ListaActivaEntidades<Pedido>;
     seleccionados: string[];
     albaranesCreados: AlbaranGenerado[];
+    facturasCreadas: FacturaGenerada[];
     fallidos: string[];
 };
