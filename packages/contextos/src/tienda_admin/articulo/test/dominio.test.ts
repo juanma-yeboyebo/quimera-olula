@@ -174,13 +174,13 @@ describe("[tienda_admin-articulo-publicacion-01] Publicación del website activo
     test("tienda_admin_articulo_publicacion_01_el_resumen_usa_la_publicacion_y_la_imagen_principal", () => {
         expect(resumenDeArticulo(detalle(), 1)).toEqual({
             id: "A1", referencia: "A1", descripcion: "Camiseta", imagen: "/b.jpg",
-            publicado: true, visible: false, destacado: true,
+            publicado: true, visible: false, destacado: true, sinControlStock: false, stock: 4,
         });
     });
 
     test("tienda_admin_articulo_publicacion_01_el_resumen_sin_publicacion_es_no_publicado", () => {
         const r = resumenDeArticulo(detalle({ imagenes: [] }), 9);
-        expect(r).toMatchObject({ imagen: null, publicado: false, visible: false, destacado: false });
+        expect(r).toMatchObject({ imagen: null, publicado: false, visible: false, destacado: false, stock: 0 });
     });
 
     test("tienda_admin_articulo_detalle_01_enlace_al_articulo_del_erp", () => {

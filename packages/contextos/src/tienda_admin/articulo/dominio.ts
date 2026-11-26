@@ -115,6 +115,8 @@ export const resumenDeArticulo = (a: ArticuloWebDetalle, websiteId: number | nul
         publicado: p?.publicado ?? false,
         visible: p?.visible ?? false,
         destacado: p?.destacado ?? false,
+        sinControlStock: a.sinControlStock,
+        stock: a.stocks.find((s) => s.websiteId === websiteId)?.stock ?? 0,
     };
 };
 
