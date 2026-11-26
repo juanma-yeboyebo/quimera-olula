@@ -2,6 +2,8 @@ import { Entidad, Modelo } from "@olula/lib/diseño.ts";
 
 export type TipoFormaPagoTienda = "PASARELA" | "SIN_PASARELA";
 
+export type DestinoFormaPagoTienda = "PEDIDO" | "VENTA_TPV";
+
 export interface CuentaStripe {
     id: string;
     nombre: string;
@@ -24,6 +26,8 @@ export interface FormaPagoTienda extends Entidad {
     orden: number;
     activo: boolean;
     credencial: CuentaStripe | null;
+    destino: DestinoFormaPagoTienda;
+    recibosPagados: boolean;
 }
 
 export interface FormaPagoTiendaDetalle extends FormaPagoTienda {
@@ -37,6 +41,8 @@ export interface NuevaFormaPagoTienda extends Modelo {
     descripcion: string;
     codpago: string;
     credencialId: string;
+    destino: DestinoFormaPagoTienda;
+    recibosPagados: boolean;
 }
 
 export interface EdicionFormaPagoTienda extends Modelo {
@@ -46,6 +52,8 @@ export interface EdicionFormaPagoTienda extends Modelo {
     credencialId: string;
     orden: number;
     activo: boolean;
+    destino: DestinoFormaPagoTienda;
+    recibosPagados: boolean;
 }
 
 export interface CambiosFormaPagoTienda {
@@ -55,6 +63,8 @@ export interface CambiosFormaPagoTienda {
     credencialId?: string | null;
     orden?: number;
     activo?: boolean;
+    destino?: DestinoFormaPagoTienda;
+    recibosPagados?: boolean;
 }
 
 export type GetFormasPago = (websiteId: number) => Promise<FormaPagoTienda[]>;

@@ -20,6 +20,15 @@ export interface ListaRegalos extends Entidad {
     lineas: LineaListaRegalos[];
 }
 
+export type EstadoPagoLineaLista = "PENDIENTE" | "RESERVADO" | "PAGADO_TARJETA" | "PAGADO_TPV";
+
+export type EstadoEnvioLineaLista = "PENDIENTE" | "POR_ENTREGAR_COMPRADOR" | "POR_ENTREGAR_PADRES" | "ENTREGADO";
+
+export interface ImagenLineaListaRegalos {
+    url: string;
+    alt: string;
+}
+
 export interface LineaListaRegalos extends Entidad {
     id: string;
     referencia: string;
@@ -31,6 +40,17 @@ export interface LineaListaRegalos extends Entidad {
     orden: number;
     sinControlStock: boolean;
     stock: number;
+    entregada: boolean;
+    estadoPago: EstadoPagoLineaLista;
+    estadoEnvio: EstadoEnvioLineaLista;
+    imagen: ImagenLineaListaRegalos | null;
+    dedicatoria: string | null;
+}
+
+export interface TotalesListaRegalos {
+    total: number;
+    vendido: number;
+    reservado: number;
 }
 
 export interface ItemListaRegalos extends Entidad {
@@ -50,6 +70,7 @@ export interface NuevaListaRegalos extends Modelo {
     clienteNombre: string;
     nombre: string;
     direccion: string;
+    fecha: Date;
     descripcion: string;
 }
 
@@ -64,19 +85,18 @@ export interface EdicionListaRegalos extends Modelo {
 export interface NuevaLineaListaRegalos extends Modelo {
     referencia: string;
     descripcion: string;
-    cantidad: number | null;
     precio: number | null;
 }
 
 export interface EdicionLineaListaRegalos extends Modelo {
     precio: number | null;
-    cantidad: number | null;
-    cantidadVendida: number | null;
 }
 
 export interface FiltrosListaRegalos {
     websiteId: number | null;
     texto: string;
+    desde: string;
+    hasta: string;
 }
 
 export type CambiosListaRegalos = {
@@ -89,9 +109,8 @@ export type CambiosListaRegalos = {
 
 export type CambiosLineaListaRegalos = {
     precio?: number;
-    cantidad?: number;
-    cantidadVendida?: number;
     orden?: number;
+    entregada?: boolean;
 };
 
 export type CambioOrdenLinea = { id: string; orden: number };
@@ -104,3 +123,4 @@ export type DeleteListaRegalos = (id: string) => Promise<void>;
 export type PostLineaListaRegalos = (id: string, nueva: NuevaLineaListaRegalos) => Promise<string>;
 export type PatchLineaListaRegalos = (id: string, lineaId: string, cambios: CambiosLineaListaRegalos) => Promise<void>;
 export type DeleteLineaListaRegalos = (id: string, lineaId: string) => Promise<void>;
+export type LiberarLineaListaRegalos = (id: string, lineaId: string) => Promise<void>;

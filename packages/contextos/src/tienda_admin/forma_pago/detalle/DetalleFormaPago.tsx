@@ -3,6 +3,7 @@ import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QCheckbox } from "@olula/componentes/atomos/qcheckbox.tsx";
 import { QEtiqueta } from "@olula/componentes/atomos/qetiqueta.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
+import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 import { Detalle } from "@olula/componentes/detalle/Detalle.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
 import { ContextoError } from "@olula/lib/contexto.ts";
@@ -19,6 +20,7 @@ import {
     esTarjeta,
     estaConectada,
     metaEdicionFormaPago,
+    opcionesDestino,
     textoTipo,
 } from "../dominio.ts";
 import { comprobarConexion, contextoDetalleFormaPagoInicial, guardarDatos } from "./detalle.ts";
@@ -82,9 +84,11 @@ const FormularioFormaPago = ({ forma, publicar }: { forma: FormaPagoTiendaDetall
                 <QInput label="Nombre" {...uiProps("nombre")} />
                 <QInput label="Descripción" {...uiProps("descripcion")} />
                 <FormaPago {...uiProps("codpago")} nombre="codpago" />
+                <QSelect label="Genera" {...uiProps("destino")} opciones={opcionesDestino} />
                 {tarjeta && cuentas !== null && cuentas.length > 0 && (
                     <SelectorCuentaStripe cuentas={cuentas} {...uiProps("credencialId")} />
                 )}
+                {tarjeta && <QCheckbox label="Recibos cobrados al facturar" {...uiProps("recibosPagados")} />}
                 <QInput label="Orden" {...uiProps("orden")} />
                 <QCheckbox label="Activa" {...uiProps("activo")} />
             </quimera-formulario>

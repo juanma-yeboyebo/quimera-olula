@@ -12,6 +12,7 @@ class FactoryTiendaOnlineDulceBebe extends FactoryTiendaOnline {
     static cabecera_buscador = false as const;
     static menu_categorias = false as const;
     static layout_pie = PieDulceBebe;
+    static checkout_dedicatoria = true;
 }
 
 export class FactoryTienda {

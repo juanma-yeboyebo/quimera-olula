@@ -1,4 +1,5 @@
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
+import { QCheckbox } from "@olula/componentes/atomos/qcheckbox.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { QSelect } from "@olula/componentes/atomos/qselect.tsx";
 import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
@@ -10,7 +11,7 @@ import { FormaPago } from "#/comun/componentes/formapago.tsx";
 import { ejecutarConConflicto } from "../../comun/errores.ts";
 import { AvisoSinCuentas } from "../componentes/AvisoSinCuentas.tsx";
 import { SelectorCuentaStripe, useCuentasStripe } from "../componentes/SelectorCuentaStripe.tsx";
-import { esTarjeta, metaNuevaFormaPago, nuevaFormaPagoVacia, opcionesTipo } from "../dominio.ts";
+import { esTarjeta, metaNuevaFormaPago, nuevaFormaPagoVacia, opcionesDestino, opcionesTipo } from "../dominio.ts";
 import { postFormaPago } from "../infraestructura.ts";
 
 export const CrearFormaPago = ({
@@ -61,9 +62,11 @@ export const CrearFormaPago = ({
                     <QInput label="Nombre" {...uiProps("nombre")} />
                     <QInput label="Descripción (opcional)" {...uiProps("descripcion")} />
                     <FormaPago {...uiProps("codpago")} nombre="codpago" />
+                    <QSelect label="Genera" {...uiProps("destino")} opciones={opcionesDestino} />
                     {tarjeta && cuentas !== null && cuentas.length > 0 && (
                         <SelectorCuentaStripe cuentas={cuentas} {...uiProps("credencialId")} />
                     )}
+                    {tarjeta && <QCheckbox label="Recibos cobrados al facturar" {...uiProps("recibosPagados")} />}
                 </quimera-formulario>
                 {tarjeta && cuentas !== null && cuentas.length === 0 && <AvisoSinCuentas />}
                 <div className="botones maestro-botones">

@@ -1,4 +1,5 @@
 import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
+import { QDate } from "@olula/componentes/atomos/qdate.tsx";
 import { QEtiqueta } from "@olula/componentes/atomos/qetiqueta.tsx";
 import { QInput } from "@olula/componentes/atomos/qinput.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
@@ -84,6 +85,18 @@ export const MaestroConDetalleListaRegalos = () => {
                                 onBlur={(valor) => {
                                     if (valor !== filtros.texto) emitir("filtros_cambiados", { texto: valor });
                                 }}
+                            />
+                            <QDate
+                                label="Desde"
+                                nombre="desde"
+                                valor={filtros.desde}
+                                onChange={(valor) => emitir("filtros_cambiados", { desde: valor })}
+                            />
+                            <QDate
+                                label="Hasta"
+                                nombre="hasta"
+                                valor={filtros.hasta}
+                                onChange={(valor) => emitir("filtros_cambiados", { hasta: valor })}
                             />
                         </div>
                         <Listado<ItemListaRegalos>

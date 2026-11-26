@@ -80,7 +80,9 @@ export const datosCheckoutIniciales = (
     carrito: CarritoTienda | null,
     formasEnvio: FormaEnvioTienda[] = [],
     formasPago: FormaPagoTienda[] = [],
+    conDedicatoria = false,
 ): DatosCheckout => {
+    const dedicatoria = conDedicatoria ? { dedicatoria: carrito?.dedicatoria ?? "" } : {};
     const datos = carrito?.datosCheckout;
     const idFormaEnvio = formaInicial(carrito?.formaEnvio?.id, formasEnvio);
     const idFormaPago = formaInicial(carrito?.formaPago?.id, formasPago);
@@ -95,6 +97,7 @@ export const datosCheckoutIniciales = (
             direccionEnvio: direccionVacia(),
             idFormaEnvio,
             idFormaPago,
+            ...dedicatoria,
         };
 
     const envio = datos.direccion_envio;
@@ -108,6 +111,7 @@ export const datosCheckoutIniciales = (
         direccionEnvio: envio ? direccionDesdeDatos(envio) : direccionVacia(),
         idFormaEnvio,
         idFormaPago,
+        ...dedicatoria,
     };
 };
 

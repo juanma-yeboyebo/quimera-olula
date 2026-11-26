@@ -20,6 +20,7 @@ export type DatosCheckout = {
     direccionEnvio: DireccionCheckout;
     idFormaEnvio: number | null;
     idFormaPago: number | null;
+    dedicatoria?: string;
 };
 
 export type ErroresCheckout = Record<string, string>;

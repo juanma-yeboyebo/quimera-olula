@@ -198,6 +198,17 @@ describe("[checkout-datos-08] PATCH …/checkout envía también id_forma_pago e
     });
 });
 
+describe("[checkout-datos-10] PATCH …/checkout envía la dedicatoria solo si el formulario la tiene", () => {
+    test("checkout_datos_10_con_dedicatoria", () => {
+        expect(datosCheckoutAApi({ ...datosValidos, dedicatoria: "Para Lucía" }).dedicatoria).toBe("Para Lucía");
+        expect(datosCheckoutAApi({ ...datosValidos, dedicatoria: "  " }).dedicatoria).toBeNull();
+    });
+
+    test("checkout_datos_10_sin_dedicatoria_no_se_envia", () => {
+        expect("dedicatoria" in datosCheckoutAApi(datosValidos)).toBe(false);
+    });
+});
+
 describe("[checkout-maquina-08] POST de confirmación con X-Store-View", () => {
     test("checkout_maquina_08_post_a_la_ruta_de_confirmar", async () => {
         post.mockResolvedValue({});

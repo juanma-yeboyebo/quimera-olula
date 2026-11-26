@@ -6,7 +6,7 @@ API del backend (`olula_servidor`, app `tienda_online`). Todas las llamadas env�
 
 | Método | Ruta | Respuesta |
 |---|---|---|
-| PATCH | `/public/tienda_online/carrito/<token>/checkout` | body `{email, nombre, id_fiscal, telefono, direccion_facturacion, direccion_envio, id_forma_pago, id_forma_envio}`; 400 email no válido o forma no válida, 404, 409 |
+| PATCH | `/public/tienda_online/carrito/<token>/checkout` | body `{email, nombre, id_fiscal, telefono, direccion_facturacion, direccion_envio, id_forma_pago, id_forma_envio, dedicatoria}`; 400 email no válido o forma no válida, 404, 409 |
 | POST | `/public/tienda_online/carrito/<token>/pago` | `{url}`; 400 (carrito vacío, datos incompletos con la lista en el texto, stock insuficiente), 404, 409, 500 (pasarela) |
 | POST | `/public/tienda_online/carrito/<token>/confirmar` | `{}`; para formas de pago sin pasarela. Mismos 400, 404 y 409 que `…/pago` |
 | POST | `/public/tienda_online/carrito/<token>/pago/cancelar` | `{}`; si ya estaba `ABIERTO` no hace nada |
@@ -50,6 +50,12 @@ Un `fieldset` «Pago» lista las formas de pago disponibles del carrito (`formas
 
 <!-- [checkout-datos-09] [nueva] -->
 Si el carrito solo tiene disponible una forma de envío o una de pago, su `fieldset` muestra esa forma como texto, sin radio.
+
+<!-- [checkout-datos-10] [x] -->
+Con `FactoryTiendaOnline.checkout_dedicatoria` a `true` (en la base es `false`; Dulce Bebé lo activa), el formulario muestra un `fieldset` «Dedicatoria» con un área de texto opcional, que empieza con la `dedicatoria` del carrito. `PATCH …/checkout` la envía como `dedicatoria` (vacía, `null`). Con el ajuste a `false` no se muestra ni se envía.
+
+<!-- [checkout-datos-11] [nueva] -->
+En la revisión, si hay dedicatoria, el resumen de datos la muestra bajo «Dedicatoria».
 
 ### Comprador con cuenta
 

@@ -4,10 +4,10 @@ Qué formas de pago ofrece cada website en el checkout y, para las de tarjeta, e
 
 | Método | Ruta | Respuesta |
 |---|---|---|
-| GET | `/tienda_admin/forma_pago?website_id=<id>` | `{datos: [{id, website_id, codigo, nombre, descripcion, tipo, codpago, orden, activo, credencial: {id, nombre} \| null}]}` |
+| GET | `/tienda_admin/forma_pago?website_id=<id>` | `{datos: [{id, website_id, codigo, nombre, descripcion, tipo, codpago, orden, activo, credencial: {id, nombre} \| null, destino, recibos_pagados}]}` |
 | GET | `/tienda_admin/forma_pago/<id>` | lo mismo y `conexion: {modo, test, live} \| null`; 404 |
-| POST | `/tienda_admin/forma_pago` | body `{website_id, codigo, nombre, descripcion, tipo, codpago, credencial_id}` → `{id}`; 400, 404, 409 |
-| PATCH | `/tienda_admin/forma_pago/<id>` | body `{nombre, descripcion, codpago, credencial_id, orden, activo}` → `{}`; 400, 404 |
+| POST | `/tienda_admin/forma_pago` | body `{website_id, codigo, nombre, descripcion, tipo, codpago, credencial_id, destino, recibos_pagados}` → `{id}`; 400, 404, 409 |
+| PATCH | `/tienda_admin/forma_pago/<id>` | body `{nombre, descripcion, codpago, credencial_id, orden, activo, destino, recibos_pagados}` → `{}`; 400, 404 |
 | POST | `/tienda_admin/forma_pago/<id>/probar_conexion` | `{test, live}`; 400 con el motivo |
 | GET | `/comun/credencial-externa` | credenciales, para el selector (solo las de proveedor «Stripe» activas) |
 
@@ -25,10 +25,10 @@ Qué formas de pago ofrece cada website en el checkout y, para las de tarjeta, e
 Listado de las formas de pago del website activo (selector de website de `tienda_admin`) en su orden: nombre, código, distintivo «Tarjeta» (`PASARELA`) o «Sin pago online» (`SIN_PASARELA`), distintivo «Inactiva» si no está activa y, en las de tarjeta, el nombre de la credencial o «Sin cuenta de Stripe».
 
 <!-- [tienda_admin-forma_pago-crear-01] [x] -->
-«Nueva forma de pago» abre un modal con tipo («Tarjeta» o «Sin pago online», p. ej. pago en tienda), código, nombre, descripción opcional, forma de pago del ERP (selector `FormaPago` de `comun/componentes`) y, si es de tarjeta, la cuenta de Stripe (selector con las credenciales Stripe activas). Crea en el website activo y abre la nueva en el detalle. El 409 se muestra en el campo código.
+«Nueva forma de pago» abre un modal con tipo («Tarjeta» o «Sin pago online», p. ej. pago en tienda), código, nombre, descripción opcional, forma de pago del ERP (selector `FormaPago` de `comun/componentes`), «Genera» («Pedido» o «Venta en TPV», por defecto «Pedido») y, si es de tarjeta, la cuenta de Stripe (selector con las credenciales Stripe activas) y «Recibos cobrados al facturar» (marcado por defecto). Crea en el website activo y abre la nueva en el detalle. El 409 se muestra en el campo código.
 
 <!-- [tienda_admin-forma_pago-detalle-01] [x] -->
-El detalle muestra código y tipo (solo lectura) y edita nombre, descripción, forma de pago del ERP, cuenta de Stripe (solo en las de tarjeta), orden y «Activa». Guardar llama a PATCH. No hay «Borrar»: para dejar de ofrecerla se desactiva.
+El detalle muestra código y tipo (solo lectura) y edita nombre, descripción, forma de pago del ERP, «Genera», cuenta de Stripe y «Recibos cobrados al facturar» (estos dos, solo en las de tarjeta), orden y «Activa». Guardar llama a PATCH. No hay «Borrar»: para dejar de ofrecerla se desactiva.
 
 <!-- [tienda_admin-forma_pago-conexion-01] [x] -->
 En las de tarjeta con cuenta de Stripe, el detalle muestra el estado de la conexión: «Conectada» si el webhook del modo en uso está dado de alta, o «Sin conectar» y un aviso. «Comprobar conexión» llama a `probar_conexion`, recarga el estado y muestra el error del servidor en el diálogo de errores.

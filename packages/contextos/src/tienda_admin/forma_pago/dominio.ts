@@ -4,6 +4,7 @@ import {
     CambiosFormaPagoTienda,
     ConexionFormaPago,
     CuentaStripe,
+    DestinoFormaPagoTienda,
     EdicionFormaPagoTienda,
     FormaPagoTienda,
     FormaPagoTiendaDetalle,
@@ -22,6 +23,11 @@ export const AVISO_SIN_CONECTAR =
 export const opcionesTipo: { valor: TipoFormaPagoTienda; descripcion: string }[] = [
     { valor: "PASARELA", descripcion: "Tarjeta" },
     { valor: "SIN_PASARELA", descripcion: "Sin pago online" },
+];
+
+export const opcionesDestino: { valor: DestinoFormaPagoTienda; descripcion: string }[] = [
+    { valor: "PEDIDO", descripcion: "Pedido" },
+    { valor: "VENTA_TPV", descripcion: "Venta en TPV" },
 ];
 
 export const textoTipo = (tipo: TipoFormaPagoTienda): string =>
@@ -54,6 +60,8 @@ export const formaPagoVacia = (): FormaPagoTiendaDetalle => ({
     orden: 0,
     activo: true,
     credencial: null,
+    destino: "PEDIDO",
+    recibosPagados: true,
     conexion: null,
 });
 
@@ -64,6 +72,8 @@ export const nuevaFormaPagoVacia = (): NuevaFormaPagoTienda => ({
     descripcion: "",
     codpago: "",
     credencialId: "",
+    destino: "PEDIDO",
+    recibosPagados: true,
 });
 
 export const metaNuevaFormaPago: MetaModelo<NuevaFormaPagoTienda> = {
@@ -74,8 +84,10 @@ export const metaNuevaFormaPago: MetaModelo<NuevaFormaPagoTienda> = {
         descripcion: {},
         codpago: { tipo: "selector", requerido: true },
         credencialId: { tipo: "selector" },
+        destino: { tipo: "selector", requerido: true },
+        recibosPagados: { tipo: "checkbox" },
     },
-    editable: (m, campo) => campo !== "credencialId" || esTarjeta(m),
+    editable: (m, campo) => (campo !== "credencialId" && campo !== "recibosPagados") || esTarjeta(m),
     onChange: (m, campo) => (campo === "tipo" && !esTarjeta(m) ? { ...m, credencialId: "" } : m),
 };
 
@@ -86,6 +98,8 @@ export const edicionDeForma = (forma: FormaPagoTienda): EdicionFormaPagoTienda =
     credencialId: forma.credencial?.id ?? "",
     orden: forma.orden,
     activo: forma.activo,
+    destino: forma.destino,
+    recibosPagados: forma.recibosPagados,
 });
 
 export const metaEdicionFormaPago: MetaModelo<EdicionFormaPagoTienda> = {
@@ -96,6 +110,8 @@ export const metaEdicionFormaPago: MetaModelo<EdicionFormaPagoTienda> = {
         credencialId: { tipo: "selector" },
         orden: { tipo: "entero" },
         activo: { tipo: "checkbox" },
+        destino: { tipo: "selector", requerido: true },
+        recibosPagados: { tipo: "checkbox" },
     },
 };
 
@@ -108,6 +124,8 @@ export const cambiosDeEdicion = (forma: FormaPagoTienda, e: EdicionFormaPagoTien
     if (esTarjeta(forma) && e.credencialId !== original.credencialId) cambios.credencialId = e.credencialId || null;
     if (Number(e.orden) !== original.orden) cambios.orden = Number(e.orden);
     if (e.activo !== original.activo) cambios.activo = e.activo;
+    if (e.destino !== original.destino) cambios.destino = e.destino;
+    if (esTarjeta(forma) && e.recibosPagados !== original.recibosPagados) cambios.recibosPagados = e.recibosPagados;
     return cambios;
 };
 

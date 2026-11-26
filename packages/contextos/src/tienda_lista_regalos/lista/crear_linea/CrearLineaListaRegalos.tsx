@@ -58,7 +58,6 @@ export const CrearLineaListaRegalos = ({
         >
             <quimera-formulario>
                 <Articulo {...articulo} />
-                <QInput label="Cantidad" {...uiProps("cantidad")} />
                 <QInput
                     label="Precio con IVA (opcional)"
                     {...uiProps("precio")}

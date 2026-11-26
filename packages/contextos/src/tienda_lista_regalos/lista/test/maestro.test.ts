@@ -74,7 +74,7 @@ describe("[lista_regalos-maestro-02] Cambiar el texto vuelve a la primera págin
             listas: { ...base.listas, criteria: { ...base.listas.criteria, paginacion: { limite: 10, pagina: 4 } } },
         });
         const r = (await m.cambiarFiltros(contexto, { texto: "ana" })) as ContextoMaestroListaRegalos;
-        expect(r.filtros).toEqual({ websiteId: 1, texto: "ana" });
+        expect(r.filtros).toEqual({ websiteId: 1, texto: "ana", desde: "", hasta: "" });
         expect(r.listas.criteria.paginacion).toEqual({ limite: 10, pagina: 1 });
     });
 

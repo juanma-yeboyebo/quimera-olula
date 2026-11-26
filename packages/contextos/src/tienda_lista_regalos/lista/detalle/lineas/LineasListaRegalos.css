@@ -8,3 +8,32 @@
     font-size: 0.85em;
     opacity: 0.7;
 }
+
+.LineasListaRegalos-totales {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin: 0 0 12px;
+}
+
+.LineasListaRegalos-totales dt {
+    font-size: 0.85em;
+    opacity: 0.7;
+}
+
+.LineasListaRegalos-totales dd {
+    margin: 0;
+    font-weight: 600;
+}
+
+.LineasListaRegalos-miniatura {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.LineasListaRegalos-dedicatoria {
+    white-space: pre-wrap;
+}

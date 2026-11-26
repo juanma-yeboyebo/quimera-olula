@@ -53,8 +53,6 @@ export const CambiarLineaListaRegalos = ({
                         soloLectura
                     />
                     <QInput label="Precio con IVA" {...uiProps("precio")} />
-                    <QInput label="Cantidad" {...uiProps("cantidad")} />
-                    <QInput label="Vendidas" {...uiProps("cantidadVendida")} />
                 </quimera-formulario>
                 {error && (
                     <p role="alert" className="CambiarLineaListaRegalos-error">

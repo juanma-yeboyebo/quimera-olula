@@ -391,3 +391,16 @@ describe("[checkout-carrito-04] Formas que dejan de estar disponibles", () => {
         expect(ajustarFormas(d, [], [])).toMatchObject({ idFormaEnvio: null, idFormaPago: null });
     });
 });
+
+describe("[checkout-datos-10] El formulario empieza con la dedicatoria del carrito si está activada", () => {
+    test("checkout_datos_10_activada_con_y_sin_dedicatoria", () => {
+        expect(datosCheckoutIniciales({ ...carrito(null), dedicatoria: "Para Lucía" }, [], [], true).dedicatoria)
+            .toBe("Para Lucía");
+        expect(datosCheckoutIniciales(carrito(null), [], [], true).dedicatoria).toBe("");
+        expect(datosCheckoutIniciales(null, [], [], true).dedicatoria).toBe("");
+    });
+
+    test("checkout_datos_10_desactivada_no_tiene_dedicatoria", () => {
+        expect(datosCheckoutIniciales({ ...carrito(null), dedicatoria: "Para Lucía" }).dedicatoria).toBeUndefined();
+    });
+});

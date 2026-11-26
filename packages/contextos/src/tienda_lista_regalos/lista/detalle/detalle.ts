@@ -82,6 +82,18 @@ export const onLineaCambiada: ProcesarDetalle = async (contexto, payload) =>
 export const onLineaBorrada: ProcesarDetalle = async (contexto) =>
     pipeLista(contexto, [refrescarLista, desactivarLinea]);
 
+export const onLineaLiberada: ProcesarDetalle = async (contexto, payload) =>
+    pipeLista(contexto, [refrescarLista, activarLineaPorId(payload as string)]);
+
+const cambiarEntrega = (entregada: boolean): ProcesarDetalle => async (contexto, payload) => {
+    await patchLineaListaRegalos(contexto.lista.id, payload as string, { entregada });
+    return refrescarLista(contexto);
+};
+
+export const entregarLinea: ProcesarDetalle = cambiarEntrega(true);
+
+export const deshacerEntregaLinea: ProcesarDetalle = cambiarEntrega(false);
+
 const moverLinea = (delta: -1 | 1): ProcesarDetalle => async (contexto, payload) => {
     const cambio = intercambioOrden(contexto.lineas.lista, payload as string, delta);
     if (!cambio) return contexto;

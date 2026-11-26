@@ -1,6 +1,7 @@
 import { QIcono } from "@olula/componentes/atomos/qicono.tsx";
 import { useMaquina } from "@olula/componentes/hook/useMaquina.ts";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { FactoryCtx } from "@olula/lib/factory_ctx.tsx";
+import { ReactNode, useContext, useEffect, useId, useRef, useState } from "react";
 import { Link, Navigate } from "react-router";
 import { BorrarLineaCarrito } from "../../carrito/borrar_linea/BorrarLineaCarrito.tsx";
 import { CambiarCantidadLinea } from "../../carrito/cambiar_linea/CambiarCantidadLinea.tsx";
@@ -216,6 +217,35 @@ const SelectorDireccion = ({
     );
 };
 
+const CampoDedicatoria = ({
+    valor,
+    deshabilitado,
+    onCambiar,
+}: {
+    valor: string;
+    deshabilitado: boolean;
+    onCambiar: (valor: string) => void;
+}) => {
+    const id = useId();
+    return (
+        <fieldset>
+            <Leyenda icono="editar" texto="Dedicatoria" />
+            <div className="campo-formulario">
+                <label htmlFor={id}>Dedicatoria (opcional)</label>
+                <span className="campo-formulario-control">
+                    <textarea
+                        id={id}
+                        rows={3}
+                        value={valor}
+                        disabled={deshabilitado}
+                        onChange={(e) => onCambiar(e.target.value)}
+                    />
+                </span>
+            </div>
+        </fieldset>
+    );
+};
+
 const ResumenDatos = ({
     ctx,
     formaEnvio,
@@ -253,6 +283,12 @@ const ResumenDatos = ({
                 <>
                     <dt>Envío</dt>
                     <dd>{formaEnvio.nombre}</dd>
+                </>
+            )}
+            {datos.dedicatoria && (
+                <>
+                    <dt>Dedicatoria</dt>
+                    <dd>{datos.dedicatoria}</dd>
                 </>
             )}
             {formaEnvio?.tipo !== "RECOGIDA" && (
@@ -352,6 +388,8 @@ const FormularioCheckout = ({ storeView }: { storeView: StoreView }) => {
     const { idioma } = storeView;
     const carrito = useCarritoTienda();
     const seguir = useSeguirComprando();
+    const { app } = useContext(FactoryCtx);
+    const conDedicatoria = app.TiendaOnline?.checkout_dedicatoria === true;
     const formasEnvio = carrito?.formasEnvioDisponibles ?? [];
     const formasPago = carrito?.formasPagoDisponibles ?? [];
     const { ctx, emitir } = useMaquina(
@@ -361,6 +399,7 @@ const FormularioCheckout = ({ storeView }: { storeView: StoreView }) => {
                 obtenerCarrito(),
                 obtenerCarrito()?.formasEnvioDisponibles,
                 obtenerCarrito()?.formasPagoDisponibles,
+                conDedicatoria,
             ),
         ),
     );
@@ -587,6 +626,13 @@ const FormularioCheckout = ({ storeView }: { storeView: StoreView }) => {
                                 deshabilitado={ocupado}
                                 onElegir={(forma) => cambiar({ idFormaPago: forma.id })}
                             />
+                            {conDedicatoria && (
+                                <CampoDedicatoria
+                                    valor={datos.dedicatoria ?? ""}
+                                    deshabilitado={ocupado}
+                                    onCambiar={(dedicatoria) => cambiar({ dedicatoria })}
+                                />
+                            )}
                             <div className="checkout-acciones checkout-acciones-movil">{botonContinuar}</div>
                         </form>
                         {resumen(botonContinuar, estado === "DATOS")}

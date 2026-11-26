@@ -17,7 +17,8 @@ const { getMaquina } = await import("#/tienda_lista_regalos/lista/detalle/maquin
 
 const linea = (id: string, orden: number, extra: Partial<LineaListaRegalos> = {}): LineaListaRegalos => ({
     id, referencia: `R${id}`, descripcion: "", precio: 10, cantidad: 2,
-    cantidadVendida: 0, pendiente: 2, orden, sinControlStock: false, stock: 5, ...extra,
+    cantidadVendida: 0, pendiente: 2, orden, sinControlStock: false, stock: 5, entregada: false,
+    estadoPago: "PENDIENTE", estadoEnvio: "PENDIENTE", imagen: null, dedicatoria: null, ...extra,
 });
 
 const lista = (extra: Partial<ListaRegalos> = {}): ListaRegalos => ({
@@ -199,5 +200,43 @@ describe("[lista_regalos-productos-05] Subir y bajar con dos PATCH", () => {
         const maquina = getMaquina();
         expect(maquina.ABIERTO.subir_linea_solicitado).toEqual([d.subirLinea]);
         expect(maquina.ABIERTO.bajar_linea_solicitado).toEqual([d.bajarLinea]);
+    });
+});
+
+describe("[lista_regalos-productos-07] Entregado y deshacer entrega", () => {
+    test("lista_regalos_productos_07_entregar_envia_entregada_y_recarga", async () => {
+        getListaRegalos.mockResolvedValue(lista());
+        await d.entregarLinea(abierto(), "2");
+        expect(patchLineaListaRegalos.mock.calls).toEqual([["7", "2", { entregada: true }]]);
+        expect(getListaRegalos).toHaveBeenCalledWith("7");
+    });
+
+    test("lista_regalos_productos_07_deshacer_envia_no_entregada_y_recarga", async () => {
+        getListaRegalos.mockResolvedValue(lista());
+        await d.deshacerEntregaLinea(abierto(), "2");
+        expect(patchLineaListaRegalos.mock.calls).toEqual([["7", "2", { entregada: false }]]);
+        expect(getListaRegalos).toHaveBeenCalledWith("7");
+    });
+
+    test("lista_regalos_productos_07_la_maquina_enlaza_las_acciones", () => {
+        const maquina = getMaquina();
+        expect(maquina.ABIERTO.entrega_de_linea_solicitada).toEqual([d.entregarLinea]);
+        expect(maquina.ABIERTO.deshacer_entrega_de_linea_solicitado).toEqual([d.deshacerEntregaLinea]);
+    });
+});
+
+describe("[lista_regalos-productos-08] Liberar con confirmación", () => {
+    test("lista_regalos_productos_08_la_maquina_pide_confirmacion", () => {
+        const maquina = getMaquina();
+        expect(maquina.ABIERTO.liberacion_de_linea_solicitada).toEqual([d.Lineas.activar, "LIBERANDO_LINEA"]);
+        expect(maquina.LIBERANDO_LINEA.liberacion_de_linea_cancelada).toBe("ABIERTO");
+        expect(maquina.LIBERANDO_LINEA.linea_liberada).toEqual([d.onLineaLiberada, "ABIERTO"]);
+    });
+
+    test("lista_regalos_productos_08_tras_liberar_se_recarga", async () => {
+        getListaRegalos.mockResolvedValue(lista());
+        const [r] = (await d.onLineaLiberada(abierto(), "2")) as [ContextoDetalleListaRegalos, unknown[]];
+        expect(getListaRegalos).toHaveBeenCalledWith("7");
+        expect(r.lineas.activo?.id).toBe("2");
     });
 });

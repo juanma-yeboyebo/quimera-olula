@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { modeloEsValido } from "@olula/lib/dominio.ts";
+import { fechaActual } from "@olula/lib/fecha.ts";
 import { LineaListaRegalos, ListaRegalos } from "#/tienda_lista_regalos/lista/diseño.ts";
 import {
     AVISO_NO_PUBLICADA,
@@ -15,7 +16,9 @@ import {
     hayCambios,
     intercambioOrden,
     itemDeLista,
-    lineaVendida,
+    lineaEntregable,
+    lineaEntregada,
+    lineaLiberable,
     mensajeError400,
     metaEdicionLineaListaRegalos,
     metaNuevaLineaListaRegalos,
@@ -31,8 +34,10 @@ import {
     textoVendidas,
     urlConDireccion,
     vistaPreviaNuevaDireccion,
-    faltaStockLinea,
-    textoStockLinea,
+    presentacionEstadoEnvio,
+    presentacionEstadoPago,
+    TEXTO_LIBERAR_LINEA,
+    totalesLista,
 } from "#/tienda_lista_regalos/lista/dominio.ts";
 import { slugDesdeTexto } from "#/tienda_admin/comun/dominio.ts";
 
@@ -47,6 +52,11 @@ const linea = (id: string, extra: Partial<LineaListaRegalos> = {}): LineaListaRe
     orden: Number(id),
     sinControlStock: false,
     stock: 5,
+    entregada: false,
+    estadoPago: "PENDIENTE",
+    estadoEnvio: "PENDIENTE",
+    imagen: null,
+    dedicatoria: null,
     ...extra,
 });
 
@@ -81,7 +91,7 @@ describe("[lista_regalos-maestro-01] Listado del website activo", () => {
     });
 
     test("lista_regalos_maestro_01_el_filtro_lleva_siempre_el_website", () => {
-        expect(filtroListas({ websiteId: 2, texto: "" })).toEqual({ and: [["website_id", "=", "2"]] });
+        expect(filtroListas({ ...filtrosListaRegalosIniciales, websiteId: 2 })).toEqual({ and: [["website_id", "=", "2"]] });
     });
 
     test("lista_regalos_maestro_01_sin_website_no_hay_clausulas", () => {
@@ -105,7 +115,7 @@ describe("[lista_regalos-maestro-01] Listado del website activo", () => {
 
 describe("[lista_regalos-maestro-02] Filtro de texto por lista o cliente", () => {
     test("lista_regalos_maestro_02_texto_por_nombre_o_nombre_de_cliente", () => {
-        expect(filtroListas({ websiteId: 1, texto: " ana " })).toEqual({
+        expect(filtroListas({ ...filtrosListaRegalosIniciales, websiteId: 1, texto: " ana " })).toEqual({
             and: [
                 ["website_id", "=", "1"],
                 { or: [["nombre", "~", "ana"], ["cliente_nombre", "~", "ana"]] },
@@ -114,12 +124,12 @@ describe("[lista_regalos-maestro-02] Filtro de texto por lista o cliente", () =>
     });
 
     test("lista_regalos_maestro_02_texto_de_solo_espacios_se_ignora", () => {
-        expect(filtroListas({ websiteId: 1, texto: "  " })).toEqual({ and: [["website_id", "=", "1"]] });
+        expect(filtroListas({ ...filtrosListaRegalosIniciales, websiteId: 1, texto: "  " })).toEqual({ and: [["website_id", "=", "1"]] });
     });
 
     test("lista_regalos_maestro_02_criteria_conserva_orden_y_paginacion", () => {
         const r = criteriaListas(
-            { websiteId: 1, texto: "" },
+            { ...filtrosListaRegalosIniciales, websiteId: 1 },
             { filtro: [], orden: ["creada", "DESC"], paginacion: { limite: 20, pagina: 2 } },
         );
         expect(r.orden).toEqual(["creada", "DESC"]);
@@ -127,8 +137,31 @@ describe("[lista_regalos-maestro-02] Filtro de texto por lista o cliente", () =>
     });
 });
 
+describe("[lista_regalos-maestro-03] Filtro por fecha", () => {
+    test("lista_regalos_maestro_03_desde_y_hasta_incluyen_el_dia_entero", () => {
+        expect(filtroListas({ ...filtrosListaRegalosIniciales, websiteId: 1, desde: "2026-03-01", hasta: "2026-03-31" })).toEqual({
+            and: [["website_id", "=", "1"], ["creada", ">=", "2026-03-01"], ["creada", "<", "2026-04-01"]],
+        });
+    });
+
+    test("lista_regalos_maestro_03_cada_limite_es_opcional", () => {
+        expect(filtroListas({ ...filtrosListaRegalosIniciales, websiteId: 1, hasta: "2026-12-31" })).toEqual({
+            and: [["website_id", "=", "1"], ["creada", "<", "2027-01-01"]],
+        });
+        expect(filtroListas({ ...filtrosListaRegalosIniciales, websiteId: 1, desde: "2026-03-01" })).toEqual({
+            and: [["website_id", "=", "1"], ["creada", ">=", "2026-03-01"]],
+        });
+    });
+});
+
 describe("[lista_regalos-crear-01] Alta de lista", () => {
     const valida = modeloEsValido(metaNuevaListaRegalos);
+
+    test("lista_regalos_crear_01_la_fecha_es_hoy_y_obligatoria", () => {
+        const hoy = fechaActual().slice(0, 10);
+        expect(nuevaListaRegalosVacia().fecha.toISOString().slice(0, 10)).toBe(hoy);
+        expect(metaNuevaListaRegalos.campos?.fecha).toMatchObject({ requerido: true, tipo: "fecha" });
+    });
 
     test("lista_regalos_crear_01_vacia_no_es_valida", () => {
         expect(valida(nuevaListaRegalosVacia())).toBe(false);
@@ -166,17 +199,81 @@ describe("[lista_regalos-datos-01] Pestaña Datos", () => {
 });
 
 describe("[lista_regalos-productos-01] Tabla de productos", () => {
-    test("lista_regalos_productos_01_sin_pendiente_es_vendido", () => {
-        expect(lineaVendida(linea("1", { pendiente: 0 }))).toBe(true);
-        expect(lineaVendida(linea("1", { pendiente: 1 }))).toBe(false);
+    test("lista_regalos_productos_01_estado_de_pago", () => {
+        const casos = [
+            ["PENDIENTE", "Pendiente", "gris"],
+            ["RESERVADO", "Reservado", "advertencia"],
+            ["PAGADO_TARJETA", "Pagado tarjeta", "exito"],
+            ["PAGADO_TPV", "Pagado TPV", "exito"],
+        ] as const;
+        for (const [estadoPago, texto, variante] of casos) {
+            expect(presentacionEstadoPago(linea("1", { estadoPago }))).toEqual({ texto, variante });
+        }
+    });
+
+    test("lista_regalos_productos_01_estado_de_envio", () => {
+        const casos = [
+            ["PENDIENTE", "Pendiente", "gris"],
+            ["POR_ENTREGAR_COMPRADOR", "Por entregar a comprador", "primario"],
+            ["POR_ENTREGAR_PADRES", "Por entregar a padres", "primario"],
+            ["ENTREGADO", "Entregado", "exito"],
+        ] as const;
+        for (const [estadoEnvio, texto, variante] of casos) {
+            expect(presentacionEstadoEnvio(linea("1", { estadoEnvio }))).toEqual({ texto, variante });
+        }
+    });
+});
+
+describe("[lista_regalos-productos-06] Totales de la lista", () => {
+    test("lista_regalos_productos_06_total_vendido_y_reservado", () => {
+        const lineas = [
+            linea("1", { precio: 10.1 }),
+            linea("2", { precio: 20.2, estadoPago: "RESERVADO" }),
+            linea("3", { precio: 30.3, estadoPago: "PAGADO_TARJETA" }),
+            linea("4", { precio: 40, estadoPago: "PAGADO_TPV" }),
+        ];
+        expect(totalesLista(lineas)).toEqual({ total: 100.6, vendido: 90.5, reservado: 20.2 });
+    });
+
+    test("lista_regalos_productos_06_lista_vacia_a_cero", () => {
+        expect(totalesLista([])).toEqual({ total: 0, vendido: 0, reservado: 0 });
+    });
+});
+
+describe("[lista_regalos-productos-07] Entregado y deshacer entrega", () => {
+    test("lista_regalos_productos_07_solo_por_entregar_se_puede_entregar", () => {
+        expect(lineaEntregable(linea("1", { estadoEnvio: "POR_ENTREGAR_COMPRADOR" }))).toBe(true);
+        expect(lineaEntregable(linea("1", { estadoEnvio: "POR_ENTREGAR_PADRES" }))).toBe(true);
+        expect(lineaEntregable(linea("1", { estadoEnvio: "PENDIENTE" }))).toBe(false);
+        expect(lineaEntregable(linea("1", { estadoEnvio: "ENTREGADO" }))).toBe(false);
+    });
+
+    test("lista_regalos_productos_07_solo_entregado_se_puede_deshacer", () => {
+        expect(lineaEntregada(linea("1", { estadoEnvio: "ENTREGADO", entregada: true }))).toBe(true);
+        expect(lineaEntregada(linea("1", { estadoEnvio: "POR_ENTREGAR_PADRES" }))).toBe(false);
+    });
+});
+
+describe("[lista_regalos-productos-08] Liberar una reserva", () => {
+    test("lista_regalos_productos_08_solo_reservada_y_sin_entregar", () => {
+        expect(lineaLiberable(linea("1", { estadoPago: "RESERVADO" }))).toBe(true);
+        expect(lineaLiberable(linea("1", { estadoPago: "RESERVADO", entregada: true }))).toBe(false);
+        expect(lineaLiberable(linea("1", { estadoPago: "PAGADO_TPV" }))).toBe(false);
+        expect(lineaLiberable(linea("1", { estadoPago: "PENDIENTE" }))).toBe(false);
+    });
+
+    test("lista_regalos_productos_08_texto_de_confirmacion", () => {
+        expect(TEXTO_LIBERAR_LINEA).toBe(
+            "El producto vuelve a quedar pendiente en la lista. La venta de TPV no se anula: anúlala en el TPV si hace falta",
+        );
     });
 });
 
 describe("[lista_regalos-productos-02] Añadir producto", () => {
     const valida = modeloEsValido(metaNuevaLineaListaRegalos);
 
-    test("lista_regalos_productos_02_cantidad_por_defecto_1_y_precio_vacio", () => {
-        expect(nuevaLineaListaRegalosVacia()).toMatchObject({ cantidad: 1, precio: null });
+    test("lista_regalos_productos_02_sin_cantidad_y_precio_vacio", () => {
+        expect(nuevaLineaListaRegalosVacia()).toEqual({ referencia: "", descripcion: "", precio: null });
     });
 
     test("lista_regalos_productos_02_texto_de_ayuda_del_precio", () => {
@@ -187,10 +284,6 @@ describe("[lista_regalos-productos-02] Añadir producto", () => {
     test("lista_regalos_productos_02_hace_falta_articulo", () => {
         expect(valida(nuevaLineaListaRegalosVacia())).toBe(false);
         expect(valida({ ...nuevaLineaListaRegalosVacia(), referencia: "R1" })).toBe(true);
-    });
-
-    test("lista_regalos_productos_02_la_cantidad_debe_ser_mayor_que_cero", () => {
-        expect(valida({ ...nuevaLineaListaRegalosVacia(), referencia: "R1", cantidad: 0 })).toBe(false);
     });
 
     test("lista_regalos_productos_02_un_400_da_su_mensaje", () => {
@@ -204,19 +297,17 @@ describe("[lista_regalos-productos-02] Añadir producto", () => {
 describe("[lista_regalos-productos-03] Cambiar una línea", () => {
     const valida = modeloEsValido(metaEdicionLineaListaRegalos);
 
-    test("lista_regalos_productos_03_la_edicion_parte_de_la_linea", () => {
-        expect(edicionDeLinea(linea("1", { cantidadVendida: 1 }))).toEqual({ precio: 10, cantidad: 2, cantidadVendida: 1 });
+    test("lista_regalos_productos_03_la_edicion_solo_lleva_el_precio", () => {
+        expect(edicionDeLinea(linea("1", { cantidadVendida: 1 }))).toEqual({ precio: 10 });
     });
 
-    test("lista_regalos_productos_03_los_cambios_llevan_precio_cantidad_y_vendidas", () => {
-        expect(cambiosDeLinea({ precio: 12, cantidad: 3, cantidadVendida: 1 })).toEqual({
-            precio: 12, cantidad: 3, cantidadVendida: 1,
-        });
+    test("lista_regalos_productos_03_los_cambios_solo_llevan_el_precio", () => {
+        expect(cambiosDeLinea({ precio: 12 })).toEqual({ precio: 12 });
     });
 
-    test("lista_regalos_productos_03_vendidas_negativas_no_son_validas", () => {
-        expect(valida({ precio: 10, cantidad: 2, cantidadVendida: -1 })).toBe(false);
-        expect(valida({ precio: 10, cantidad: 2, cantidadVendida: 0 })).toBe(true);
+    test("lista_regalos_productos_03_precio_negativo_no_es_valido", () => {
+        expect(valida({ precio: -1 })).toBe(false);
+        expect(valida({ precio: 0 })).toBe(true);
     });
 });
 
@@ -311,19 +402,5 @@ describe("[lista_regalos-direccion-02] Dirección en Datos", () => {
         const edicion = { ...edicionDeLista(publicada), direccion: "bautizo" };
         expect(cambiosDeEdicion(publicada, edicion)).toEqual({});
         expect(TEXTO_DIRECCION_PUBLICADA).toBe("La dirección no se puede cambiar una vez publicada");
-    });
-});
-
-describe("[lista_regalos-productos-01] Stock de las líneas", () => {
-    test("lista_regalos_productos_01_texto_del_stock", () => {
-        expect(textoStockLinea(linea("1", { stock: 3 }))).toBe("3");
-        expect(textoStockLinea(linea("1", { sinControlStock: true, stock: 0 }))).toBe("Sin control");
-    });
-
-    test("lista_regalos_productos_01_falta_stock_si_no_cubre_lo_pendiente", () => {
-        expect(faltaStockLinea(linea("1", { pendiente: 2, stock: 1 }))).toBe(true);
-        expect(faltaStockLinea(linea("1", { pendiente: 2, stock: 2 }))).toBe(false);
-        expect(faltaStockLinea(linea("1", { pendiente: 2, stock: 0, sinControlStock: true }))).toBe(false);
-        expect(faltaStockLinea(linea("1", { pendiente: 0, cantidadVendida: 2, stock: 0 }))).toBe(false);
     });
 });

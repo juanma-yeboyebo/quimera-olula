@@ -73,6 +73,7 @@ export interface CarritoTienda {
     total: number;
     unidades: number;
     datosCheckout: Record<string, unknown> | null;
+    dedicatoria?: string | null;
     lineas: LineaCarritoTienda[];
     documento: Record<string, unknown> | null;
     formaPago?: FormaCarritoTienda<TipoFormaPago> | null;

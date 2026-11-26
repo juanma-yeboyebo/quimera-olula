@@ -2,11 +2,20 @@ import { QBoton } from "@olula/componentes/atomos/qboton.tsx";
 import { QEtiqueta } from "@olula/componentes/atomos/qetiqueta.tsx";
 import { MetaTabla } from "@olula/componentes/atomos/qtabla.tsx";
 import { ListadoSemiControlado } from "@olula/componentes/maestro/ListadoSemiControlado.tsx";
+import { QModal } from "@olula/componentes/moleculas/qmodal.tsx";
 import { EmitirEvento } from "@olula/lib/diseño.ts";
 import { criteriaDefecto } from "@olula/lib/dominio.js";
-import { MouseEvent } from "react";
+import { MouseEvent, useState } from "react";
 import { LineaListaRegalos } from "../../diseño.ts";
-import { faltaStockLinea, lineaVendida, motivoNoBorrableLinea, textoStockLinea } from "../../dominio.ts";
+import {
+    lineaEntregable,
+    lineaEntregada,
+    lineaLiberable,
+    motivoNoBorrableLinea,
+    PresentacionEstadoLinea,
+    presentacionEstadoEnvio,
+    presentacionEstadoPago,
+} from "../../dominio.ts";
 
 export const LineasLista = ({
     lineas,
@@ -17,13 +26,16 @@ export const LineasLista = ({
     seleccionada?: string;
     publicar: EmitirEvento;
 }) => {
+    const [dedicatoria, setDedicatoria] = useState<string | null>(null);
+
     const setSeleccionada = (linea: LineaListaRegalos) => {
         publicar("linea_seleccionada", linea);
     };
 
     return (
+        <>
         <ListadoSemiControlado
-            metaTabla={getMetaTablaLineas(lineas, publicar)}
+            metaTabla={getMetaTablaLineas(lineas, publicar, setDedicatoria)}
             entidades={lineas}
             totalEntidades={lineas.length}
             cargando={false}
@@ -34,6 +46,15 @@ export const LineasLista = ({
             modo="tabla"
             modosDisponibles={["tabla"]}
         />
+        {dedicatoria !== null && (
+            <QModal nombre="dedicatoriaLineaListaRegalos" titulo="Dedicatoria" abierto={true} onCerrar={() => setDedicatoria(null)}>
+                <p className="LineasListaRegalos-dedicatoria">{dedicatoria}</p>
+                <div className="botones">
+                    <QBoton onClick={() => setDedicatoria(null)}>Cerrar</QBoton>
+                </div>
+            </QModal>
+        )}
+        </>
     );
 };
 
@@ -56,6 +77,33 @@ const AccionesLinea = ({
     const motivo = motivoNoBorrableLinea(linea);
     return (
         <span className="LineasListaRegalos-acciones">
+            {lineaEntregable(linea) && (
+                <QBoton
+                    variante="texto"
+                    tamaño="pequeño"
+                    onClick={sinPropagar(() => publicar("entrega_de_linea_solicitada", linea.id))}
+                >
+                    Entregado
+                </QBoton>
+            )}
+            {lineaEntregada(linea) && (
+                <QBoton
+                    variante="texto"
+                    tamaño="pequeño"
+                    onClick={sinPropagar(() => publicar("deshacer_entrega_de_linea_solicitado", linea.id))}
+                >
+                    Deshacer entrega
+                </QBoton>
+            )}
+            {lineaLiberable(linea) && (
+                <QBoton
+                    variante="texto"
+                    tamaño="pequeño"
+                    onClick={sinPropagar(() => publicar("liberacion_de_linea_solicitada", linea))}
+                >
+                    Liberar
+                </QBoton>
+            )}
             <QBoton
                 variante="texto"
                 tamaño="pequeño"
@@ -86,29 +134,51 @@ const AccionesLinea = ({
     );
 };
 
+const Estado = ({ estado }: { estado: PresentacionEstadoLinea }) => (
+    <QEtiqueta variante={estado.variante}>{estado.texto}</QEtiqueta>
+);
+
+const Foto = ({ linea }: { linea: LineaListaRegalos }) =>
+    linea.imagen ? (
+        <img className="LineasListaRegalos-miniatura" src={linea.imagen.url} alt={linea.imagen.alt} loading="lazy" />
+    ) : (
+        <QEtiqueta variante="advertencia">Sin foto</QEtiqueta>
+    );
+
 const getMetaTablaLineas = (
     lineas: LineaListaRegalos[],
     publicar: EmitirEvento,
+    verDedicatoria: (texto: string) => void,
 ): MetaTabla<LineaListaRegalos> => [
+    { id: "imagen", cabecera: "Foto", render: (l: LineaListaRegalos) => <Foto linea={l} /> },
     { id: "referencia", cabecera: "Referencia", estilo: "secundario" },
     { id: "descripcion", cabecera: "Descripción" },
     { id: "precio", cabecera: "Precio con IVA", tipo: "moneda", divisa: "EUR" },
-    { id: "cantidad", cabecera: "Cantidad", tipo: "numero" },
-    { id: "cantidadVendida", cabecera: "Vendidas", tipo: "numero" },
     {
-        id: "pendiente",
-        cabecera: "Pendiente",
-        render: (l: LineaListaRegalos) =>
-            lineaVendida(l) ? <QEtiqueta variante="exito">Vendido</QEtiqueta> : String(l.pendiente),
+        id: "estadoPago",
+        cabecera: "Pago",
+        render: (l: LineaListaRegalos) => <Estado estado={presentacionEstadoPago(l)} />,
     },
     {
-        id: "stock",
-        cabecera: "Stock",
+        id: "estadoEnvio",
+        cabecera: "Envío",
+        render: (l: LineaListaRegalos) => <Estado estado={presentacionEstadoEnvio(l)} />,
+    },
+    {
+        id: "dedicatoria",
+        cabecera: "Dedicatoria",
         render: (l: LineaListaRegalos) =>
-            faltaStockLinea(l) ? (
-                <QEtiqueta variante="advertencia">{textoStockLinea(l)}</QEtiqueta>
+            l.dedicatoria ? (
+                <QBoton
+                    variante="texto"
+                    tamaño="pequeño"
+                    props={{ title: l.dedicatoria }}
+                    onClick={sinPropagar(() => verDedicatoria(l.dedicatoria ?? ""))}
+                >
+                    Dedicatoria
+                </QBoton>
             ) : (
-                textoStockLinea(l)
+                ""
             ),
     },
     {

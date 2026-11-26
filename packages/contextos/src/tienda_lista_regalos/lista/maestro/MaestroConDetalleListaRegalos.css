@@ -1,4 +1,7 @@
 .ListaRegalos-filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espaciado-s);
     margin-bottom: 8px;
 }
 

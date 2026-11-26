@@ -7,7 +7,8 @@ export type EstadoDetalleListaRegalos =
     | "BORRANDO"
     | "CREANDO_LINEA"
     | "CAMBIANDO_LINEA"
-    | "BORRANDO_LINEA";
+    | "BORRANDO_LINEA"
+    | "LIBERANDO_LINEA";
 
 export type ContextoDetalleListaRegalos = {
     estado: EstadoDetalleListaRegalos;

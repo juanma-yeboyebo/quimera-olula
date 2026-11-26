@@ -4,9 +4,12 @@ import {
     CambiosListaRegalos,
     DeleteLineaListaRegalos,
     DeleteListaRegalos,
+    EstadoEnvioLineaLista,
+    EstadoPagoLineaLista,
     GetListaRegalos,
     GetListasRegalos,
     ItemListaRegalos,
+    LiberarLineaListaRegalos,
     LineaListaRegalos,
     ListaRegalos,
     NuevaLineaListaRegalos,
@@ -48,6 +51,11 @@ export interface LineaListaApi {
     orden?: number;
     sin_control_stock?: boolean;
     stock?: number;
+    entregada?: boolean;
+    estado_pago?: EstadoPagoLineaLista;
+    estado_envio?: EstadoEnvioLineaLista;
+    imagen?: { url: string; alt: string | null } | null;
+    dedicatoria?: string | null;
 }
 
 export interface ListaApi {
@@ -91,6 +99,11 @@ export const lineaListaDesdeApi = (l: LineaListaApi, indice: number): LineaLista
     orden: l.orden ?? indice + 1,
     sinControlStock: l.sin_control_stock ?? false,
     stock: l.stock ?? 0,
+    entregada: l.entregada ?? false,
+    estadoPago: l.estado_pago ?? "PENDIENTE",
+    estadoEnvio: l.estado_envio ?? "PENDIENTE",
+    imagen: l.imagen ? { url: l.imagen.url, alt: l.imagen.alt ?? "" } : null,
+    dedicatoria: l.dedicatoria || null,
 });
 
 export const listaDesdeApi = (l: ListaApi): ListaRegalos => ({
@@ -114,6 +127,7 @@ export const nuevaListaAApi = (websiteId: number, n: NuevaListaRegalos) => ({
     nombre: n.nombre.trim(),
     descripcion: n.descripcion ? n.descripcion : null,
     slug: n.direccion || null,
+    fecha: n.fecha.toISOString().slice(0, 10),
 });
 
 export const cambiosListaAApi = (c: CambiosListaRegalos) => {
@@ -128,16 +142,14 @@ export const cambiosListaAApi = (c: CambiosListaRegalos) => {
 
 export const nuevaLineaAApi = (n: NuevaLineaListaRegalos) => ({
     referencia: n.referencia,
-    cantidad: n.cantidad,
     ...(n.precio === null || n.precio === undefined ? {} : { precio: n.precio }),
 });
 
 export const cambiosLineaAApi = (c: CambiosLineaListaRegalos) => {
-    const cambios: { precio?: number; cantidad?: number; cantidad_vendida?: number; orden?: number } = {};
+    const cambios: { precio?: number; orden?: number; entregada?: boolean } = {};
     if (c.precio !== undefined) cambios.precio = c.precio;
-    if (c.cantidad !== undefined) cambios.cantidad = c.cantidad;
-    if (c.cantidadVendida !== undefined) cambios.cantidad_vendida = c.cantidadVendida;
     if (c.orden !== undefined) cambios.orden = c.orden;
+    if (c.entregada !== undefined) cambios.entregada = c.entregada;
     return cambios;
 };
 
@@ -196,4 +208,8 @@ export const patchLineaListaRegalos: PatchLineaListaRegalos = async (id, lineaId
 
 export const deleteLineaListaRegalos: DeleteLineaListaRegalos = async (id, lineaId) => {
     await RestAPI.delete(`${baseUrl}/${id}/linea/${lineaId}`, "Error al borrar el producto");
+};
+
+export const liberarLineaListaRegalos: LiberarLineaListaRegalos = async (id, lineaId) => {
+    await RestAPI.post(`${baseUrl}/${id}/linea/${lineaId}/liberar`, {}, "Error al liberar la reserva");
 };

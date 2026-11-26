@@ -3,11 +3,14 @@ import { publicar } from "@olula/lib/dominio.ts";
 import {
     bajarLinea,
     cargarContexto,
+    deshacerEntregaLinea,
+    entregarLinea,
     Lineas,
     onLineaBorrada,
     onLineaCambiada,
     ocultarLista,
     onLineaCreada,
+    onLineaLiberada,
     publicarLista,
     refrescarLista,
     subirLinea,
@@ -32,6 +35,9 @@ export const getMaquina: () => Maquina<EstadoDetalleListaRegalos, ContextoDetall
         baja_linea_solicitada: [Lineas.activar, "BORRANDO_LINEA"],
         subir_linea_solicitado: [subirLinea],
         bajar_linea_solicitado: [bajarLinea],
+        entrega_de_linea_solicitada: [entregarLinea],
+        deshacer_entrega_de_linea_solicitado: [deshacerEntregaLinea],
+        liberacion_de_linea_solicitada: [Lineas.activar, "LIBERANDO_LINEA"],
     },
 
     BORRANDO: {
@@ -52,5 +58,10 @@ export const getMaquina: () => Maquina<EstadoDetalleListaRegalos, ContextoDetall
     BORRANDO_LINEA: {
         linea_borrada: [onLineaBorrada, "ABIERTO"],
         borrado_de_linea_cancelado: "ABIERTO",
+    },
+
+    LIBERANDO_LINEA: {
+        linea_liberada: [onLineaLiberada, "ABIERTO"],
+        liberacion_de_linea_cancelada: "ABIERTO",
     },
 });

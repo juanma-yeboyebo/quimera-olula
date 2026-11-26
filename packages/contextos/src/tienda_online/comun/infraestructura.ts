@@ -50,6 +50,7 @@ export interface CarritoApi {
     total: number;
     unidades: number;
     datos_checkout: Record<string, unknown> | null;
+    dedicatoria?: string | null;
     lineas: LineaCarritoApi[];
     documento: Record<string, unknown> | null;
     forma_pago?: FormaCarritoTienda<TipoFormaPago> | null;
@@ -102,6 +103,7 @@ export const carritoDesdeApi = (c: CarritoApi): CarritoTienda => ({
     total: c.total,
     unidades: c.unidades,
     datosCheckout: c.datos_checkout,
+    dedicatoria: c.dedicatoria ?? null,
     lineas: c.lineas.map(lineaDesdeApi),
     documento: c.documento,
     formaPago: c.forma_pago ?? null,

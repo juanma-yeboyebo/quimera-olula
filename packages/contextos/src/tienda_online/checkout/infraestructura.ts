@@ -28,6 +28,7 @@ export type DatosCheckoutApi = {
     direccion_envio: DireccionCheckoutApi | null;
     id_forma_pago: number | null;
     id_forma_envio: number | null;
+    dedicatoria?: string | null;
 };
 
 const direccionAApi = (d: DireccionCheckout, telefono: string | null): DireccionCheckoutApi => ({
@@ -51,6 +52,7 @@ export const datosCheckoutAApi = (d: DatosCheckout): DatosCheckoutApi => ({
     direccion_envio: d.envioDistinto ? direccionAApi(d.direccionEnvio, d.telefono) : null,
     id_forma_pago: d.idFormaPago,
     id_forma_envio: d.idFormaEnvio,
+    ...(d.dedicatoria !== undefined ? { dedicatoria: aNulo(d.dedicatoria) } : {}),
 });
 
 const cabeceras = () => cabecerasTienda(codigoStoreViewActivo() ?? "");

@@ -20,4 +20,5 @@ export class FactoryTiendaOnline {
     static envio_gratis_desde: number | null = null;
     static ruta_seguir_comprando = "/catalogo";
     static texto_seguir_comprando = "Ir al catálogo";
+    static checkout_dedicatoria = false;
 }

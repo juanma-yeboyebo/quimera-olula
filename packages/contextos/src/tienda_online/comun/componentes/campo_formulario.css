@@ -10,7 +10,8 @@
             font-weight: 500;
         }
 
-        input {
+        input,
+        textarea {
             min-height: 44px;
             padding: 0 var(--tienda-espacio-3);
             border: 1px solid var(--tienda-color-borde-fuerte);
@@ -26,6 +27,11 @@
                 border-color: var(--tienda-color-accion);
                 box-shadow: 0 0 0 3px color-mix(in srgb, var(--tienda-color-accion) 20%, transparent);
             }
+        }
+
+        textarea {
+            padding: var(--tienda-espacio-2) var(--tienda-espacio-3);
+            resize: vertical;
         }
 
         input[aria-invalid="true"] {

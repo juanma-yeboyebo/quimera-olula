@@ -89,7 +89,23 @@ describe("[lista_regalos-detalle-01] Lectura y borrado de la lista", () => {
         expect(l.lineas[0]).toEqual({
             id: "11", referencia: "R1", descripcion: "", precio: 12.5,
             cantidad: 2, cantidadVendida: 2, pendiente: 0, orden: 1,
-            sinControlStock: false, stock: 0,
+            sinControlStock: false, stock: 0, entregada: false,
+            estadoPago: "PENDIENTE", estadoEnvio: "PENDIENTE", imagen: null, dedicatoria: null,
+        });
+    });
+
+    test("lista_regalos_productos_01_convierte_estados_e_imagen_de_la_linea", () => {
+        const l = infra.listaDesdeApi({
+            ...listaApi,
+            lineas: [{
+                ...listaApi.lineas[0], entregada: true, estado_pago: "PAGADO_TPV" as const,
+                estado_envio: "ENTREGADO" as const, imagen: { url: "https://cdn/cuna.jpg", alt: null },
+                dedicatoria: "Para el bebé",
+            }],
+        });
+        expect(l.lineas[0]).toMatchObject({
+            entregada: true, estadoPago: "PAGADO_TPV", estadoEnvio: "ENTREGADO",
+            imagen: { url: "https://cdn/cuna.jpg", alt: "" }, dedicatoria: "Para el bebé",
         });
     });
 
@@ -124,15 +140,15 @@ describe("[lista_regalos-crear-01] Alta de lista", () => {
 
     test("lista_regalos_crear_01_el_cuerpo_lleva_el_website_activo", async () => {
         post.mockResolvedValue({ id: 9 });
-        const id = await infra.postListaRegalos(2, { clienteId: "C1", clienteNombre: "Ana", nombre: " Boda ", direccion: "boda", descripcion: "" });
+        const id = await infra.postListaRegalos(2, { clienteId: "C1", clienteNombre: "Ana", nombre: " Boda ", direccion: "boda", fecha: new Date("2026-03-14"), descripcion: "" });
         expect(id).toBe("9");
         expect(post.mock.calls[0][0]).toBe("/tienda_lista_regalos/lista");
-        expect(post.mock.calls[0][1]).toEqual({ id_website: 2, cliente_id: "C1", nombre: "Boda", descripcion: null, slug: "boda" });
+        expect(post.mock.calls[0][1]).toEqual({ id_website: 2, cliente_id: "C1", nombre: "Boda", descripcion: null, slug: "boda", fecha: "2026-03-14" });
     });
 
     test("lista_regalos_crear_01_sin_cliente_va_nulo", async () => {
         post.mockResolvedValue({ id: 9 });
-        await infra.postListaRegalos(2, { clienteId: "", clienteNombre: "", nombre: "Boda", direccion: "boda", descripcion: "" });
+        await infra.postListaRegalos(2, { clienteId: "", clienteNombre: "", nombre: "Boda", direccion: "boda", fecha: new Date("2026-03-14"), descripcion: "" });
         expect(post.mock.calls[0][1]).toMatchObject({ cliente_id: null });
     });
 });
@@ -160,22 +176,22 @@ describe("[lista_regalos-productos-02] Añadir producto", () => {
 
     test("lista_regalos_productos_02_post_a_la_ruta_de_lineas", async () => {
         post.mockResolvedValue({ id: 15 });
-        const id = await infra.postLineaListaRegalos("7", { referencia: "R1", descripcion: "x", cantidad: 1, precio: 20 });
+        const id = await infra.postLineaListaRegalos("7", { referencia: "R1", descripcion: "x", precio: 20 });
         expect(id).toBe("15");
         expect(post.mock.calls[0][0]).toBe("/tienda_lista_regalos/lista/7/linea");
-        expect(post.mock.calls[0][1]).toEqual({ referencia: "R1", cantidad: 1, precio: 20 });
+        expect(post.mock.calls[0][1]).toEqual({ referencia: "R1", precio: 20 });
     });
 
     test("lista_regalos_productos_02_sin_precio_no_se_envia", () => {
-        expect(infra.nuevaLineaAApi({ referencia: "R1", descripcion: "", cantidad: 2, precio: null })).toEqual({
-            referencia: "R1", cantidad: 2,
+        expect(infra.nuevaLineaAApi({ referencia: "R1", descripcion: "", precio: null })).toEqual({
+            referencia: "R1",
         });
     });
 
     test("lista_regalos_productos_02_un_400_de_articulo_repetido_se_propaga", async () => {
         post.mockRejectedValue({ estado: 400, descripcion: "El artículo R1 ya está en la lista" });
         await expect(
-            infra.postLineaListaRegalos("7", { referencia: "R1", descripcion: "", cantidad: 1, precio: null }),
+            infra.postLineaListaRegalos("7", { referencia: "R1", descripcion: "", precio: null }),
         ).rejects.toMatchObject({ estado: 400 });
     });
 });
@@ -186,9 +202,9 @@ describe("[lista_regalos-productos-03] Cambiar una línea", () => {
     });
 
     test("lista_regalos_productos_03_patch_a_la_ruta_de_la_linea", async () => {
-        await infra.patchLineaListaRegalos("7", "11", { precio: 10, cantidad: 3, cantidadVendida: 1 });
+        await infra.patchLineaListaRegalos("7", "11", { precio: 10, orden: 2 });
         expect(patch.mock.calls[0][0]).toBe("/tienda_lista_regalos/lista/7/linea/11");
-        expect(patch.mock.calls[0][1]).toEqual({ precio: 10, cantidad: 3, cantidad_vendida: 1 });
+        expect(patch.mock.calls[0][1]).toEqual({ precio: 10, orden: 2 });
     });
 });
 
@@ -206,6 +222,29 @@ describe("[lista_regalos-productos-04] Borrar una línea", () => {
 describe("[lista_regalos-productos-05] Cambiar el orden", () => {
     test("lista_regalos_productos_05_el_cuerpo_solo_lleva_el_orden", () => {
         expect(infra.cambiosLineaAApi({ orden: 3 })).toEqual({ orden: 3 });
+    });
+});
+
+describe("[lista_regalos-productos-07] Marcar como entregado", () => {
+    test("lista_regalos_productos_07_el_cuerpo_lleva_entregada", () => {
+        expect(infra.cambiosLineaAApi({ entregada: true })).toEqual({ entregada: true });
+        expect(infra.cambiosLineaAApi({ entregada: false })).toEqual({ entregada: false });
+    });
+});
+
+describe("[lista_regalos-productos-08] Liberar una reserva", () => {
+    beforeEach(() => {
+        post.mockReset();
+    });
+
+    test("lista_regalos_productos_08_post_a_la_ruta_de_liberar", async () => {
+        await infra.liberarLineaListaRegalos("7", "11");
+        expect(post.mock.calls[0][0]).toBe("/tienda_lista_regalos/lista/7/linea/11/liberar");
+    });
+
+    test("lista_regalos_productos_08_un_400_se_propaga", async () => {
+        post.mockRejectedValueOnce({ estado: 400, descripcion: "no reservada" });
+        await expect(infra.liberarLineaListaRegalos("7", "11")).rejects.toMatchObject({ estado: 400 });
     });
 });
 

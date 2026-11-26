@@ -1,4 +1,5 @@
 import { Criteria, Filtro } from "@olula/lib/diseño.ts";
+import { fechaActual } from "@olula/lib/fecha.ts";
 import { criteriaDefecto, MetaModelo, stringNoVacio } from "@olula/lib/dominio.ts";
 import { errorSlug, slugDesdeTexto } from "#/tienda_admin/comun/dominio.ts";
 import {
@@ -7,12 +8,15 @@ import {
     CambiosListaRegalos,
     EdicionLineaListaRegalos,
     EdicionListaRegalos,
+    EstadoEnvioLineaLista,
+    EstadoPagoLineaLista,
     FiltrosListaRegalos,
     ItemListaRegalos,
     LineaListaRegalos,
     ListaRegalos,
     NuevaLineaListaRegalos,
     NuevaListaRegalos,
+    TotalesListaRegalos,
 } from "./diseño.ts";
 
 export const TEXTO_AYUDA_PRECIO =
@@ -22,6 +26,8 @@ export const TEXTO_CODIGO_DIRECCION = "Al final se añade un código para que na
 export const TEXTO_DIRECCION_PUBLICADA = "La dirección no se puede cambiar una vez publicada";
 const MARCA_CODIGO = "······";
 export const MOTIVO_LINEA_CON_VENTAS = "Tiene unidades vendidas";
+export const TEXTO_LIBERAR_LINEA =
+    "El producto vuelve a quedar pendiente en la lista. La venta de TPV no se anula: anúlala en el TPV si hace falta";
 export const AVISO_NO_PUBLICADA = "La lista no está publicada: el enlace no funcionará hasta que la publiques";
 
 export const ordenListasDefecto = ["creada", "DESC"];
@@ -46,6 +52,14 @@ export const listaRegalosVacia = (): ListaRegalos => ({
 export const filtrosListaRegalosIniciales: FiltrosListaRegalos = {
     websiteId: null,
     texto: "",
+    desde: "",
+    hasta: "",
+};
+
+const diaSiguiente = (fecha: string): string => {
+    const dia = new Date(`${fecha}T00:00:00Z`);
+    dia.setUTCDate(dia.getUTCDate() + 1);
+    return dia.toISOString().slice(0, 10);
 };
 
 export const filtroListas = (f: FiltrosListaRegalos): Filtro => {
@@ -55,6 +69,8 @@ export const filtroListas = (f: FiltrosListaRegalos): Filtro => {
     if (texto !== "") {
         filtro.push({ or: [["nombre", "~", texto], ["cliente_nombre", "~", texto]] });
     }
+    if (f.desde) filtro.push(["creada", ">=", f.desde]);
+    if (f.hasta) filtro.push(["creada", "<", diaSiguiente(f.hasta)]);
     return { and: filtro };
 };
 
@@ -92,11 +108,14 @@ export const urlConDireccion = (l: Pick<ListaRegalos, "url" | "codigo">, direcci
     return l.url ? l.url.replace(/[^/]+$/, final) : `…/lista/${final}`;
 };
 
+export const fechaDeHoy = (): Date => new Date(Date.parse(fechaActual().slice(0, 10)));
+
 export const nuevaListaRegalosVacia = (): NuevaListaRegalos => ({
     clienteId: "",
     clienteNombre: "",
     nombre: "",
     direccion: "",
+    fecha: fechaDeHoy(),
     descripcion: "",
 });
 
@@ -107,6 +126,7 @@ export const metaNuevaListaRegalos: MetaModelo<NuevaListaRegalos> = {
         clienteId: { requerido: false },
         nombre: { requerido: true, validacion: (m) => stringNoVacio(m.nombre.trim()) },
         direccion: { requerido: true, validacion: (m) => validarDireccion(m.direccion) },
+        fecha: { requerido: true, tipo: "fecha" },
         descripcion: { requerido: false },
     },
     onChange: (m, campo, valorAnterior) =>
@@ -146,44 +166,70 @@ export const hayCambios = (cambios: CambiosListaRegalos): boolean => Object.keys
 export const nuevaLineaListaRegalosVacia = (): NuevaLineaListaRegalos => ({
     referencia: "",
     descripcion: "",
-    cantidad: 1,
     precio: null,
 });
 
 export const metaNuevaLineaListaRegalos: MetaModelo<NuevaLineaListaRegalos> = {
     campos: {
         referencia: { requerido: true },
-        cantidad: { requerido: true, tipo: "decimal", validacion: (m) => (m.cantidad ?? 0) > 0 || "Debe ser mayor que 0" },
         precio: { requerido: false, tipo: "decimal", positivo: true },
     },
 };
 
 export const edicionDeLinea = (l: LineaListaRegalos): EdicionLineaListaRegalos => ({
     precio: l.precio,
-    cantidad: l.cantidad,
-    cantidadVendida: l.cantidadVendida,
 });
 
 export const metaEdicionLineaListaRegalos: MetaModelo<EdicionLineaListaRegalos> = {
     campos: {
         precio: { requerido: true, tipo: "decimal", positivo: true },
-        cantidad: { requerido: true, tipo: "decimal", validacion: (m) => (m.cantidad ?? 0) > 0 || "Debe ser mayor que 0" },
-        cantidadVendida: { requerido: true, tipo: "decimal", positivo: true },
     },
 };
 
 export const cambiosDeLinea = (e: EdicionLineaListaRegalos): CambiosLineaListaRegalos => ({
     precio: e.precio ?? undefined,
-    cantidad: e.cantidad ?? undefined,
-    cantidadVendida: e.cantidadVendida ?? undefined,
 });
 
-export const lineaVendida = (l: LineaListaRegalos): boolean => l.pendiente <= 0;
+type VarianteEstadoLinea = "gris" | "advertencia" | "exito" | "primario";
 
-export const textoStockLinea = (l: LineaListaRegalos): string => (l.sinControlStock ? "Sin control" : String(l.stock));
+export type PresentacionEstadoLinea = { texto: string; variante: VarianteEstadoLinea };
 
-export const faltaStockLinea = (l: LineaListaRegalos): boolean =>
-    !l.sinControlStock && !lineaVendida(l) && l.stock < l.pendiente;
+const PRESENTACION_ESTADO_PAGO: Record<EstadoPagoLineaLista, PresentacionEstadoLinea> = {
+    PENDIENTE: { texto: "Pendiente", variante: "gris" },
+    RESERVADO: { texto: "Reservado", variante: "advertencia" },
+    PAGADO_TARJETA: { texto: "Pagado tarjeta", variante: "exito" },
+    PAGADO_TPV: { texto: "Pagado TPV", variante: "exito" },
+};
+
+const PRESENTACION_ESTADO_ENVIO: Record<EstadoEnvioLineaLista, PresentacionEstadoLinea> = {
+    PENDIENTE: { texto: "Pendiente", variante: "gris" },
+    POR_ENTREGAR_COMPRADOR: { texto: "Por entregar a comprador", variante: "primario" },
+    POR_ENTREGAR_PADRES: { texto: "Por entregar a padres", variante: "primario" },
+    ENTREGADO: { texto: "Entregado", variante: "exito" },
+};
+
+export const presentacionEstadoPago = (l: LineaListaRegalos): PresentacionEstadoLinea =>
+    PRESENTACION_ESTADO_PAGO[l.estadoPago];
+
+export const presentacionEstadoEnvio = (l: LineaListaRegalos): PresentacionEstadoLinea =>
+    PRESENTACION_ESTADO_ENVIO[l.estadoEnvio];
+
+export const totalesLista = (lineas: LineaListaRegalos[]): TotalesListaRegalos => {
+    const suma = (filtro: (l: LineaListaRegalos) => boolean) =>
+        Math.round(lineas.filter(filtro).reduce((total, l) => total + l.precio, 0) * 100) / 100;
+    return {
+        total: suma(() => true),
+        vendido: suma((l) => l.estadoPago !== "PENDIENTE"),
+        reservado: suma((l) => l.estadoPago === "RESERVADO"),
+    };
+};
+
+export const lineaEntregable = (l: LineaListaRegalos): boolean =>
+    l.estadoEnvio === "POR_ENTREGAR_COMPRADOR" || l.estadoEnvio === "POR_ENTREGAR_PADRES";
+
+export const lineaEntregada = (l: LineaListaRegalos): boolean => l.estadoEnvio === "ENTREGADO";
+
+export const lineaLiberable = (l: LineaListaRegalos): boolean => l.estadoPago === "RESERVADO" && !l.entregada;
 
 export const motivoNoBorrableLinea = (l: LineaListaRegalos): string | null =>
     l.cantidadVendida > 0 ? MOTIVO_LINEA_CON_VENTAS : null;

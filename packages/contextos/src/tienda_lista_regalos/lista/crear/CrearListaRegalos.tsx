@@ -51,6 +51,7 @@ export const CrearListaRegalos = ({
                 <quimera-formulario>
                     <QInput label="Nombre" {...uiProps("nombre")} />
                     <QInput label="Dirección" {...uiProps("direccion")} />
+                    <QInput label="Fecha" {...uiProps("fecha")} />
                     <Cliente {...uiProps("clienteId", "clienteNombre")} />
                     <QInput label="Descripción (opcional)" {...uiProps("descripcion")} />
                 </quimera-formulario>

@@ -21,7 +21,7 @@ const { getMaquina: getMaquinaMaestro } = await import("#/tienda_admin/forma_pag
 const forma = (extra: Partial<FormaPagoTiendaDetalle> = {}): FormaPagoTiendaDetalle => ({
     id: "3", websiteId: 1, codigo: "tarjeta", nombre: "Tarjeta", descripcion: "",
     tipo: "PASARELA", codpago: "CONT", orden: 1, activo: true,
-    credencial: { id: "cred_1", nombre: "Stripe" }, conexion: null, ...extra,
+    credencial: { id: "cred_1", nombre: "Stripe" }, destino: "PEDIDO", recibosPagados: true, conexion: null, ...extra,
 });
 
 beforeEach(() => {
@@ -47,7 +47,7 @@ describe("[tienda_admin-forma_pago-maestro-01] Listado del website activo", () =
 describe("[tienda_admin-forma_pago-detalle-01] Guardar el detalle", () => {
     test("tienda_admin_forma_pago_detalle_01_sin_cambios_no_llama_al_servidor", async () => {
         const f = forma();
-        expect(await d.guardarDatos(f, { nombre: "Tarjeta", descripcion: "", codpago: "CONT", credencialId: "cred_1", orden: 1, activo: true })).toBe(false);
+        expect(await d.guardarDatos(f, { nombre: "Tarjeta", descripcion: "", codpago: "CONT", credencialId: "cred_1", orden: 1, activo: true, destino: "PEDIDO", recibosPagados: true })).toBe(false);
         expect(patchFormaPago).not.toHaveBeenCalled();
     });
 

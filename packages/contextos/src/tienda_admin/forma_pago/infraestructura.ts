@@ -4,6 +4,7 @@ import { getCredencialesExterna } from "#/comun/credencial_externa/infraestructu
 import {
     CambiosFormaPagoTienda,
     ConexionFormaPago,
+    DestinoFormaPagoTienda,
     FormaPagoTienda,
     FormaPagoTiendaDetalle,
     GetCuentasStripe,
@@ -30,6 +31,8 @@ export interface FormaPagoApi {
     orden: number;
     activo: boolean;
     credencial: { id: string; nombre: string } | null;
+    destino: DestinoFormaPagoTienda;
+    recibos_pagados: boolean;
 }
 
 export interface FormaPagoDetalleApi extends FormaPagoApi {
@@ -47,6 +50,8 @@ export const formaPagoDesdeApi = (api: FormaPagoApi): FormaPagoTienda => ({
     orden: api.orden,
     activo: api.activo,
     credencial: api.credencial,
+    destino: api.destino,
+    recibosPagados: api.recibos_pagados,
 });
 
 export const formaPagoDetalleDesdeApi = (api: FormaPagoDetalleApi): FormaPagoTiendaDetalle => ({
@@ -62,6 +67,8 @@ export const nuevaFormaPagoAApi = (websiteId: number, n: NuevaFormaPagoTienda) =
     descripcion: n.descripcion.trim() || null,
     codpago: n.codpago,
     credencial_id: n.tipo === "PASARELA" && n.credencialId ? n.credencialId : null,
+    destino: n.destino,
+    recibos_pagados: n.tipo === "PASARELA" ? n.recibosPagados : false,
 });
 
 export const cambiosFormaPagoAApi = (c: CambiosFormaPagoTienda) => {
@@ -72,6 +79,8 @@ export const cambiosFormaPagoAApi = (c: CambiosFormaPagoTienda) => {
     if (c.credencialId !== undefined) api.credencial_id = c.credencialId;
     if (c.orden !== undefined) api.orden = c.orden;
     if (c.activo !== undefined) api.activo = c.activo;
+    if (c.destino !== undefined) api.destino = c.destino;
+    if (c.recibosPagados !== undefined) api.recibos_pagados = c.recibosPagados;
     return api;
 };
 
