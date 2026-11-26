@@ -4,9 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  nombre-del-paquete: 0.25.12
-
 importers:
 
   .:
@@ -243,6 +240,18 @@ importers:
         version: link:../olula
 
   apps/dulce_bebe:
+    dependencies:
+      '@olula/componentes':
+        specifier: workspace:*
+        version: link:../../packages/componentes
+      '@olula/ctx':
+        specifier: workspace:*
+        version: link:../../packages/contextos
+      '@olula/lib':
+        specifier: workspace:*
+        version: link:../../packages/contextos/lib
+
+  apps/elganso_central:
     dependencies:
       '@olula/componentes':
         specifier: workspace:*
